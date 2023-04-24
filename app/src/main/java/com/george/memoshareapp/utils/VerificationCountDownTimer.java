@@ -20,7 +20,6 @@ import com.george.memoshareapp.R;
  */
 public class VerificationCountDownTimer extends CountDownTimer {
 
-
     private TextView mTextView;
 
     public VerificationCountDownTimer(TextView textView, long millisInFuture, long countDownInterval) {

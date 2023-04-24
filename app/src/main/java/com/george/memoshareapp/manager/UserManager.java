@@ -45,7 +45,7 @@ public class UserManager {
         return true;
     }
 
-    public boolean  saveUserInfo(String phone, String pw){
+    public static boolean  saveUserInfo(String phone, String pw){
         LitePal.getDatabase();
         User user = new User(phone, pw);
         return user.save();

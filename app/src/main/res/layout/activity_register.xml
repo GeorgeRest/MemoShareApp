@@ -21,14 +21,15 @@
             android:layout_marginTop="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginLeft="30dp">
+
             <ImageView
                 android:id="@+id/iv_back"
                 android:layout_width="30dp"
                 android:layout_height="20dp"
-                android:src="@mipmap/back_register"
-                android:layout_gravity="center"
                 android:layout_centerVertical="true"
-                android:onClick="onClick"/>
+                android:layout_gravity="center"
+                android:onClick="onClick"
+                android:src="@mipmap/back_register" />
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
@@ -81,9 +82,9 @@
                         android:layout_alignParentRight="true"
                         android:background="@mipmap/bg_code_register"
                         android:gravity="center"
+                        android:onClick="onClick"
                         android:text="获取验证码"
-                        android:textColor="#EFE9E9"
-                        android:onClick="onClick"/>
+                        android:textColor="#EFE9E9" />
 
                 </RelativeLayout>
             </FrameLayout>
@@ -97,6 +98,7 @@
                 android:hint="请设置密码"
                 android:inputType="textPassword"
                 android:paddingLeft="15dp" />
+
             <EditText
                 android:id="@+id/et_pwAgain"
                 android:layout_width="match_parent"
@@ -123,13 +125,13 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="30dp">
 
-                <RadioButton
+                <com.george.memoshareapp.view.MyCheckBox
                     android:id="@+id/rb_agree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"/>
-
-
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/my_checkbox"
+                    android:button="@null" />
                 <TextView
 
                     android:layout_width="wrap_content"
@@ -137,6 +139,7 @@
                     android:paddingRight="15dp"
                     android:textColor="#979292"
                     android:textSize="15dp"
+
                     android:text="我已阅读并同意《用户协议》《隐私政策》《联通统一认证服务条款》" />
 
             </LinearLayout>
