@@ -1,8 +1,10 @@
-package com.george.memoshareapp;
+package com.george.memoshareapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.george.memoshareapp.R;
 
 public class MainActivity extends AppCompatActivity {
 

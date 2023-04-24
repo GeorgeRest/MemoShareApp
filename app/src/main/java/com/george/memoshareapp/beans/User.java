@@ -3,11 +3,11 @@ package com.george.memoshareapp.beans;
 import org.litepal.crud.LitePalSupport;
 
 /**
- * @projectName: MemoShare
- * @package: com.george.memoshare.beans
+ * @projectName: MemoShareApp
+ * @package: com.george.memoshareApp.beans
  * @className: User
  * @author: George
- * @description: TODO
+ * @description: 用户表
  * @date: 2023/4/23 12:11
  * @version: 1.0
  */
@@ -15,7 +15,7 @@ public class User extends LitePalSupport {
     private int id;
     private String phoneNumber;
     private String password;
-    public User(){
+    public User() {
 
     }
 
@@ -27,7 +27,7 @@ public class User extends LitePalSupport {
         this.id = id;
     }
 
-    public User(String phoneNumber, String password ) {
+    public User(String phoneNumber, String password) {
         this.phoneNumber = phoneNumber;
         this.password = password;
     }

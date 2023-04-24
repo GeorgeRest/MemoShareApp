@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_register">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginRight="23dp"
+        android:layout_marginBottom="100dp"
+        android:background="@mipmap/white_register"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp">
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:src="@mipmap/back_register"
+                android:layout_gravity="center"
+                android:layout_centerVertical="true"
+                android:onClick="onClick"/>
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="注册"
+                android:layout_centerInParent="true"
+                android:textStyle="bold"
+                android:textColor="#EFE9E9"
+                android:textSize="25dp"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="30dp">
+
+            <EditText
+                android:id="@+id/et_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_rounded_rectangle_register"
+                android:hint="请输入手机号"
+                android:inputType="phone"
+                android:paddingLeft="15dp" />
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/et_verificationCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_rounded_rectangle_register"
+                        android:hint="请输入验证码"
+                        android:inputType="phone"
+                        android:paddingLeft="15dp" />
+
+                    <TextView
+                        android:id="@+id/tv_getCode"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/et_verificationCode"
+                        android:layout_alignBottom="@id/et_verificationCode"
+                        android:layout_alignParentRight="true"
+                        android:background="@mipmap/bg_code_register"
+                        android:gravity="center"
+                        android:text="获取验证码"
+                        android:textColor="#EFE9E9"
+                        android:onClick="onClick"/>
+
+                </RelativeLayout>
+            </FrameLayout>
+
+            <EditText
+                android:id="@+id/et_pw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_rounded_rectangle_register"
+                android:hint="请设置密码"
+                android:inputType="textPassword"
+                android:paddingLeft="15dp" />
+            <EditText
+                android:id="@+id/et_pwAgain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/button_rounded_rectangle_register"
+                android:hint="请确认密码"
+                android:paddingLeft="15dp"
+                android:inputType="textPassword" />
+
+
+
+            <ImageButton
+                android:id="@+id/bt_register"
+                android:layout_width="match_parent"
+                android:layout_height="47dp"
+                android:layout_marginTop="15dp"
+                android:background="@mipmap/button_register"
+                android:onClick="onClick"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="30dp">
+
+                <RadioButton
+                    android:id="@+id/rb_agree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="15dp"
+                    android:textColor="#979292"
+                    android:textSize="15dp"
+                    android:text="我已阅读并同意《用户协议》《隐私政策》《联通统一认证服务条款》" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
