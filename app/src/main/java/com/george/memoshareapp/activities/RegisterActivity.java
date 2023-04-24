@@ -60,38 +60,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     codePhone = phone; // 记录下发送验证码的手机号
                     VerificationCountDownTimer timer = new VerificationCountDownTimer(tv_getCode, 60000, 1000);
                     timer.start();
-                    // todo  调用验证码方法传入手机号
-
+                    // todo  调用验证码方法传入手机号获取验证码
                     Toast.makeText(this, "验证码已发送到您的手机，请注意查收", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.bt_register:
-                if (checkUserInfo(phone, pw, pwAgain, vcCode, codePhone)) {
-                    UserManager userManager = new UserManager(this);
+                UserManager userManager = new UserManager(this);
+                if (userManager.checkUserInfo(phone, pw, pwAgain, vcCode, codePhone)) {
+                    //todo 还需判断验证码是否正确
                     if (userManager.saveUserInfo(phone, pw)){
                         Toast.makeText(this, "注册成功", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(this, "注册失败", Toast.LENGTH_SHORT).show();
                     }
                 }
-
                 break;
 
         }
-    }
-
-    private boolean checkUserInfo(String phone, String pw, String pwAgain, String vcCode, String codePhone) {
-        if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(vcCode) || TextUtils.isEmpty(pw) || TextUtils.isEmpty(pwAgain)) {
-            Toast.makeText(this, "请输入完整信息", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (!phone.equals(codePhone) || !pw.equals(pwAgain)) {   //todo   验证码判断未加
-            Toast.makeText(this, "信息输入有误，请重新输入", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
     }
 
 

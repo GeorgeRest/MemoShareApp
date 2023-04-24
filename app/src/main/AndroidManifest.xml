@@ -17,6 +17,7 @@
         <activity
             android:name=".activities.RegisterActivity"
             android:exported="true">
+
         </activity>
         <activity
             android:name=".activities.MainActivity"
