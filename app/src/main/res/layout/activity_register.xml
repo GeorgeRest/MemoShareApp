@@ -30,26 +30,27 @@
                 android:layout_gravity="center"
                 android:onClick="onClick"
                 android:src="@mipmap/back_register" />
+
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="注册"
                 android:layout_centerInParent="true"
-                android:textStyle="bold"
+                android:text="注册"
                 android:textColor="#EFE9E9"
-                android:textSize="25dp"/>
+                android:textSize="25dp"
+                android:textStyle="bold" />
         </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="30dp">
+            android:padding="24dp">
 
             <EditText
                 android:id="@+id/et_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="297.5dp"
+                android:layout_height="46dp"
                 android:background="@drawable/button_rounded_rectangle_register"
                 android:hint="请输入手机号"
                 android:inputType="phone"
@@ -57,8 +58,8 @@
 
 
             <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="297.5dp"
+                android:layout_height="46dp"
                 android:layout_marginTop="15dp">
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -69,7 +70,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/button_rounded_rectangle_register"
-                        android:hint="请输入验证码"
+                        android:hint="输入验证码"
                         android:inputType="phone"
                         android:paddingLeft="15dp" />
 
@@ -84,28 +85,28 @@
                         android:gravity="center"
                         android:onClick="onClick"
                         android:text="获取验证码"
-                        android:textColor="#EFE9E9" />
+                        android:textColor="#EBFFFFFF" />
 
                 </RelativeLayout>
             </FrameLayout>
 
             <EditText
                 android:id="@+id/et_pw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="297.5dp"
+                android:layout_height="46dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/button_rounded_rectangle_register"
-                android:hint="请设置密码"
+                android:hint="设置密码"
                 android:inputType="textPassword"
                 android:paddingLeft="15dp" />
 
             <EditText
                 android:id="@+id/et_pwAgain"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="297.5dp"
+                android:layout_height="46dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/button_rounded_rectangle_register"
-                android:hint="请确认密码"
+                android:hint="确认密码"
                 android:paddingLeft="15dp"
                 android:inputType="textPassword" />
 
@@ -113,10 +114,10 @@
 
             <ImageButton
                 android:id="@+id/bt_register"
-                android:layout_width="match_parent"
+                android:layout_width="297.5dp"
                 android:layout_height="47dp"
                 android:layout_marginTop="15dp"
-                android:background="@mipmap/button_register"
+                android:background="@drawable/bg_register_selector"
                 android:onClick="onClick"/>
 
             <LinearLayout
@@ -124,23 +125,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="30dp">
-
+<!--android:button="@null"取消原有背景-->
                 <com.george.memoshareapp.view.MyCheckBox
                     android:id="@+id/rb_agree"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:layout_gravity="center"
                     android:background="@drawable/my_checkbox"
-                    android:button="@null" />
+                    android:button="@null"/>
+
                 <TextView
 
-                    android:layout_width="wrap_content"
+                    android:layout_width="277dp"
                     android:layout_height="wrap_content"
                     android:paddingRight="15dp"
-                    android:textColor="#979292"
-                    android:textSize="15dp"
-
-                    android:text="我已阅读并同意《用户协议》《隐私政策》《联通统一认证服务条款》" />
+                    android:text="我已阅读并同意《用户协议》《隐私政策》《儿童/青少年个人信息保护规则》《联通统一认证服务条款》"
+                    android:textColor="#752A2342"
+                    android:textSize="10sp" />
 
             </LinearLayout>
 

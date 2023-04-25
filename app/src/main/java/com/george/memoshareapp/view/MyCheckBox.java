@@ -3,6 +3,7 @@ package com.george.memoshareapp.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.CheckBox;
 
 import com.george.memoshareapp.R;
@@ -16,8 +17,9 @@ import com.george.memoshareapp.R;
  * @date: 2023/4/24 22:28
  * @version: 1.0
  */
-@SuppressLint("AppCompatCustomView")
-public class MyCheckBox extends CheckBox {
+
+
+public class MyCheckBox extends androidx.appcompat.widget.AppCompatCheckBox implements View.OnClickListener {
     private boolean isClicked = false;
     private int defaultBackgroundResource = R.drawable.my_checkbox;
     private int clickedBackgroundResource = R.drawable.my_checkbox_click;
@@ -33,14 +35,13 @@ public class MyCheckBox extends CheckBox {
     public MyCheckBox(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setBackgroundResource(defaultBackgroundResource);
+        setOnClickListener(this);
     }
 
     @Override
-    public boolean performClick() {
+    public void onClick(View view) {
         isClicked = !isClicked;
         setBackgroundResource(isClicked ? clickedBackgroundResource : defaultBackgroundResource);
-        return super.performClick();
     }
-
 }
 
