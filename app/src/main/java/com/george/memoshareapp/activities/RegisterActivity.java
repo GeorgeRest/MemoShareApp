@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
+import com.george.memoshareapp.view.MyCheckBox;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -21,7 +22,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText et_pw;
     private EditText et_pwAgain;
     private ImageButton bt_register;
-    private CheckBox rb_agree;
+    private MyCheckBox rb_agree;
     private TextView tv_getCode;
     private TextView code;
     private String codePhone;
@@ -40,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         et_pw = (EditText) findViewById(R.id.et_pw);
         et_pwAgain = (EditText) findViewById(R.id.et_pwAgain);
         bt_register = (ImageButton) findViewById(R.id.bt_register);
-        rb_agree = (CheckBox) findViewById(R.id.rb_agree);
+        rb_agree = (MyCheckBox) findViewById(R.id.rb_agree);
         tv_getCode = (TextView) findViewById(R.id.tv_getCode);
         code = (TextView) findViewById(R.id.et_verificationCode);
         bt_register.setOnClickListener(this);
@@ -66,16 +67,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.bt_register:
+            case R.id.bt_register:  //todo 防止重复注册
                 UserManager userManager = new UserManager(this);
                 if (userManager.checkUserInfo(phone, pw, pwAgain, vcCode, codePhone)) {
                     //todo 还需判断验证码是否正确
+                    if(!rb_agree.isChecked()){
+                        Toast.makeText(this, "请同意协议", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     if (UserManager.saveUserInfo(phone, pw)){
                         Toast.makeText(this, "注册成功", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(this, "注册失败", Toast.LENGTH_SHORT).show();
                     }
                 }
+                break;
             case R.id.iv_back:
                 finish();
                 break;
