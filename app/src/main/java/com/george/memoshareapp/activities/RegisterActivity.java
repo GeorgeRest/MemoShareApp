@@ -74,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (userManager.checkUserInfo(phone, pw, pwAgain, vcCode, codePhone)) {
                     //todo 还需判断验证码是否正确
                     if(!rb_agree.isChecked()){
-                        Toast.makeText(this, "请同意协议", Toast.LENGTH_SHORT).show();
+                        Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT,true).show();
                         return;
                     }
                     if (UserManager.saveUserInfo(phone, pw)){
