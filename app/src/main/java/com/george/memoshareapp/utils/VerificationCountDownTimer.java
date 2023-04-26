@@ -30,12 +30,14 @@ public class VerificationCountDownTimer extends CountDownTimer {
     @Override
     public void onTick(long millisUntilFinished) {
         mTextView.setClickable(false);
-        mTextView.setText(millisUntilFinished / 1000 + "秒重新发送");
+        mTextView.setText(millisUntilFinished / 1000 + "”");
+        mTextView.setBackgroundResource(R.drawable.bg_code_count_time);
     }
 
     @Override
     public void onFinish() {
-        mTextView.setText("重新获取验证码");
+        mTextView.setText("重新获取");
         mTextView.setClickable(true);
+        mTextView.setBackgroundResource(R.drawable.bg_code_register_selector);
     }
 }
