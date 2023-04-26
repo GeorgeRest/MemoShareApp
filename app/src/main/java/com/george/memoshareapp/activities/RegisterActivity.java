@@ -16,6 +16,8 @@ import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.george.memoshareapp.view.MyCheckBox;
 
+import es.dmoral.toasty.Toasty;
+
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText et_phone;
@@ -62,9 +64,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     VerificationCountDownTimer timer = new VerificationCountDownTimer(tv_getCode, COUNTDOWN_TIME, 1000);
                     timer.start();
                     // todo  调用验证码方法传入手机号获取验证码
-                    Toast.makeText(this, "验证码已发送到您的手机，请注意查收", Toast.LENGTH_SHORT).show();
+                    Toasty.info(this, "验证码已发送到您的手机，请注意查收", Toast.LENGTH_SHORT, true).show();
                 } else {
-                    Toast.makeText(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT).show();
+                    Toasty.warning(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT, true).show();
                 }
                 break;
             case R.id.bt_register:  //todo 防止重复注册
@@ -76,9 +78,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         return;
                     }
                     if (UserManager.saveUserInfo(phone, pw)){
-                        Toast.makeText(this, "注册成功", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(this, "注册成功", Toast.LENGTH_SHORT).show();
+                        Toasty.success(this, "注册成功!", Toast.LENGTH_SHORT, true).show();
                     }else{
-                        Toast.makeText(this, "注册失败", Toast.LENGTH_SHORT).show();
+
+                        Toasty.error(this, "注册失败!", Toast.LENGTH_SHORT, true).show();
                     }
                 }
                 break;

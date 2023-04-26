@@ -81,7 +81,7 @@
                         android:layout_alignTop="@id/et_verificationCode"
                         android:layout_alignBottom="@id/et_verificationCode"
                         android:layout_alignParentRight="true"
-                        android:background="@mipmap/bg_code_register"
+                        android:background="@drawable/bg_code_register_selector"
                         android:gravity="center"
                         android:onClick="onClick"
                         android:text="获取验证码"
