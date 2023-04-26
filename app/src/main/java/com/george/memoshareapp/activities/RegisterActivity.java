@@ -43,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         bt_register = (ImageButton) findViewById(R.id.bt_register);
         rb_agree = (MyCheckBox) findViewById(R.id.rb_agree);
         tv_getCode = (TextView) findViewById(R.id.tv_getCode);
-        code = (TextView) findViewById(R.id.et_verificationCode);
+        code = (TextView) findViewById(R.id.fragment_et_code);
         bt_register.setOnClickListener(this);
         tv_getCode.setOnClickListener(this);
     }

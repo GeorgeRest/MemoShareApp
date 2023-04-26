@@ -1,12 +1,15 @@
 package com.george.memoshareapp.manager;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.george.memoshareapp.beans.User;
 
 import org.litepal.LitePal;
+
+import java.util.List;
 
 /**
  * @projectName: MemoShare
@@ -49,6 +52,18 @@ public class UserManager {
         LitePal.getDatabase();
         User user = new User(phone, pw);
         return user.save();
+    }
+    public  boolean queryUserInfo(String phone ,String pw){
+        User user = LitePal.where("phonenumber=?", phone).findFirst(User.class);
+        if(user==null){
+            Toast.makeText(context, "请先注册", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (user.getPassword().equals(pw)){
+            Toast.makeText(context, "密码错误", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+            return true;
     }
 
 }
