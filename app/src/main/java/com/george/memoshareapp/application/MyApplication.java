@@ -1,4 +1,4 @@
-package com.george.memoshareapp;
+package com.george.memoshareapp.application;
 
 import android.app.Application;
 
