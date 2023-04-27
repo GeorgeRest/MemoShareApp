@@ -66,10 +66,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String pw = et_pw.getText().toString().trim();
         String pwAgain = et_pwAgain.getText().toString().trim();
         String vcCode = code.getText().toString().trim();
+        UserManager userManager = new UserManager(this);
         switch (v.getId()) {
             case R.id.tv_getCode:
                 if (!TextUtils.isEmpty(phone) && isPhoneNumberValid(phone)) {
-                    codePhone = phone; // 记录下发送验证码的手机号
+                    if(userManager.isPhoneNumberRegistered(phone)!=null){
+                        Toasty.warning(this, "该手机号已注册", Toast.LENGTH_SHORT,true).show();
+                        return;
+                    }
+                    codePhone = phone;
                     VerificationCountDownTimer timer = new VerificationCountDownTimer(tv_getCode, COUNTDOWN_TIME, 1000);
                     timer.start();
                     // todo  调用验证码方法传入手机号获取验证码
@@ -79,7 +84,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case R.id.bt_register:  //todo 防止重复注册
-                UserManager userManager = new UserManager(this);
                 if (userManager.checkUserInfo(phone, pw, pwAgain, vcCode, codePhone)) {
                     if (!vcCode.equals(codeReal)){
                         Toasty.error(this, "验证码输入错误", Toast.LENGTH_SHORT,true).show();
