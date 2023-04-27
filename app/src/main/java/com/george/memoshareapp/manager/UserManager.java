@@ -36,6 +36,12 @@ public class UserManager {
      * @return
      */
     public boolean checkUserInfo(String phone, String pw, String pwAgain, String vcCode, String codePhone) {
+        LitePal.getDatabase();
+        User user = LitePal.where("phonenumber = ?", phone).findFirst(User.class);
+        if (user != null) {
+            Toasty.error(context, "该手机号已注册", Toast.LENGTH_SHORT,true).show();
+            return false;
+        }
         if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(vcCode) || TextUtils.isEmpty(pw) || TextUtils.isEmpty(pwAgain)) {
             Toasty.info(context, "请输入完整信息", Toast.LENGTH_SHORT,true).show();
             return false;

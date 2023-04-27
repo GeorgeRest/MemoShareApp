@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -15,8 +14,14 @@ import android.widget.Toast;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.CodeSender;
+import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.george.memoshareapp.view.MyCheckBox;
+import com.hjq.permissions.OnPermissionCallback;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
+
+import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 
@@ -40,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         initView();
+        PermissionUtils.permissionsGranted(this);
     }
 
     private void initView() {
@@ -60,7 +66,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String pw = et_pw.getText().toString().trim();
         String pwAgain = et_pwAgain.getText().toString().trim();
         String vcCode = code.getText().toString().trim();
-        boolean isCodeValid = false;
         switch (v.getId()) {
             case R.id.tv_getCode:
                 if (!TextUtils.isEmpty(phone) && isPhoneNumberValid(phone)) {
@@ -68,8 +73,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     VerificationCountDownTimer timer = new VerificationCountDownTimer(tv_getCode, COUNTDOWN_TIME, 1000);
                     timer.start();
                     // todo  调用验证码方法传入手机号获取验证码
-                    codeSender = new CodeSender(this);
-                    codeReal = codeSender.sendCode(codePhone);
+                    codeReal=new CodeSender(this).sendCode(phone);
                 } else {
                     Toasty.warning(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT,true).show();
                 }
@@ -77,7 +81,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.bt_register:  //todo 防止重复注册
                 UserManager userManager = new UserManager(this);
                 if (userManager.checkUserInfo(phone, pw, pwAgain, vcCode, codePhone)) {
-                    //todo 还需判断验证码是否正确
                     if (!vcCode.equals(codeReal)){
                         Toasty.error(this, "验证码输入错误", Toast.LENGTH_SHORT,true).show();
                         return;
@@ -100,15 +103,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
     private boolean isPhoneNumberValid(String phoneNumber) {
-        // 手机号正则表达式
         String phoneRegex = "^1[3-9]\\d{9}$";
         return phoneNumber.matches(phoneRegex);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        codeSender.onRequestPermissionsResult(requestCode, permissions, grantResults, codePhone);
     }
 }
