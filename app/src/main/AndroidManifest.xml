@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.george.memoshareapp">
 
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -17,7 +18,10 @@
         <activity
             android:name=".activities.RegisterActivity"
             android:exported="true">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.MainActivity"
