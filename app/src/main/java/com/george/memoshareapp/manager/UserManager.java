@@ -60,4 +60,10 @@ public class UserManager {
 
     }
 
+    public static boolean changePassword(String phone){
+        LitePal.getDatabase();
+        User user = LitePal.where("phonenumber=?", phone).findFirst(User.class);
+        return user.save();
+    }
+
 }

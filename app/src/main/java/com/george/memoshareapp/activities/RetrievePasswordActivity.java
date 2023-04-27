@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.CodeSender;
+import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.george.memoshareapp.view.MyCheckBox;
 
@@ -37,6 +38,7 @@ public class RetrievePasswordActivity extends AppCompatActivity implements View.
         setContentView(R.layout.activity_retrieve_password);
 
         initView();
+        PermissionUtils.permissionsGranted(this);
     }
 
     private void initView() {
@@ -69,7 +71,7 @@ public class RetrievePasswordActivity extends AppCompatActivity implements View.
                     codePhone = phone;
                     VerificationCountDownTimer timer = new VerificationCountDownTimer(tv_getCode, COUNTDOWN_TIME, 1000);
                     timer.start();
-                    //   调用验证码方法传入手机号获取验证码
+                    // 调用验证码方法传入手机号获取验证码
                     codeReal=new CodeSender(this).sendCode(phone);
                 } else {
                     Toast.makeText(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT).show();
@@ -77,13 +79,20 @@ public class RetrievePasswordActivity extends AppCompatActivity implements View.
                 break;
 
             case R.id.bt_ok:
-                // 判断验证码是否正确
-                if (!vcCode.equals(codeReal)){
-                    Toasty.error(this, "验证码输入错误", Toast.LENGTH_SHORT,true).show();
-                    return;
+                if(userManager.checkUserInfo(phone,pw,pwAgain,vcCode,codePhone)){
+                    // 判断验证码是否正确
+                    if (!vcCode.equals(codeReal)){
+                        Toasty.error(this, "验证码输入错误", Toast.LENGTH_SHORT,true).show();
+                        return;
+                    }
+                    // 修改密码
+                    if (UserManager.changePassword(phone)){
+                        Toasty.success(this, "修改密码成功，请登录", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toasty.error(this, "修改失败，请重试", Toast.LENGTH_SHORT,true).show();
+                    }
                 }
-                //todo 修改密码
-                
+
                 break;
 
             case R.id.iv_back:
