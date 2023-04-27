@@ -68,13 +68,13 @@
                 android:text="忘记密码"
                 android:textSize="16dp" />
 
-            <TextView
-                android:id="@+id/tv_yx_lg_regist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="去注册"
-                android:textSize="16dp" />
+                <TextView
+                    android:id="@+id/tv_yx_lg_regist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="去注册"
+                    android:textSize="16dp" />
 
             <ImageButton
                 android:id="@+id/ib_yx_lg_login"

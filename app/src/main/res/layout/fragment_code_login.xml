@@ -32,6 +32,8 @@
                 android:textColor="@color/black"
                 android:textColorHint="#A3A1A1" />
 
+
+
             <TextView
                 android:id="@+id/tv_getCode"
                 android:layout_width="100dp"
@@ -39,7 +41,7 @@
                 android:layout_alignTop="@id/fragment_et_code"
                 android:layout_alignBottom="@id/fragment_et_code"
                 android:layout_alignParentRight="true"
-                android:background="@mipmap/bg_code_register"
+                android:background="@mipmap/code"
                 android:gravity="center"
                 android:text="获取验证码"
                 android:textColor="#EFE9E9" />

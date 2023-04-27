@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.george.memoshareapp.Fragment.CodeLoginFragment;
 import com.george.memoshareapp.Fragment.PWLoginFragment;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.view.MyCheckBox;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
@@ -38,6 +39,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         initView();
         fragmentManager = getSupportFragmentManager();
         setDefaultSelection(0);
+        PermissionUtils.permissionsGranted(this);
     }
     private void initView() {
         tv_pw_login = (TextView) findViewById(R.id.tv_pw_login);

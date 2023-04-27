@@ -64,8 +64,16 @@ public class UserManager {
             Toast.makeText(context, "请先注册", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (user.getPassword().equals(pw)){
+        if (!user.getPassword().equals(pw)){
             Toast.makeText(context, "密码错误", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+    public  boolean queryUser(String phone ){
+        User user = LitePal.where("phonenumber=?", phone).findFirst(User.class);
+        if(user==null){
+            Toast.makeText(context, "请先注册", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
