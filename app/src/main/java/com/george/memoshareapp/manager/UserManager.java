@@ -53,9 +53,11 @@ public class UserManager {
         User user = new User(phone, pw);
         return user.save();
     }
+
     public User isPhoneNumberRegistered(String phone){
         LitePal.getDatabase();
         return  LitePal.where("phonenumber=?", phone).findFirst(User.class);
+
     }
 
 }
