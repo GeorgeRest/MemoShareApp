@@ -71,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     codeSender = new CodeSender(this);
                     codeReal = codeSender.sendCode(codePhone);
                 } else {
-                    Toast.makeText(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT).show();
+                    Toasty.warning(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT,true).show();
                 }
                 break;
             case R.id.bt_register:  //todo 防止重复注册
@@ -79,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (userManager.checkUserInfo(phone, pw, pwAgain, vcCode, codePhone)) {
                     //todo 还需判断验证码是否正确
                     if (!vcCode.equals(codeReal)){
-                        Toast.makeText(this, "验证码输入错误", Toast.LENGTH_SHORT).show();
+                        Toasty.error(this, "验证码输入错误", Toast.LENGTH_SHORT,true).show();
                         return;
                     }
                     if(!rb_agree.isChecked()){
@@ -87,9 +87,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         return;
                     }
                     if (UserManager.saveUserInfo(phone, pw)){
-                        Toast.makeText(this, "注册成功", Toast.LENGTH_SHORT).show();
+                        Toasty.success(this, "注册成功", Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(this, "注册失败", Toast.LENGTH_SHORT).show();
+                        Toasty.error(this, "注册失败", Toast.LENGTH_SHORT,true).show();
                     }
                 }
                 break;
