@@ -53,9 +53,22 @@ public class UserManager {
         User user = new User(phone, pw);
         return user.save();
     }
-    public User isPhoneNumberRegistered(String phone){
+    public User isPhoneNumberRegistered(String phone) {
         LitePal.getDatabase();
-        return  LitePal.where("phonenumber=?", phone).findFirst(User.class);
+        return LitePal.where("phonenumber=?", phone).findFirst(User.class);
+    }
+
+    public  boolean queryUserInfo(String phone ,String pw){
+        User user = LitePal.where("phonenumber=?", phone).findFirst(User.class);
+        if(user==null){
+            Toast.makeText(context, "请先注册", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (user.getPassword().equals(pw)){
+            Toast.makeText(context, "密码错误", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
 }
