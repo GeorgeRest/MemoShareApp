@@ -1,10 +1,11 @@
-package com.george.memoshareapp;
+package com.george.memoshareapp.application;
 
 import android.app.Application;
 
 import org.litepal.LitePal;
 
 import es.dmoral.toasty.Toasty;
+
 
 /**
  * @projectName: Memosahre
