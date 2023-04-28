@@ -86,7 +86,7 @@ public class RetrievePasswordActivity extends AppCompatActivity implements View.
                         return;
                     }
                     // 修改密码
-                    if (UserManager.changePassword(phone)){
+                    if (userManager.changePassword(phone,pw)){
                         Toasty.success(this, "修改密码成功，请登录", Toast.LENGTH_SHORT).show();
                     }else{
                         Toasty.error(this, "修改失败，请重试", Toast.LENGTH_SHORT,true).show();
