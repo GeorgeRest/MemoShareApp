@@ -66,7 +66,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/et_verificationCode"
+                        android:id="@+id/fragment_et_code"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/button_rounded_rectangle_register"
@@ -78,8 +78,8 @@
                         android:id="@+id/tv_getCode"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/et_verificationCode"
-                        android:layout_alignBottom="@id/et_verificationCode"
+                        android:layout_alignTop="@id/fragment_et_code"
+                        android:layout_alignBottom="@id/fragment_et_code"
                         android:layout_alignParentRight="true"
                         android:background="@drawable/bg_code_register_selector"
                         android:gravity="center"
