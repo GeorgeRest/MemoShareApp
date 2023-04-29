@@ -53,10 +53,20 @@ public class UserManager {
         User user = new User(phone, pw);
         return user.save();
     }
-    public User isPhoneNumberRegistered(String phone) {
+
+    public User isPhoneNumberRegistered(String phone){
         LitePal.getDatabase();
-        return LitePal.where("phonenumber=?", phone).findFirst(User.class);
+        return  LitePal.where("phonenumber=?", phone).findFirst(User.class);
+
     }
+
+    public boolean changePassword(String phone,String pw) {
+        LitePal.getDatabase();
+        User user = LitePal.where("phonenumber=?", phone).findFirst(User.class);
+        user.setPassword(pw);
+        return user.save();
+    }
+
 
     public  boolean queryUserInfo(String phone ,String pw){
         User user = LitePal.where("phonenumber=?", phone).findFirst(User.class);
