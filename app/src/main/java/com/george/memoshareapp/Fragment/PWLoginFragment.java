@@ -3,6 +3,7 @@ package com.george.memoshareapp.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class PWLoginFragment extends Fragment implements View.OnClickListener{
     private String pwNumber;
     private MyCheckBox agreement;
     private View view;
+    private static String TAG = "PWLoginFragment";
 
     @Nullable
     @Override
@@ -53,6 +55,7 @@ public class PWLoginFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         phoneNumber = this.phone.getText().toString().trim();
         pwNumber = this.pw.getText().toString().trim();
+        Log.d(TAG, "phoneNumber: "+phoneNumber+"pw: "+pwNumber);
         UserManager userManager = new UserManager(getContext());
         if (TextUtils.isEmpty(phoneNumber)||TextUtils.isEmpty(pwNumber)){
             Toast.makeText(getActivity(), "请将信息填写完整", Toast.LENGTH_SHORT).show();

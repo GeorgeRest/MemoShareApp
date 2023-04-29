@@ -30,7 +30,6 @@ public class CodeSender {
         }
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(codePhone, null, "【忆享】您的验证码是：" + code, null, null);
-        Toasty.info(context, "验证码已发送到您的手机，请注意查收", Toast.LENGTH_SHORT, true).show();
         return code;
     }
 

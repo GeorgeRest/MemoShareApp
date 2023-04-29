@@ -3,6 +3,7 @@ package com.george.memoshareapp.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
     private TextView getCode;
     private String et_code;
     private TextView register;
+    private  static String TAG = "CodeLoginFragment";
 
     @Nullable
     @Override
@@ -80,6 +82,7 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
             case R.id.ib_yx_lg_login:
                 UserManager userManager = new UserManager(getContext());
                 et_code = this.fragment_et_code.getText().toString().trim();
+                Log.d(TAG, "yzm: "+et_code+"phone: "+phoneNumber+"codeReal: "+codeReal);
                 if (TextUtils.isEmpty(phoneNumber)||TextUtils.isEmpty(et_code)){
                     Toast.makeText(getActivity(), "请将信息填写完整", Toast.LENGTH_SHORT).show();
                     return;

@@ -20,7 +20,7 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         public void run() {
             if(!isFinishing()) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 finish();
             }
         }

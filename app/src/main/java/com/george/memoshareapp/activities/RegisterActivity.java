@@ -44,9 +44,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        initView();
-        PermissionUtils.permissionsGranted(this);
-    }
+        initView();}
 
     private void initView() {
         et_phone = (EditText) findViewById(R.id.et_phone);
@@ -79,6 +77,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     timer.start();
                     // todo  调用验证码方法传入手机号获取验证码
                     codeReal=new CodeSender(this).sendCode(phone);
+                    if(codeReal!=""){
+                        Toasty.success(this, "验证码已发送", Toast.LENGTH_SHORT,true).show();
+                    }
                 } else {
                     Toasty.warning(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT,true).show();
                 }
