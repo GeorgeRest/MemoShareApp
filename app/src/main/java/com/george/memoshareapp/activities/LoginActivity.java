@@ -6,24 +6,26 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.george.memoshareapp.Fragment.CodeLoginFragment;
 import com.george.memoshareapp.Fragment.PWLoginFragment;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.view.MyCheckBox;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView tv_pw_login;
     private TextView tv_code_login;
     private TextView forgetPW;
-    private ImageView login;
+    private ImageButton login;
     private MyCheckBox agreement;
     private PWLoginFragment PwFragment;
     private CodeLoginFragment CodeFragment;
@@ -41,15 +43,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setDefaultSelection(0);
         PermissionUtils.permissionsGranted(this);
     }
+
     private void initView() {
         tv_pw_login = (TextView) findViewById(R.id.tv_pw_login);
         tv_code_login = (TextView) findViewById(R.id.tv_code_login);
         forgetPW = (TextView) findViewById(R.id.tv_forget_pw);
-        login = (ImageView) findViewById(R.id.ib_yx_lg_login);
+        login = (ImageButton) findViewById(R.id.ib_yx_lg_login);
         agreement = (MyCheckBox) findViewById(R.id.rb_yx_lg_agreement);
         frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
         tv_pw_login.setOnClickListener(this);
         tv_code_login.setOnClickListener(this);
+        login.setOnClickListener(this);
     }
 
 
@@ -57,42 +61,45 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         clearSelection();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         hideFragment(transaction);
-        switch (index){
+        switch (index) {
             case 0:
                 tv_pw_login.setTextColor(Color.BLACK);
-                if(PwFragment == null){
-                    PwFragment=new PWLoginFragment();
-                    transaction.add(R.id.frameLayout,PwFragment);
-                }else {
+                if (PwFragment == null) {
+                    PwFragment = new PWLoginFragment();
+                    transaction.add(R.id.frameLayout, PwFragment);
+                } else {
                     transaction.show(PwFragment);
                 }
                 break;
             case 1:
-                default:
+            default:
                 tv_code_login.setTextColor(Color.BLACK);
-                if (CodeFragment==null){
-                    CodeFragment=new CodeLoginFragment();
-                    transaction.add(R.id.frameLayout,CodeFragment);
-                }else{
+                if (CodeFragment == null) {
+                    CodeFragment = new CodeLoginFragment();
+                    transaction.add(R.id.frameLayout, CodeFragment);
+                } else {
                     transaction.show(CodeFragment);
                 }
                 break;
+
 
         }
         transaction.commit();
     }
 
 
-
-
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tv_pw_login:
                 setDefaultSelection(0);
                 break;
             case R.id.tv_code_login:
                 setDefaultSelection(1);
+                break;
+            case R.id.ib_yx_lg_login:
+                handleLogin();
+                break;
             default:
                 break;
         }
@@ -105,15 +112,51 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void hideFragment(FragmentTransaction transaction) {
-        if (PwFragment!=null){
+        if (PwFragment != null) {
             transaction.hide(PwFragment);
         }
-        if (CodeFragment!=null){
+        if (CodeFragment != null) {
             transaction.hide(CodeFragment);
         }
 
     }
 
+    private void handleLogin() {
+        if (PwFragment != null && PwFragment.isVisible()) {
+            String phoneNumber = PwFragment.getPhoneNumber();
+            String pwNumber = PwFragment.getPwNumber();
+
+            if (TextUtils.isEmpty(phoneNumber) || TextUtils.isEmpty(pwNumber)) {
+                Toast.makeText(this, "请将信息填写完整", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            UserManager userManager = new UserManager(this);
+            if (userManager.queryUserInfo(phoneNumber, pwNumber)) {
+                if (agreement.isChecked()) {
+                    Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "请勾选同意协议", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else if (CodeFragment != null && CodeFragment.isVisible()) {
+            String phoneNumber = CodeFragment.getPhoneNumber();
+            String et_code = CodeFragment.getEtCode();
+
+            if (TextUtils.isEmpty(phoneNumber) || TextUtils.isEmpty(et_code)) {
+                Toast.makeText(this, "请将信息填写完整", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            UserManager userManager = new UserManager(this);
+            if (userManager.queryUser(phoneNumber) && et_code.equals(CodeFragment.codeReal)) {
+                if (agreement.isChecked()) {
+                    Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "请勾选同意协议", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
 }
 
 
