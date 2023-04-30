@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.RegisterActivity;
+import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.CodeSender;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.george.memoshareapp.view.MyCheckBox;
@@ -48,7 +51,7 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
         phone = (EditText) view.findViewById(R.id.et_phone);
         fragment_et_code = (EditText) view.findViewById(R.id.fragment_et_code);
         getCode = (TextView) view.findViewById(R.id.tv_getCode);
-        agreement = (MyCheckBox) getActivity().findViewById(R.id.rb_yx_lg_agreement);
+        agreement = (MyCheckBox) getActivity().findViewById(R.id.rb_agree);
         register = (TextView) getActivity().findViewById(R.id.tv_yx_lg_regist);
         getCode.setOnClickListener(this);
     }
@@ -58,18 +61,33 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         phoneNumber = this.phone.getText().toString().trim();
         switch (v.getId()){
-            case R.id.tv_yx_lg_regist:
-                Intent intent = new Intent(getContext(), RegisterActivity.class);
-                startActivity(intent);
-                break;
             case R.id.tv_getCode:
-                if (TextUtils.isEmpty(phoneNumber) && isPhoneNumberValid(phoneNumber)){
+                if (TextUtils.isEmpty(phoneNumber) || !isPhoneNumberValid(phoneNumber)){
                     Toasty.error(getContext(),"请输入正确的手机号",Toasty.LENGTH_SHORT,true).show();
                     return;
                 }
                 new VerificationCountDownTimer(getCode, 60000, 1000).start();
-                codeReal = new CodeSender(getContext()).sendCode(phoneNumber);
+                if (!TextUtils.isEmpty(phoneNumber)){
+                    codeReal = new CodeSender(getContext()).sendCode(phoneNumber);
+                }
+
                 break;
+//            if (TextUtils.isEmpty(phoneNumber) || !isPhoneNumberValid(phoneNumber)){
+//                Toasty.error(getContext(),"请输入正确的手机号",Toasty.LENGTH_SHORT,true).show();
+//                return;
+//            }
+//            if (agreement.isChecked()) {
+//            UserManager userManager = new UserManager(getContext());
+////            if (userManager.queryUserInfo(phoneNumber, pwNumber)) {
+////                new VerificationCountDownTimer(getCode, 60000, 1000).start();
+////                if (!TextUtils.isEmpty(phoneNumber)){
+////                    codeReal = new CodeSender(getContext()).sendCode(phoneNumber);
+//                      Toast.makeText(getContext(), "登录成功", Toast.LENGTH_SHORT).show();
+////                }
+////            }
+//            } else {
+//                Toast.makeText(getContext(), "请勾选同意协议", Toast.LENGTH_SHORT).show();}
+//            break;
         }
     }
     public String getPhoneNumber() {

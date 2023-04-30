@@ -40,7 +40,7 @@ public class PWLoginFragment extends Fragment{
     private void initView() {
         phone = (EditText) view.findViewById(R.id.et_phone);
         pw = (EditText) view.findViewById(R.id.et_pw);
-        agreement = (MyCheckBox) getActivity().findViewById(R.id.rb_yx_lg_agreement);
+        agreement = (MyCheckBox) getActivity().findViewById(R.id.rb_agree);
     }
 
     public String getPhoneNumber() {
@@ -50,6 +50,7 @@ public class PWLoginFragment extends Fragment{
     public String getPwNumber() {
         return pw != null ? pw.getText().toString().trim() : "";
     }
+
 
 }
 

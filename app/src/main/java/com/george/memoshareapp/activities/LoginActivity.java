@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,6 +21,8 @@ import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.view.MyCheckBox;
 
+import es.dmoral.toasty.Toasty;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView tv_pw_login;
@@ -29,9 +32,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private MyCheckBox agreement;
     private PWLoginFragment PwFragment;
     private CodeLoginFragment CodeFragment;
-
+    private String phoneRegex = "^1[3-9]\\d{9}$";
     private FrameLayout frameLayout;
     private FragmentManager fragmentManager;
+    private TextView tv_yx_lg_regist;
+    private TextView tv_forget_pw;
 
 
     @Override
@@ -47,13 +52,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void initView() {
         tv_pw_login = (TextView) findViewById(R.id.tv_pw_login);
         tv_code_login = (TextView) findViewById(R.id.tv_code_login);
+        tv_yx_lg_regist = (TextView) findViewById(R.id.tv_yx_lg_regist);
+        tv_forget_pw = (TextView) findViewById(R.id.tv_forget_pw);
         forgetPW = (TextView) findViewById(R.id.tv_forget_pw);
         login = (ImageButton) findViewById(R.id.ib_yx_lg_login);
-        agreement = (MyCheckBox) findViewById(R.id.rb_yx_lg_agreement);
+        agreement = (MyCheckBox) findViewById(R.id.rb_agree);
         frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
         tv_pw_login.setOnClickListener(this);
         tv_code_login.setOnClickListener(this);
         login.setOnClickListener(this);
+        tv_yx_lg_regist.setOnClickListener(this);
+        tv_forget_pw.setOnClickListener(this);
+
     }
 
 
@@ -97,6 +107,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.tv_code_login:
                 setDefaultSelection(1);
                 break;
+            case R.id.tv_forget_pw:
+//                Intent intent = new Intent(this, );
+//                startActivity(intent);
+                break;
+            case R.id.tv_yx_lg_regist:
+                Intent intent1 = new Intent(this, RegisterActivity.class);
+                startActivity(intent1);
+                break;
             case R.id.ib_yx_lg_login:
                 handleLogin();
                 break;
@@ -127,34 +145,56 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String pwNumber = PwFragment.getPwNumber();
 
             if (TextUtils.isEmpty(phoneNumber) || TextUtils.isEmpty(pwNumber)) {
-                Toast.makeText(this, "请将信息填写完整", Toast.LENGTH_SHORT).show();
+                Toasty.error(this, "请将信息填写完整", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            UserManager userManager = new UserManager(this);
-            if (userManager.queryUserInfo(phoneNumber, pwNumber)) {
-                if (agreement.isChecked()) {
-                    Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "请勾选同意协议", Toast.LENGTH_SHORT).show();
+            if (agreement.isChecked()) {
+                UserManager userManager = new UserManager(this);
+                if(phoneNumber.matches(phoneRegex)){
+                    if (userManager.queryUserInfo(phoneNumber, pwNumber)) {
+//                    Intent intent = new Intent(this, );
+//                    startActivity(intent);
+                      Toasty.error(this,"登录成功",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }else {
+                    Toasty.error(this,"请输入正确格式的手机号",Toast.LENGTH_SHORT).show();
                 }
+            }else {
+                Toasty.error(this, "请勾选同意协议", Toast.LENGTH_SHORT).show();
             }
+
+
         } else if (CodeFragment != null && CodeFragment.isVisible()) {
             String phoneNumber = CodeFragment.getPhoneNumber();
             String et_code = CodeFragment.getEtCode();
 
             if (TextUtils.isEmpty(phoneNumber) || TextUtils.isEmpty(et_code)) {
-                Toast.makeText(this, "请将信息填写完整", Toast.LENGTH_SHORT).show();
+                Toasty.error(this, "请将信息填写完整", Toast.LENGTH_SHORT).show();
                 return;
             }
-            UserManager userManager = new UserManager(this);
-            if (userManager.queryUser(phoneNumber) && et_code.equals(CodeFragment.codeReal)) {
-                if (agreement.isChecked()) {
-                    Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "请勾选同意协议", Toast.LENGTH_SHORT).show();
+            if (agreement.isChecked()){
+                UserManager userManager = new UserManager(this);
+                if(phoneNumber.matches(phoneRegex)){
+                    if (userManager.queryUser(phoneNumber) ) {
+                        if( et_code.equals(CodeFragment.codeReal)){
+                            //Intent intent = new Intent(this, );
+                            // startActivity(intent);
+                            Toasty.error(this, "登录成功", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toasty.error(this, "验证码错误", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }else {
+                    Toasty.error(this,"请输入正确格式的手机号",Toast.LENGTH_SHORT).show();
                 }
+
+            }else {
+                Toasty.error(this, "请勾选同意协议", Toast.LENGTH_SHORT).show();
             }
+
         }
     }
 }

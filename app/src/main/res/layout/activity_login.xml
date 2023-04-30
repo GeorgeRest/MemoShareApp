@@ -60,13 +60,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp">
-            <TextView
-                android:id="@+id/tv_forget_pw"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:text="忘记密码"
-                android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/tv_forget_pw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="忘记密码"
+                    android:textSize="16dp" />
 
                 <TextView
                     android:id="@+id/tv_yx_lg_regist"
@@ -89,20 +90,21 @@
                 android:layout_marginTop="10dp">
 
                 <com.george.memoshareapp.view.MyCheckBox
-                    android:id="@+id/rb_yx_lg_agreement"
+                    android:id="@+id/rb_agree"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
-                    android:layout_gravity="center" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:textColor="#979292"
                     android:layout_gravity="center"
-                    android:textSize="15dp"
-                    android:maxLines="2"
-                    android:text="我已阅读并同意《用户协议》《隐私政策》《联通统一认证服务条款》"/>
+                    android:background="@drawable/my_checkbox"
+                    android:button="@null"/>
 
+                <TextView
+
+                    android:layout_width="277dp"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="15dp"
+                    android:text="我已阅读并同意《用户协议》《隐私政策》《儿童/青少年个人信息保护规则》《联通统一认证服务条款》"
+                    android:textColor="#752A2342"
+                    android:textSize="10sp" />
             </LinearLayout>
 
 
