@@ -66,11 +66,14 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
                     Toasty.error(getContext(),"请输入正确的手机号",Toasty.LENGTH_SHORT,true).show();
                     return;
                 }
+                if(new UserManager(getContext()).isPhoneNumberRegistered(phoneNumber)==null){
+                    Toasty.warning(getContext(), "该手机号未注册", Toast.LENGTH_SHORT,true).show();
+                    return;
+                }
                 new VerificationCountDownTimer(getCode, 60000, 1000).start();
                 if (!TextUtils.isEmpty(phoneNumber)){
                     codeReal = new CodeSender(getContext()).sendCode(phoneNumber);
                 }
-
                 break;
 //            if (TextUtils.isEmpty(phoneNumber) || !isPhoneNumberValid(phoneNumber)){
 //                Toasty.error(getContext(),"请输入正确的手机号",Toasty.LENGTH_SHORT,true).show();

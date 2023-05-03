@@ -108,8 +108,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 setDefaultSelection(1);
                 break;
             case R.id.tv_forget_pw:
-//                Intent intent = new Intent(this, );
-//                startActivity(intent);
+                Intent intent = new Intent(this,RetrievePasswordActivity.class);
+                startActivity(intent);
                 break;
             case R.id.tv_yx_lg_regist:
                 Intent intent1 = new Intent(this, RegisterActivity.class);
