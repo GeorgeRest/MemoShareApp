@@ -73,6 +73,9 @@ public class RetrievePasswordActivity extends AppCompatActivity implements View.
                     timer.start();
                     // 调用验证码方法传入手机号获取验证码
                     codeReal=new CodeSender(this).sendCode(phone);
+                    if(codeReal != null){
+                        Toasty.success(this, "验证码已发送", Toast.LENGTH_SHORT,true).show();
+                    }
                 } else {
                     Toasty.error(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT,true).show();
                 }

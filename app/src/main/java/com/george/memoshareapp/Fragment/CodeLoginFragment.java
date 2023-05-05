@@ -73,24 +73,11 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
                 new VerificationCountDownTimer(getCode, 60000, 1000).start();
                 if (!TextUtils.isEmpty(phoneNumber)){
                     codeReal = new CodeSender(getContext()).sendCode(phoneNumber);
+                    if(codeReal != null){
+                        Toasty.success(getContext(), "验证码已发送", Toast.LENGTH_SHORT,true).show();
+                    }
                 }
                 break;
-//            if (TextUtils.isEmpty(phoneNumber) || !isPhoneNumberValid(phoneNumber)){
-//                Toasty.error(getContext(),"请输入正确的手机号",Toasty.LENGTH_SHORT,true).show();
-//                return;
-//            }
-//            if (agreement.isChecked()) {
-//            UserManager userManager = new UserManager(getContext());
-////            if (userManager.queryUserInfo(phoneNumber, pwNumber)) {
-////                new VerificationCountDownTimer(getCode, 60000, 1000).start();
-////                if (!TextUtils.isEmpty(phoneNumber)){
-////                    codeReal = new CodeSender(getContext()).sendCode(phoneNumber);
-//                      Toast.makeText(getContext(), "登录成功", Toast.LENGTH_SHORT).show();
-////                }
-////            }
-//            } else {
-//                Toast.makeText(getContext(), "请勾选同意协议", Toast.LENGTH_SHORT).show();}
-//            break;
         }
     }
     public String getPhoneNumber() {
