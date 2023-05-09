@@ -28,6 +28,10 @@ public class PermissionUtils {
     public static void permissionsGranted(Context context) {
         XXPermissions.with(context)
                 .permission(Permission.SEND_SMS)
+                .permission(Permission.ACCESS_COARSE_LOCATION)//网络
+                .permission(Permission.ACCESS_FINE_LOCATION)//GPS定位
+                .permission(Permission.READ_PHONE_STATE)//读取手机当前状态
+                .permission(Permission.WRITE_EXTERNAL_STORAGE)
                 .request(new OnPermissionCallback() {
                     @Override
                     public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
