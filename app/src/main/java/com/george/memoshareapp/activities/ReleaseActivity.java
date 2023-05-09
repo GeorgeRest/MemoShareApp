@@ -47,8 +47,9 @@ public class ReleaseActivity extends AppCompatActivity {
         rl_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDatePickerDialog(ReleaseActivity.this,  6, release_time, calendar);
                 showTimePickerDialog(ReleaseActivity.this,6,release_time_hour,calendar);
+                showDatePickerDialog(ReleaseActivity.this,  6, release_time, calendar);
+
             }
         });
 
