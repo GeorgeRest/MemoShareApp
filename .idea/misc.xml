@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android/AndroidProjects/MemoShareApp/app/src/main/res/layout/activity_login.xml" value="0.1458966565349544" />
+        <entry key="..\:/Android/AndroidProjects/MemoShareApp/app/src/main/res/layout/activity_permission.xml" value="0.2953125" />
         <entry key="..\:/Android/AndroidProjects/MemoShareApp/app/src/main/res/layout/activity_register.xml" value="0.1458966565349544" />
         <entry key="..\:/Android/AndroidProjects/MemoShareApp/app/src/main/res/layout/fragment_code_login.xml" value="0.1458966565349544" />
         <entry key="..\:/Android/AndroidProjects/MemoShareApp/app/src/main/res/layout/fragment_pw_login.xml" value="0.1458966565349544" />
