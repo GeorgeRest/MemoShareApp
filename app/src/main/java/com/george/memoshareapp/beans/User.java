@@ -16,7 +16,6 @@ public class User extends LitePalSupport {
     private String phoneNumber;
     private String password;
     public User() {
-
     }
 
     public int getId() {
