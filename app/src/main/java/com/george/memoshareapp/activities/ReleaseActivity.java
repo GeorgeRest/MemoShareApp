@@ -59,7 +59,6 @@ public class ReleaseActivity extends AppCompatActivity {
     private void initView() {
         format = DateFormat.getDateTimeInstance();
         calendar = Calendar.getInstance(Locale.CHINA);
-
         rl_permission = (RelativeLayout) findViewById(R.id.RL_permission);
         rl_time = (RelativeLayout) findViewById(R.id.RL_time);
         release_permission = (TextView) findViewById(R.id.release_permission);
@@ -86,9 +85,8 @@ public class ReleaseActivity extends AppCompatActivity {
     public static void showTimePickerDialog(Activity activity,int themeResId, final TextView tv, Calendar calendar) {
         // Calendar c = Calendar.getInstance();
         // 创建一个TimePickerDialog实例，并把它显示出来
-        // 解释一哈，Activity是context的子类
+        // Activity是context的子类
         new TimePickerDialog( activity,themeResId,
-                // 绑定监听器
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
