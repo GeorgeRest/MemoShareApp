@@ -30,7 +30,7 @@ public class VerificationCountDownTimer extends CountDownTimer {
     @Override
     public void onTick(long millisUntilFinished) {
         mTextView.setClickable(false);
-        mTextView.setText(millisUntilFinished / 1000 + "”");
+        mTextView.setText(millisUntilFinished / 1000 + "s");
         mTextView.setBackgroundResource(R.drawable.bg_code_count_time);
     }
 

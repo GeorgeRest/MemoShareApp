@@ -1,12 +1,10 @@
 package com.george.memoshareapp.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -39,8 +37,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        initView();
-    }
+        initView();}
 
     private void initView() {
         et_phone = (EditText) findViewById(R.id.et_phone);
@@ -49,7 +46,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         bt_register = (ImageButton) findViewById(R.id.bt_register);
         rb_agree = (MyCheckBox) findViewById(R.id.rb_agree);
         tv_getCode = (TextView) findViewById(R.id.tv_getCode);
-        code = (TextView) findViewById(R.id.et_verificationCode);
+        code = (TextView) findViewById(R.id.fragment_et_code);
         bt_register.setOnClickListener(this);
         tv_getCode.setOnClickListener(this);
     }
@@ -60,36 +57,40 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String pw = et_pw.getText().toString().trim();
         String pwAgain = et_pwAgain.getText().toString().trim();
         String vcCode = code.getText().toString().trim();
-        boolean isCodeValid = false;
+        UserManager userManager = new UserManager(this);
         switch (v.getId()) {
             case R.id.tv_getCode:
                 if (!TextUtils.isEmpty(phone) && isPhoneNumberValid(phone)) {
-                    codePhone = phone; // 记录下发送验证码的手机号
+                    if(userManager.isPhoneNumberRegistered(phone)!=null){
+                        Toasty.warning(this, "该手机号已注册", Toast.LENGTH_SHORT,true).show();
+                        return;
+                    }
+                    codePhone = phone;
                     VerificationCountDownTimer timer = new VerificationCountDownTimer(tv_getCode, COUNTDOWN_TIME, 1000);
                     timer.start();
                     // todo  调用验证码方法传入手机号获取验证码
-                    codeSender = new CodeSender(this);
-                    codeReal = codeSender.sendCode(codePhone);
+                    codeReal=new CodeSender(this).sendCode(phone);
+                    if(codeReal!=""){
+                        Toasty.success(this, "验证码已发送", Toast.LENGTH_SHORT,true).show();
+                    }
                 } else {
-                    Toast.makeText(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT).show();
+                    Toasty.warning(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT,true).show();
                 }
                 break;
             case R.id.bt_register:  //todo 防止重复注册
-                UserManager userManager = new UserManager(this);
                 if (userManager.checkUserInfo(phone, pw, pwAgain, vcCode, codePhone)) {
-                    //todo 还需判断验证码是否正确
                     if (!vcCode.equals(codeReal)){
-                        Toast.makeText(this, "验证码输入错误", Toast.LENGTH_SHORT).show();
+                        Toasty.error(this, "验证码输入错误", Toast.LENGTH_SHORT,true).show();
                         return;
                     }
                     if(!rb_agree.isChecked()){
-                        Toast.makeText(this, "请同意协议", Toast.LENGTH_SHORT).show();
+                        Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT,true).show();
                         return;
                     }
                     if (UserManager.saveUserInfo(phone, pw)){
-                        Toast.makeText(this, "注册成功", Toast.LENGTH_SHORT).show();
+                        Toasty.success(this, "注册成功", Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(this, "注册失败", Toast.LENGTH_SHORT).show();
+                        Toasty.error(this, "注册失败", Toast.LENGTH_SHORT,true).show();
                     }
                 }
                 break;
@@ -100,15 +101,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
     private boolean isPhoneNumberValid(String phoneNumber) {
-        // 手机号正则表达式
         String phoneRegex = "^1[3-9]\\d{9}$";
         return phoneNumber.matches(phoneRegex);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        codeSender.onRequestPermissionsResult(requestCode, permissions, grantResults, codePhone);
     }
 }

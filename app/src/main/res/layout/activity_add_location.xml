@@ -1,0 +1,74 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MapLocationActivity">
+
+    <com.amap.api.maps2d.MapView
+        android:id="@+id/map_view_01"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    </com.amap.api.maps2d.MapView>
+
+    <Button
+        android:id="@+id/finish_button"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="6dp"
+        android:layout_alignTop="@id/search_text"
+        android:background="@mipmap/map_back"
+        android:onClick="finish" />
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="6dp"
+        android:layout_alignTop="@id/search_text"
+        android:layout_alignParentRight="true"
+        android:background="@mipmap/location_confirm"
+        android:onClick="confirm" />
+    <EditText
+        android:id="@+id/search_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/rounded_edittext"
+        android:elevation="2dp"
+        android:hint="搜索地点" />
+
+    <ListView
+        android:id="@+id/nearby_places_list"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/rounded_listview"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="0.5dp"
+        android:elevation="2dp" />
+
+    <FrameLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_above="@id/nearby_places_list"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/rounded_white_background"
+        android:elevation="4dp">
+
+        <Button
+            android:id="@+id/my_location_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:background="@mipmap/location" />
+    </FrameLayout>
+
+</RelativeLayout>

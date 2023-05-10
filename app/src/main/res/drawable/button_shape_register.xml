@@ -8,7 +8,7 @@
         android:height="45dp" />
     <stroke
         android:width="0dp"
-        android:color="#FFE3D8D8"
+        android:color="@color/white"
         />
 
 
