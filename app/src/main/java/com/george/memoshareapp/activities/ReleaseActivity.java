@@ -7,11 +7,15 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,12 +50,41 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private RelativeLayout addLocation;
     public static final int MAP_INFORMATION_SUCCESS=1 ;
     private PublishContent publishContent;
+    private int StyleType=5;
+    private EditText release_edit;
+    private ImageView release_back;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.release);
         initView();
+        rl_permission.setOnClickListener(this);
+        rl_time.setOnClickListener(this);
+        release_button.setOnClickListener(this);
+        release_back.setOnClickListener(this);
+        release_edit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().isEmpty()){
+                    release_button.setImageResource(R.mipmap.releasr_press);
+                }else {
+                    release_button.setImageResource(R.mipmap.release_buttton);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
     }
 
@@ -65,6 +98,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         release_time_hour = (TextView) findViewById(R.id.release_time_hour);
         release_button = (ImageView) findViewById(R.id.release_button);
         addLocation = (RelativeLayout) findViewById(R.id.rl_addLocation);
+        release_edit = (EditText) findViewById(R.id.release_edit);
+        release_back = (ImageView) findViewById(R.id.release_back);
         contentManager = new ContentManager(this);
         rl_permission.setOnClickListener(this);
         rl_time.setOnClickListener(this);
@@ -80,6 +115,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 // 此处得到选择的时间，可以进行你想要的操作
                 tv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                showTimePickerDialog(ReleaseActivity.this, StyleType, release_time_hour, calendar);
                 getYearMonthDay(year, monthOfYear + 1, dayOfMonth);
             }
         }, calendar.get(Calendar.YEAR)
@@ -169,8 +205,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 showBottomDialog();
                 break;
             case R.id.RL_time:
-                showDatePickerDialog(this, 2, release_time, calendar);
-                showTimePickerDialog(this, 2, release_time_hour, calendar);
+                showDatePickerDialog(this, StyleType, release_time, calendar);
                 break;
             case R.id.release_button:
                 contentManager.saveContent2DB(PUBLIC_PERMISSION, memoireTime, time);
@@ -187,6 +222,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 case MAP_INFORMATION_SUCCESS:
                     publishContent = (PublishContent) data.getSerializableExtra("publishContent");
                     break;
+            case R.id.release_back:
+                finish();
+                break;
+
         }
 
     }

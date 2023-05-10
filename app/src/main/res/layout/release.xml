@@ -24,214 +24,222 @@
             android:layout_alignParentRight="true"
             android:src="@mipmap/release_buttton" />
     </RelativeLayout>
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
-        <EditText
-            android:id="@+id/release_edit"
+        android:layout_height="wrap_content">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="分享新鲜事..."
-            android:background="@null"/>
-        <ImageView
-            android:id="@+id/picture"
-            android:layout_marginTop="50dp"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@mipmap/picture"/>
-        <ImageView
-            android:id="@+id/voice"
-            android:layout_marginTop="5dp"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:src="@mipmap/voice"/>
-        <RelativeLayout
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/location_icon" />
-
-            <TextView
-                android:id="@+id/tv_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:text="大连外国语大学"
-                android:textColor="@color/black" />
-        </RelativeLayout>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:background="@color/white">
-        <ImageView
-            android:id="@+id/at"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/at_icon"
-            android:layout_marginLeft="30dp"/>
-        <TextView
-            android:layout_toRightOf="@id/at"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:text="和谁一起"
-            android:textSize="14dp"
-            android:layout_centerVertical="true"
-            android:textColor="#504F4F"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rl_addLocation"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:layout_marginTop="2dp"
-            android:background="@color/white"
-            android:clickable="true">
-
-            <ImageView
-                android:id="@+id/location"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="30dp"
-                android:src="@mipmap/location_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
-                android:layout_toRightOf="@id/location"
-                android:text="添加地点"
-                android:textColor="#504F4F"
-                android:textSize="14dp" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/RL_permission"
-            android:layout_marginTop="2dp"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:background="@color/white">
-            <ImageView
-                android:id="@+id/permission_icon"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/permission_icon"
-                android:layout_marginLeft="30dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
-                android:layout_toRightOf="@id/permission_icon"
-                android:text="权限设置"
-                android:textColor="#504F4F"
-                android:textSize="14dp" />
-
-            <TextView
-                android:id="@+id/release_permission"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="320dp"
-                android:layout_marginRight="30dp"
-                android:text="公开"
-                android:textColor="#353434" />
-
-            <TextView
-                android:id="@+id/public_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="360dp"
-                android:layout_marginRight="15dp"
-                android:text=">"
-                android:textColor="@color/black" />
-
-            
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/RL_time"
-            android:layout_marginTop="2dp"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:background="@color/white">
-            <ImageView
-                android:id="@+id/memoirs_icon"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/memoirs_icon"
-                android:layout_marginLeft="30dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
-                android:layout_toRightOf="@id/memoirs_icon"
-                android:text="回忆定时"
-                android:textColor="#504F4F"
-                android:textSize="14dp" />
-
-            <TextView
-                android:id="@+id/release_time"
+            android:orientation="vertical">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="240dp"
-                android:layout_marginRight="30dp"
-                android:text="2023/03/24"
-                android:textColor="@color/black" />
+                android:orientation="vertical"
+                android:padding="20dp">
+                <EditText
+                    android:id="@+id/release_edit"
 
-            <TextView
-                android:id="@+id/release_time_hour"
-                android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="分享新鲜事..."
+                    android:background="@null"/>
+                <ImageView
+                    android:id="@+id/picture"
+                    android:layout_marginTop="50dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:src="@mipmap/picture"/>
+                <ImageView
+                    android:id="@+id/voice"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
+                    android:src="@mipmap/voice"/>
+                <RelativeLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/location_icon" />
+
+                    <TextView
+                        android:id="@+id/tv_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:text="大连外国语大学"
+                        android:textColor="@color/black" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="320dp"
-                android:layout_marginRight="15dp"
-                android:text="12:30"
-                android:textColor="@color/black" />
-            <TextView
+                android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="43dp"
+                    android:background="@color/white">
+                    <ImageView
+                        android:id="@+id/at"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/at_icon"
+                        android:layout_marginLeft="30dp"/>
+                    <TextView
+                        android:layout_toRightOf="@id/at"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="和谁一起"
+                        android:textSize="14dp"
+                        android:layout_centerVertical="true"
+                        android:textColor="#504F4F"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_marginTop="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="43dp"
+                    android:background="@color/white">
 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="360dp"
-                android:layout_marginRight="15dp"
-                android:text=">"
-                android:textColor="@color/black" />
+                    <ImageView
+                        android:id="@+id/location"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30dp"
+                        android:src="@mipmap/location_icon" />
+                    <TextView
+                        android:layout_toRightOf="@id/location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="添加地点"
+                        android:textSize="14dp"
+                        android:layout_centerVertical="true"
+                        android:textColor="#504F4F"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/RL_permission"
+                    android:layout_marginTop="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="43dp"
+                    android:background="@color/white">
+                    <ImageView
+                        android:id="@+id/permission_icon"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/permission_icon"
+                        android:layout_marginLeft="30dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="12dp"
+                        android:layout_toRightOf="@id/permission_icon"
+                        android:text="权限设置"
+                        android:textColor="#504F4F"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/release_permission"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="320dp"
+                        android:layout_marginRight="30dp"
+                        android:text="公开"
+                        android:textColor="#353434" />
+
+                    <TextView
+                        android:id="@+id/public_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="360dp"
+                        android:layout_marginRight="15dp"
+                        android:text=">"
+                        android:textColor="@color/black" />
 
 
-        </RelativeLayout>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/RL_time"
+                    android:layout_marginTop="2dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="43dp"
+                    android:background="@color/white">
+                    <ImageView
+                        android:id="@+id/memoirs_icon"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/memoirs_icon"
+                        android:layout_marginLeft="30dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="12dp"
+                        android:layout_toRightOf="@id/memoirs_icon"
+                        android:text="回忆定时"
+                        android:textColor="#504F4F"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:id="@+id/release_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="240dp"
+                        android:layout_marginRight="30dp"
+                        android:text="2023/03/24"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/release_time_hour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="320dp"
+                        android:layout_marginRight="15dp"
+                        android:text="12:30"
+                        android:textColor="@color/black" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="360dp"
+                        android:layout_marginRight="15dp"
+                        android:text=">"
+                        android:textColor="@color/black" />
+
+
+                </RelativeLayout>
 
 
 
 
 
 
-    </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
 
 
 
