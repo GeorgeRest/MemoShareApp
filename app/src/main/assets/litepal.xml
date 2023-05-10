@@ -5,6 +5,8 @@
     <list>
         <list>
             <mapping class="com.george.memoshareapp.beans.User"></mapping>
+            <mapping class="com.george.memoshareapp.beans.PublishContent"></mapping>
+
         </list>
     </list>
 

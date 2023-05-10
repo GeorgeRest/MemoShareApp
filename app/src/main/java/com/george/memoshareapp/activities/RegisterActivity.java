@@ -1,6 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -14,14 +13,8 @@ import android.widget.Toast;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.CodeSender;
-import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.george.memoshareapp.view.MyCheckBox;
-import com.hjq.permissions.OnPermissionCallback;
-import com.hjq.permissions.Permission;
-import com.hjq.permissions.XXPermissions;
-
-import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 

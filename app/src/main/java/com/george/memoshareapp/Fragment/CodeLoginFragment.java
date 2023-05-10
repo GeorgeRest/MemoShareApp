@@ -1,20 +1,17 @@
 package com.george.memoshareapp.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.activities.RegisterActivity;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.CodeSender;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
@@ -66,13 +63,18 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
                     Toasty.error(getContext(),"请输入正确的手机号",Toasty.LENGTH_SHORT,true).show();
                     return;
                 }
+                if(new UserManager(getContext()).isPhoneNumberRegistered(phoneNumber)==null){
+                    Toasty.warning(getContext(), "该手机号未注册", Toast.LENGTH_SHORT,true).show();
+                    return;
+                }
                 new VerificationCountDownTimer(getCode, 60000, 1000).start();
                 if (!TextUtils.isEmpty(phoneNumber)){
                     codeReal = new CodeSender(getContext()).sendCode(phoneNumber);
+                    if(codeReal != null){
+                        Toasty.success(getContext(), "验证码已发送", Toast.LENGTH_SHORT,true).show();
+                    }
                 }
-
                 break;
-
         }
     }
     public String getPhoneNumber() {
