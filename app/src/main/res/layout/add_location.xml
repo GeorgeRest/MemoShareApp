@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,10 +24,28 @@
         android:id="@+id/nearby_places_list"
         android:layout_width="match_parent"
         android:layout_height="240dp"
-        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/rounded_listview"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="0.5dp"
-        android:background="@drawable/rounded_listview"
         android:elevation="2dp" />
 
-</FrameLayout>
+    <FrameLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_above="@id/nearby_places_list"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/rounded_white_background"
+        android:elevation="4dp">
+
+        <Button
+            android:id="@+id/my_location_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:background="@mipmap/location" />
+    </FrameLayout>
+
+</RelativeLayout>

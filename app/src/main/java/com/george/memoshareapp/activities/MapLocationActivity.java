@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,6 +53,7 @@ public class MapLocationActivity extends AppCompatActivity {
     private ListView nearbyPlacesList;
     private LatLng currentLocation;
     private Marker marker;
+    private Button myLocationButton;
 
     private AMapLocationClient locationClient;
     private AMapLocationClientOption locationOption;
@@ -76,9 +79,11 @@ public class MapLocationActivity extends AppCompatActivity {
 
         searchText = findViewById(R.id.search_text);
         nearbyPlacesList = findViewById(R.id.nearby_places_list);
+        myLocationButton = findViewById(R.id.my_location_button);
 
         initLocation();
         initSearch();
+        initMyLocationButton();
 
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -104,6 +109,20 @@ public class MapLocationActivity extends AppCompatActivity {
                     marker = aMap.addMarker(new MarkerOptions().position(latLng));
                 }
                 searchNearbyPlaces(latLng);
+            }
+        });
+    }
+
+    private void initMyLocationButton() {
+        myLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (marker != null) {
+                    marker.remove();
+                    marker = null;
+                }
+                aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+               searchNearbyPlaces(currentLocation);
             }
         });
     }
@@ -138,6 +157,15 @@ public class MapLocationActivity extends AppCompatActivity {
         });
 
         locationClient.startLocation();
+    }
+
+    private void returnLocationInfo(LatLng latLng) {
+        Intent intent = new Intent();
+        intent.putExtra("location_name", "当前位置");
+        intent.putExtra("latitude", latLng.latitude);
+        intent.putExtra("longitude", latLng.longitude);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void initSearch() {
