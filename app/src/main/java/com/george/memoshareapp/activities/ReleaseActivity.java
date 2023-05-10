@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -24,7 +25,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener{
+public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static String time;
     private static String memoireTime;
@@ -36,8 +37,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private TextView release_time;
     private TextView release_time_hour;
     private ImageView release_button;
-    private int PUBLIC_PERMISSION=1;
+    private int PUBLIC_PERMISSION = 1;
     private ContentManager contentManager;
+    private RelativeLayout addLocation;
 
 
     @Override
@@ -45,13 +47,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.release);
         initView();
-        rl_permission.setOnClickListener(this);
-        rl_time.setOnClickListener(this);
-        release_button.setOnClickListener(this);
 
     }
-
-
 
     private void initView() {
         format = DateFormat.getDateTimeInstance();
@@ -62,51 +59,56 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         release_time = (TextView) findViewById(R.id.release_time);
         release_time_hour = (TextView) findViewById(R.id.release_time_hour);
         release_button = (ImageView) findViewById(R.id.release_button);
+        addLocation = (RelativeLayout) findViewById(R.id.rl_addLocation);
         contentManager = new ContentManager(this);
-
+        rl_permission.setOnClickListener(this);
+        rl_time.setOnClickListener(this);
+        release_button.setOnClickListener(this);
+        addLocation.setOnClickListener(this);
     }
-    public  void showDatePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
+
+    public void showDatePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
         // 直接创建一个DatePickerDialog对话框实例，并将它显示出来
         new DatePickerDialog(activity, themeResId, new DatePickerDialog.OnDateSetListener() {
             // 绑定监听器(How the parent is notified that the date is set.)
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 // 此处得到选择的时间，可以进行你想要的操作
-                tv.setText( year + "/" + (monthOfYear + 1) + "/" + dayOfMonth );
-                getYearMonthDay(year,monthOfYear+1,dayOfMonth);
+                tv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                getYearMonthDay(year, monthOfYear + 1, dayOfMonth);
             }
-        }       , calendar.get(Calendar.YEAR)
+        }, calendar.get(Calendar.YEAR)
                 , calendar.get(Calendar.MONTH)
                 , calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    private  String getYearMonthDay(int year, int month, int dayOfMonth) {
-        memoireTime = year+"/"+month+"/"+dayOfMonth;
+    private String getYearMonthDay(int year, int month, int dayOfMonth) {
+        memoireTime = year + "/" + month + "/" + dayOfMonth;
         return memoireTime;
 
     }
 
-    public  void showTimePickerDialog(Activity activity,int themeResId, final TextView tv, Calendar calendar) {
+    public void showTimePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
         // Calendar c = Calendar.getInstance();
         // 创建一个TimePickerDialog实例，并把它显示出来
         // Activity是context的子类
-        new TimePickerDialog( activity,themeResId,
+        new TimePickerDialog(activity, themeResId,
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        tv.setText( hourOfDay + ":" + minute  );
-                        getTime(hourOfDay,minute);
+                        tv.setText(hourOfDay + ":" + minute);
+                        getTime(hourOfDay, minute);
                     }
                 }
                 // 设置初始时间
                 , calendar.get(Calendar.HOUR_OF_DAY)
                 , calendar.get(Calendar.MINUTE)
                 // true表示采用24小时制
-                ,true).show();
+                , true).show();
     }
 
-    private  String getTime(int hourOfDay, int minute) {
-        time = hourOfDay+":"+minute;
+    private String getTime(int hourOfDay, int minute) {
+        time = hourOfDay + ":" + minute;
         return time;
     }
 
@@ -131,7 +133,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(View view) {
                 release_permission.setText("公开");
-                PUBLIC_PERMISSION=1;
+                PUBLIC_PERMISSION = 1;
                 dialog.dismiss();
             }
         });
@@ -140,7 +142,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onClick(View view) {
                 release_permission.setText("私密");
-                PUBLIC_PERMISSION=0;
+                PUBLIC_PERMISSION = 0;
                 dialog.dismiss();
             }
         });
@@ -162,17 +164,17 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 showBottomDialog();
                 break;
             case R.id.RL_time:
-                showDatePickerDialog(this,  2, release_time, calendar);
+                showDatePickerDialog(this, 2, release_time, calendar);
                 showTimePickerDialog(this, 2, release_time_hour, calendar);
                 break;
             case R.id.release_button:
-                contentManager.saveContent2DB(PUBLIC_PERMISSION,memoireTime,time);
-                    break;
-
+                contentManager.saveContent2DB(PUBLIC_PERMISSION, memoireTime, time);
+                break;
+            case R.id.rl_addLocation:
+//                startActivityForResult(new Intent(this, MapLocationActivity.class), 1);
+               startActivity(new Intent(this, MapLocationActivity.class));
         }
     }
-
-
 
 
 }

@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.george.memoshareapp.Fragment.CalendarTripFragment;
@@ -36,6 +39,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
 
     private FragmentManager fragmentManager;
+    private ImageView capsuleButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +56,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         icon_two = (ImageView) findViewById(R.id.bottom_icon_two);
         icon_three = (ImageView) findViewById(R.id.bottom_icon_three);
         icon_four = (ImageView) findViewById(R.id.bottom_icon_four);
+        capsuleButton = (ImageView) findViewById(R.id.home_capsule);
         icon_one.setOnClickListener(this);
         icon_two.setOnClickListener(this);
         icon_three.setOnClickListener(this);
         icon_four.setOnClickListener(this);
+        capsuleButton.setOnClickListener(this);
+
     }
 
     @Override
@@ -73,6 +80,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             case R.id.bottom_icon_four:
                 setTabSelection(3);
                 break;
+            case R.id.home_capsule:
+                startActivity(new Intent(HomePageActivity.this, ReleaseActivity.class));
             default:
                 break;
         }
