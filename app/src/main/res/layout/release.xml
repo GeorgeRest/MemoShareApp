@@ -104,10 +104,12 @@
                         android:layout_centerVertical="true"
                         android:textColor="#504F4F"/>
                 </RelativeLayout>
+
                 <RelativeLayout
-                    android:layout_marginTop="2dp"
+                    android:id="@+id/rl_addLocation"
                     android:layout_width="match_parent"
                     android:layout_height="43dp"
+                    android:layout_marginTop="2dp"
                     android:background="@color/white">
 
                     <ImageView
@@ -117,15 +119,16 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="30dp"
                         android:src="@mipmap/location_icon" />
+
                     <TextView
-                        android:layout_toRightOf="@id/location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:text="添加地点"
-                        android:textSize="14dp"
                         android:layout_centerVertical="true"
-                        android:textColor="#504F4F"/>
+                        android:layout_marginLeft="12dp"
+                        android:layout_toRightOf="@id/location"
+                        android:text="添加地点"
+                        android:textColor="#504F4F"
+                        android:textSize="14dp" />
                 </RelativeLayout>
 
                 <RelativeLayout
