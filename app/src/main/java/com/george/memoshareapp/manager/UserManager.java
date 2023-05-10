@@ -44,7 +44,6 @@ public class UserManager {
             Toasty.error(context, "信息输入有误，请重新输入", Toast.LENGTH_SHORT,true).show();
             return false;
         }
-
         return true;
     }
 
@@ -57,7 +56,6 @@ public class UserManager {
     public User isPhoneNumberRegistered(String phone){
         LitePal.getDatabase();
         return  LitePal.where("phonenumber=?", phone).findFirst(User.class);
-
     }
 
     public boolean changePassword(String phone,String pw) {
@@ -66,7 +64,6 @@ public class UserManager {
         user.setPassword(pw);
         return user.save();
     }
-
 
     public  boolean queryUserInfo(String phone ,String pw){
         User user = LitePal.where("phonenumber=?", phone).findFirst(User.class);
@@ -88,5 +85,6 @@ public class UserManager {
         }
         return true;
     }
+
 
 }

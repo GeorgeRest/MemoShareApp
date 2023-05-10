@@ -9,18 +9,20 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@mipmap/release_bg">
+
         <ImageView
             android:id="@+id/release_back"
             android:layout_width="30dp"
             android:layout_height="20dp"
-            android:src="@mipmap/back_register"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:src="@mipmap/back_register" />
+
         <ImageView
             android:id="@+id/release_button"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:src="@mipmap/release_buttton"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/release_buttton" />
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,6 +30,7 @@
         android:orientation="vertical"
         android:padding="20dp">
         <EditText
+            android:id="@+id/release_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="分享新鲜事..."
@@ -53,15 +56,16 @@
                 android:layout_height="12dp"
                 android:layout_centerVertical="true"
                 android:src="@mipmap/location_icon" />
+
             <TextView
                 android:id="@+id/tv_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:text="大连外国语大学"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
         </RelativeLayout>
 
 
