@@ -13,7 +13,7 @@ import java.util.List;
  * @date: 2023/5/9 11:06
  * @version: 1.0
  */
-public class ContentPublic extends LitePalSupport {
+public class PublishContent extends LitePalSupport {
     private int id;
     private int phoneNumber;
     private String publishedText;
@@ -27,10 +27,10 @@ public class ContentPublic extends LitePalSupport {
     private String publishedTime;
     private String MemoryTime;
 
-    public ContentPublic() {
+    public PublishContent() {
     }
 
-    public ContentPublic(int id, int phoneNumber, String publishedText, List<String> phoneCachePath, List<String> voiceCachePath, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
+    public PublishContent(int id, int phoneNumber, String publishedText, List<String> phoneCachePath, List<String> voiceCachePath, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.publishedText = publishedText;

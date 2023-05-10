@@ -2,26 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.george.memoshareapp">
-
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <!--用于访问网络，网络定位需要上网-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--用于读取手机当前的状态-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--用于写入缓存数据到扩展存储卡-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--用于申请调用A-GPS模块-->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <!--用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!--用于访问GPS定位-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--用于获取运营商信息，用于支持提供运营商信息相关的接口-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--用于访问wifi网络信息，wifi信息会用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.SEND_SMS" /> <!-- 用于访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 用于写入缓存数据到扩展存储卡 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> <!-- 用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
         android:name=".application.MyApplication"
         android:allowBackup="true"
@@ -32,10 +23,21 @@
         android:roundIcon="@mipmap/app_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.MemoShareApp"
+        android:requestLegacyExternalStorage="true"
         tools:targetApi="31">
-        <service android:name="com.amap.api.location.APSService" />
-        <!--设置高德Key-->
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="b73d5e0ad525991966aed0de9c8cecc5"/>
+
+        <service android:name="com.amap.api.location.APSService" /> <!-- 设置高德Key -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="b73d5e0ad525991966aed0de9c8cecc5"/>
+        <meta-data
+            android:name="ScopedStorage"
+            android:value="true" />
+        <activity
+            android:name=".activities.MapLocationActivity"
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".activities.HomePageActivity"
             android:exported="false" />
@@ -50,7 +52,6 @@
             android:theme="@style/Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -59,18 +60,19 @@
             android:exported="true">
 
         </activity>
+
+
         <activity
             android:name=".activities.MainActivity"
-            android:exported="true"></activity>
-        <activity
-            android:name=".activities.ReleaseActivity"
-            android:exported="true">
+            android:exported="true"/>
 
+    <activity
+        android:name=".activities.ReleaseActivity"
+        android:exported="true">
 
-        </activity>
-        <activity
-            android:name=".activities.LoginActivity"
-            android:exported="true" />
-    </application>
-
-</manifest>
+    </activity>
+    <activity
+        android:name=".activities.LoginActivity"
+        android:exported="true" />
+</application>
+    </manifest>

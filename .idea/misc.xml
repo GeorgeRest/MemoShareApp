@@ -27,12 +27,15 @@
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/radiobutton_click.xml" value="0.2125" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/radionbutton_click_change.xml" value="0.2" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/test.xml" value="0.2115" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_add_loaction.xml" value="0.2703125" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_add_location.xml" value="0.26927083333333335" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_home_page.xml" value="0.33" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_main.xml" value="0.3338541666666667" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_regist.xml" value="0.3338541666666667" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_register.xml" value="0.33" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_retrieve_password.xml" value="0.3338541666666667" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/add_location.xml" value="0.26927083333333335" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_calendar_trip.xml" value="0.24609375" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_code_login.xml" value="0.17864583333333334" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_home_page.xml" value="0.328125" />
@@ -40,10 +43,14 @@
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_personal_page.xml" value="0.32916666666666666" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_pw_login.xml" value="0.17864583333333334" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/homepage_top_navigation_bar.xml" value="0.328125" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_nearby_place.xml" value="0.2703125" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/release.xml" value="0.33" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.205" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.205" />
         <entry key="..\:/IDEA/apps/AndroidStudio/sdk/platforms/android-32/data/res/drawable/btn_radio.xml" value="0.2125" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/sdk/platforms/android-32/data/res/layout/simple_list_item_1.xml" value="0.32916666666666666" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/sdk/platforms/android-32/data/res/layout/simple_list_item_2.xml" value="0.32916666666666666" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/sdk/platforms/android-32/data/res/layout/simple_list_item_activated_2.xml" value="0.32916666666666666" />
       </map>
     </option>
   </component>

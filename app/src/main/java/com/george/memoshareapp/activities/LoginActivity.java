@@ -153,7 +153,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 UserManager userManager = new UserManager(this);
                 if(phoneNumber.matches(phoneRegex)){
                     if (userManager.queryUserInfo(phoneNumber, pwNumber)) {
-                    Intent intent = new Intent(this, HomePageActivity.class);
+                    Intent intent = new Intent(this, MapLocationActivity.class);
                     startActivity(intent);
                       Toasty.success(this,"登录成功",Toast.LENGTH_SHORT).show();
                        finish();

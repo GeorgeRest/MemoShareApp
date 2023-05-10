@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MapLocationActivity">
+
+    <EditText
+        android:id="@+id/search_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="搜索地点"/>
+
+    <com.amap.api.maps2d.MapView
+        android:id="@+id/map_view_01"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_below="@+id/search_text"/>
+
+
+    <ListView
+        android:id="@+id/nearby_places_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/map_view_01" />
+
+</RelativeLayout>
