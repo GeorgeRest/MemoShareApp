@@ -16,10 +16,16 @@ public class ContactListAdapter extends BaseAdapter {
 
     private Context context;
     private List<ContactInfo> contactList;
+    private String[] sections; // 存储所有拼音首字母
+    private int[] sectionIndices; // 存储每个拼音首字母在列表中的位置
 
     public ContactListAdapter(Context context, List<ContactInfo> contactList) {
         this.context = context;
         this.contactList = contactList;
+    }
+    public void setContacts(List<ContactInfo> contactList) {
+        this.contactList = contactList;
+        notifyDataSetChanged();    // 更新适配器中的数据
     }
 
     @Override

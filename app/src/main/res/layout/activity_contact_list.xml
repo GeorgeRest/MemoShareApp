@@ -35,16 +35,187 @@
 
     </RelativeLayout>
 
-    <EditText
+
+    <SearchView
+        android:id="@+id/sv_search"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="搜索"/>
+        android:layout_height="wrap_content"/>
 
-    <ListView
-        android:id="@+id/lv_contact_list"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ListView
+            android:id="@+id/lv_contact_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="12" />
+
+        <ListView
+            android:id="@+id/lv_ABC"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/letters_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/navigationA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A" />
+
+            <TextView
+                android:id="@+id/navigationB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="B" />
+
+            <TextView
+            android:id="@+id/navigationC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="C" />
+
+            <TextView
+                android:id="@+id/navigationD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="D" />
+
+            <TextView
+                android:id="@+id/navigationE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="E" />
+            <TextView
+                android:id="@+id/navigationF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="F" />
+            <TextView
+                android:id="@+id/navigationG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="G" />
+            <TextView
+                android:id="@+id/navigationH"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="H" />
+            <TextView
+                android:id="@+id/navigationI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I" />
+
+            <TextView
+                android:id="@+id/navigationJ"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="J" />
+
+            <TextView
+                android:id="@+id/navigationK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="K" />
+            <TextView
+                android:id="@+id/navigationL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="L" />
+            <TextView
+                android:id="@+id/navigationM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="M" />
+            <TextView
+                android:id="@+id/navigationN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="N" />
+            <TextView
+                android:id="@+id/navigationO"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="O" />
+
+            <TextView
+                android:id="@+id/navigationP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="P" />
+
+            <TextView
+                android:id="@+id/navigationQ"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Q" />
+            <TextView
+                android:id="@+id/navigationR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R" />
+            <TextView
+                android:id="@+id/navigationS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="S" />
+            <TextView
+                android:id="@+id/navigationT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="T" />
+            <TextView
+                android:id="@+id/navigationU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="U" />
+            <TextView
+                android:id="@+id/navigationV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="V" />
+            <TextView
+                android:id="@+id/navigationW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="W" />
+            <TextView
+                android:id="@+id/navigationX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="X" />
+
+            <TextView
+                android:id="@+id/navigationY"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Y" />
+
+            <TextView
+                android:id="@+id/navigationZ"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Z" />
+            <TextView
+                android:id="@+id/navigation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="#" />
 
 
+
+
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

@@ -39,4 +39,6 @@ dependencies {
     implementation 'com.github.GrenderG:Toasty:1.5.2'
     implementation 'com.github.getActivity:XXPermissions:18.0'
     implementation 'com.google.android.gms:play-services-auth:20.1.0'  //Google提供的一种方式，用于从短信中提取信息
+    implementation 'com.belerweb:pinyin4j:2.5.1'                      //使用Pinyin4j将中文字符串转换为拼音
+
 }
