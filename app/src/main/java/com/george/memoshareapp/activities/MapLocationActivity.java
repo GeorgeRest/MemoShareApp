@@ -1,24 +1,19 @@
 package com.george.memoshareapp.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -27,23 +22,23 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
-import com.amap.api.maps2d.UiSettings;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
-import com.amap.api.maps2d.model.MyLocationStyle;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
 
-import com.amap.api.services.help.Inputtips;
-import com.amap.api.services.help.InputtipsQuery;
-import com.amap.api.services.help.Tip;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.george.memoshareapp.R;
 import com.amap.api.services.core.PoiItem;
+import com.george.memoshareapp.beans.PublishContent;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class MapLocationActivity extends AppCompatActivity {
 
@@ -61,7 +56,7 @@ public class MapLocationActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_location);
+        setContentView(R.layout.activity_add_location);
         AMapLocationClient.setApiKey("b73d5e0ad525991966aed0de9c8cecc5");
         AMapLocationClient.updatePrivacyShow(this, true, true);
         AMapLocationClient.updatePrivacyAgree(this, true);
@@ -122,7 +117,7 @@ public class MapLocationActivity extends AppCompatActivity {
                     marker = null;
                 }
                 aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-               searchNearbyPlaces(currentLocation);
+                searchNearbyPlaces(currentLocation);
             }
         });
     }
@@ -159,14 +154,6 @@ public class MapLocationActivity extends AppCompatActivity {
         locationClient.startLocation();
     }
 
-    private void returnLocationInfo(LatLng latLng) {
-        Intent intent = new Intent();
-        intent.putExtra("location_name", "当前位置");
-        intent.putExtra("latitude", latLng.latitude);
-        intent.putExtra("longitude", latLng.longitude);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
 
     private void initSearch() {
         try {
@@ -179,6 +166,9 @@ public class MapLocationActivity extends AppCompatActivity {
             public void onPoiSearched(PoiResult poiResult, int resultCode) {
                 if (resultCode == AMapException.CODE_AMAP_SUCCESS && poiResult != null) {
                     List<PoiItem> poiItems = poiResult.getPois();
+                    String title = poiItems.get(0).getTitle();
+                    if (marker != null)
+                        marker.setTitle(title);
                     updateNearbyPlacesList(poiItems);
                 }
             }
@@ -218,21 +208,37 @@ public class MapLocationActivity extends AppCompatActivity {
                 LatLng latLng = new LatLng(poiItem.getLatLonPoint().getLatitude(), poiItem.getLatLonPoint().getLongitude());
                 if (marker != null) {
                     marker.setPosition(latLng);
+                    marker.setTitle(poiItem.getTitle());
                 } else {
-                    marker = aMap.addMarker(new MarkerOptions().position(latLng));
+                    marker = aMap.addMarker(new MarkerOptions().position(latLng).title(poiItem.getTitle())); // Modify this line
                 }
                 aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
             }
         });
     }
 
-    private String getMarkerLocationInfo() {
-        if (marker != null) {
-            LatLng markerPosition = marker.getPosition();
-            return "全称: " + marker.getTitle() + "\n纬度: " + markerPosition.latitude + "\n经度: " + markerPosition.longitude;
-        } else {
-            return "无当前位置信息";
+
+    private Map<String, String> getAddressFromLocation(LatLng latLng) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        Map<String, String> cityMap = null;
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            if (addresses != null && addresses.size() > 0) {
+                Address address = addresses.get(0);
+                String province = address.getAdminArea();
+                String city = address.getLocality();
+                String addressLine = address.getAddressLine(0);
+                String subLocality = address.getSubLocality();
+                cityMap = new HashMap<>();
+                cityMap.put("province", province);
+                cityMap.put("city", city);
+                cityMap.put("addressLine", addressLine);
+                cityMap.put("subLocality", subLocality);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return cityMap;
     }
 
     @Override
@@ -260,6 +266,41 @@ public class MapLocationActivity extends AppCompatActivity {
         if (locationClient != null) {
             locationClient.onDestroy();
         }
+    }
+
+    public void finish(View view) {
+        finish();
+    }
+
+    public void confirm(View view) {
+        if (marker != null) {
+            LatLng position = marker.getPosition();
+            saveLocation(position);
+            finish();
+        } else {
+            saveLocation(currentLocation);
+            finish();
+        }
+    }
+
+    private void saveLocation(LatLng position) {
+        Map<String, String> address = getAddressFromLocation(position);
+        String city = address.get("city");
+        String province = address.get("province");
+        String addressLine = address.get("addressLine");
+        String subLocality = address.get("subLocality");
+        PublishContent publishContent = new PublishContent();
+        publishContent.setLatitude(position.latitude);
+        publishContent.setLongitude(position.longitude);
+        if (marker != null && marker.getTitle() != null) {
+            publishContent.setLocation(province + city + subLocality + marker.getTitle());
+        } else {
+            publishContent.setLocation(province + city + subLocality + addressLine);
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra("publishContent", publishContent);
+        setResult(ReleaseActivity.MAP_INFORMATION_SUCCESS, intent);
     }
 }
 

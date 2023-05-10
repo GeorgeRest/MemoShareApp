@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.PublishContent;
 import com.george.memoshareapp.manager.ContentManager;
 
 import java.text.DateFormat;
@@ -27,6 +30,7 @@ import java.util.Locale;
 
 public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "ReleaseActivity";
     private static String time;
     private static String memoireTime;
     private TextView release_permission;
@@ -40,7 +44,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private int PUBLIC_PERMISSION = 1;
     private ContentManager contentManager;
     private RelativeLayout addLocation;
-
+    public static final int MAP_INFORMATION_SUCCESS=1 ;
+    private PublishContent publishContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,10 +176,18 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 contentManager.saveContent2DB(PUBLIC_PERMISSION, memoireTime, time);
                 break;
             case R.id.rl_addLocation:
-//                startActivityForResult(new Intent(this, MapLocationActivity.class), 1);
-               startActivity(new Intent(this, MapLocationActivity.class));
+                startActivityForResult(new Intent(this, MapLocationActivity.class), 1);
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+                case MAP_INFORMATION_SUCCESS:
+                    publishContent = (PublishContent) data.getSerializableExtra("publishContent");
+                    break;
+        }
 
+    }
 }

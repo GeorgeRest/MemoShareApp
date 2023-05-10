@@ -2,6 +2,7 @@ package com.george.memoshareapp.beans;
 
 import org.litepal.crud.LitePalSupport;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  * @date: 2023/5/9 11:06
  * @version: 1.0
  */
-public class PublishContent extends LitePalSupport {
+public class PublishContent extends LitePalSupport implements Serializable {
     private int id;
     private int phoneNumber;
     private String publishedText;
@@ -139,5 +140,23 @@ public class PublishContent extends LitePalSupport {
 
     public void setMemoryTime(String memoryTime) {
         MemoryTime = memoryTime;
+    }
+
+    @Override
+    public String toString() {
+        return "PublishContent{" +
+                "id=" + id +
+                ", phoneNumber=" + phoneNumber +
+                ", publishedText='" + publishedText + '\'' +
+                ", phoneCachePath=" + phoneCachePath +
+                ", voiceCachePath=" + voiceCachePath +
+                ", contacts=" + contacts +
+                ", location='" + location + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", isPublic=" + isPublic +
+                ", publishedTime='" + publishedTime + '\'' +
+                ", MemoryTime='" + MemoryTime + '\'' +
+                '}';
     }
 }
