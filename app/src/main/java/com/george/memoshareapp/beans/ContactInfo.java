@@ -6,6 +6,8 @@ public class ContactInfo {
     private String name;
     private int picture;
     private String pinyin;
+    private String firstLetter;
+
 
     public ContactInfo(){
     }
@@ -13,7 +15,9 @@ public class ContactInfo {
         this.name = name;
         this.picture = picture;
         this.pinyin = getPinyin(name);
+        this.firstLetter = getFirstLetter(pinyin);
     }
+
 
     public String getName() {
         return name;
@@ -49,6 +53,20 @@ public class ContactInfo {
             }
         }
         return sb.toString();
+    }
+
+    public String getFirstLetter() {
+        return firstLetter;
+    }
+
+    private String getFirstLetter(String pinyin) {
+        char firstChar = pinyin.charAt(0);
+        String s = String.valueOf(firstChar).toUpperCase();
+        if (s.matches("[A-Z]")) {
+            return s;
+        }else{
+            return "#";
+        }
     }
 
 }

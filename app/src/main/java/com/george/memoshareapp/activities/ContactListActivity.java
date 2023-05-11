@@ -3,8 +3,11 @@ package com.george.memoshareapp.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ContactListAdapter;
 import com.george.memoshareapp.beans.ContactInfo;
+import com.george.memoshareapp.view.LetterIndexView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,22 +29,30 @@ public class ContactListActivity extends AppCompatActivity {
     private ListView lv_contact_list;
     private ContactListAdapter contactListAdapter;
     private SearchView sv_search;
-    private ListView lv_abc;
-
+    private LetterIndexView letterIndexView;
+    private TextView tv_show_letter_toast;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_list);
-        lv_contact_list = (ListView) findViewById(R.id.lv_contact_list);
-        sv_search = (SearchView) findViewById(R.id.sv_search);
-        lv_abc = (ListView) findViewById(R.id.lv_ABC);
 
+        initView();
+        initDate();
+        sortContacts(contacts); // 按拼音首字母排序
         contactListAdapter = new ContactListAdapter(this,contacts);
         lv_contact_list.setAdapter(contactListAdapter);
-        lv_contact_list.setFastScrollEnabled(true); // 启用快速滚动
 
+        lv_contact_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 跳回发布页面
+                Intent intent = new Intent(ContactListActivity.this,MainActivity.class);
+                intent.putExtra("name",contacts.get(position).getName());
+                startActivity(intent);
+            }
+        });
         sv_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -52,11 +64,37 @@ public class ContactListActivity extends AppCompatActivity {
                 return true;
             }
         });
-        setupLettersNavigation();
-        initDate();
-        sortContacts(contacts); // 按拼音首字母排序
-        contactListAdapter.setContacts(contacts); // 将排序后的数据设置到适配器中
+
+        letterIndexView.setTextViewDialog(tv_show_letter_toast);
+        letterIndexView.setUpdateListView(new LetterIndexView.UpdateListView() {
+            @Override
+            public void updateListView(String currentChar) {
+                int positionForSection =contactListAdapter.getPositionForSection(currentChar.charAt(0));
+                lv_contact_list.setSelection(positionForSection);
+            }
+        });
+
+        lv_contact_list.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int sectionForPosition = contactListAdapter.getSectionForPosition(firstVisibleItem);
+                letterIndexView.updateLetterIndexView(sectionForPosition);
+            }
+        });
     }
+
+    private void initView() {
+        lv_contact_list = (ListView) findViewById(R.id.lv_contact_list);
+        sv_search = (SearchView) findViewById(R.id.sv_search);
+        letterIndexView = (LetterIndexView) findViewById(R.id.letter_index_view);
+        tv_show_letter_toast = (TextView) findViewById(R.id.tv_show_letter_toast);
+    }
+
 
     private void sortContacts(List<ContactInfo> contacts) {
         Collections.sort(contacts, new Comparator<ContactInfo>() {
@@ -67,65 +105,26 @@ public class ContactListActivity extends AppCompatActivity {
         });
     }
     private void initDate(){
-        contacts.add(new ContactInfo("张三",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("李潇",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("唐莉",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("程思迪",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("Audss",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("王五",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("CC",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("张明敏",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("lilies",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("大师",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("历史老师",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("Kato",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("seven",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("吴仪",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("李宏",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("高倩倩",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("福福",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("小庞",R.mipmap.app_icon));
-        contacts.add(new ContactInfo("***",R.mipmap.app_icon));
-
-
+        contacts.add(new ContactInfo("张三",R.mipmap.photo_1));
+        contacts.add(new ContactInfo("李潇",R.mipmap.photo_2));
+        contacts.add(new ContactInfo("唐莉",R.mipmap.photo_3));
+        contacts.add(new ContactInfo("程思迪",R.mipmap.photo_4));
+        contacts.add(new ContactInfo("Audss",R.mipmap.photo_5));
+        contacts.add(new ContactInfo("王五",R.mipmap.photo_6));
+        contacts.add(new ContactInfo("CC",R.mipmap.photo_7));
+        contacts.add(new ContactInfo("张明敏",R.mipmap.photo_8));
+        contacts.add(new ContactInfo("lilies",R.mipmap.photo_9));
+        contacts.add(new ContactInfo("大师",R.mipmap.photo_10));
+        contacts.add(new ContactInfo("历史老师",R.mipmap.photo_2));
+        contacts.add(new ContactInfo("Kato",R.mipmap.photo_7));
+        contacts.add(new ContactInfo("seven",R.mipmap.photo_5));
+        contacts.add(new ContactInfo("吴仪",R.mipmap.photo_1));
+        contacts.add(new ContactInfo("李宏",R.mipmap.photo_3));
+        contacts.add(new ContactInfo("高倩倩",R.mipmap.photo_10));
+        contacts.add(new ContactInfo("福福",R.mipmap.photo_4));
+        contacts.add(new ContactInfo("小庞",R.mipmap.photo_9));
+        contacts.add(new ContactInfo("***",R.mipmap.photo_6));
     }
-    private void setupLettersNavigation() {
-        LinearLayout lettersLayout = findViewById(R.id.letters_layout);
-        for (int i = 0; i < lettersLayout.getChildCount(); i++) {
-            TextView letterTextView = (TextView) lettersLayout.getChildAt(i);
-            letterTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    char letter = ((TextView) v).getText().charAt(0);
-                    int position = getPositionForLetter(letter);
-                    if (position >= 0) {
-                        lv_abc.setSelection(position);
-                    }
-                }
-            });
-        }
-    }
-
-//    private int getPositionForLetter(char letter) {
-//        for (int i = 0; i < contacts.size(); i++) {
-//            String contact = String.valueOf(contacts.get(i));
-//            if (contact != null && !contact.isEmpty() && Character.toUpperCase(contact.charAt(0)) == letter) {
-//                return i;
-//            }
-//        }
-//        return -1; // 如果找不到对应的字母，返回-1
-//    }
-
-    private int getPositionForLetter(char letter) {
-        for (int i = 0; i < contacts.size(); i++) {
-            ContactInfo contact = contacts.get(i);
-            if (contact != null && Character.toUpperCase(contact.getName().charAt(0)) == letter) {
-                return i;
-            }
-        }
-        return -1; // 如果找不到对应的字母，返回-1
-    }
-
 
     public void onClick(View view) {
         finish();

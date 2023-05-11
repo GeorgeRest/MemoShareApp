@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.george.memoshareapp.R;
@@ -12,21 +13,20 @@ import com.george.memoshareapp.beans.ContactInfo;
 
 import java.util.List;
 
-public class ContactListAdapter extends BaseAdapter {
+public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
 
     private Context context;
     private List<ContactInfo> contactList;
-    private String[] sections; // 存储所有拼音首字母
-    private int[] sectionIndices; // 存储每个拼音首字母在列表中的位置
 
     public ContactListAdapter(Context context, List<ContactInfo> contactList) {
         this.context = context;
         this.contactList = contactList;
     }
-    public void setContacts(List<ContactInfo> contactList) {
-        this.contactList = contactList;
-        notifyDataSetChanged();    // 更新适配器中的数据
-    }
+
+//    public void setContacts(List<ContactInfo> contactList) {
+//        this.contactList = contactList;
+//        notifyDataSetChanged();    // 更新适配器中的数据
+//    }
 
     @Override
     public int getCount() {
@@ -51,19 +51,54 @@ public class ContactListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.iv_photo = convertView.findViewById(R.id.iv_photo);
             holder.tv_name = convertView.findViewById(R.id.tv_name);
+            holder.tv_show_letter = convertView.findViewById(R.id.tv_show_letter);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
-        // 图片绑定 假数据
-        holder.iv_photo.setImageResource(this.contactList.get(position).getPicture());
-        holder.tv_name.setText(this.contactList.get(position).getName());
+        ContactInfo contact = contactList.get(position);
+        holder.iv_photo.setImageResource(contact.getPicture());
+        holder.tv_name.setText(contact.getName());
+
+        //获得当前position是属于哪个分组
+        int sectionForPosition = getSectionForPosition(position);
+        //获得该分组第一项的position
+        int positionForSection = getPositionForSection(sectionForPosition);
+        //查看当前position是不是当前item所在分组的第一个item
+        //如果是，则显示showLetter，否则隐藏
+        if (position == positionForSection) {
+            holder.tv_show_letter.setVisibility(View.VISIBLE);
+            holder.tv_show_letter.setText(contact.getFirstLetter());
+        } else {
+            holder.tv_show_letter.setVisibility(View.GONE);
+        }
+
         return convertView;
+    }
+
+    @Override
+    public Object[] getSections() {
+        return new Object[0];
+    }
+
+    @Override
+    public int getPositionForSection(int sectionIndex) {
+        for (int i = 0; i < contactList.size(); i++) {
+            if (contactList.get(i).getFirstLetter().charAt(0) == sectionIndex) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    @Override
+    public int getSectionForPosition(int position) {
+        return contactList.get(position).getFirstLetter().charAt(0);
     }
 
     private static class ViewHolder{
         ImageView iv_photo;
         TextView tv_name;
+        TextView tv_show_letter;
     }
 }
 

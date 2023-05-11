@@ -1,23 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
     android:gravity="center_vertical">
 
-    <ImageView
-        android:id="@+id/iv_photo"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@color/common_google_signin_btn_text_light_disabled"/>
-
     <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_show_letter"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:textSize="18sp"
-        android:text="name"/>
+        android:text="A"
+        android:textColor="#C3090A0E"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:background="#83EAE7E7"
+        android:padding="4dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/iv_photo"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@color/common_google_signin_btn_text_light_disabled"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textSize="16sp"
+            android:text="name"
+            android:layout_toRightOf="@+id/iv_photo"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
 
 </LinearLayout>
