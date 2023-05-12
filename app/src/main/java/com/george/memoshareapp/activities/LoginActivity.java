@@ -153,10 +153,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 UserManager userManager = new UserManager(this);
                 if(phoneNumber.matches(phoneRegex)){
                     if (userManager.queryUserInfo(phoneNumber, pwNumber)) {
-//                    Intent intent = new Intent(this, );
-//                    startActivity(intent);
+                    Intent intent = new Intent(this, HomePageActivity.class);
+                    startActivity(intent);
                       Toasty.success(this,"登录成功",Toast.LENGTH_SHORT).show();
-                        return;
+                       finish();
                     }
                 }else {
                     Toasty.warning(this,"请输入正确格式的手机号",Toast.LENGTH_SHORT).show();
@@ -179,9 +179,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(phoneNumber.matches(phoneRegex)){
                     if (userManager.queryUser(phoneNumber) ) {
                         if( et_code.equals(CodeFragment.codeReal)){
-                            //Intent intent = new Intent(this, );
-                            // startActivity(intent);
+                                Intent intent = new Intent(this, HomePageActivity.class);
+                                 startActivity(intent);
                             Toasty.success(this, "登录成功", Toast.LENGTH_SHORT).show();
+                            finish();
                         }else {
                             Toasty.error(this, "验证码错误", Toast.LENGTH_SHORT).show();
                         }
@@ -190,7 +191,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }else {
                     Toasty.info(this,"请输入正确格式的手机号",Toast.LENGTH_SHORT).show();
                 }
-
             }else {
                 Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT).show();
             }
