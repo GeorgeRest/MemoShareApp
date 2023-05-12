@@ -52,10 +52,10 @@ public class ContactListActivity extends AppCompatActivity {
         lv_contact_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // 跳回发布页面
-                Intent intent = new Intent(ContactListActivity.this,MainActivity.class);
-                intent.putExtra("name",contacts.get(position).getName());
-                startActivity(intent);
+                Intent intent = new Intent();
+                intent.putExtra("message",contacts.get(position).getName());
+                setResult(ReleaseActivity.RESULT_CODE_CONTACT,intent);
+                finish();   //关闭页面,回传结果
             }
         });
 

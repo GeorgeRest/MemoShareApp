@@ -49,6 +49,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private ContentManager contentManager;
     private RelativeLayout addLocation;
     public static final int MAP_INFORMATION_SUCCESS=1 ;
+    public static final int RESULT_CODE_CONTACT = 2;
     private PublishContent publishContent;
     private int StyleType=5;
     private EditText release_edit;
