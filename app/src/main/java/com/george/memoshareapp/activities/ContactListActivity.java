@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ContactListAdapter;
@@ -23,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import es.dmoral.toasty.Toasty;
 
 public class ContactListActivity extends AppCompatActivity {
 
@@ -119,15 +122,17 @@ public class ContactListActivity extends AppCompatActivity {
 
     private void filterContacts(String query) {
         List<ContactInfo> filteredList = new ArrayList<>();
-
         for (ContactInfo contact : contacts) {
             if (contact.getName().toLowerCase().contains(query.toLowerCase())) {//contains()方法是判断字符串中是否包含指定的字符
                 filteredList.add(contact);
             }
         }
-
-        contactListAdapter.setData(filteredList);
-        contactListAdapter.notifyDataSetChanged();
+        if(!filteredList.isEmpty()) {
+            contactListAdapter.setData(filteredList);
+            contactListAdapter.notifyDataSetChanged();
+        }else{
+            Toasty.warning(this, "没有找到"+"'"+query+"'"+"相关结果", Toast.LENGTH_SHORT,true).show();
+        }
     }
     private void initDate(){
         contacts.add(new ContactInfo("张三",R.mipmap.photo_1));
