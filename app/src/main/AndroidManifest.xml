@@ -44,7 +44,6 @@
         <activity
             android:name=".activities.MapLocationActivity"
             android:exported="true">
-
         </activity>
         <activity
             android:name=".activities.HomePageActivity"
@@ -77,13 +76,17 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true" />
+
+
+        <activity
+            android:name=".activities.ReleasePhotoImageDetailActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

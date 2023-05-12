@@ -4,34 +4,49 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.Fragment.RecordAudioDialogFragment;
 import com.george.memoshareapp.interfaces.RecordingDataListener;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
+import com.george.memoshareapp.adapters.ImageAdapter;
+import com.george.memoshareapp.beans.PublishContent;
 import com.george.memoshareapp.manager.ContentManager;
 import com.george.memoshareapp.utils.PermissionUtils;
+import com.george.memoshareapp.utils.CustomItemDecoration;
+import com.george.memoshareapp.utils.GridSpacingItemDecoration;
+import com.zhihu.matisse.Matisse;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -70,11 +85,17 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private EditText release_edit;
     private ImageView release_back;
 
+    private static final int MAX_IMAGES = 9;  // Maximum number of images
+    private RecyclerView recyclerView;
+    private ImageAdapter imageAdapter;
+    private List<Uri> imageUriList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_release);
         initView();
+        initRecyclerView();
         rl_permission.setOnClickListener(this);
         rl_time.setOnClickListener(this);
         release_button.setOnClickListener(this);
@@ -101,6 +122,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+
     }
 
     private void initView() {
@@ -123,6 +145,31 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         rl_time.setOnClickListener(this);
         release_button.setOnClickListener(this);
         addLocation.setOnClickListener(this);
+
+    }
+
+    private void initRecyclerView(){
+        // Set to 3-column grid layout
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerView.setHasFixedSize(true);
+
+        // Add blank items in RecyclerView
+        imageUriList.add(null);
+        imageAdapter = new ImageAdapter(this, imageUriList);
+        recyclerView.setAdapter(imageAdapter);
+
+        // 设置 RecyclerView 中的 item 的相对位置
+//        int spanCount = 3;
+//        int spacing = 0;
+//        boolean includeEdge = true;
+//        recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+
+//        imageAdapter.updateButtonPosition(MAX_IMAGES);
+
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_expected_size);
+        recyclerView.addItemDecoration(new CustomItemDecoration(spacingInPixels));
+
         record.setOnClickListener(this);
         RecordAudioDialogFragment.recordCount=0;
     }
@@ -217,6 +264,40 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    private void getPhotoFromAlbum(Intent data) {
+        // 从相册获取图片
+        if (data != null) {
+            ClipData clipData = data.getClipData();
+            if (clipData != null && clipData.getItemCount() + imageUriList.size()> MAX_IMAGES + 1) {
+                // 选择的图片数量超过了限制，提示用户重新选择
+                Toast.makeText(this, "最多可展示 " + MAX_IMAGES + " 照片" + "," + "请重新选择！", Toast.LENGTH_SHORT).show();
+            } else {
+                // 处理选择的图片
+                if (clipData != null) {
+                    int count = clipData.getItemCount();
+                    for (int i = 0; i < count; i++) {
+                        Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                        imageUriList.add(imageUriList.size() - 1, imageUri);
+                    }
+                } else {
+                    Uri imageUri = data.getData();
+                    imageUriList.add(imageUriList.size() - 1, imageUri);
+                }
+                imageAdapter.updateImageListAndButtonPosition(MAX_IMAGES);
+            }
+        }
+    }
+    //imageUriList即是所选择照片的uri，但因为我的逻辑需要判断list尾部是否存在null，在获取list时要做出判断，若有则需要移除，具体逻辑如下
+    private List<Uri> getImageUriList() {
+        List<Uri> list = new ArrayList<>();
+        for (int i = 0; i < imageUriList.size(); i++) {
+            if (imageUriList.get(i) != null) {
+                list.add(imageUriList.get(i));
+            }
+        }
+        return list;
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -228,7 +309,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 showDatePickerDialog(this, StyleType, release_time, calendar);
                 break;
             case R.id.release_button:
-                contentManager.saveContent2DB(PUBLIC_PERMISSION, memoireTime, time);
+                contentManager.saveContent2DB(PUBLIC_PERMISSION, memoireTime, time);//照片路径270行左右
                 break;
             case R.id.rl_addLocation:
                 startActivityForResult(new Intent(this, MapLocationActivity.class), 1);
@@ -263,9 +344,13 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     tv_location.setText(location);
                     rl_location.setVisibility(View.VISIBLE);
                     break;
-            case R.id.release_back:
-                finish();
-                break;
+                case R.id.release_back:
+                    finish();
+                    break;
+                case RESULT_OK:
+                    getPhotoFromAlbum(data);
+                    break;
+        }
 
 
         }
