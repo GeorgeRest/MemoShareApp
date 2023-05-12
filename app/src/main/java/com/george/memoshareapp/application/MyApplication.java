@@ -17,9 +17,12 @@ import es.dmoral.toasty.Toasty;
  * @version: 1.0
  */
 public class MyApplication extends Application {
+
+    private static MyApplication instance;
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         Toasty.Config.getInstance()
                 .tintIcon(true)
                 .allowQueue(false)
@@ -27,5 +30,9 @@ public class MyApplication extends Application {
 
         LitePal.initialize(this);
     }
+    public static MyApplication getInstance() {
+        return instance;
+    }
+
 }
 

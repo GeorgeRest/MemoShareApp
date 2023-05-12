@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -21,14 +22,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.beans.PublishContent;
+import com.george.memoshareapp.Fragment.RecordAudioDialogFragment;
+import com.george.memoshareapp.RecordingDataListener;
+import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.manager.ContentManager;
+import com.george.memoshareapp.utils.PermissionUtils;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
-public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener {
+public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener, RecordingDataListener {
 
     private static final String TAG = "ReleaseActivity";
     private static String time;
@@ -45,12 +52,21 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private ContentManager contentManager;
     private RelativeLayout addLocation;
     public static final int MAP_INFORMATION_SUCCESS=1 ;
-    private PublishContent publishContent;
+    private Post post;
+    private TextView record;
+    private Button mBtnRecordAudio;
+    private Button mBtnPlayAudio;
+    private RelativeLayout rl_location;
+    private TextView tv_location;
+    private double latitude;
+    private double longitude;
+    private String location;
+    private List<Recordings> recordingsList  = new ArrayList<>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.release);
+        setContentView(R.layout.activity_release);
         initView();
 
     }
@@ -63,13 +79,18 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         release_permission = (TextView) findViewById(R.id.release_permission);
         release_time = (TextView) findViewById(R.id.release_time);
         release_time_hour = (TextView) findViewById(R.id.release_time_hour);
+        tv_location = (TextView) findViewById(R.id.tv_location);
         release_button = (ImageView) findViewById(R.id.release_button);
         addLocation = (RelativeLayout) findViewById(R.id.rl_addLocation);
+        rl_location = (RelativeLayout) findViewById(R.id.rl_location);
+        record = (TextView) findViewById(R.id.record);
         contentManager = new ContentManager(this);
         rl_permission.setOnClickListener(this);
         rl_time.setOnClickListener(this);
         release_button.setOnClickListener(this);
         addLocation.setOnClickListener(this);
+        record.setOnClickListener(this);
+        RecordAudioDialogFragment.recordCount=0;
     }
 
     public void showDatePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
@@ -177,6 +198,22 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.rl_addLocation:
                 startActivityForResult(new Intent(this, MapLocationActivity.class), 1);
+                break;
+            case R.id.record:
+                PermissionUtils.recordPermission(this);
+                final RecordAudioDialogFragment fragment = RecordAudioDialogFragment.newInstance();
+                fragment.show(getSupportFragmentManager(), RecordAudioDialogFragment.class.getSimpleName());
+                fragment.setDataListener(this);
+                fragment.setOnCancelListener(new RecordAudioDialogFragment.OnAudioCancelListener() {
+                    @Override
+                    public void onCancel() {
+                        if (!fragment.isRecording()) {
+                            fragment.dismiss();
+                        }
+                    }
+                });
+                break;
+
         }
     }
 
@@ -185,8 +222,27 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode){
                 case MAP_INFORMATION_SUCCESS:
-                    publishContent = (PublishContent) data.getSerializableExtra("publishContent");
+                    post = (Post) data.getSerializableExtra("publishContent");
+                    latitude = post.getLatitude();
+                    longitude = post.getLongitude();
+                    location = post.getLocation();
+                    tv_location.setText(location);
+                    rl_location.setVisibility(View.VISIBLE);
                     break;
+
+        }
+
+    }
+
+    @Override
+    public void onRecordingDataReceived(Recordings recording) {
+        if (recording != null) {
+            Log.d(TAG, "onRecordingDataReceived: "+recording.getRecordTime());
+            Log.d(TAG, "onRecordingDataReceived: "+recording.getRecordCachePath());
+
+            recordingsList.add(recording);
+            Log.d(TAG, "onRecordingDataReceived: "+recordingsList.size());
+
         }
 
     }

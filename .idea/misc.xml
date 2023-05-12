@@ -34,17 +34,22 @@
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_main.xml" value="0.3338541666666667" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_regist.xml" value="0.3338541666666667" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_register.xml" value="0.33" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_release.xml" value="0.4381067961165049" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_retrieve_password.xml" value="0.3338541666666667" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_test_record.xml" value="0.32916666666666666" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/add_location.xml" value="0.26927083333333335" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_calendar_trip.xml" value="0.24609375" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_calendar_trip_page.xml" value="0.32916666666666666" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_code_login.xml" value="0.17864583333333334" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_home_page.xml" value="0.328125" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_media_playback.xml" value="0.18489583333333334" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_message.xml" value="0.328125" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_personal_page.xml" value="0.32916666666666666" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_pw_login.xml" value="0.17864583333333334" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_record_audio.xml" value="0.32916666666666666" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/homepage_top_navigation_bar.xml" value="0.328125" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_nearby_place.xml" value="0.2703125" />
-        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/release.xml" value="0.28370786516853935" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/release.xml" value="0.26143790849673204" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/release_permission.xml" value="0.26666666666666666" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.205" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.205" />
