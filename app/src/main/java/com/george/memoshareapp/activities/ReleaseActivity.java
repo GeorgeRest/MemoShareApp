@@ -54,6 +54,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private int StyleType=5;
     private EditText release_edit;
     private ImageView release_back;
+    private TextView at;
+    private RelativeLayout rl_at;
 
 
     @Override
@@ -99,11 +101,13 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         release_time_hour = (TextView) findViewById(R.id.release_time_hour);
         release_button = (ImageView) findViewById(R.id.release_button);
         addLocation = (RelativeLayout) findViewById(R.id.rl_addLocation);
+        rl_at = (RelativeLayout) findViewById(R.id.rl_at);
         release_edit = (EditText) findViewById(R.id.release_edit);
         release_back = (ImageView) findViewById(R.id.release_back);
         contentManager = new ContentManager(this);
         rl_permission.setOnClickListener(this);
         rl_time.setOnClickListener(this);
+        rl_at.setOnClickListener(this);
         release_button.setOnClickListener(this);
         addLocation.setOnClickListener(this);
     }
@@ -213,6 +217,13 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.rl_addLocation:
                 startActivityForResult(new Intent(this, MapLocationActivity.class), 1);
+                break;
+            case R.id.at:
+                startActivityForResult(new Intent(this, ContactListActivity.class), RESULT_CODE_CONTACT);
+                break;
+            case R.id.release_back:
+                finish();
+                break;
         }
     }
 
@@ -223,10 +234,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 case MAP_INFORMATION_SUCCESS:
                     publishContent = (PublishContent) data.getSerializableExtra("publishContent");
                     break;
-            case R.id.release_back:
-                finish();
-                break;
-
+                case RESULT_CODE_CONTACT:
+                    String name = data.getStringExtra("name");
+                    //todo name拼接到文本内容后面，高亮提示
+                    break;
         }
 
     }

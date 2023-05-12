@@ -53,7 +53,7 @@ public class ContactListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-                intent.putExtra("message",contacts.get(position).getName());
+                intent.putExtra("name",contacts.get(position).getName());
                 setResult(ReleaseActivity.RESULT_CODE_CONTACT,intent);
                 finish();   //关闭页面,回传结果
             }
