@@ -23,7 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.Fragment.RecordAudioDialogFragment;
-import com.george.memoshareapp.RecordingDataListener;
+import com.george.memoshareapp.interfaces.RecordingDataListener;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.manager.ContentManager;

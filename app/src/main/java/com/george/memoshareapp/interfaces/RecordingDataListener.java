@@ -1,4 +1,4 @@
-package com.george.memoshareapp;
+package com.george.memoshareapp.interfaces;
 
 import com.george.memoshareapp.beans.Recordings;
 

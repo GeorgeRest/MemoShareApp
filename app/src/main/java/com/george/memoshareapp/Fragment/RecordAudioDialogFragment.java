@@ -32,7 +32,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.george.memoshareapp.BuildConfig;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.RecordingDataListener;
+import com.george.memoshareapp.interfaces.RecordingDataListener;
 import com.george.memoshareapp.application.MyApplication;
 import com.george.memoshareapp.beans.Recordings;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
