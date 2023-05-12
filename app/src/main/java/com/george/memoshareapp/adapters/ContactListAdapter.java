@@ -43,6 +43,9 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
         return position;
     }
 
+    public void setData(List<ContactInfo> data) {
+        this.contactList = data;
+    }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;

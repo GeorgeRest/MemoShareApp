@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -40,6 +41,7 @@ public class ContactListActivity extends AppCompatActivity {
 
         initView();
         initDate();
+        setupSearchView();
         sortContacts(contacts); // 按拼音首字母排序
         contactListAdapter = new ContactListAdapter(this,contacts);
         lv_contact_list.setAdapter(contactListAdapter);
@@ -51,17 +53,6 @@ public class ContactListActivity extends AppCompatActivity {
                 Intent intent = new Intent(ContactListActivity.this,MainActivity.class);
                 intent.putExtra("name",contacts.get(position).getName());
                 startActivity(intent);
-            }
-        });
-        sv_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // TODO: 实现搜索逻辑
-                return true;
             }
         });
 
@@ -103,6 +94,40 @@ public class ContactListActivity extends AppCompatActivity {
                 return c1.getPinyin().compareToIgnoreCase(c2.getPinyin());
             }
         });
+    }
+
+    private void setupSearchView() {
+        sv_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(! TextUtils.isEmpty(newText)){
+                    letterIndexView.setVisibility(View.GONE);
+                }else{
+                    letterIndexView.setVisibility(View.VISIBLE);
+                }
+
+                filterContacts(newText);
+                return true;
+            }
+        });
+    }
+
+    private void filterContacts(String query) {
+        List<ContactInfo> filteredList = new ArrayList<>();
+
+        for (ContactInfo contact : contacts) {
+            if (contact.getName().toLowerCase().contains(query.toLowerCase())) {//contains()方法是判断字符串中是否包含指定的字符
+                filteredList.add(contact);
+            }
+        }
+
+        contactListAdapter.setData(filteredList);
+        contactListAdapter.notifyDataSetChanged();
     }
     private void initDate(){
         contacts.add(new ContactInfo("张三",R.mipmap.photo_1));
