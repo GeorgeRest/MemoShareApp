@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.graphics.Color;
@@ -40,12 +41,10 @@ import com.george.memoshareapp.interfaces.RecordingDataListener;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.adapters.ImageAdapter;
-import com.george.memoshareapp.beans.PublishContent;
 import com.george.memoshareapp.manager.ContentManager;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.utils.CustomItemDecoration;
-import com.george.memoshareapp.utils.GridSpacingItemDecoration;
-import com.zhihu.matisse.Matisse;
+
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -92,6 +91,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private RecyclerView recyclerView;
     private ImageAdapter imageAdapter;
     private List<Uri> imageUriList = new ArrayList<>();
+    private RelativeLayout rl_at;
+    private RelativeLayout rl_addat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +143,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         addat = (RelativeLayout) findViewById(R.id.rl_addat);
         rl_location = (RelativeLayout) findViewById(R.id.rl_location);
         record = (TextView) findViewById(R.id.record);
-        rl_at = (RelativeLayout) findViewById(R.id.rl_at);
+        rl_addat = (RelativeLayout) findViewById(R.id.rl_addat);
         release_edit = (EditText) findViewById(R.id.release_edit);
         release_back = (ImageView) findViewById(R.id.release_back);
         contentManager = new ContentManager(this);
@@ -341,12 +342,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 });
                 break;
 
-                break;
             case R.id.at:
                 startActivityForResult(new Intent(this, ContactListActivity.class), RESULT_CODE_CONTACT);
-                break;
-            case R.id.release_back:
-                finish();
                 break;
         }
     }
@@ -366,6 +363,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 case RESULT_CODE_CONTACT:
                     String name = data.getStringExtra("name");
                     release_edit.setText("@"+name);
+                    release_edit.setTextColor(Color.parseColor("#685c97"));
                     break;
                 case R.id.release_back:
                     finish();
@@ -378,7 +376,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
         }
 
-    }
+
 
     @Override
     public void onRecordingDataReceived(Recordings recording) {
