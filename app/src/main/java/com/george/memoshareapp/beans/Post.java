@@ -46,6 +46,19 @@ public class Post extends LitePalSupport implements Serializable {
         this.publishedTime = publishedTime;
         MemoryTime = memoryTime;
     }
+    public Post( int phoneNumber, String publishedText, List<String> phoneCachePath, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
+        this.phoneNumber = phoneNumber;
+        this.publishedText = publishedText;
+        this.phoneCachePath = phoneCachePath;
+        this.record = record;
+        this.contacts = contacts;
+        this.location = location;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.isPublic = isPublic;
+        this.publishedTime = publishedTime;
+        MemoryTime = memoryTime;
+    }
 
     public int getId() {
         return id;

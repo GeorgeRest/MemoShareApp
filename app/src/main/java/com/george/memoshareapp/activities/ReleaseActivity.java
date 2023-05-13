@@ -6,16 +6,15 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.ClipData;
 import android.content.Intent;
-import android.net.Uri;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.style.ClickableSpan;
-import android.util.Log;
-import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -104,6 +103,12 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private String hour;
     private String minute;
     private String contactName;
+    private String release_edit1;
+    private List<String> photoPathList;
+    private List<String> addedNames;
+    private SpannableString spannableString;
+    private ClickableSpan clickableSpan;
+    private String atText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -334,10 +339,13 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 String phoneNumber = getIntent().getStringExtra("phoneNumber");
                 getSystemTime();
 
-                postManager.saveContent2DB(phoneNumber,editTextContent,imageUriList,recordingsList,contactName,location,longitude,latitude,PUBLIC_PERMISSION,getSystemTime(), memoryTime);
-                // 保存图片到本地
+                postManager.saveContent2DB(phoneNumber, release_edit1,photoPathList,recordingsList, addedNames,location,longitude,latitude,PUBLIC_PERMISSION,getSystemTime(), memoryTime);
+                // 保存图片
                 ExecutorService executor = Executors.newFixedThreadPool(5);
-                executor.execute(new SavePhotoRunnable(imageUriList));
+                SavePhotoRunnable savePhotoRunnable = new SavePhotoRunnable(imageUriList, this);
+                executor.execute(savePhotoRunnable);
+                photoPathList = savePhotoRunnable.getPhotoPathList();
+
                 executor.shutdown();
                 break;
             case R.id.release_back:
@@ -400,7 +408,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 case RESULT_CODE_CONTACT:
                     contactName = data.getStringExtra("name");
-                    release_edit.setText("@"+ contactName);
+                    addAtName(contactName);
 
                     break;
 
@@ -411,31 +419,35 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
 
         }
-
-
         private void addAtName (String name){
-            String atText = "@" + name + " ";
-            // 创建一个SpannableString对象
-            SpannableString spannableString = new SpannableString(atText);
+            addedNames = new ArrayList<>();
+            if(!addedNames.contains(name)){
+                atText = "@" + name + " ";
+                // 创建一个SpannableString对象
+                spannableString = new SpannableString(atText);
 
-            // 创建一个ClickableSpan对象
-            ClickableSpan clickableSpan = new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    // 定义点击事件，打开好友的个人信息页面
-                }
+                // 创建一个ClickableSpan对象
+                clickableSpan = new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        // 定义点击事件，打开好友的个人信息页面
+                    }
 
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    super.updateDrawState(ds);
-                    // 定义样式，高亮显示
-                    ds.setColor(Color.parseColor("#685c97"));
-                    ds.setUnderlineText(false);
-                }
-            };
+                    @Override
+                    public void updateDrawState(TextPaint ds) {
+                        super.updateDrawState(ds);
+                        // 定义样式，高亮显示
+                        ds.setColor(Color.parseColor("#685c97"));
+                        ds.setUnderlineText(false);
+                    }
+                };
+                addedNames.add(name);
+            }
+
             spannableString.setSpan(clickableSpan, 0, atText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             // 将SpannableString添加到EditText的内容中
             release_edit.append(spannableString);
+            release_edit1 = this.release_edit.getText().toString().trim();
         }
 
 
