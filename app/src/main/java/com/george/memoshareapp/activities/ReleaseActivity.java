@@ -26,17 +26,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.PublishContent;
-import com.george.memoshareapp.manager.ContentManager;
+import com.george.memoshareapp.manager.PostManager;
+import com.george.memoshareapp.runnable.SavePhotoRunnable;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "ReleaseActivity";
-    private static String time;
-    private static String memoireTime;
+    private static String timeHourMinute;
+    private static String memoireTimeYear;
     private TextView release_permission;
     private RelativeLayout rl_permission;
     private RelativeLayout rl_time;
@@ -46,13 +49,17 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private TextView release_time_hour;
     private ImageView release_button;
     private int PUBLIC_PERMISSION = 1;
-    private ContentManager contentManager;
+    private PostManager postManager;
     private RelativeLayout addLocation;
     public static final int MAP_INFORMATION_SUCCESS=1 ;
     private PublishContent publishContent;
     private int StyleType=5;
     private EditText release_edit;
     private ImageView release_back;
+    private String editTextContent;
+    private double latitude;
+    private String location;
+    private double longitude;
 
 
     @Override
@@ -100,7 +107,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         addLocation = (RelativeLayout) findViewById(R.id.rl_addLocation);
         release_edit = (EditText) findViewById(R.id.release_edit);
         release_back = (ImageView) findViewById(R.id.release_back);
-        contentManager = new ContentManager(this);
+        postManager = new PostManager(this);
         rl_permission.setOnClickListener(this);
         rl_time.setOnClickListener(this);
         release_button.setOnClickListener(this);
@@ -124,8 +131,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private String getYearMonthDay(int year, int month, int dayOfMonth) {
-        memoireTime = year + "/" + month + "/" + dayOfMonth;
-        return memoireTime;
+        memoireTimeYear = year + "/" + month + "/" + dayOfMonth;
+        return memoireTimeYear;
 
     }
 
@@ -149,8 +156,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private String getTime(int hourOfDay, int minute) {
-        time = hourOfDay + ":" + minute;
-        return time;
+        timeHourMinute = hourOfDay + ":" + minute;
+        return timeHourMinute;
     }
 
 
@@ -208,11 +215,29 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 showDatePickerDialog(this, StyleType, release_time, calendar);
                 break;
             case R.id.release_button:
-                contentManager.saveContent2DB(PUBLIC_PERMISSION, memoireTime, time);
+                getOtherParameter();
+                postManager.saveContent2DB(editTextContent,PUBLIC_PERMISSION,location,latitude,longitude, memoireTimeYear, timeHourMinute);
+                ExecutorService executor = Executors.newFixedThreadPool(5);
+//                executor.execute(new SavePhotoRunnable(photoPath));
+                executor.shutdown();
+                break;
+            case R.id.release_back:
+                finish();
                 break;
             case R.id.rl_addLocation:
                 startActivityForResult(new Intent(this, MapLocationActivity.class), 1);
         }
+    }
+
+    private void getOtherParameter() {
+        editTextContent = release_edit.getText().toString().trim();
+        //获取图片的路径，语音的路径＋时长
+        //@的人 字符串拼接
+        latitude = publishContent.getLatitude();
+        location = publishContent.getLocation();
+        longitude = publishContent.getLongitude();
+
+
     }
 
     @Override
@@ -222,11 +247,11 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 case MAP_INFORMATION_SUCCESS:
                     publishContent = (PublishContent) data.getSerializableExtra("publishContent");
                     break;
-            case R.id.release_back:
-                finish();
-                break;
 
         }
 
     }
+
+
+
 }
