@@ -369,7 +369,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             case RESULT_CODE_CONTACT:
                 String name = data.getStringExtra("name");
                 addAtName(name);
-                release_edit.setTextColor(Color.parseColor("#685c97"));
                 break;
             case R.id.release_back:
                 finish();
