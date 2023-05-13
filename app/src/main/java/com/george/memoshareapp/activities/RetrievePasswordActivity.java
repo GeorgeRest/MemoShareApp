@@ -15,7 +15,6 @@ import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.CodeSender;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
-import com.george.memoshareapp.view.MyCheckBox;
 
 import es.dmoral.toasty.Toasty;
 
@@ -29,7 +28,7 @@ public class RetrievePasswordActivity extends AppCompatActivity implements View.
     private TextView code;
     private String codePhone;
     private final long COUNTDOWN_TIME=60000;
-    private boolean isClicked = false;  //
+    private boolean isClicked = false;
     private String codeReal;
 
     @Override
@@ -98,7 +97,7 @@ public class RetrievePasswordActivity extends AppCompatActivity implements View.
 
                 break;
 
-            case R.id.iv_back:
+            case R.id.iv_back_rg:
                 finish();
                 break;
 

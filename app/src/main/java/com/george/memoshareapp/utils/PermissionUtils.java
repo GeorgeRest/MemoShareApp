@@ -32,6 +32,7 @@ public class PermissionUtils {
                 .permission(Permission.ACCESS_FINE_LOCATION)//GPS定位
                 .permission(Permission.READ_PHONE_STATE)//读取手机当前状态
                 .permission(Permission.READ_EXTERNAL_STORAGE)//读取外部存储
+                .permission(Permission.WRITE_EXTERNAL_STORAGE)//写入外部存储
                 .request(new OnPermissionCallback() {
                     @Override
                     public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
@@ -50,4 +51,21 @@ public class PermissionUtils {
                 });
 
     }
+    public static void recordPermission(Context context){
+        XXPermissions.with(context) // 替换为当前的Activity或者Fragment
+                .permission(Permission.RECORD_AUDIO) // 需要请求的权限
+                .request(new OnPermissionCallback() {
+                    @Override
+                    public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
+                    }
+                    @Override
+                    public void onDenied(@NonNull List<String> permissions, boolean doNotAskAgain) {
+                        if (doNotAskAgain) {
+                            Toasty.error(context, "获取权限失败，请手动授予权限", Toast.LENGTH_SHORT, true).show();
+                            XXPermissions.startPermissionActivity(context, permissions);
+                        }
+                    }
+                });
+    }
+
 }

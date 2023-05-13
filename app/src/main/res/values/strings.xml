@@ -1,6 +1,52 @@
 <resources>
-    <string name="app_name">忆享</string>
-    <string name="some_id">
-\u00E6\u0088\u0091\u00E5\u00B7\u00B2\u00E9\u0098\u0085\u00E8\u00AF\u00BB\u00E5\u00B9\u00B6\u00E5\u0090\u008C\u00E6\u0084\u008F\u00E3\u0080\u008A\u00E7\u0094\u00A8\u00E6\u0088\u00B7\u00E5\u008D\u008F\u00E8\u00AE\u00AE\u00E3\u0080\u008B\u00E3\u0080\u008A\u00E9\u009A\u0090\u00E7\u00A7\u0081\u00E6\u0094\u00BF\u00E7\u00AD\u0096\u00E3\u0080\u008B\u00E3\u0080\u008A\u00E5\u0084\u00BF\u00E7\u00AB\u00A5/\u00E9\u009D\u0092\u00E5\u00B0\u0091\u00E5\u00B9\u00B4\u00E4\u00B8\u00AA\u00E4\u00BA\u00BA\u00E4\u00BF\u00A1\u00E6\u0081\u00AF\u00E4\u00BF\u009D\u00E6\u008A\u00A4\u00E8\u00A7\u0084\u00E5\u0088\u0099\u00E3\u0080\u008B\u00E3\u0080\u008A\u00E8\u0081\u0094\u00E9\u0080\u009A\u00E7\u00BB\u009F\u00E4\u00B8\u0080\u00E8\u00AE\u00A4\u00E8\u00AF\u0081\u00E6\u009C\u008D\u00E5\u008A\u00A1\u00E6\u009D\u00A1\u00E6\u00AC\u00BE\u00E3\u0080\u008B
-</string>
+    <string name="link">Website: github.com/dkim0419/SoundRecorder</string>
+
+    <!-- Toolbar -->
+    <string name="app_name">SoundRecorderUtils</string>
+    <string name="action_licenses">Licenses</string>
+    <string name="action_settings">Settings</string>
+    <string name="tab_title_record">Record</string>
+    <string name="tab_title_saved_recordings">Saved Recordings</string>
+
+    <!-- Toasts -->
+    <string name="toast_recording_start">Recording started</string>
+    <string name="toast_recording_finish">Recording saved to</string>
+    <string name="toast_file_delete">%1$s successfully deleted</string>
+    <string name="toast_file_exists">The file %1$s already exists. Please choose a different file name.</string>
+
+    <!-- Notifications -->
+    <string name="notification_recording">Recording...</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_title_delete">Confirm Delete...</string>
+    <string name="dialog_text_delete">Are you sure you would like to delete this file?</string>
+    <string name="dialog_title_licenses">Open Source Licenses</string>
+    <string name="dialog_title_share">Share File</string>
+    <string name="dialog_title_rename">Rename File</string>
+    <string name="dialog_title_options">Options</string>
+
+    <string name="dialog_file_share">Share File</string>
+    <string name="dialog_file_rename">Rename File</string>
+    <string name="dialog_file_delete">Delete File</string>
+    <string name="dialog_action_cancel">Cancel</string>
+    <string name="dialog_action_ok">OK</string>
+    <string name="dialog_action_yes">Yes</string>
+    <string name="dialog_action_no">No</string>
+
+    <string name="no_saved_recordings_message">No saved recordings</string>
+    <string name="pause_recording_button">Pause</string>
+    <string name="resume_recording_button">Resume</string>
+    <string name="default_file_name">My Recording</string>
+    <string name="record_prompt">Tap the button to start recording</string>
+    <string name="record_in_progress">Recording</string>
+
+    <string name="send_to">Send to</string>
+
+    <!-- Preferences -->
+    <string name="pref_high_quality_key">pref_high_quality</string>
+    <string name="pref_high_quality_title">Enable High Quality Recording</string>
+    <string name="pref_high_quality_desc">Record in CD Quality</string>
+    <string name="pref_about_key">pref_about</string>
+    <string name="pref_about_title">About</string>
+    <string name="pref_about_desc">v%s</string>
 </resources>

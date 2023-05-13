@@ -4,38 +4,51 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.george.memoshareapp.Fragment.RecordAudioDialogFragment;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.beans.PublishContent;
+import com.george.memoshareapp.adapters.ImageAdapter;
+import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.beans.Recordings;
+import com.george.memoshareapp.interfaces.RecordingDataListener;
 import com.george.memoshareapp.manager.PostManager;
-import com.george.memoshareapp.runnable.SavePhotoRunnable;
+import com.george.memoshareapp.utils.CustomItemDecoration;
+import com.george.memoshareapp.utils.PermissionUtils;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener {
+public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener, RecordingDataListener {
 
     private static final String TAG = "ReleaseActivity";
     private static String timeHourMinute;
@@ -52,21 +65,38 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private PostManager postManager;
     private RelativeLayout addLocation;
     public static final int MAP_INFORMATION_SUCCESS=1 ;
-    private PublishContent publishContent;
+    public static final int RESULT_CODE_CONTACT = 2;
+   // private PublishContent publishContent;
+    private Post post;
+    private TextView record;
+    private Button mBtnRecordAudio;
+    private Button mBtnPlayAudio;
+    private RelativeLayout rl_location;
+    private TextView tv_location;
+    private double latitude;
+    private double longitude;
+    private String location;
+    private List<Recordings> recordingsList  = new ArrayList<>();;
     private int StyleType=5;
     private EditText release_edit;
     private ImageView release_back;
     private String editTextContent;
-    private double latitude;
-    private String location;
-    private double longitude;
+    private TextView at;
+    private RelativeLayout addat;
 
+    private static final int MAX_IMAGES = 9;  // Maximum number of images
+    private RecyclerView recyclerView;
+    private ImageAdapter imageAdapter;
+    private List<Uri> imageUriList = new ArrayList<>();
+    private RelativeLayout rl_at;
+    private RelativeLayout rl_addat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.release);
+        setContentView(R.layout.activity_release);
         initView();
+        initRecyclerView();
         rl_permission.setOnClickListener(this);
         rl_time.setOnClickListener(this);
         release_button.setOnClickListener(this);
@@ -93,6 +123,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+
     }
 
     private void initView() {
@@ -103,15 +134,48 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         release_permission = (TextView) findViewById(R.id.release_permission);
         release_time = (TextView) findViewById(R.id.release_time);
         release_time_hour = (TextView) findViewById(R.id.release_time_hour);
+        tv_location = (TextView) findViewById(R.id.tv_location);
         release_button = (ImageView) findViewById(R.id.release_button);
         addLocation = (RelativeLayout) findViewById(R.id.rl_addLocation);
+        addat = (RelativeLayout) findViewById(R.id.rl_addat);
+        rl_location = (RelativeLayout) findViewById(R.id.rl_location);
+        record = (TextView) findViewById(R.id.record);
+        rl_addat = (RelativeLayout) findViewById(R.id.rl_addat);
         release_edit = (EditText) findViewById(R.id.release_edit);
         release_back = (ImageView) findViewById(R.id.release_back);
         postManager = new PostManager(this);
         rl_permission.setOnClickListener(this);
         rl_time.setOnClickListener(this);
+        addat.setOnClickListener(this);
         release_button.setOnClickListener(this);
         addLocation.setOnClickListener(this);
+
+    }
+
+    private void initRecyclerView(){
+        // Set to 3-column grid layout
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerView.setHasFixedSize(true);
+
+        // Add blank items in RecyclerView
+        imageUriList.add(null);
+        imageAdapter = new ImageAdapter(this, imageUriList);
+        recyclerView.setAdapter(imageAdapter);
+
+        // 设置 RecyclerView 中的 item 的相对位置
+//        int spanCount = 3;
+//        int spacing = 0;
+//        boolean includeEdge = true;
+//        recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+
+//        imageAdapter.updateButtonPosition(MAX_IMAGES);
+
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_expected_size);
+        recyclerView.addItemDecoration(new CustomItemDecoration(spacingInPixels));
+
+        record.setOnClickListener(this);
+        RecordAudioDialogFragment.recordCount=0;
     }
 
     public void showDatePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
@@ -204,6 +268,40 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    private void getPhotoFromAlbum(Intent data) {
+        // 从相册获取图片
+        if (data != null) {
+            ClipData clipData = data.getClipData();
+            if (clipData != null && clipData.getItemCount() + imageUriList.size()> MAX_IMAGES + 1) {
+                // 选择的图片数量超过了限制，提示用户重新选择
+                Toast.makeText(this, "最多可展示 " + MAX_IMAGES + " 照片" + "," + "请重新选择！", Toast.LENGTH_SHORT).show();
+            } else {
+                // 处理选择的图片
+                if (clipData != null) {
+                    int count = clipData.getItemCount();
+                    for (int i = 0; i < count; i++) {
+                        Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                        imageUriList.add(imageUriList.size() - 1, imageUri);
+                    }
+                } else {
+                    Uri imageUri = data.getData();
+                    imageUriList.add(imageUriList.size() - 1, imageUri);
+                }
+                imageAdapter.updateImageListAndButtonPosition(MAX_IMAGES);
+            }
+        }
+    }
+    //imageUriList即是所选择照片的uri，但因为我的逻辑需要判断list尾部是否存在null，在获取list时要做出判断，若有则需要移除，具体逻辑如下
+    private List<Uri> getImageUriList() {
+        List<Uri> list = new ArrayList<>();
+        for (int i = 0; i < imageUriList.size(); i++) {
+            if (imageUriList.get(i) != null) {
+                list.add(imageUriList.get(i));
+            }
+        }
+        return list;
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -215,7 +313,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 showDatePickerDialog(this, StyleType, release_time, calendar);
                 break;
             case R.id.release_button:
-                getOtherParameter();
+
                 postManager.saveContent2DB(editTextContent,PUBLIC_PERMISSION,location,latitude,longitude, memoireTimeYear, timeHourMinute);
                 ExecutorService executor = Executors.newFixedThreadPool(5);
 //                executor.execute(new SavePhotoRunnable(photoPath));
@@ -223,30 +321,71 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.release_back:
                 finish();
+               //照片路径270行左右
                 break;
             case R.id.rl_addLocation:
                 startActivityForResult(new Intent(this, MapLocationActivity.class), 1);
+                break;
+            case R.id.rl_addat:
+                startActivityForResult(new Intent(this, ContactListActivity.class), RESULT_CODE_CONTACT);
+                break;
+
+            case R.id.record:
+                PermissionUtils.recordPermission(this);
+                final RecordAudioDialogFragment fragment = RecordAudioDialogFragment.newInstance();
+                fragment.show(getSupportFragmentManager(), RecordAudioDialogFragment.class.getSimpleName());
+                fragment.setDataListener(this);
+                fragment.setOnCancelListener(new RecordAudioDialogFragment.OnAudioCancelListener() {
+                    @Override
+                    public void onCancel() {
+                        if (!fragment.isRecording()) {
+                            fragment.dismiss();
+                        }
+                    }
+                });
+                break;
+
         }
     }
 
-    private void getOtherParameter() {
-        editTextContent = release_edit.getText().toString().trim();
-        //获取图片的路径，语音的路径＋时长
-        //@的人 字符串拼接
-        latitude = publishContent.getLatitude();
-        location = publishContent.getLocation();
-        longitude = publishContent.getLongitude();
 
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode){
                 case MAP_INFORMATION_SUCCESS:
-                    publishContent = (PublishContent) data.getSerializableExtra("publishContent");
+                    post = (Post) data.getSerializableExtra("publishContent");
+                    latitude = post.getLatitude();
+                    longitude = post.getLongitude();
+                    location = post.getLocation();
+                    tv_location.setText(location);
+                    rl_location.setVisibility(View.VISIBLE);
                     break;
+                case RESULT_CODE_CONTACT:
+                    String name = data.getStringExtra("name");
+                    release_edit.setText("@"+name);
+                    release_edit.setTextColor(Color.parseColor("#685c97"));
+                    break;
+
+                case RESULT_OK:
+                    getPhotoFromAlbum(data);
+                    break;
+        }
+
+
+        }
+
+
+
+    @Override
+    public void onRecordingDataReceived(Recordings recording) {
+        if (recording != null) {
+            Log.d(TAG, "onRecordingDataReceived: "+recording.getRecordTime());
+            Log.d(TAG, "onRecordingDataReceived: "+recording.getRecordCachePath());
+
+            recordingsList.add(recording);
+            Log.d(TAG, "onRecordingDataReceived: "+recordingsList.size());
 
         }
 

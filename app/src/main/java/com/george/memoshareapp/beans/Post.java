@@ -14,12 +14,12 @@ import java.util.List;
  * @date: 2023/5/9 11:06
  * @version: 1.0
  */
-public class PublishContent extends LitePalSupport implements Serializable {
+public class Post extends LitePalSupport implements Serializable {
     private int id;
     private int phoneNumber;
     private String publishedText;
     private List<String> phoneCachePath;
-    private List<String> voiceCachePath;
+    private List<Recordings> record;
     private List<String> contacts;
     private String location;
     private double longitude;
@@ -28,15 +28,16 @@ public class PublishContent extends LitePalSupport implements Serializable {
     private String publishedTime;
     private String MemoryTime;
 
-    public PublishContent() {
+    public Post() {
+
     }
 
-    public PublishContent(int id, int phoneNumber, String publishedText, List<String> phoneCachePath, List<String> voiceCachePath, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
+    public Post(int id, int phoneNumber, String publishedText, List<String> phoneCachePath, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.publishedText = publishedText;
         this.phoneCachePath = phoneCachePath;
-        this.voiceCachePath = voiceCachePath;
+        this.record = record;
         this.contacts = contacts;
         this.location = location;
         this.longitude = longitude;
@@ -78,12 +79,12 @@ public class PublishContent extends LitePalSupport implements Serializable {
         this.phoneCachePath = phoneCachePath;
     }
 
-    public List<String> getVoiceCachePath() {
-        return voiceCachePath;
+    public List<Recordings> getRecord() {
+        return record;
     }
 
-    public void setVoiceCachePath(List<String> voiceCachePath) {
-        this.voiceCachePath = voiceCachePath;
+    public void setRecord(List<Recordings> record) {
+        this.record = record;
     }
 
     public List<String> getContacts() {
@@ -144,12 +145,12 @@ public class PublishContent extends LitePalSupport implements Serializable {
 
     @Override
     public String toString() {
-        return "PublishContent{" +
+        return "Post{" +
                 "id=" + id +
                 ", phoneNumber=" + phoneNumber +
                 ", publishedText='" + publishedText + '\'' +
                 ", phoneCachePath=" + phoneCachePath +
-                ", voiceCachePath=" + voiceCachePath +
+                ", record=" + record +
                 ", contacts=" + contacts +
                 ", location='" + location + '\'' +
                 ", longitude=" + longitude +
