@@ -2,6 +2,7 @@ package com.george.memoshareapp.beans;
 
 import android.os.CountDownTimer;
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
 /**
@@ -17,9 +18,10 @@ public class Recordings extends LitePalSupport {
     private int id;
     private String recordCachePath;
     private long recordTime;
+    @Column(ignore = true)
     private CountDownTimer countDownTimer;
+    @Column(ignore = true)
     private long InitialRecordTime;
-
     public Recordings() {
     }
 
@@ -28,6 +30,10 @@ public class Recordings extends LitePalSupport {
         this.recordCachePath = recordCachePath;
         this.recordTime = recordTime;
     }
+
+
+
+
 
     public CountDownTimer getCountDownTimer() {
         return countDownTimer;
