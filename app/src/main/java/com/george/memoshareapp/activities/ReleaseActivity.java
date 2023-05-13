@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.text.Editable;
@@ -72,7 +73,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private EditText release_edit;
     private ImageView release_back;
     private TextView at;
-    private RelativeLayout rl_at;
+    private RelativeLayout addat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +119,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         tv_location = (TextView) findViewById(R.id.tv_location);
         release_button = (ImageView) findViewById(R.id.release_button);
         addLocation = (RelativeLayout) findViewById(R.id.rl_addLocation);
-        rl_at = (RelativeLayout) findViewById(R.id.rl_at);
+        addat = (RelativeLayout) findViewById(R.id.rl_addat);
         rl_location = (RelativeLayout) findViewById(R.id.rl_location);
         record = (TextView) findViewById(R.id.record);
         release_edit = (EditText) findViewById(R.id.release_edit);
@@ -126,7 +127,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         contentManager = new ContentManager(this);
         rl_permission.setOnClickListener(this);
         rl_time.setOnClickListener(this);
-        rl_at.setOnClickListener(this);
+        addat.setOnClickListener(this);
         release_button.setOnClickListener(this);
         addLocation.setOnClickListener(this);
         record.setOnClickListener(this);
@@ -239,7 +240,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.rl_addLocation:
                 startActivityForResult(new Intent(this, MapLocationActivity.class), 1);
                 break;
-            case R.id.at:
+            case R.id.rl_addat:
                 startActivityForResult(new Intent(this, ContactListActivity.class), RESULT_CODE_CONTACT);
                 break;
             case R.id.release_back:
@@ -277,7 +278,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 case RESULT_CODE_CONTACT:
                     String name = data.getStringExtra("name");
-                    //todo name拼接到文本内容后面，高亮提示
+                    release_edit.setText("@"+name);
                     break;
 
 

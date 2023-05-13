@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <RelativeLayout
-                    android:id="@+id/rl_at"
+                    android:id="@+id/rl_addat"
                     android:layout_width="match_parent"
                     android:layout_height="43dp"
                     android:background="@color/white">
