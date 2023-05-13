@@ -9,6 +9,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -68,9 +72,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private int PUBLIC_PERMISSION = 1;
     private ContentManager contentManager;
     private RelativeLayout addLocation;
-    public static final int MAP_INFORMATION_SUCCESS=1 ;
+    public static final int MAP_INFORMATION_SUCCESS = 1;
     public static final int RESULT_CODE_CONTACT = 2;
-   // private PublishContent publishContent;
+    // private PublishContent publishContent;
     private Post post;
     private TextView record;
     private Button mBtnRecordAudio;
@@ -80,8 +84,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private double latitude;
     private double longitude;
     private String location;
-    private List<Recordings> recordingsList  = new ArrayList<>();;
-    private int StyleType=5;
+    private List<Recordings> recordingsList = new ArrayList<>();
+    ;
+    private int StyleType = 5;
     private EditText release_edit;
     private ImageView release_back;
     private TextView at;
@@ -112,9 +117,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().isEmpty()){
+                if (!s.toString().isEmpty()) {
                     release_button.setImageResource(R.mipmap.releasr_press);
-                }else {
+                } else {
                     release_button.setImageResource(R.mipmap.release_buttton);
                 }
 
@@ -155,7 +160,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private void initRecyclerView(){
+    private void initRecyclerView() {
         // Set to 3-column grid layout
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
@@ -178,7 +183,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         recyclerView.addItemDecoration(new CustomItemDecoration(spacingInPixels));
 
         record.setOnClickListener(this);
-        RecordAudioDialogFragment.recordCount=0;
+        RecordAudioDialogFragment.recordCount = 0;
     }
 
     public void showDatePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
@@ -275,7 +280,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         // 从相册获取图片
         if (data != null) {
             ClipData clipData = data.getClipData();
-            if (clipData != null && clipData.getItemCount() + imageUriList.size()> MAX_IMAGES + 1) {
+            if (clipData != null && clipData.getItemCount() + imageUriList.size() > MAX_IMAGES + 1) {
                 // 选择的图片数量超过了限制，提示用户重新选择
                 Toast.makeText(this, "最多可展示 " + MAX_IMAGES + " 照片" + "," + "请重新选择！", Toast.LENGTH_SHORT).show();
             } else {
@@ -294,6 +299,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
     }
+
     //imageUriList即是所选择照片的uri，但因为我的逻辑需要判断list尾部是否存在null，在获取list时要做出判断，若有则需要移除，具体逻辑如下
     private List<Uri> getImageUriList() {
         List<Uri> list = new ArrayList<>();
@@ -351,43 +357,69 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode){
-                case MAP_INFORMATION_SUCCESS:
-                    post = (Post) data.getSerializableExtra("publishContent");
-                    latitude = post.getLatitude();
-                    longitude = post.getLongitude();
-                    location = post.getLocation();
-                    tv_location.setText(location);
-                    rl_location.setVisibility(View.VISIBLE);
-                    break;
-                case RESULT_CODE_CONTACT:
-                    String name = data.getStringExtra("name");
-                    release_edit.setText("@"+name);
-                    release_edit.setTextColor(Color.parseColor("#685c97"));
-                    break;
-                case R.id.release_back:
-                    finish();
-                    break;
-                case RESULT_OK:
-                    getPhotoFromAlbum(data);
-                    break;
+        switch (resultCode) {
+            case MAP_INFORMATION_SUCCESS:
+                post = (Post) data.getSerializableExtra("publishContent");
+                latitude = post.getLatitude();
+                longitude = post.getLongitude();
+                location = post.getLocation();
+                tv_location.setText(location);
+                rl_location.setVisibility(View.VISIBLE);
+                break;
+            case RESULT_CODE_CONTACT:
+                String name = data.getStringExtra("name");
+                addAtName(name);
+                release_edit.setTextColor(Color.parseColor("#685c97"));
+                break;
+            case R.id.release_back:
+                finish();
+                break;
+            case RESULT_OK:
+                getPhotoFromAlbum(data);
+                break;
         }
 
 
         }
 
 
+        private void addAtName (String name){
+            String atText = "@" + name + " ";
+            // 创建一个SpannableString对象
+            SpannableString spannableString = new SpannableString(atText);
 
-    @Override
-    public void onRecordingDataReceived(Recordings recording) {
-        if (recording != null) {
-            Log.d(TAG, "onRecordingDataReceived: "+recording.getRecordTime());
-            Log.d(TAG, "onRecordingDataReceived: "+recording.getRecordCachePath());
+            // 创建一个ClickableSpan对象
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+                    // 定义点击事件，打开好友的个人信息页面
+                }
 
-            recordingsList.add(recording);
-            Log.d(TAG, "onRecordingDataReceived: "+recordingsList.size());
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    // 定义样式，高亮显示
+                    ds.setColor(Color.parseColor("#685c97"));
+                    ds.setUnderlineText(false);
+                }
+            };
+            spannableString.setSpan(clickableSpan, 0, atText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            // 将SpannableString添加到EditText的内容中
+            release_edit.append(spannableString);
+        }
+
+
+        @Override
+        public void onRecordingDataReceived (Recordings recording){
+            if (recording != null) {
+                Log.d(TAG, "onRecordingDataReceived: " + recording.getRecordTime());
+                Log.d(TAG, "onRecordingDataReceived: " + recording.getRecordCachePath());
+
+                recordingsList.add(recording);
+                Log.d(TAG, "onRecordingDataReceived: " + recordingsList.size());
+
+            }
 
         }
 
     }
-}
