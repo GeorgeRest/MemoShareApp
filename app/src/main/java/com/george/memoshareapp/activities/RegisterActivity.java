@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private boolean isClicked = false;
     private CodeSender codeSender;
     private String codeReal;
+    private ImageView back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         rb_agree = (MyCheckBox) findViewById(R.id.rb_agree);
         tv_getCode = (TextView) findViewById(R.id.tv_getCode);
         code = (TextView) findViewById(R.id.fragment_et_code);
+        back = (ImageView) findViewById(R.id.iv_back_rg);
         bt_register.setOnClickListener(this);
         tv_getCode.setOnClickListener(this);
     }
@@ -94,7 +97,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     }
                 }
                 break;
-            case R.id.iv_back:
+            case R.id.iv_back_rg:
                 finish();
                 break;
 
