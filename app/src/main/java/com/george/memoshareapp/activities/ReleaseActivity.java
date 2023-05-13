@@ -7,6 +7,10 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -278,13 +282,39 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 case RESULT_CODE_CONTACT:
                     String name = data.getStringExtra("name");
-                    release_edit.setText("@"+name);
+                    addAtName(name);
+
                     break;
 
 
         }
 
     }
+
+    private void addAtName(String name) {
+        String atText = "@" + name + " ";
+        // 创建一个SpannableString对象
+        SpannableString spannableString = new SpannableString(atText);
+
+        // 创建一个ClickableSpan对象
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                // 定义点击事件，打开好友的个人信息页面
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                // 定义样式，高亮显示
+                ds.setColor(Color.parseColor("#685c97"));
+                ds.setUnderlineText(false);
+            }
+        };
+        spannableString.setSpan(clickableSpan, 0, atText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        // 将SpannableString添加到EditText的内容中
+        release_edit.append(spannableString);
+    }
+
 
     @Override
     public void onRecordingDataReceived(Recordings recording) {
@@ -298,4 +328,5 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         }
 
     }
+
 }
