@@ -50,7 +50,6 @@ dependencies {
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-
     //图片选择库
     implementation 'com.zhihu.android:matisse:0.4.3'
     implementation 'com.belerweb:pinyin4j:2.5.1'                      //使用Pinyin4j将中文字符串转换为拼音

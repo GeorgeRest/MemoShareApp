@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.media.AudioFormat;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -135,7 +136,7 @@ public class RecordAudioDialogFragment extends DialogFragment {
 
                         elapsedMillis = SystemClock.elapsedRealtime() - mChronometerTime.getBase();
                         int formattedTime = formatElapsedTime(elapsedMillis);
-                        newTextview.setText(formattedTime + "''");
+                        newTextview.setText(formattedTime + "“");
                         recordMap = new HashMap<>();
                         Recordings recordings = new Recordings();
                         recordings.setRecordTime(elapsedMillis);
@@ -275,53 +276,13 @@ public class RecordAudioDialogFragment extends DialogFragment {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(textViewWidth, textViewHeight);
         params.setMargins((int) x, marginTop, 0, 0);
         newTextview.setLayoutParams(params);
-
-        newTextview.setPadding(20, 0, 0, 0);
+        newTextview.setTextColor(getResources().getColor(R.color.new_text_color));
+        newTextview.setTextSize(15);
+        newTextview.setTypeface(null, Typeface.BOLD);
+        newTextview.setPadding(100, 0, 0, 0);
         newTextview.setGravity(Gravity.CENTER);
         recordContainer.addView(newTextview);
         recordCount++;
-
-//        newTextview.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Recordings recordings = recordMap.get(newTextview);
-//                if (recordings.getCountDownTimer() == null) {
-//                    // Store the initial time
-//                    recordings.setInitialRecordTime(recordings.getRecordTime());
-//                    // 创建倒计时器，设置倒计时时间和间隔时间
-//                    recordings.setCountDownTimer(new CountDownTimer(recordings.getRecordTime(), 1000) {
-//                        @Override
-//                        public void onTick(long millisUntilFinished) {
-//                            // 每次间隔时间到达时，更新倒计时文本
-//                            newTextview.setText(String.valueOf(formatElapsedTime(millisUntilFinished)));
-//                            recordings.setRecordTime(millisUntilFinished); // 更新剩余时间
-//                            Log.d(TAG, "onTick: " + millisUntilFinished + "  " + recordings.getRecordTime() + "  " + recordings.getCountDownTimer());
-//                        }
-//
-//                        @Override
-//                        public void onFinish() {
-//                            // 倒计时结束时的处理
-//                            // Reset the timer to the initial time
-//                            recordings.setRecordTime(recordings.getInitialRecordTime());
-//                            newTextview.setText(String.valueOf(formatElapsedTime(recordings.getRecordTime())));
-//                            recordings.setCountDownTimer(null);
-//                        }
-//                    });
-//                    recordings.getCountDownTimer().start();
-//                } else {
-//                    // 如果倒计时器已存在，则暂停或重新启动
-//                    recordings.getCountDownTimer().cancel();
-//                    recordings.setRecordTime(recordings.getInitialRecordTime());
-//                    newTextview.setText(String.valueOf(formatElapsedTime(recordings.getRecordTime())));
-//                    recordings.setCountDownTimer(null);
-//                }
-//            }
-//        });
-//        if (recordCount == 3) {
-//            record.setVisibility(View.GONE);
-//        }
-//    }
-        // 定义一个变量来跟踪倒计时的状态
 
 
         newTextview.setOnClickListener(new View.OnClickListener() {
@@ -341,7 +302,7 @@ public class RecordAudioDialogFragment extends DialogFragment {
                         public void onTick(long millisUntilFinished) {
                             if (isCountdownRunning) {
                                 // 每次间隔时间到达时，更新倒计时文本
-                                newTextview.setText(String.valueOf(formatElapsedTime(millisUntilFinished)));
+                                newTextview.setText(String.valueOf(formatElapsedTime(millisUntilFinished))+"“");
                                 recordings.setRecordTime(millisUntilFinished); // 更新剩余时间
                                 Log.d(TAG, "onTick: " + millisUntilFinished + "  " + recordings.getRecordTime() + "  " + recordings.getCountDownTimer());
                             } else {
@@ -353,7 +314,7 @@ public class RecordAudioDialogFragment extends DialogFragment {
                         public void onFinish() {
                             // 倒计时结束时的处理
                             // Reset the timer to the total time
-                            newTextview.setText(String.valueOf(formatElapsedTime(totalRecordTime)));
+                            newTextview.setText(String.valueOf(formatElapsedTime(totalRecordTime))+"“");
                             recordings.setRecordTime(totalRecordTime);
                             recordings.setCountDownTimer(null);
                             isCountdownRunning = false;

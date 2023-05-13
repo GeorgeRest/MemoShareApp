@@ -50,6 +50,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         tv_getCode = (TextView) findViewById(R.id.tv_getCode);
         code = (TextView) findViewById(R.id.fragment_et_code);
         back = (ImageView) findViewById(R.id.iv_back_rg);
+        back.setOnClickListener(this);
+
         bt_register.setOnClickListener(this);
         tv_getCode.setOnClickListener(this);
     }
@@ -92,6 +94,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     }
                     if (UserManager.saveUserInfo(phone, pw)){
                         Toasty.success(this, "注册成功", Toast.LENGTH_SHORT).show();
+                        finish();
                     }else{
                         Toasty.error(this, "注册失败", Toast.LENGTH_SHORT,true).show();
                     }
