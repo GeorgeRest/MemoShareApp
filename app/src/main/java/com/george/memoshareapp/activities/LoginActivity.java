@@ -1,9 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +9,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.george.memoshareapp.Fragment.CodeLoginFragment;
 import com.george.memoshareapp.Fragment.PWLoginFragment;
@@ -180,6 +180,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (userManager.queryUser(phoneNumber) ) {
                         if( et_code.equals(CodeFragment.codeReal)){
                                 Intent intent = new Intent(this, HomePageActivity.class);
+                                intent.putExtra("phoneNumber",phoneNumber);
                                  startActivity(intent);
                             Toasty.success(this, "登录成功", Toast.LENGTH_SHORT).show();
                             finish();

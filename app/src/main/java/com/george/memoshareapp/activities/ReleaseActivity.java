@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.ClipData;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -37,6 +36,7 @@ import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.interfaces.RecordingDataListener;
 import com.george.memoshareapp.manager.PostManager;
+import com.george.memoshareapp.runnable.SavePhotoRunnable;
 import com.george.memoshareapp.utils.CustomItemDecoration;
 import com.george.memoshareapp.utils.PermissionUtils;
 
@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -66,7 +67,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private RelativeLayout addLocation;
     public static final int MAP_INFORMATION_SUCCESS=1 ;
     public static final int RESULT_CODE_CONTACT = 2;
-   // private PublishContent publishContent;
+
     private Post post;
     private TextView record;
     private Button mBtnRecordAudio;
@@ -90,6 +91,13 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private List<Uri> imageUriList = new ArrayList<>();
     private RelativeLayout rl_at;
     private RelativeLayout rl_addat;
+    private String memoryTime;
+    private String systemYear;
+    private String systemMonth;
+    private String systemDay;
+    private String hour;
+    private String minute;
+    private String contactName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,6 +231,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         timeHourMinute = hourOfDay + ":" + minute;
         return timeHourMinute;
     }
+    private void memoryTime(String memoireTimeYear, String timeHourMinute) {
+        memoryTime = memoireTimeYear + " " + timeHourMinute;
+
+    }
 
 
     private void showBottomDialog() {
@@ -313,15 +325,17 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 showDatePickerDialog(this, StyleType, release_time, calendar);
                 break;
             case R.id.release_button:
+                String phoneNumber = getIntent().getStringExtra("phoneNumber");
+                getSystemTime();
 
-                postManager.saveContent2DB(editTextContent,PUBLIC_PERMISSION,location,latitude,longitude, memoireTimeYear, timeHourMinute);
+                postManager.saveContent2DB(phoneNumber,editTextContent,imageUriList,recordingsList,contactName,location,longitude,latitude,PUBLIC_PERMISSION,getSystemTime(), memoryTime);
+                // 保存图片到本地
                 ExecutorService executor = Executors.newFixedThreadPool(5);
-//                executor.execute(new SavePhotoRunnable(photoPath));
+                executor.execute(new SavePhotoRunnable(imageUriList));
                 executor.shutdown();
                 break;
             case R.id.release_back:
                 finish();
-               //照片路径270行左右
                 break;
             case R.id.rl_addLocation:
                 startActivityForResult(new Intent(this, MapLocationActivity.class), 1);
@@ -348,6 +362,21 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private String getSystemTime() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+
+        systemYear = String.valueOf(cal.get(Calendar.YEAR));
+        systemMonth = String.valueOf(cal.get(Calendar.MONTH)) + 1;
+        systemDay = String.valueOf(cal.get(Calendar.DATE));
+        if (cal.get(Calendar.AM_PM) == 0) {
+            hour = String.valueOf(cal.get(Calendar.HOUR));
+        } else
+            hour = String.valueOf(cal.get(Calendar.HOUR)+12);
+        minute = String.valueOf(cal.get(Calendar.MINUTE));
+        String publishedTime = systemYear + "/" + systemMonth + "/" + systemDay + " " + hour + ":" + minute;
+        return publishedTime;
+    }
 
 
     @Override
@@ -361,11 +390,12 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     location = post.getLocation();
                     tv_location.setText(location);
                     rl_location.setVisibility(View.VISIBLE);
+
                     break;
                 case RESULT_CODE_CONTACT:
-                    String name = data.getStringExtra("name");
-                    release_edit.setText("@"+name);
-                    release_edit.setTextColor(Color.parseColor("#685c97"));
+                    contactName = data.getStringExtra("name");
+                    release_edit.setText("@"+ contactName);
+
                     break;
 
                 case RESULT_OK:
@@ -383,7 +413,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         if (recording != null) {
             Log.d(TAG, "onRecordingDataReceived: "+recording.getRecordTime());
             Log.d(TAG, "onRecordingDataReceived: "+recording.getRecordCachePath());
-
             recordingsList.add(recording);
             Log.d(TAG, "onRecordingDataReceived: "+recordingsList.size());
 

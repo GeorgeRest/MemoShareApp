@@ -1,15 +1,13 @@
 package com.george.memoshareapp.activities;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.content.Intent;
-import android.media.Image;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import com.george.memoshareapp.Fragment.CalendarTripFragment;
 import com.george.memoshareapp.Fragment.HomepageFragment;
@@ -81,7 +79,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 setTabSelection(3);
                 break;
             case R.id.home_capsule:
-                startActivity(new Intent(HomePageActivity.this, ReleaseActivity.class));
+                String phoneNumber = getIntent().getStringExtra("phoneNumber");
+                Intent intent = new Intent(HomePageActivity.this, ReleaseActivity.class).putExtra("phoneNumber", phoneNumber);
+                startActivity(intent);
             default:
                 break;
         }
