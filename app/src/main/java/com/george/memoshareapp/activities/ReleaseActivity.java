@@ -334,7 +334,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.record:
-                PermissionUtils.recordPermission(this);
                 final RecordAudioDialogFragment fragment = RecordAudioDialogFragment.newInstance();
                 fragment.show(getSupportFragmentManager(), RecordAudioDialogFragment.class.getSimpleName());
                 fragment.setDataListener(this);
@@ -379,46 +378,48 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         }
 
 
-        }
+    }
 
 
-        private void addAtName (String name){
-            String atText = "@" + name + " ";
-            // 创建一个SpannableString对象
-            SpannableString spannableString = new SpannableString(atText);
+    private void addAtName(String name) {
+        String atText = "@" + name + " ";
+        // 创建一个SpannableString对象
+        SpannableString spannableString = new SpannableString(atText);
 
-            // 创建一个ClickableSpan对象
-            ClickableSpan clickableSpan = new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    // 定义点击事件，打开好友的个人信息页面
-                }
-
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    super.updateDrawState(ds);
-                    // 定义样式，高亮显示
-                    ds.setColor(Color.parseColor("#685c97"));
-                    ds.setUnderlineText(false);
-                }
-            };
-            spannableString.setSpan(clickableSpan, 0, atText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            // 将SpannableString添加到EditText的内容中
-            release_edit.append(spannableString);
-        }
-
-
-        @Override
-        public void onRecordingDataReceived (Recordings recording){
-            if (recording != null) {
-                Log.d(TAG, "onRecordingDataReceived: " + recording.getRecordTime());
-                Log.d(TAG, "onRecordingDataReceived: " + recording.getRecordCachePath());
-
-                recordingsList.add(recording);
-                Log.d(TAG, "onRecordingDataReceived: " + recordingsList.size());
-
+        // 创建一个ClickableSpan对象
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                // 定义点击事件，打开好友的个人信息页面
             }
 
-        }
-
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                // 定义样式，高亮显示
+                ds.setColor(Color.parseColor("#685c97"));
+                ds.setUnderlineText(false);
+            }
+        };
+        spannableString.setSpan(clickableSpan, 0, atText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        // 将SpannableString添加到EditText的内容中
+        release_edit.append(spannableString);
     }
+
+
+    @Override
+    public void onRecordingDataReceived(Recordings recording, int type) {
+        if (recording != null && type == 1) {
+            recordingsList.add(recording);
+        }
+        if (recording != null && type == 0) {
+            recordingsList.remove(recording);
+        }
+        Log.d("TAG", "onRecordingDataReceived: " + recordingsList.size());
+        for (Recordings recordings : recordingsList) {
+            String recordCachePath = recordings.getRecordCachePath();
+            System.out.println(recordCachePath);
+        }
+    }
+
+}
