@@ -28,10 +28,9 @@
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
-                android:onClick="finish"
                 android:clickable="true"
-                android:src="@mipmap/back_register"
-                />
+                android:onClick="finish"
+                android:src="@mipmap/back_register" />
 
             <TextView
                 android:id="@+id/tv_title"

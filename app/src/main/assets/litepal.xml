@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="MemoShare" />
-    <version value="2" />
+    <version value="6" />
     <list>
         <list>
             <mapping class="com.george.memoshareapp.beans.User"></mapping>
             <mapping class="com.george.memoshareapp.beans.Post"></mapping>
+            <mapping class="com.george.memoshareapp.beans.Recordings"></mapping>
 
         </list>
     </list>

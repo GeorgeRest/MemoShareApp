@@ -32,6 +32,8 @@ public class PermissionUtils {
                 .permission(Permission.ACCESS_FINE_LOCATION)//GPS定位
                 .permission(Permission.READ_PHONE_STATE)//读取手机当前状态
                 .permission(Permission.READ_EXTERNAL_STORAGE)//读取外部存储
+                .permission(Permission.WRITE_EXTERNAL_STORAGE)//写入外部存储
+                .permission(Permission.RECORD_AUDIO)
                 .request(new OnPermissionCallback() {
                     @Override
                     public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
