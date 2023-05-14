@@ -359,7 +359,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.record:
-                PermissionUtils.recordPermission(this);
                 final RecordAudioDialogFragment fragment = RecordAudioDialogFragment.newInstance();
                 fragment.show(getSupportFragmentManager(), RecordAudioDialogFragment.class.getSimpleName());
                 fragment.setDataListener(this);
@@ -452,15 +451,18 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
 
     @Override
-    public void onRecordingDataReceived(Recordings recording) {
-        if (recording != null) {
-            Log.d(TAG, "onRecordingDataReceived: "+recording.getRecordTime());
-            Log.d(TAG, "onRecordingDataReceived: "+recording.getRecordCachePath());
+    public void onRecordingDataReceived(Recordings recording, int type) {
+        if (recording != null&& type == 1) {
             recordingsList.add(recording);
-            Log.d(TAG, "onRecordingDataReceived: "+recordingsList.size());
-
+            }
+        if (recording!= null && type == 0) {
+            recordingsList.remove(recording);
         }
-
+        Log.d("TAG", "onRecordingDataReceived: "+recordingsList.size());
+for (Recordings recordings : recordingsList) {
+        String recordCachePath = recordings.getRecordCachePath();
+            System.out.println(recordCachePath);
+        }
     }
 
 }
