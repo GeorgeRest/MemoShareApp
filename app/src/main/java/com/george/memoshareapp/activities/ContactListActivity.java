@@ -113,7 +113,6 @@ public class ContactListActivity extends AppCompatActivity {
                 }else{
                     letterIndexView.setVisibility(View.VISIBLE);
                 }
-
                 filterContacts(newText);
                 return true;
             }
@@ -135,9 +134,9 @@ public class ContactListActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent();
-                    intent.putExtra("name",contacts.get(position).getName());
+                    intent.putExtra("name",filteredList.get(position).getName());
                     setResult(ReleaseActivity.RESULT_CODE_CONTACT,intent);
-                    finish();   //关闭页面,回传结果
+                    finish();
                 }
             });
         }else{
