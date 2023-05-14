@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Environment;
 
 import androidx.annotation.RequiresApi;
+import android.util.Log;
 
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
@@ -21,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class PostManager {
+    private static final String TAG = "PostManager";
     private Context context;
     private List<Uri> imageUriList;
     private List<String> photoPathList=new ArrayList<>();
@@ -33,16 +35,15 @@ public class PostManager {
     public PostManager(Context context) {
         this.context = context;
     }
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void getDBParameter(List<Uri>imageUriList, String phoneNumber, String editTextContent, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime){
+
+@RequiresApi(api = Build.VERSION_CODES.O)    public void getDBParameter(List<Uri> imageUriList, String phoneNumber, String editTextContent, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime) {
         this.imageUriList = imageUriList;
         saveContent2DB(phoneNumber, editTextContent, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
 
     }
-   @RequiresApi(api = Build.VERSION_CODES.O)
-   public void saveContent2DB(String phoneNumber, String editTextContent, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime){
-       ExecutorService executor = Executors.newFixedThreadPool(5);
-       File photoFolder = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "photoCache");
+
+ @RequiresApi(api = Build.VERSION_CODES.O)   public void saveContent2DB(String phoneNumber, String editTextContent, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime) {
+        ExecutorService executor = Executors.newFixedThreadPool(5);File photoFolder = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "photoCache");
        if (!photoFolder.exists()) {// 文件夹不存在，执行创建文件夹的操作
            photoFolder.mkdirs(); // 创建文件夹
        }
@@ -68,15 +69,18 @@ public class PostManager {
                photoPathList.add(photoAbsolutePath);
            }
 
+         savePhotoRunnable = new SavePhotoRunnable(uri,file, photoFolder,imageUriList, context);
+        executor.execute(savePhotoRunnable);
+        }
+        Log.d(TAG, "saveContent2DB: "+photoPathList);
+        Post post = new Post(phoneNumber, editTextContent, photoPathList, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
+        for (Recordings recordings : record) {
+            recordings.setPost(post);
+            recordings.save();
+        }
+        post.save();
+        executor.shutdown();
 
-           savePhotoRunnable = new SavePhotoRunnable(uri,file, photoFolder, imageUriList, context);
 
-           executor.execute(savePhotoRunnable);
-       }
-       Post post = new Post(  phoneNumber, editTextContent, photoPathList, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
-       post.save();
-       executor.shutdown();
-
-
-   }
+    }
 }

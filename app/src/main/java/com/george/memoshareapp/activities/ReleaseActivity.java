@@ -80,8 +80,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private double latitude;
     private double longitude;
     private String location;
-    private List<Recordings> recordingsList  = new ArrayList<>();;
-    private int StyleType=5;
+    private List<Recordings> recordingsList = new ArrayList<>();
+    ;
+    private int StyleType = 5;
     private EditText release_edit;
     private ImageView release_back;
     private String editTextContent;
@@ -103,7 +104,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private String contactName;
     private String release_edit1;
     private List<String> photoPathList;
-    private List<String> addedNames;
+    private List<String> addedNames = new ArrayList<>();
+    ;
     private SpannableString spannableString;
     private ClickableSpan clickableSpan;
     private String atText;
@@ -128,10 +130,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().isEmpty()){
+                if (!s.toString().isEmpty()) {
                     release_button.setImageResource(R.mipmap.re_press);
 
-                }else {
+                } else {
                     release_button.setImageResource(R.mipmap.release_buttton);
                 }
 
@@ -173,7 +175,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    private void initRecyclerView(){
+    private void initRecyclerView() {
         // Set to 3-column grid layout
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
@@ -196,7 +198,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         recyclerView.addItemDecoration(new CustomItemDecoration(spacingInPixels));
 
         record.setOnClickListener(this);
-        RecordAudioDialogFragment.recordCount=0;
+        RecordAudioDialogFragment.recordCount = 0;
     }
 
     public void showDatePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
@@ -246,9 +248,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         timeHourMinute = hourOfDay + ":" + minute;
         return timeHourMinute;
     }
+
     private String memoryTime() {
-        memoryTime = memoireTimeYear + " " + timeHourMinute;
-        return memoryTime;
+        return memoryTime = memoireTimeYear + " " + timeHourMinute;
 
     }
 
@@ -300,7 +302,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         // 从相册获取图片
         if (data != null) {
             ClipData clipData = data.getClipData();
-            if (clipData != null && clipData.getItemCount() + imageUriList.size()> MAX_IMAGES + 1) {
+            if (clipData != null && clipData.getItemCount() + imageUriList.size() > MAX_IMAGES + 1) {
                 // 选择的图片数量超过了限制，提示用户重新选择
                 Toast.makeText(this, "最多可展示 " + MAX_IMAGES + " 照片" + "," + "请重新选择！", Toast.LENGTH_SHORT).show();
             } else {
@@ -319,6 +321,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
     }
+
     //imageUriList即是所选择照片的uri，但因为我的逻辑需要判断list尾部是否存在null，在获取list时要做出判断，若有则需要移除，具体逻辑如下
     private List<Uri> getImageUriList() {
         List<Uri> list = new ArrayList<>();
@@ -345,12 +348,12 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
                 getSystemTime();
 
-                if (location==null){
+                if (location == null) {
                     location = "";
                 }
 
 
-                postManager.getDBParameter(getImageUriList(),phoneNumber, release_edit1,recordingsList, addedNames,location,longitude,latitude,PUBLIC_PERMISSION,getSystemTime(), memoryTime());
+                postManager.getDBParameter(getImageUriList(), phoneNumber, release_edit1, recordingsList, addedNames, location, longitude, latitude, PUBLIC_PERMISSION, getSystemTime(), memoryTime());
 
                 break;
             case R.id.release_back:
@@ -385,12 +388,12 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         cal.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
 
         systemYear = String.valueOf(cal.get(Calendar.YEAR));
-        systemMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
+        systemMonth = String.valueOf(cal.get(Calendar.MONTH) + 1);
         systemDay = String.valueOf(cal.get(Calendar.DATE));
         if (cal.get(Calendar.AM_PM) == 0) {
             hour = String.valueOf(cal.get(Calendar.HOUR));
         } else
-            hour = String.valueOf(cal.get(Calendar.HOUR)+12);
+            hour = String.valueOf(cal.get(Calendar.HOUR) + 12);
         minute = String.valueOf(cal.get(Calendar.MINUTE));
         String publishedTime = systemYear + "/" + systemMonth + "/" + systemDay + " " + hour + ":" + minute;
         return publishedTime;
@@ -400,71 +403,70 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode){
-                case MAP_INFORMATION_SUCCESS:
-                    post = (Post) data.getSerializableExtra("publishContent");
-                    latitude = post.getLatitude();
-                    longitude = post.getLongitude();
-                    location = post.getLocation();
-                    tv_location.setText(location);
-                    rl_location.setVisibility(View.VISIBLE);
+        switch (resultCode) {
+            case MAP_INFORMATION_SUCCESS:
+                post = (Post) data.getSerializableExtra("publishContent");
+                latitude = post.getLatitude();
+                longitude = post.getLongitude();
+                location = post.getLocation();
+                tv_location.setText(location);
+                rl_location.setVisibility(View.VISIBLE);
 
-                    break;
-                case RESULT_CODE_CONTACT:
-                    contactName = data.getStringExtra("name");
-                    addAtName(contactName);
-
-                    break;
-
-                case RESULT_OK:
-                    getPhotoFromAlbum(data);
-                    break;
+                break;
+            case RESULT_CODE_CONTACT:
+                contactName = data.getStringExtra("name");
+                addAtName(contactName);
+                break;
+            case RESULT_OK:
+                getPhotoFromAlbum(data);
+                break;
         }
+    }
 
+    private void addAtName(String name) {
 
+        if (!addedNames.contains(name)) {
+            atText = "@" + name + " ";
+            // 创建一个SpannableString对象
+            spannableString = new SpannableString(atText);
+            // 创建一个ClickableSpan对象
+            clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+                    // 定义点击事件，打开好友的个人信息页面
+                }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    // 定义样式，高亮显示
+                    ds.setColor(Color.parseColor("#685c97"));
+                    ds.setUnderlineText(false);
+                }
+            };
+            addedNames.add(name);
         }
-        private void addAtName (String name){
-            if(!addedNames.contains(name)){
-                atText = "@" + name + " ";
-                // 创建一个SpannableString对象
-                spannableString = new SpannableString(atText);
+        String userInput = this.release_edit.getText().toString().trim();
+        release_edit1=removeAtNames(userInput);
+        spannableString.setSpan(clickableSpan, 0, atText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        // 将SpannableString添加到EditText的内容中
+        release_edit.append(spannableString);
+    }
 
-                // 创建一个ClickableSpan对象
-                clickableSpan = new ClickableSpan() {
-                    @Override
-                    public void onClick(View widget) {
-                        // 定义点击事件，打开好友的个人信息页面
-                    }
-
-                    @Override
-                    public void updateDrawState(TextPaint ds) {
-                        super.updateDrawState(ds);
-                        // 定义样式，高亮显示
-                        ds.setColor(Color.parseColor("#685c97"));
-                        ds.setUnderlineText(false);
-                    }
-                };
-                addedNames.add(name);
-            }
-            release_edit1 = this.release_edit.getText().toString().trim();
-            spannableString.setSpan(clickableSpan, 0, atText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            // 将SpannableString添加到EditText的内容中
-            release_edit.append(spannableString);
-
-        }
-
-
+    private String removeAtNames(String text) {
+        return text.replaceAll("@\\w+", "");
+    }
     @Override
     public void onRecordingDataReceived(Recordings recording, int type) {
-        if (recording != null&& type == 1) {
+        if (recording != null && type == 1) {
             recordingsList.add(recording);
-            }
-        if (recording!= null && type == 0) {
+        }
+        if (recording != null && type == 0) {
             recordingsList.remove(recording);
         }
-        Log.d("TAG", "onRecordingDataReceived: "+recordingsList.size());
-for (Recordings recordings : recordingsList) {
-        String recordCachePath = recordings.getRecordCachePath();
+        Log.d("TAG", "onRecordingDataReceived: " + recordingsList.size());
+        for (Recordings recordings : recordingsList) {
+            String recordCachePath = recordings.getRecordCachePath();
             System.out.println(recordCachePath);
         }
     }

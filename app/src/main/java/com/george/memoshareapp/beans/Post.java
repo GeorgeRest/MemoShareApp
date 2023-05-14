@@ -1,6 +1,7 @@
 package com.george.memoshareapp.beans;
 
 import org.litepal.crud.LitePalSupport;
+import org.w3c.dom.Comment;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,57 +16,35 @@ import java.util.List;
  * @version: 1.0
  */
 public class Post extends LitePalSupport implements Serializable {
-    private int id;
     private String phoneNumber;
     private String publishedText;
-    private List<String> phoneCachePath;
-    private List<Recordings> record;
+    private List<String> photoCachePath;
+    private List<Recordings> recordings;
     private List<String> contacts;
     private String location;
     private double longitude;
     private double latitude;
     private int isPublic;
     private String publishedTime;
-    private String MemoryTime;
+    private String memoryTime;
+    private List<Comment> comments;
 
     public Post() {
 
     }
 
-    public Post(int id, String phoneNumber, String publishedText, List<String> phoneCachePath, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
-        this.id = id;
+    public Post(String phoneNumber, String publishedText, List<String> photoCachePath, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
         this.phoneNumber = phoneNumber;
         this.publishedText = publishedText;
-        this.phoneCachePath = phoneCachePath;
-        this.record = record;
+        this.photoCachePath = photoCachePath;
+        this.recordings = record;
         this.contacts = contacts;
         this.location = location;
         this.longitude = longitude;
         this.latitude = latitude;
         this.isPublic = isPublic;
         this.publishedTime = publishedTime;
-        MemoryTime = memoryTime;
-    }
-    public Post( String  phoneNumber, String publishedText, List<String> phoneCachePath, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
-        this.phoneNumber = phoneNumber;
-        this.publishedText = publishedText;
-        this.phoneCachePath = phoneCachePath;
-        this.record = record;
-        this.contacts = contacts;
-        this.location = location;
-        this.longitude = longitude;
-        this.latitude = latitude;
-        this.isPublic = isPublic;
-        this.publishedTime = publishedTime;
-        MemoryTime = memoryTime;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.memoryTime = memoryTime;
     }
 
     public String getPhoneNumber() {
@@ -84,20 +63,20 @@ public class Post extends LitePalSupport implements Serializable {
         this.publishedText = publishedText;
     }
 
-    public List<String> getPhoneCachePath() {
-        return phoneCachePath;
+    public List<String> getPhotoCachePath() {
+        return photoCachePath;
     }
 
-    public void setPhoneCachePath(List<String> phoneCachePath) {
-        this.phoneCachePath = phoneCachePath;
+    public void setPhotoCachePath(List<String> photoCachePath) {
+        this.photoCachePath = photoCachePath;
     }
 
-    public List<Recordings> getRecord() {
-        return record;
+    public List<Recordings> getRecordings() {
+        return recordings;
     }
 
-    public void setRecord(List<Recordings> record) {
-        this.record = record;
+    public void setRecordings(List<Recordings> recordings) {
+        this.recordings = recordings;
     }
 
     public List<String> getContacts() {
@@ -149,29 +128,18 @@ public class Post extends LitePalSupport implements Serializable {
     }
 
     public String getMemoryTime() {
-        return MemoryTime;
+        return memoryTime;
     }
 
     public void setMemoryTime(String memoryTime) {
-        MemoryTime = memoryTime;
+        this.memoryTime = memoryTime;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", phoneNumber=" + phoneNumber +
-                ", publishedText='" + publishedText + '\'' +
-                ", phoneCachePath=" + phoneCachePath +
-                ", record=" + record +
-                ", contacts=" + contacts +
-                ", location='" + location + '\'' +
-                ", longitude=" + longitude +
-                ", latitude=" + latitude +
-                ", isPublic=" + isPublic +
-                ", publishedTime='" + publishedTime + '\'' +
-                ", MemoryTime='" + MemoryTime + '\'' +
-                '}';
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

@@ -12,17 +12,17 @@ import org.litepal.crud.LitePalSupport;
  * @version: 1.0
  */
 public class User extends LitePalSupport {
-    private int id;
+    private long id;
     private String phoneNumber;
     private String password;
     public User() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
