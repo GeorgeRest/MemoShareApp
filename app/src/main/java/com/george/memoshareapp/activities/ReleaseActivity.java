@@ -8,6 +8,7 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -30,6 +31,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -145,6 +147,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initView() {
+        addedNames = new ArrayList<>();
         format = DateFormat.getDateTimeInstance();
         calendar = Calendar.getInstance(Locale.CHINA);
         rl_permission = (RelativeLayout) findViewById(R.id.RL_permission);
@@ -203,9 +206,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 // 此处得到选择的时间，可以进行你想要的操作
+                getYearMonthDay(year, monthOfYear + 1, dayOfMonth);
                 tv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
                 showTimePickerDialog(ReleaseActivity.this, StyleType, release_time_hour, calendar);
-                getYearMonthDay(year, monthOfYear + 1, dayOfMonth);
+
             }
         }, calendar.get(Calendar.YEAR)
                 , calendar.get(Calendar.MONTH)
@@ -226,8 +230,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        tv.setText(hourOfDay + ":" + minute);
                         getTime(hourOfDay, minute);
+                        tv.setText(hourOfDay + ":" + minute);
+
                     }
                 }
                 // 设置初始时间
@@ -241,8 +246,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         timeHourMinute = hourOfDay + ":" + minute;
         return timeHourMinute;
     }
-    private void memoryTime(String memoireTimeYear, String timeHourMinute) {
+    private String memoryTime() {
         memoryTime = memoireTimeYear + " " + timeHourMinute;
+        return memoryTime;
 
     }
 
@@ -325,6 +331,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -338,20 +345,12 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
                 getSystemTime();
 
-
-//                // 保存图片
-//                ExecutorService executor = Executors.newFixedThreadPool(5);
-//                SavePhotoRunnable savePhotoRunnable = new SavePhotoRunnable(imageUriList, this);
-//                executor.execute(savePhotoRunnable);
-//                photoPathList = savePhotoRunnable.getPhotoPathList();
-//                postManager.saveContent2DB(phoneNumber, release_edit1,photoPathList,recordingsList, addedNames,"location",78,89,PUBLIC_PERMISSION,getSystemTime(), memoryTime);
-//                executor.shutdown();
                 if (location==null){
                     location = "";
                 }
 
 
-                postManager.getDBParameter(getImageUriList(),phoneNumber, release_edit1,recordingsList, addedNames,location,longitude,latitude,PUBLIC_PERMISSION,getSystemTime(), memoryTime);
+                postManager.getDBParameter(getImageUriList(),phoneNumber, release_edit1,recordingsList, addedNames,location,longitude,latitude,PUBLIC_PERMISSION,getSystemTime(), memoryTime());
 
                 break;
             case R.id.release_back:
@@ -425,7 +424,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
         }
         private void addAtName (String name){
-            addedNames = new ArrayList<>();
             if(!addedNames.contains(name)){
                 atText = "@" + name + " ";
                 // 创建一个SpannableString对象
