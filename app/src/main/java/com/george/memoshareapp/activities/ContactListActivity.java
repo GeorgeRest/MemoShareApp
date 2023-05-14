@@ -44,7 +44,6 @@ public class ContactListActivity extends AppCompatActivity {
 
         initView();
         initDate();
-        setupSearchView();
         sortContacts(contacts); // 按拼音首字母排序
         contactListAdapter = new ContactListAdapter(this,contacts);
         lv_contact_list.setAdapter(contactListAdapter);
@@ -80,6 +79,7 @@ public class ContactListActivity extends AppCompatActivity {
                 letterIndexView.updateLetterIndexView(sectionForPosition);
             }
         });
+        setupSearchView();
     }
 
     private void initView() {
@@ -130,7 +130,16 @@ public class ContactListActivity extends AppCompatActivity {
         if(!filteredList.isEmpty()) {
             contactListAdapter.setData(filteredList);
             contactListAdapter.notifyDataSetChanged();
-            
+
+            lv_contact_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent();
+                    intent.putExtra("name",contacts.get(position).getName());
+                    setResult(ReleaseActivity.RESULT_CODE_CONTACT,intent);
+                    finish();   //关闭页面,回传结果
+                }
+            });
         }else{
             Toasty.warning(this, "没有找到"+"'"+query+"'"+"相关结果", Toast.LENGTH_SHORT,true).show();
         }
