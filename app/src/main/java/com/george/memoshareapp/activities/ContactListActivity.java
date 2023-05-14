@@ -99,7 +99,7 @@ public class ContactListActivity extends AppCompatActivity {
         });
     }
 
-    private void setupSearchView() {
+    private void setupSearchView() {    //搜索业务
         sv_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -130,6 +130,7 @@ public class ContactListActivity extends AppCompatActivity {
         if(!filteredList.isEmpty()) {
             contactListAdapter.setData(filteredList);
             contactListAdapter.notifyDataSetChanged();
+            
         }else{
             Toasty.warning(this, "没有找到"+"'"+query+"'"+"相关结果", Toast.LENGTH_SHORT,true).show();
         }
