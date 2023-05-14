@@ -1,7 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,6 +8,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.manager.UserManager;
@@ -88,10 +88,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         Toasty.error(this, "验证码输入错误", Toast.LENGTH_SHORT,true).show();
                         return;
                     }
-                    if(!rb_agree.isChecked()){
-                        Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT,true).show();
-                        return;
-                    }
+//                    if(!rb_agree.isChecked()){
+//                        Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT,true).show();
+//                        return;
+//                    }
                     if (UserManager.saveUserInfo(phone, pw)){
                         Toasty.success(this, "注册成功", Toast.LENGTH_SHORT).show();
                         finish();

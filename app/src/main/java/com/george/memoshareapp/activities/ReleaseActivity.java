@@ -41,9 +41,7 @@ import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.interfaces.RecordingDataListener;
 import com.george.memoshareapp.manager.PostManager;
-import com.george.memoshareapp.runnable.SavePhotoRunnable;
 import com.george.memoshareapp.utils.CustomItemDecoration;
-import com.george.memoshareapp.utils.PermissionUtils;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -51,8 +49,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener, RecordingDataListener {
 
@@ -109,6 +105,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private SpannableString spannableString;
     private ClickableSpan clickableSpan;
     private String atText;
+    private String phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +113,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_release);
         initView();
         initRecyclerView();
+        phoneNumber = getIntent().getStringExtra("phoneNumber");
         rl_permission.setOnClickListener(this);
         rl_time.setOnClickListener(this);
         release_button.setOnClickListener(this);
@@ -129,7 +127,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().isEmpty()){
-                    release_button.setImageResource(R.mipmap.releasr_press);
+                    release_button.setImageResource(R.mipmap.re_press);
+
                 }else {
                     release_button.setImageResource(R.mipmap.release_buttton);
                 }
@@ -336,17 +335,24 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 showDatePickerDialog(this, StyleType, release_time, calendar);
                 break;
             case R.id.release_button:
-                String phoneNumber = getIntent().getStringExtra("phoneNumber");
+
                 getSystemTime();
 
-                postManager.saveContent2DB(phoneNumber, release_edit1,photoPathList,recordingsList, addedNames,location,longitude,latitude,PUBLIC_PERMISSION,getSystemTime(), memoryTime);
-                // 保存图片
-                ExecutorService executor = Executors.newFixedThreadPool(5);
-                SavePhotoRunnable savePhotoRunnable = new SavePhotoRunnable(imageUriList, this);
-                executor.execute(savePhotoRunnable);
-                photoPathList = savePhotoRunnable.getPhotoPathList();
 
-                executor.shutdown();
+//                // 保存图片
+//                ExecutorService executor = Executors.newFixedThreadPool(5);
+//                SavePhotoRunnable savePhotoRunnable = new SavePhotoRunnable(imageUriList, this);
+//                executor.execute(savePhotoRunnable);
+//                photoPathList = savePhotoRunnable.getPhotoPathList();
+//                postManager.saveContent2DB(phoneNumber, release_edit1,photoPathList,recordingsList, addedNames,"location",78,89,PUBLIC_PERMISSION,getSystemTime(), memoryTime);
+//                executor.shutdown();
+                if (location==null){
+                    location = "";
+                }
+
+
+                postManager.getDBParameter(getImageUriList(),phoneNumber, release_edit1,recordingsList, addedNames,location,longitude,latitude,PUBLIC_PERMISSION,getSystemTime(), memoryTime);
+
                 break;
             case R.id.release_back:
                 finish();
@@ -380,7 +386,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         cal.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
 
         systemYear = String.valueOf(cal.get(Calendar.YEAR));
-        systemMonth = String.valueOf(cal.get(Calendar.MONTH)) + 1;
+        systemMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
         systemDay = String.valueOf(cal.get(Calendar.DATE));
         if (cal.get(Calendar.AM_PM) == 0) {
             hour = String.valueOf(cal.get(Calendar.HOUR));
@@ -442,11 +448,11 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 };
                 addedNames.add(name);
             }
-
+            release_edit1 = this.release_edit.getText().toString().trim();
             spannableString.setSpan(clickableSpan, 0, atText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             // 将SpannableString添加到EditText的内容中
             release_edit.append(spannableString);
-            release_edit1 = this.release_edit.getText().toString().trim();
+
         }
 
 

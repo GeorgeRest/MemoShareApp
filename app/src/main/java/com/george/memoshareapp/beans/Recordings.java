@@ -75,3 +75,4 @@ public class Recordings extends LitePalSupport {
         this.recordTime = recordTime;
     }
 }
+

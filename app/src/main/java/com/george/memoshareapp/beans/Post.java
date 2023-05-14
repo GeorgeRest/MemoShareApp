@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class Post extends LitePalSupport implements Serializable {
     private int id;
-    private int phoneNumber;
+    private String phoneNumber;
     private String publishedText;
     private List<String> phoneCachePath;
     private List<Recordings> record;
@@ -32,7 +32,7 @@ public class Post extends LitePalSupport implements Serializable {
 
     }
 
-    public Post(int id, int phoneNumber, String publishedText, List<String> phoneCachePath, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
+    public Post(int id, String phoneNumber, String publishedText, List<String> phoneCachePath, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.publishedText = publishedText;
@@ -46,7 +46,7 @@ public class Post extends LitePalSupport implements Serializable {
         this.publishedTime = publishedTime;
         MemoryTime = memoryTime;
     }
-    public Post( int phoneNumber, String publishedText, List<String> phoneCachePath, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
+    public Post( String  phoneNumber, String publishedText, List<String> phoneCachePath, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
         this.phoneNumber = phoneNumber;
         this.publishedText = publishedText;
         this.phoneCachePath = phoneCachePath;
@@ -68,11 +68,11 @@ public class Post extends LitePalSupport implements Serializable {
         this.id = id;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -155,6 +155,7 @@ public class Post extends LitePalSupport implements Serializable {
     public void setMemoryTime(String memoryTime) {
         MemoryTime = memoryTime;
     }
+
 
     @Override
     public String toString() {
