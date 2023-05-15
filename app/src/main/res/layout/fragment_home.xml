@@ -27,7 +27,8 @@
             android:layout_weight="1"
             app:tabGravity="fill"
             app:tabIndicatorHeight="0dp"
-            app:tabRippleColor="@android:color/transparent"/>
+            app:tabRippleColor="@android:color/transparent"
+            style="@style/MyCustomTabLayout"/>
 
         <Space
             android:layout_width="0dp"
