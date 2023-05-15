@@ -15,48 +15,29 @@ import org.litepal.crud.LitePalSupport;
  * @version: 1.0
  */
 public class Recordings extends LitePalSupport {
-    private int id;
+    private Post post;
     private String recordCachePath;
     private long recordTime;
     @Column(ignore = true)
     private CountDownTimer countDownTimer;
     @Column(ignore = true)
-    private long InitialRecordTime;
+    private long initialRecordTime;
     public Recordings() {
     }
 
-    public Recordings(int id, String recordCachePath, long recordTime) {
-        this.id = id;
+    public Recordings( String recordCachePath, long recordTime, CountDownTimer countDownTimer, long initialRecordTime) {
         this.recordCachePath = recordCachePath;
         this.recordTime = recordTime;
-    }
-
-
-
-
-
-    public CountDownTimer getCountDownTimer() {
-        return countDownTimer;
-    }
-
-    public long getInitialRecordTime() {
-        return InitialRecordTime;
-    }
-
-    public void setInitialRecordTime(long initialRecordTime) {
-        InitialRecordTime = initialRecordTime;
-    }
-
-    public void setCountDownTimer(CountDownTimer countDownTimer) {
         this.countDownTimer = countDownTimer;
+        this.initialRecordTime = initialRecordTime;
     }
 
-    public int getId() {
-        return id;
+    public Post getPost() {
+        return post;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     public String getRecordCachePath() {
@@ -73,6 +54,22 @@ public class Recordings extends LitePalSupport {
 
     public void setRecordTime(long recordTime) {
         this.recordTime = recordTime;
+    }
+
+    public CountDownTimer getCountDownTimer() {
+        return countDownTimer;
+    }
+
+    public void setCountDownTimer(CountDownTimer countDownTimer) {
+        this.countDownTimer = countDownTimer;
+    }
+
+    public long getInitialRecordTime() {
+        return initialRecordTime;
+    }
+
+    public void setInitialRecordTime(long initialRecordTime) {
+        this.initialRecordTime = initialRecordTime;
     }
 }
 
