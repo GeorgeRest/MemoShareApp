@@ -1,18 +1,16 @@
 package com.george.memoshareapp.activities;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
-import android.media.Image;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-
 import com.george.memoshareapp.Fragment.CalendarTripFragment;
-import com.george.memoshareapp.Fragment.HomepageFragment;
+import com.george.memoshareapp.Fragment.HomeFragment;
 import com.george.memoshareapp.Fragment.MessageFragment;
 import com.george.memoshareapp.Fragment.PersonalPageFragment;
 import com.george.memoshareapp.R;
@@ -20,7 +18,7 @@ import com.george.memoshareapp.R;
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
 
-    private HomepageFragment homepageFragment;
+    private HomeFragment homeFragment;
 
     private CalendarTripFragment calendarTripFragment;
 
@@ -81,7 +79,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 setTabSelection(3);
                 break;
             case R.id.home_capsule:
-                startActivity(new Intent(HomePageActivity.this, ReleaseActivity.class));
+                String phoneNumber = getIntent().getStringExtra("phoneNumber");
+                Intent intent = new Intent(HomePageActivity.this, ReleaseActivity.class).putExtra("phoneNumber", phoneNumber);
+                startActivity(intent);
             default:
                 break;
         }
@@ -94,12 +94,12 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         switch (index) {
             case 0:
 //                icon_one.setImageResource(R.drawable.message_selected);
-                if (homepageFragment == null) {
-                    homepageFragment = new HomepageFragment();
-                    transaction.add(R.id.content, homepageFragment);
+                if (homeFragment == null) {
+                    homeFragment = new HomeFragment();
+                    transaction.add(R.id.content, homeFragment);
                 } else {
                     // 如果MessageFragment不为空，则直接将它显示出来
-                    transaction.show(homepageFragment);
+                    transaction.show(homeFragment);
                 }
                 break;
             case 1:
@@ -149,8 +149,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
 
     private void hideFragments(FragmentTransaction transaction) {
-        if (homepageFragment != null) {
-            transaction.hide(homepageFragment);
+        if (homeFragment != null) {
+            transaction.hide(homeFragment);
         }
         if (calendarTripFragment != null) {
             transaction.hide(calendarTripFragment);

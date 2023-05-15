@@ -225,7 +225,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="240dp"
                         android:layout_marginRight="30dp"
-                        android:text="2023/03/24"
+                        android:text=""
                         android:textColor="@color/black" />
 
                     <TextView
@@ -235,7 +235,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="320dp"
                         android:layout_marginRight="15dp"
-                        android:text="12:30"
+                        android:text=""
                         android:textColor="@color/black" />
                     <TextView
 

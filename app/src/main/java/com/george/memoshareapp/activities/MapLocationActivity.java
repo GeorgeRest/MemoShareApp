@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -42,6 +43,7 @@ import java.util.Map;
 
 public class MapLocationActivity extends AppCompatActivity {
 
+    private static final String TAG = "MapLocationActivity";
     private AMap aMap;
     private MapView mapView;
     private EditText searchText;
@@ -297,10 +299,10 @@ public class MapLocationActivity extends AppCompatActivity {
         } else {
             post.setLocation( addressLine);
         }
-
         Intent intent = new Intent();
         intent.putExtra("publishContent", post);
         setResult(ReleaseActivity.MAP_INFORMATION_SUCCESS, intent);
+        Log.d(TAG, "saveLocation: "+post.getLocation()+" "+post.getLatitude()+" "+post.getLongitude());
     }
 }
 
