@@ -2,6 +2,8 @@ package com.george.memoshareapp.beans;
 
 import org.litepal.crud.LitePalSupport;
 
+import java.util.List;
+
 /**
  * @projectName: Memosahre
  * @package: com.george.memoshareapp.beans
@@ -18,16 +20,19 @@ public class Comment extends LitePalSupport {
     private String commentUserPhoneNumber;
     private long like;
     private long share;
+    private List<Comment> subComments;    // 子评论列表
 
     public Comment() {
     }
 
-    public Comment( String commentContent, String commentTime, String commentUserPhoneNumber, long like, long share) {
+    public Comment(Post post, String commentContent, String commentTime, String commentUserPhoneNumber, long like, long share, List<Comment> subComments) {
+        this.post = post;
         this.commentContent = commentContent;
         this.commentTime = commentTime;
         this.commentUserPhoneNumber = commentUserPhoneNumber;
         this.like = like;
         this.share = share;
+        this.subComments = subComments;
     }
 
     public Post getPost() {
@@ -76,5 +81,13 @@ public class Comment extends LitePalSupport {
 
     public void setShare(long share) {
         this.share = share;
+    }
+
+    public List<Comment> getSubComments() {
+        return subComments;
+    }
+
+    public void setSubComments(List<Comment> subComments) {
+        this.subComments = subComments;
     }
 }
