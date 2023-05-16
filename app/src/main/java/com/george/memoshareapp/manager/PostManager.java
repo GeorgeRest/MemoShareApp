@@ -8,6 +8,7 @@ import android.os.Environment;
 import androidx.annotation.RequiresApi;
 import android.util.Log;
 
+import com.george.memoshareapp.beans.Comment;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.runnable.SavePhotoRunnable;
@@ -73,7 +74,7 @@ public class PostManager {
         executor.execute(savePhotoRunnable);
         }
         Log.d(TAG, "saveContent2DB: "+photoPathList);
-        Post post = new Post(phoneNumber, editTextContent, photoPathList, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
+     Post post = new Post(phoneNumber, editTextContent, photoPathList, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
         for (Recordings recordings : record) {
             recordings.setPost(post);
             recordings.save();

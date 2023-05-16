@@ -9,6 +9,12 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.manager.DisplayManager;
+import com.george.memoshareapp.utils.DateFormat;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @projectName: Memosahre
@@ -24,8 +30,6 @@ public class HomePageFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
 
     private String mParam1;
-
-    private TextView textView;
 
     public HomePageFragment() {
 
@@ -53,7 +57,26 @@ public class HomePageFragment extends Fragment {
         switch (mParam1) {
             case "好友":
                 rootView = inflater.inflate(R.layout.fragment_home_friend, container, false);
+                List<Post> displayPostList=new ArrayList<>();
+                List<Post> postList = new DisplayManager(getActivity()).getPostList();
+                for (Post post:postList) {
+                    String messageDate = DateFormat.getMessageDate(post.getPublishedTime());
+                    post.setPublishedTime(messageDate);
+                }
+                if(postList!=null){
+                    displayPostList.addAll(postList);
+
+
+                }
+
+
+
                 break;
+
+
+
+
+
             case "推荐":
                 rootView = inflater.inflate(R.layout.fragment_home_recommend, container, false);
 
@@ -67,4 +90,5 @@ public class HomePageFragment extends Fragment {
         }
         return rootView;
     }
+
 }
