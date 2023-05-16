@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,7 +33,7 @@ import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.george.memoshareapp.R;
 import com.amap.api.services.core.PoiItem;
-import com.george.memoshareapp.beans.PublishContent;
+import com.george.memoshareapp.beans.Post;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import java.util.Map;
 
 public class MapLocationActivity extends AppCompatActivity {
 
+    private static final String TAG = "MapLocationActivity";
     private AMap aMap;
     private MapView mapView;
     private EditText searchText;
@@ -289,18 +291,18 @@ public class MapLocationActivity extends AppCompatActivity {
         String province = address.get("province");
         String addressLine = address.get("addressLine");
         String subLocality = address.get("subLocality");
-        PublishContent publishContent = new PublishContent();
-        publishContent.setLatitude(position.latitude);
-        publishContent.setLongitude(position.longitude);
+        Post post = new Post();
+        post.setLatitude(position.latitude);
+        post.setLongitude(position.longitude);
         if (marker != null && marker.getTitle() != null) {
-            publishContent.setLocation(province + city + subLocality + marker.getTitle());
+            post.setLocation(province + city + subLocality + marker.getTitle());
         } else {
-            publishContent.setLocation(province + city + subLocality + addressLine);
+            post.setLocation( addressLine);
         }
-
         Intent intent = new Intent();
-        intent.putExtra("publishContent", publishContent);
+        intent.putExtra("publishContent", post);
         setResult(ReleaseActivity.MAP_INFORMATION_SUCCESS, intent);
+        Log.d(TAG, "saveLocation: "+post.getLocation()+" "+post.getLatitude()+" "+post.getLongitude());
     }
 }
 

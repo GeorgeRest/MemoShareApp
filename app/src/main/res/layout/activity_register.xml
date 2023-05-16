@@ -23,12 +23,13 @@
             android:layout_marginLeft="30dp">
 
             <ImageView
-                android:id="@+id/iv_back"
+                android:id="@+id/iv_back_rg"
                 android:layout_width="30dp"
                 android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
-                android:onClick="onClick"
+                android:clickable="true"
+                android:onClick="finish"
                 android:src="@mipmap/back_register" />
 
             <TextView

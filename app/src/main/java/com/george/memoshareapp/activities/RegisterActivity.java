@@ -1,14 +1,15 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.manager.UserManager;
@@ -32,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private boolean isClicked = false;
     private CodeSender codeSender;
     private String codeReal;
+    private ImageView back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         rb_agree = (MyCheckBox) findViewById(R.id.rb_agree);
         tv_getCode = (TextView) findViewById(R.id.tv_getCode);
         code = (TextView) findViewById(R.id.fragment_et_code);
+        back = (ImageView) findViewById(R.id.iv_back_rg);
+        back.setOnClickListener(this);
+
         bt_register.setOnClickListener(this);
         tv_getCode.setOnClickListener(this);
     }
@@ -83,18 +88,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         Toasty.error(this, "验证码输入错误", Toast.LENGTH_SHORT,true).show();
                         return;
                     }
-                    if(!rb_agree.isChecked()){
-                        Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT,true).show();
-                        return;
-                    }
+//                    if(!rb_agree.isChecked()){
+//                        Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT,true).show();
+//                        return;
+//                    }
                     if (UserManager.saveUserInfo(phone, pw)){
                         Toasty.success(this, "注册成功", Toast.LENGTH_SHORT).show();
+                        finish();
                     }else{
                         Toasty.error(this, "注册失败", Toast.LENGTH_SHORT,true).show();
                     }
                 }
                 break;
-            case R.id.iv_back:
+            case R.id.iv_back_rg:
                 finish();
                 break;
 
