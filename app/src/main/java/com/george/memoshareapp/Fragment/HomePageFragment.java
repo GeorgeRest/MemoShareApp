@@ -7,8 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
@@ -30,6 +33,8 @@ public class HomePageFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
 
     private String mParam1;
+    private HomeWholeRecyclerViewAdapter outerAdapter;
+    private List<Post> displayPostList;
 
     public HomePageFragment() {
 
@@ -57,25 +62,24 @@ public class HomePageFragment extends Fragment {
         switch (mParam1) {
             case "好友":
                 rootView = inflater.inflate(R.layout.fragment_home_friend, container, false);
-                List<Post> displayPostList=new ArrayList<>();
+                RecyclerView outerRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_recycler);
+
+                displayPostList = new ArrayList<>();
                 List<Post> postList = new DisplayManager(getActivity()).getPostList();
                 for (Post post:postList) {
                     String messageDate = DateFormat.getMessageDate(post.getPublishedTime());
                     post.setPublishedTime(messageDate);
                 }
+
                 if(postList!=null){
                     displayPostList.addAll(postList);
-
+                    outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), displayPostList);
+                    outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    outerRecyclerView.setAdapter(outerAdapter);
 
                 }
 
-
-
                 break;
-
-
-
-
 
             case "推荐":
                 rootView = inflater.inflate(R.layout.fragment_home_recommend, container, false);

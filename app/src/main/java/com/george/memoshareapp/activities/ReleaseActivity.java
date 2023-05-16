@@ -110,6 +110,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private ClickableSpan clickableSpan;
     private String atText;
     private String phoneNumber;
+    private String userInput;
+    private String content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -352,9 +354,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     location = "";
                 }
 
-
-                postManager.getDBParameter(getImageUriList(), phoneNumber, release_edit1, recordingsList, addedNames, location, longitude, latitude, PUBLIC_PERMISSION, getSystemTime(), memoryTime());
-
+                content = release_edit.getText().toString();
+                content =removeAtNames(content);
+                postManager.getDBParameter(getImageUriList(), phoneNumber, content, recordingsList, addedNames, location, longitude, latitude, PUBLIC_PERMISSION, getSystemTime(), memoryTime());
+                finish();
                 break;
             case R.id.release_back:
                 finish();
@@ -446,8 +449,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             };
             addedNames.add(name);
         }
-        String userInput = this.release_edit.getText().toString().trim();
-        release_edit1=removeAtNames(userInput);
+        content = this.release_edit.getText().toString().trim();
+        content=removeAtNames(content);
         spannableString.setSpan(clickableSpan, 0, atText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         // 将SpannableString添加到EditText的内容中
         release_edit.append(spannableString);

@@ -6,8 +6,11 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/home_friend_recycler"
+        android:id="@+id/whole_recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        android:scrollbarStyle="outsideOverlay" />
 
 </LinearLayout>

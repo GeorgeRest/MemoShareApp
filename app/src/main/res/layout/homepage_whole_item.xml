@@ -19,21 +19,24 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp">
+
             <TextView
                 android:id="@+id/tv_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="测试"
                 android:textSize="16sp" />
+
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="发布于:12:00"
-                android:textSize="10sp"
                 android:layout_alignBottom="@+id/tv_username"
-                android:layout_toRightOf="@id/tv_username"/>
+                android:layout_toRightOf="@id/tv_username"
+                android:text="发布于:12:00"
+                android:textSize="10sp" />
             <TextView
+                android:id="@+id/tv_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="深圳市万科云城设计公社"
@@ -53,13 +56,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="用户发表文本内容"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="5dp"
+            android:text="用户发表文本内容" />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_images"
             android:layout_width="280dp"
@@ -68,14 +72,15 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:scrollbarStyle="outsideOverlay"/>
+
         <ImageView
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_below="@id/rv_images"
             android:layout_alignLeft="@id/rv_images"
-            android:src="@mipmap/recoder"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="15dp"
+            android:src="@mipmap/recoder" />
         <ImageView
             android:layout_width="25dp"
             android:layout_height="21dp"
