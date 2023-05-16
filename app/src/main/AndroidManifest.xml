@@ -101,6 +101,15 @@
         <activity
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true"/>
+        <!--test 用完删除   -->
+        <activity
+            android:name=".activities.TestHomeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!--//test 用完删除   -->
     </application>
-
 </manifest>

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="grid_expected_size">1dp</dimen>
+    <dimen name="image_size_large">280dp</dimen>
+    <dimen name="image_size_small">140dp</dimen>
 </resources>
