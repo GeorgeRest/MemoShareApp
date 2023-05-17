@@ -29,6 +29,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MemoShareApp"
         tools:targetApi="31">
+
         <activity
             android:name=".activities.DetailActivity"
             android:exported="true" >
@@ -96,6 +97,8 @@
         <activity
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true" />
+
+
     </application>
 
 </manifest>

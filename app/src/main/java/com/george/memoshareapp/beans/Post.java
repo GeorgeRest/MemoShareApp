@@ -142,4 +142,22 @@ public class Post extends LitePalSupport implements Serializable {
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "phoneNumber='" + phoneNumber + '\'' +
+                ", publishedText='" + publishedText + '\'' +
+                ", photoCachePath=" + photoCachePath +
+                ", recordings=" + recordings +
+                ", contacts=" + contacts +
+                ", location='" + location + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", isPublic=" + isPublic +
+                ", publishedTime='" + publishedTime + '\'' +
+                ", memoryTime='" + memoryTime + '\'' +
+                ", comments=" + comments +
+                '}';
+    }
 }
