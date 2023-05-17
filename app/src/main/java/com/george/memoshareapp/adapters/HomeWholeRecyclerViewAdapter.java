@@ -184,12 +184,17 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         mData.addAll(item);
     }
 
-    public void addData(Post newData) {
-        int startPos = this.mData.size();  // 记录添加前的数据量，即新数据添加的起始位置
-        this.mData.add(newData);  // 添加新的数据
-        notifyItemRangeInserted(startPos, 1);  // 通知 adapter 在 startPos 位置插入了 newData.size() 条数据
-    }
+//    public void addData(Post newData) {
+//        int startPos = this.mData.size();  // 记录添加前的数据量，即新数据添加的起始位置
+//        this.mData.add(newData);  // 添加新的数据
+//        notifyItemRangeInserted(startPos, 1);  // 通知 adapter 在 startPos 位置插入了 newData.size() 条数据
+//    }
 
+    public void addData(Post newData) {
+        this.mData.add(0, newData);  // 添加新的数据到列表的最前面
+        notifyItemInserted(0);  // 通知 adapter 在位置 0 插入了一条数据
+
+    }
     private int calculateSpanCount(int itemCount) {
         return itemCount > 1 ? 2 : 1;
     }

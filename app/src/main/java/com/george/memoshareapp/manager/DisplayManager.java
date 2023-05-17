@@ -3,6 +3,7 @@ package com.george.memoshareapp.manager;
 import android.content.Context;
 
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.utils.DateFormat;
 
 import org.litepal.LitePal;
 
@@ -32,12 +33,23 @@ public class DisplayManager {
         List<Post> postList = LitePal.where("ispublic = ?", "1")
                 .limit(limit)
                 .offset(offset)
+                .order("id desc")
                 .find(Post.class,true);
         offset += limit;
+        //重复调用bug
+//        if (postList == null) {
+//            postList = new ArrayList<>();
+//        }else{
+//            for (Post post : postList) {
+//                String messageDate = DateFormat.getMessageDate(post.getPublishedTime());
+//                post.setPublishedTime(messageDate);
+//            }
+//        }
         return postList;
     }
-
-    public void resetOffset() {
-        this.offset = 0;
+    public List<Post> updatePostList(){
+        return null;
     }
+
+
 }

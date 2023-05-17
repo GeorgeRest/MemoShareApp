@@ -14,6 +14,7 @@ import com.george.memoshareapp.beans.Comment;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.runnable.SavePhotoRunnable;
+import com.george.memoshareapp.utils.DateFormat;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -88,6 +89,7 @@ public class PostManager {
         post.save();
 
         HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
+        post.setPublishedTime(DateFormat.getMessageDate(post.getPublishedTime()));
         adapter.addData(post);
         executor.shutdown();
 
