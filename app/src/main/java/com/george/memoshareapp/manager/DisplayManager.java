@@ -20,24 +20,24 @@ import java.util.List;
  */
 public class DisplayManager {
     private int offset = 0;
+    private final int limit = 10;
     Context Context;
 
     public DisplayManager(Context context) {
         this.Context = context;
     }
 
-    public List<Post> getPostList() {
-        List<Post> postList = new ArrayList<>();
-        postList = LitePal.where("ispublic = ?", "1")
-                .limit(10)
-                .offset(offset)
-                .find(Post.class);
-        offset += 10;
-        if (postList.size() != 0) {
-            return postList;
-        } else {
-            return null;
-        }
 
+    public List<Post> getPostList() {
+        List<Post> postList = LitePal.where("ispublic = ?", "1")
+                .limit(limit)
+                .offset(offset)
+                .find(Post.class,true);
+        offset += limit;
+        return postList;
+    }
+
+    public void resetOffset() {
+        this.offset = 0;
     }
 }

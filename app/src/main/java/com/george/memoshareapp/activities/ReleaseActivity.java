@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.Fragment.RecordAudioDialogFragment;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.adapters.ImageAdapter;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;

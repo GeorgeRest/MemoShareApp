@@ -96,7 +96,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 icon_one.setImageResource(R.drawable.bottom_icon_one_click);
                 if (homeFragment == null) {
                     homeFragment = new HomeFragment();
-                    transaction.add(R.id.content, homeFragment);
+                    transaction.add(R.id.content, homeFragment,"HomeFragment ");
                 } else {
                     transaction.show(homeFragment);
                 }
