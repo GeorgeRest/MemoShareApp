@@ -13,8 +13,18 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.events.ScrollToTopEvent;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
+import com.scwang.smart.refresh.footer.ClassicsFooter;
+import com.scwang.smart.refresh.header.ClassicsHeader;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +41,16 @@ import java.util.List;
 public class HomePageFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
-
+    private static final int PAGE_SIZE = 10;
+    private static final String TAG = "HomePageFragment";
+    private int currentPage = 0;
     private String mParam1;
     private HomeWholeRecyclerViewAdapter outerAdapter;
     private List<Post> displayPostList;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private SmartRefreshLayout smartRefreshLayout;
     private DisplayManager displayManager;
+    private List<Post> postList;
+    private RecyclerView outerRecyclerView;
 
     public HomePageFragment() {
 
@@ -56,6 +70,7 @@ public class HomePageFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
         }
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -64,26 +79,31 @@ public class HomePageFragment extends Fragment {
         switch (mParam1) {
             case "好友":
                 rootView = inflater.inflate(R.layout.fragment_home_friend, container, false);
-                RecyclerView outerRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_recycler);
-                swipeRefreshLayout = rootView.findViewById(R.id.swipe_refresh_layout);
-                displayPostList = new ArrayList<>();
-                List<Post> postList = new DisplayManager(getActivity()).getPostList();
+                outerRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_recycler);
+                smartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
+                displayManager = new DisplayManager(getActivity());
+                postList = displayManager.getPostList();
+
                 if (postList != null) {
-                    for (Post post : postList) {
-                        String messageDate = DateFormat.getMessageDate(post.getPublishedTime());
-                        post.setPublishedTime(messageDate);
-                    }
-                }
-                if (postList != null) {
-                    displayPostList.addAll(postList);
-                    for (Post post:displayPostList) {
-                        System.out.println("---------"+post);
-                    }
-                    outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), displayPostList);
+                    outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), postList);
                     outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     outerRecyclerView.setAdapter(outerAdapter);
                 }
-
+                smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
+                smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
+                smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+                    @Override
+                    public void onLoadMore(RefreshLayout refreshlayout) {
+                        List<Post> newPosts = HomePageFragment.this.displayManager.getPostList();
+                        if (newPosts.isEmpty()||newPosts.size()==0) {
+                            refreshlayout.setNoMoreData(true);
+                        } else {
+                            postList.addAll(newPosts);
+                            outerAdapter.notifyDataSetChanged();
+                        }
+                        refreshlayout.finishLoadMore();
+                    }
+                });
 
 
                 break;
@@ -102,6 +122,17 @@ public class HomePageFragment extends Fragment {
         return rootView;
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onScrollToTopEvent(ScrollToTopEvent event) {
+        Log.d(TAG, "onScrollToTopEvent: 事件接收成功");
+        if (outerRecyclerView != null) {
+            outerRecyclerView.scrollToPosition(0);
+        }
+    }
 
 }

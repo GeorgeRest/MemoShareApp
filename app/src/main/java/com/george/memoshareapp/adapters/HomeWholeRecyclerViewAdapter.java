@@ -24,6 +24,7 @@ import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.activities.ReleaseActivity;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
+import com.george.memoshareapp.utils.DateFormat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,25 +74,31 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.recordings = post.getRecordings();
         List<String> photoCachePath = post.getPhotoCachePath();
         holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
-        HomePhotoRecyclerViewAdapter innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath);
+        HomePhotoRecyclerViewAdapter innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath,post);
         holder.innerRecyclerView.setAdapter(innerAdapter);
         holder.tv_username.setText(name);
-        holder.tv_time.setText(publishedTime);
+        holder.tv_time.setText(DateFormat.getMessageDate(publishedTime));
         holder.tv_location.setText(location);
         holder.tv_content.setText(publishedText);
 
-        if (holder.recordings != null) {
+        if (holder.recordings != null && !holder.recordings.isEmpty()) {
             holder.record_one.setVisibility(View.GONE);
             holder.record_two.setVisibility(View.GONE);
             holder.record_three.setVisibility(View.GONE);
             switch (holder.recordings.size()) {
                 case 3:
                     holder.record_three.setVisibility(View.VISIBLE);
+                    // no break here
                 case 2:
                     holder.record_two.setVisibility(View.VISIBLE);
+                    // no break here
                 case 1:
                     holder.record_one.setVisibility(View.VISIBLE);
             }
+        } else {
+            holder.record_one.setVisibility(View.GONE);
+            holder.record_two.setVisibility(View.GONE);
+            holder.record_three.setVisibility(View.GONE);
         }
     }
 
@@ -103,16 +110,21 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     @Override
     public void onClick(View v) {
         ViewHolder holder = (ViewHolder) v.getTag();
-        switch (v.getId()) {
-            case R.id.record_one:
-                handleClick(holder.recordings.get(0).getRecordCachePath(), holder.record_one);
-                break;
-            case R.id.record_two:
-                handleClick(holder.recordings.get(1).getRecordCachePath(), holder.record_two);
-                break;
-            case R.id.record_three:
-                handleClick(holder.recordings.get(2).getRecordCachePath(), holder.record_three);
-                break;
+        if (holder.recordings != null && !holder.recordings.isEmpty()) {
+            switch (v.getId()) {
+                case R.id.record_one:
+                    if(holder.recordings.size() > 0)
+                        handleClick(holder.recordings.get(0).getRecordCachePath(), holder.record_one);
+                    break;
+                case R.id.record_two:
+                    if(holder.recordings.size() > 1)
+                        handleClick(holder.recordings.get(1).getRecordCachePath(), holder.record_two);
+                    break;
+                case R.id.record_three:
+                    if(holder.recordings.size() > 2)
+                        handleClick(holder.recordings.get(2).getRecordCachePath(), holder.record_three);
+                    break;
+            }
         }
     }
 
@@ -143,12 +155,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         }
     }
 
-//    public List<String> getLastItem() {
-//        if (!mData.isEmpty()) {
-//            return mData.get(mData.size() - 1);
-//        }
-//        return null;
-//    }
 
 
     private void handleClick(String recordPath, ImageView iv) {
@@ -184,12 +190,17 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         mData.addAll(item);
     }
 
-    public void addData(Post newData) {
-        int startPos = this.mData.size();  // 记录添加前的数据量，即新数据添加的起始位置
-        this.mData.add(newData);  // 添加新的数据
-        notifyItemRangeInserted(startPos, 1);  // 通知 adapter 在 startPos 位置插入了 newData.size() 条数据
-    }
+//    public void addData(Post newData) {
+//        int startPos = this.mData.size();  // 记录添加前的数据量，即新数据添加的起始位置
+//        this.mData.add(newData);  // 添加新的数据
+//        notifyItemRangeInserted(startPos, 1);  // 通知 adapter 在 startPos 位置插入了 newData.size() 条数据
+//    }
 
+    public void addData(Post newData) {
+        this.mData.add(0, newData);  // 添加新的数据到列表的最前面
+        notifyItemInserted(0);  // 通知 adapter 在位置 0 插入了一条数据
+
+    }
     private int calculateSpanCount(int itemCount) {
         return itemCount > 1 ? 2 : 1;
     }
