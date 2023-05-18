@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.george.memoshareapp.CustomLinearLayoutManager;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.Comment;
 
@@ -37,6 +38,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         return comments.size();
     }
 
+
     @NonNull
     @Override
     public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -49,18 +51,30 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     @Override
     public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
         Comment comment = comments.get(position);
-    //    holder.tv_comment_username
-    //    holder.iv_comment_userphoto
+        holder.tv_comment_username.setText(comment.getCommentUserName());
+        holder.iv_comment_userphoto.setImageResource(comment.getCommentUserPhoto());
         holder.tv_comment_content.setText(comment.getCommentContent());
-        holder.rv_sub_comments.setAdapter(commentAdapter);
-        // 设置子评论的 RecyclerView
-        CommentAdapter subCommentAdapter = new CommentAdapter();
-        holder.rv_sub_comments.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
-        holder.subComments.setAdapter(subCommentAdapter);
-        subCommentAdapter.setComments(comment.getSubComments());
+
+
+
+        List<Comment> subComments = comment.getSubComments();
+        if (subComments != null && !subComments.isEmpty()) {
+            // 设置子评论的 RecyclerView
+            CommentAdapter subCommentAdapter = new CommentAdapter(context, subComments);
+            holder.rv_sub_comments.setLayoutManager(new CustomLinearLayoutManager(holder.itemView.getContext()));
+            holder.rv_sub_comments.setAdapter(subCommentAdapter);
+            subCommentAdapter.setComments(subComments);
+
+            holder.rv_sub_comments.setVisibility(View.VISIBLE);  // 如果有子评论，就显示 RecyclerView
+        }else{
+            holder.rv_sub_comments.setVisibility(View.GONE);  // 如果没有子评论，就隐藏 RecyclerView
+        }
     }
 
-
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+        notifyDataSetChanged();    // 当评论列表改变时，通知 RecyclerView 更新界面
+    }
 
     class CommentViewHolder extends RecyclerView.ViewHolder{
 
@@ -77,6 +91,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             this.tv_comment_content = itemView.findViewById(R.id.tv_comment_content);
             this.rv_sub_comments = itemView.findViewById(R.id.rv_sub_comments);
 
+            this.rv_sub_comments.setVisibility(View.GONE);  // 默认设置为不可见
         }
     }
 }

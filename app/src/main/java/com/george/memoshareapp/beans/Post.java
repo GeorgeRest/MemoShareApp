@@ -28,16 +28,19 @@ public class Post extends LitePalSupport implements Serializable {
     private String publishedTime;
     private String memoryTime;
     private List<Comment> comments;
+    private long like;
+    private long share;
 
     public Post() {
 
     }
 
-    public Post(String phoneNumber, String publishedText, List<String> photoCachePath, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
+
+    public Post(String phoneNumber, String publishedText, List<String> photoCachePath, List<Recordings> recordings, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
         this.phoneNumber = phoneNumber;
         this.publishedText = publishedText;
         this.photoCachePath = photoCachePath;
-        this.recordings = record;
+        this.recordings = recordings;
         this.contacts = contacts;
         this.location = location;
         this.longitude = longitude;
@@ -141,5 +144,21 @@ public class Post extends LitePalSupport implements Serializable {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public long getLike() {
+        return like;
+    }
+
+    public void setLike(long like) {
+        this.like = like;
+    }
+
+    public long getShare() {
+        return share;
+    }
+
+    public void setShare(long share) {
+        this.share = share;
     }
 }

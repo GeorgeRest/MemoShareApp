@@ -18,21 +18,37 @@ public class Comment extends LitePalSupport {
     private String commentContent;
     private String commentTime;
     private String commentUserPhoneNumber;
-    private long like;
-    private long share;
     private List<Comment> subComments;    // 子评论列表
+    private String commentUserName;
+    private int commentUserPhoto;
+
+    public String getCommentUserName() {
+        return commentUserName;
+    }
+
+    public void setCommentUserName(String commentUserName) {
+        this.commentUserName = commentUserName;
+    }
+
+    public int getCommentUserPhoto() {
+        return commentUserPhoto;
+    }
+
+    public void setCommentUserPhoto(int commentUserPhoto) {
+        this.commentUserPhoto = commentUserPhoto;
+    }
 
     public Comment() {
     }
 
-    public Comment(Post post, String commentContent, String commentTime, String commentUserPhoneNumber, long like, long share, List<Comment> subComments) {
+    public Comment(Post post, String commentContent, String commentTime, String commentUserPhoneNumber, List<Comment> subComments, String commentUserName, int commentUserPhoto) {
         this.post = post;
         this.commentContent = commentContent;
         this.commentTime = commentTime;
         this.commentUserPhoneNumber = commentUserPhoneNumber;
-        this.like = like;
-        this.share = share;
         this.subComments = subComments;
+        this.commentUserName = commentUserName;
+        this.commentUserPhoto = commentUserPhoto;
     }
 
     public Post getPost() {
@@ -65,22 +81,6 @@ public class Comment extends LitePalSupport {
 
     public void setCommentUserPhoneNumber(String commentUserPhoneNumber) {
         this.commentUserPhoneNumber = commentUserPhoneNumber;
-    }
-
-    public long getLike() {
-        return like;
-    }
-
-    public void setLike(long like) {
-        this.like = like;
-    }
-
-    public long getShare() {
-        return share;
-    }
-
-    public void setShare(long share) {
-        this.share = share;
     }
 
     public List<Comment> getSubComments() {
