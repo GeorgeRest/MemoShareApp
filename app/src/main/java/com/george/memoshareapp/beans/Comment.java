@@ -18,28 +18,15 @@ public class Comment extends LitePalSupport {
     private String commentContent;
     private String commentTime;
     private String commentUserPhoneNumber;
+
     private List<Comment> subComments;    // 子评论列表
     private String commentUserName;
     private int commentUserPhoto;
 
-    public String getCommentUserName() {
-        return commentUserName;
-    }
-
-    public void setCommentUserName(String commentUserName) {
-        this.commentUserName = commentUserName;
-    }
-
-    public int getCommentUserPhoto() {
-        return commentUserPhoto;
-    }
-
-    public void setCommentUserPhoto(int commentUserPhoto) {
-        this.commentUserPhoto = commentUserPhoto;
-    }
 
     public Comment() {
     }
+
 
     public Comment(Post post, String commentContent, String commentTime, String commentUserPhoneNumber, List<Comment> subComments, String commentUserName, int commentUserPhoto) {
         this.post = post;
@@ -49,6 +36,7 @@ public class Comment extends LitePalSupport {
         this.subComments = subComments;
         this.commentUserName = commentUserName;
         this.commentUserPhoto = commentUserPhoto;
+
     }
 
     public Post getPost() {
@@ -90,4 +78,21 @@ public class Comment extends LitePalSupport {
     public void setSubComments(List<Comment> subComments) {
         this.subComments = subComments;
     }
+
+    public String getCommentUserName() {
+        return commentUserName;
+    }
+
+    public void setCommentUserName(String commentUserName) {
+        this.commentUserName = commentUserName;
+    }
+
+    public int getCommentUserPhoto() {
+        return commentUserPhoto;
+    }
+
+    public void setCommentUserPhoto(int commentUserPhoto) {
+        this.commentUserPhoto = commentUserPhoto;
+    }
+
 }

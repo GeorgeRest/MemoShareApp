@@ -53,4 +53,16 @@ dependencies {
     //图片选择库
     implementation 'com.zhihu.android:matisse:0.4.3'
 
+    implementation 'com.belerweb:pinyin4j:2.5.1'                      //使用Pinyin4j将中文字符串转换为拼音
+    implementation 'androidx.appcompat:appcompat:1.0.0'                 //必须 1.0.0 以上
+    implementation  'io.github.scwang90:refresh-layout-kernel:2.0.6'      //核心必须依赖
+    implementation  'io.github.scwang90:refresh-header-classics:2.0.6'    //经典刷新头
+    implementation  'io.github.scwang90:refresh-header-radar:2.0.6'       //雷达刷新头
+    implementation  'io.github.scwang90:refresh-header-falsify:2.0.6'     //虚拟刷新头
+    implementation  'io.github.scwang90:refresh-header-material:2.0.6'    //谷歌刷新头
+    implementation  'io.github.scwang90:refresh-header-two-level:2.0.6'   //二级刷新头
+    implementation  'io.github.scwang90:refresh-footer-ball:2.0.6'        //球脉冲加载
+    implementation  'io.github.scwang90:refresh-footer-classics:2.0.6'    //经典加载
+
+
 }

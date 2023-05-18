@@ -30,7 +30,7 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
     private TabLayout mTabLayout;
-    private ViewPager2 mViewPager2;
+    public ViewPager2 mViewPager2;
     private List<String> mData = new ArrayList<>();
 
     @Override
@@ -64,4 +64,5 @@ public class HomeFragment extends Fragment {
         mData.add("推荐");
         mData.add("活动");
     }
+
 }

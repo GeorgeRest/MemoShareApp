@@ -93,18 +93,17 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         hideFragments(transaction);
         switch (index) {
             case 0:
-//                icon_one.setImageResource(R.drawable.message_selected);
+                icon_one.setImageResource(R.drawable.bottom_icon_one_click);
                 if (homeFragment == null) {
                     homeFragment = new HomeFragment();
-                    transaction.add(R.id.content, homeFragment);
+                    transaction.add(R.id.content, homeFragment,"HomeFragment ");
                 } else {
-                    // 如果MessageFragment不为空，则直接将它显示出来
                     transaction.show(homeFragment);
                 }
                 break;
             case 1:
-                // 当点击了联系人tab时，改变控件的图片和文字颜色
-//                contactsImage.setImageResource(R.drawable.contacts_selected);
+
+                icon_two.setImageResource(R.drawable.bottom_icon_two_click);
                 if (calendarTripFragment == null) {
                     calendarTripFragment = new CalendarTripFragment();
                     transaction.add(R.id.content, calendarTripFragment);
@@ -113,25 +112,25 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case 2:
-//                icon_three.setImageResource(R.drawable.news_selected);
+                icon_three.setImageResource(R.drawable.bottom_icon_three_click);
                 if (messageFragment == null) {
-                    // 如果NewsFragment为空，则创建一个并添加到界面上
+
                     messageFragment = new MessageFragment();
                     transaction.add(R.id.content, messageFragment);
                 } else {
-                    // 如果NewsFragment不为空，则直接将它显示出来
+
                     transaction.show(messageFragment);
                 }
                 break;
             case 3:
             default:
-//                icon_four.setImageResource(R.drawable.setting_selected);
+                icon_four.setImageResource(R.drawable.bottom_icon_four_click);
                 if (personalPageFragment == null) {
-                    // 如果SettingFragment为空，则创建一个并添加到界面上
+
                     personalPageFragment = new PersonalPageFragment();
                     transaction.add(R.id.content, personalPageFragment);
                 } else {
-                    // 如果SettingFragment不为空，则直接将它显示出来
+
                     transaction.show(personalPageFragment);
                 }
                 break;
@@ -141,10 +140,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void clearSelection() {
-//        icon_one.setImageResource(R.drawable.message_unselected);
-//        contactsImage.setImageResource(R.drawable.contacts_unselected);
-//        icon_three.setImageResource(R.drawable.news_unselected);
-//        icon_four.setImageResource(R.drawable.setting_unselected);
+        icon_one.setImageResource(R.drawable.bottom_icon_one);
+        icon_two.setImageResource(R.drawable.bottom_icon_two);
+        icon_three.setImageResource(R.drawable.bottom_icon_three);
+        icon_four.setImageResource(R.drawable.bottom_icon_four);
     }
 
 
