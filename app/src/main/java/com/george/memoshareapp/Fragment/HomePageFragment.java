@@ -1,17 +1,17 @@
 package com.george.memoshareapp.Fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
+import com.george.memoshareapp.adapters.HomePageWholeAdapter;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
@@ -33,7 +33,7 @@ public class HomePageFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
 
     private String mParam1;
-    private HomeWholeRecyclerViewAdapter outerAdapter;
+    private HomePageWholeAdapter outerAdapter;
     private List<Post> displayPostList;
 
     public HomePageFragment() {
@@ -66,18 +66,22 @@ public class HomePageFragment extends Fragment {
 
                 displayPostList = new ArrayList<>();
                 List<Post> postList = new DisplayManager(getActivity()).getPostList();
-                for (Post post:postList) {
-                    String messageDate = DateFormat.getMessageDate(post.getPublishedTime());
-                    post.setPublishedTime(messageDate);
+                if(postList!=null) {
+                    for (Post post : postList) {
+                        String messageDate = DateFormat.getMessageDate(post.getPublishedTime());
+                        post.setPublishedTime(messageDate);
+                    }
                 }
 
                 if(postList!=null){
                     displayPostList.addAll(postList);
-                    outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), displayPostList);
+                    outerAdapter = new HomePageWholeAdapter(getActivity(), displayPostList);
                     outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     outerRecyclerView.setAdapter(outerAdapter);
-
+                    //如果是自己发的，那么就显示另一种布局
+                    //使用相同adapter，在内部根据发送人，设置背景颜色，并使下面的异形显示
                 }
+
 
                 break;
 

@@ -1,11 +1,11 @@
 package com.george.memoshareapp.adapters;
 
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,15 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhotoRecyclerViewAdapter.ViewHolder> {
+public class HomePagePhotoAdapter extends RecyclerView.Adapter<HomePagePhotoAdapter.ViewHolder> {
 
     private List<String> mData;
 
 
-    public HomePhotoRecyclerViewAdapter(List<String> data) {
+    public HomePagePhotoAdapter(List<String> data) {
         this.mData = data;
     }
 
@@ -37,11 +36,18 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
         int size = mData.size();
         ViewGroup.LayoutParams layoutParams = holder.imageView.getLayoutParams();
         if (size == 1) {
-            layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_large);
-            layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_large);
+            if (position == 0) {
+                layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_large);
+                layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_large);
+            }else {
+                holder.imageView.setVisibility(View.GONE);
+            }
         } else {
             layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_small);
             layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_small);
+            if (position > 3){
+                holder.imageView.setVisibility(View.GONE);
+            }
         }
         holder.imageView.setLayoutParams(layoutParams);
         String url = mData.get(position);
@@ -59,7 +65,11 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        if (mData.size() <=4) {
+            return mData.size();
+        }else {
+            return 4;
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -69,6 +79,15 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
             super(itemView);
             imageView = itemView.findViewById(R.id.image_view);
             extraImageCount = itemView.findViewById(R.id.extra_image_count);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    // 处理子项点击事件的逻辑
+                    Toast.makeText(itemView.getContext(), "子项点击，位置：" + position, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
     }

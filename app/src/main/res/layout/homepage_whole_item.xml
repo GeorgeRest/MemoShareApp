@@ -6,14 +6,28 @@
     android:orientation="vertical"
     android:layout_margin="5dp">
     <LinearLayout
+        android:id="@+id/ll_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
     
-        <ImageView
+<!--        <ImageView-->
+<!--            android:layout_width="32dp"-->
+<!--            android:layout_height="32dp"-->
+<!--            android:src="@mipmap/ic_launcher"/>-->
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_head_image"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@mipmap/ic_launcher"/>
+            android:scrollbarStyle="outsideOverlay"
+            android:background="#5F49BB" />
+        </androidx.cardview.widget.CardView>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,6 +61,7 @@
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cv_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="10dp"
@@ -54,6 +69,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp">
     <RelativeLayout
+        android:id="@+id/rl_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -67,10 +83,12 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_images"
             android:layout_width="280dp"
-            android:layout_height="280dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/tv_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
+            android:clickable="true"
+            android:onClick="onRecyclerViewClicked"
             android:scrollbarStyle="outsideOverlay"/>
 
         <ImageView
@@ -101,5 +119,36 @@
 
     </RelativeLayout>
     </androidx.cardview.widget.CardView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/image_view1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/myself_item_button" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/image_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+
+                android:background="@drawable/myself_item_backgroud"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
