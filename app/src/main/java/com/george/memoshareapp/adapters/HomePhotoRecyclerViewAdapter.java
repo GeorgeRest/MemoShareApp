@@ -1,5 +1,6 @@
 package com.george.memoshareapp.adapters;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,10 +23,12 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
 
     private List<String> mData;
     private Post post;
+    Context context;
 
-    public HomePhotoRecyclerViewAdapter(List<String> data, Post post) {
+    public HomePhotoRecyclerViewAdapter(List<String> data, Post post,Context context) {
         this.mData = data;
         this.post = post;
+        this.context=context;
     }
 
     @NonNull
@@ -92,7 +95,7 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
                     Toast.makeText(itemView.getContext(), "子项点击，位置：" + position, Toast.LENGTH_SHORT).show();
                     System.out.println("---------"+post);
 //                    页面传值，更改键值对即可
-//                    Intent intent = new Intent();
+//                    Intent intent = new Intent(context,);
 //                    intent.putExtra("post", post);
                 }
             });
