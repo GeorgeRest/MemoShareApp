@@ -1,13 +1,12 @@
 package com.george.memoshareapp.manager;
 
 import android.content.Context;
-import android.net.Uri;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.adapters.ImageAdapter;
+import com.george.memoshareapp.adapters.DetailPhotoRecycleViewAdapter;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.utils.CustomItemDecoration;
 
@@ -16,10 +15,11 @@ import org.litepal.LitePal;
 import java.util.List;
 
 public class DisplayManager {
-    private ImageAdapter imageAdapter;
     private int offset = 0;
     private final int limit = 10;
     Context Context;
+    private DetailPhotoRecycleViewAdapter detailPhotoRecycleViewAdapter;
+
     public DisplayManager(Context context) {
         this.Context = context;
     }
@@ -27,28 +27,27 @@ public class DisplayManager {
     }
 
 
-    public void showPhoto(RecyclerView recyclerView,List<Uri> photoPath, Context context) {
+    public void showPhoto(RecyclerView recyclerView,List<String> photoPath, Context context) {
 
-        if (photoPath.size() == 1) {
-            recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
-        }
-        if (photoPath.size() > 1) {
-            if (photoPath.size() < 4) {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
-            }
-            if (photoPath.size() == 4) {
+
+        switch (photoPath.size()) {
+            case 1:
+                recyclerView.setLayoutManager(new GridLayoutManager(context, 1));
+                break;
+            case 2:
+            case 4:
                 recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
-            }
-            if (photoPath.size() > 4 && photoPath.size() < 9) {
+                break;
+            default:
                 recyclerView.setLayoutManager(new GridLayoutManager(context, 3));
-            }
-            recyclerView.setHasFixedSize(true);
-            photoPath.add(null);
-            imageAdapter = new ImageAdapter(context, photoPath);
-            recyclerView.setAdapter(imageAdapter);
-            int spacingInPixels = context.getResources().getDimensionPixelSize(R.dimen.grid_expected_size);
-            recyclerView.addItemDecoration(new CustomItemDecoration(spacingInPixels));
+                break;
         }
+        recyclerView.setHasFixedSize(true);
+        detailPhotoRecycleViewAdapter = new DetailPhotoRecycleViewAdapter(context,photoPath);
+        recyclerView.setAdapter(detailPhotoRecycleViewAdapter);
+        int spacingInPixels = context.getResources().getDimensionPixelSize(R.dimen.grid_expected_size);
+        recyclerView.addItemDecoration(new CustomItemDecoration(spacingInPixels));
+
     }
 
 

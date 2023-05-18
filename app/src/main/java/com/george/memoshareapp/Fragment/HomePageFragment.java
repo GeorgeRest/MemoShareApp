@@ -1,14 +1,10 @@
 package com.george.memoshareapp.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -80,7 +76,9 @@ public class HomePageFragment extends Fragment {
                 }
                 if (postList != null) {
                     displayPostList.addAll(postList);
-                    Log.d("TAG", displayPostList.get(0).getRecordings().get(0).getRecordCachePath());
+                    for (Post post:displayPostList) {
+                        System.out.println("---------"+post);
+                    }
                     outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), displayPostList);
                     outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     outerRecyclerView.setAdapter(outerAdapter);

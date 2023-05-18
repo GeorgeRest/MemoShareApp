@@ -3,7 +3,6 @@ package com.george.memoshareapp.activities;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -36,7 +35,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private ImageView like;
     private Intent intent;
     private Post post;
-    private List<Uri> photoPath;
+    private List<String> photoPath;
     private RecyclerView recyclerView;
     private List<String> commentList = new ArrayList<>();
     private TextView comment_count;
@@ -49,53 +48,82 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private TextView detail_tv_share_number;
     private TextView detail_tv_like_number;
     private TextView detail_tv_comment_number;
+    private List<String> ceShiList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
         init();
 //        intent = getIntent();
 //        post = (Post) intent.getSerializableExtra("key");/////////改key
 //
-//        putParameter2View();//传参
+        putParameter2View();//传参
         detail_tv_share_number.setText(shareNumber+"");
         detail_tv_like_number.setText(like_number+"");
         detail_tv_comment_number.setText(commentNumber+"");
+
     }
 
+    private void initData() {
+        ceShiList = new ArrayList<>();
+        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQzMjk=");
+        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQzMjg=");
+        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQzMzA=");
+        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQ0ODU=");
+        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQ0ODQ=");
+        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQ0ODM=");
+        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQwMzE=");
+        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQwMzA=");
+        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzYzODI=");
+
+        userIcon.setImageResource(R.mipmap.touxiangceshi);
+        userName.setText("9476");
+        publishTime.setText("2023-5-18");
+        location.setText("大连市甘井子区");
+        content.setText("这是一条测试数据");
+//        photoPath = ceShiList;
+
+
+    }
+
+
     private void putParameter2View() {
-       userIcon.setImageResource((Integer) intent.getExtras().get("userIcon"));
-        userName.setText(post.getPhoneNumber().substring(0,4));
-        publishTime.setText(post.getPublishedTime());
-        location.setText(post.getLocation());
-        content.setText(post.getPublishedText());
-        photoPath = (List<Uri>)intent.getExtras().get("photoPathCache");
+        initData();
+//       userIcon.setImageResource((Integer) intent.getExtras().get("userIcon"));
+//        userName.setText(post.getPhoneNumber().substring(0,4));
+//        publishTime.setText(post.getPublishedTime());
+//        location.setText(post.getLocation());
+//        content.setText(post.getPublishedText());
+//        photoPath = (List<String>)intent.getExtras().get("photoPathCache");
 
-        if (intent.getExtras().get("like").equals("true")){
-            like.setImageResource(R.mipmap.like_press);
-            IS_LIKE =true;
-            like_number++;
-            if (like_number>10000){
-                double converted = Math.floor((double) like_number / 10000 * 10) / 10;
 
-                detail_tv_like_number.setText(converted+"万");
-            }
-            detail_tv_like_number.setText(like_number+"");
-        }
+//        if (intent.getExtras().get("like").equals("true")){
+//            like.setImageResource(R.mipmap.like_press);
+//            IS_LIKE =true;
+//            like_number++;
+//            if (like_number>10000){
+//                double converted = Math.floor((double) like_number / 10000 * 10) / 10;
+//
+//                detail_tv_like_number.setText(converted+"万");
+//            }
+//            detail_tv_like_number.setText(like_number+"");
+//        }
         //如果传进来的评论不为空，那么就把评论加进来
-        if (intent.getExtras().get("comment")!=null){
-            commentList = (List<String>) intent.getExtras().get("comment");
-            commentNumber = commentList.size();
-            if (commentNumber>10000){
-                double converted = Math.floor((double) commentNumber / 10000 * 10) / 10;
+//        if (intent.getExtras().get("comment")!=null){
+//            commentList = (List<String>) intent.getExtras().get("comment");
+//            commentNumber = commentList.size();
+//            if (commentNumber>10000){
+//                double converted = Math.floor((double) commentNumber / 10000 * 10) / 10;
+//
+//                comment_count.setText(converted+"万");
+//            }
+//            comment_count.setText(commentNumber);
+//        }
 
-                comment_count.setText(converted+"万");
-            }
-            comment_count.setText(commentNumber);
-        }
+        displayManager.showPhoto(recyclerView,ceShiList,DetailActivity.this);
 
-        displayManager.showPhoto(recyclerView,photoPath,DetailActivity.this);
 
     }
 
@@ -125,6 +153,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         detail_tv_share_number = (TextView) findViewById(R.id.detail_tv_share_number);
         detail_tv_like_number = (TextView) findViewById(R.id.detail_tv_like_number);
         detail_tv_comment_number = (TextView) findViewById(R.id.detail_tv_comment_number);
+        recyclerView = findViewById(R.id.recycler_view);
         back.setOnClickListener(this);
         userIcon.setOnClickListener(this);
         share.setOnClickListener(this);
@@ -230,7 +259,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         dialog.findViewById(R.id.detail_link).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //服务器动态网址
 
                 dialog.dismiss();
             }
