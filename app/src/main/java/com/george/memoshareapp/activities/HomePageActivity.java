@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.george.memoshareapp.Fragment.CalendarTripFragment;
 import com.george.memoshareapp.Fragment.HomeFragment;
+import com.george.memoshareapp.Fragment.HomePageFragment;
 import com.george.memoshareapp.Fragment.MessageFragment;
 import com.george.memoshareapp.Fragment.PersonalPageFragment;
 import com.george.memoshareapp.R;
@@ -38,6 +39,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     private FragmentManager fragmentManager;
     private ImageView capsuleButton;
+    public static  String phoneNumber;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         initViews();
         fragmentManager = getSupportFragmentManager();
         setTabSelection(0);
+        Intent intent = getIntent();
+        phoneNumber = intent.getStringExtra("phoneNumber");
 
     }
 
@@ -96,7 +101,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 icon_one.setImageResource(R.drawable.bottom_icon_one_click);
                 if (homeFragment == null) {
                     homeFragment = new HomeFragment();
-                    transaction.add(R.id.content, homeFragment,"HomeFragment ");
+                    transaction.add(R.id.content, homeFragment,"HomeFragment");
                 } else {
                     transaction.show(homeFragment);
                 }
@@ -161,4 +166,5 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             transaction.hide(personalPageFragment);
         }
     }
+
 }
