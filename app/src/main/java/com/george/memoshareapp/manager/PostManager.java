@@ -92,10 +92,11 @@ public class PostManager {
             recordings.save();
         }
         post.save();
-
-        HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
-        adapter.addData(post);
-        EventBus.getDefault().post(new ScrollToTopEvent());
+        if (post.getIsPublic() != 0) {
+            HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
+            adapter.addData(post);
+            EventBus.getDefault().post(new ScrollToTopEvent());
+        }
         executor.shutdown();
     }
 }
