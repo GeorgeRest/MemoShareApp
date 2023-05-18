@@ -30,8 +30,9 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
     private TabLayout mTabLayout;
-    private ViewPager2 mViewPager2;
+    public ViewPager2 mViewPager2;
     private List<String> mData = new ArrayList<>();
+    private HomePagerAdapter homePagerAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class HomeFragment extends Fragment {
     private void initView(View rootView) {
         mTabLayout = rootView.findViewById(R.id.home_indicator);
         mViewPager2 = rootView.findViewById(R.id.home_pager);
-        HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getActivity(), mData);
+        homePagerAdapter = new HomePagerAdapter(getActivity(), mData);
         mViewPager2.setAdapter(homePagerAdapter);
         new TabLayoutMediator(mTabLayout, mViewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
@@ -64,4 +65,5 @@ public class HomeFragment extends Fragment {
         mData.add("推荐");
         mData.add("活动");
     }
+
 }

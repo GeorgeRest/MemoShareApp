@@ -15,7 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.test.test;
+import com.george.memoshareapp.activities.HomePageActivity;
+import com.george.memoshareapp.adapters.HomePagerAdapter;
+import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 
 import java.io.IOException;
 
@@ -28,6 +30,7 @@ public class AudioPlayerFragment extends Fragment {
     private TextView currentProgressTextView;
     private TextView fileLengthTextView;
     private ImageView cancelRecord;
+
 
     @Nullable
     @Override
@@ -49,11 +52,13 @@ public class AudioPlayerFragment extends Fragment {
                     mediaPlayer = null;
                     handler.removeCallbacks(runnable);
                     getActivity().getSupportFragmentManager().beginTransaction().remove(AudioPlayerFragment.this).commit();
-                    if (getActivity() instanceof test) {
-                        ((test) getActivity()).fragment = null;
+                    HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
+                    if (adapter != null) {
+                        adapter.resetFragment();
                     }
+
                 }
-            }
+                }
         });
 
 

@@ -1,5 +1,7 @@
 package com.george.memoshareapp.adapters;
 
+import android.util.SparseArray;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -23,21 +25,25 @@ import java.util.List;
 public class HomePagerAdapter extends FragmentStateAdapter {
 
     private List<String> mData = new ArrayList<>();
-
     public HomePagerAdapter(@NonNull FragmentActivity fragmentActivity, List<String> data) {
         super(fragmentActivity);
+
         mData = data;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return HomePageFragment.newInstance(mData.get(position));
-    }
+        HomePageFragment fragment = HomePageFragment.newInstance(mData.get(position));
 
+
+        return HomePageFragment.newInstance(mData.get(position));
+
+    }
     @Override
     public int getItemCount() {
         return mData.size();
     }
+
 }
 

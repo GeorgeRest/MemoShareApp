@@ -27,6 +27,8 @@ public class Post extends LitePalSupport implements Serializable {
     private int isPublic;
     private String publishedTime;
     private String memoryTime;
+    private long like;
+    private long share;
     private List<Comment> comments;
 
     public Post() {
@@ -45,6 +47,22 @@ public class Post extends LitePalSupport implements Serializable {
         this.isPublic = isPublic;
         this.publishedTime = publishedTime;
         this.memoryTime = memoryTime;
+    }
+
+    public long getLike() {
+        return like;
+    }
+
+    public void setLike(long like) {
+        this.like = like;
+    }
+
+    public long getShare() {
+        return share;
+    }
+
+    public void setShare(long share) {
+        this.share = share;
     }
 
     public String getPhoneNumber() {

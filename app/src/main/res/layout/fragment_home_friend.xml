@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.scwang.smart.refresh.layout.SmartRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/refreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/whole_recycler"
+   >
+    <com.scwang.smart.refresh.header.BezierRadarHeader
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp"
-        android:scrollbarStyle="outsideOverlay" />
+        android:layout_height="wrap_content"/>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/whole_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingBottom="16dp"
+            android:scrollbarStyle="outsideOverlay" />
+
+    </LinearLayout>
+
+    <com.scwang.smart.refresh.footer.BallPulseFooter
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</com.scwang.smart.refresh.layout.SmartRefreshLayout>

@@ -16,18 +16,15 @@ public class Comment extends LitePalSupport {
     private String commentContent;
     private String commentTime;
     private String commentUserPhoneNumber;
-    private long like;
-    private long share;
+
 
     public Comment() {
     }
 
-    public Comment( String commentContent, String commentTime, String commentUserPhoneNumber, long like, long share) {
+    public Comment( String commentContent, String commentTime, String commentUserPhoneNumber) {
         this.commentContent = commentContent;
         this.commentTime = commentTime;
         this.commentUserPhoneNumber = commentUserPhoneNumber;
-        this.like = like;
-        this.share = share;
     }
 
     public Post getPost() {
@@ -62,19 +59,5 @@ public class Comment extends LitePalSupport {
         this.commentUserPhoneNumber = commentUserPhoneNumber;
     }
 
-    public long getLike() {
-        return like;
-    }
 
-    public void setLike(long like) {
-        this.like = like;
-    }
-
-    public long getShare() {
-        return share;
-    }
-
-    public void setShare(long share) {
-        this.share = share;
-    }
 }
