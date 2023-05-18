@@ -15,12 +15,12 @@ import com.george.memoshareapp.R;
 
 import java.util.List;
 
-public class HomePagePhotoAdapter extends RecyclerView.Adapter<HomePagePhotoAdapter.ViewHolder> {
+public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhotoRecyclerViewAdapter.ViewHolder> {
 
     private List<String> mData;
 
 
-    public HomePagePhotoAdapter(List<String> data) {
+    public HomePhotoRecyclerViewAdapter(List<String> data) {
         this.mData = data;
     }
 

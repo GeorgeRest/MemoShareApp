@@ -1,7 +1,6 @@
 package com.george.memoshareapp.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.adapters.HomePageWholeAdapter;
+import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
@@ -33,7 +32,7 @@ public class HomePageFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
 
     private String mParam1;
-    private HomePageWholeAdapter outerAdapter;
+    private HomeWholeRecyclerViewAdapter outerAdapter;
     private List<Post> displayPostList;
 
     public HomePageFragment() {
@@ -75,7 +74,7 @@ public class HomePageFragment extends Fragment {
 
                 if(postList!=null){
                     displayPostList.addAll(postList);
-                    outerAdapter = new HomePageWholeAdapter(getActivity(), displayPostList);
+                    outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), displayPostList);
                     outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     outerRecyclerView.setAdapter(outerAdapter);
                     //如果是自己发的，那么就显示另一种布局

@@ -2,7 +2,6 @@ package com.george.memoshareapp.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,11 +22,11 @@ import com.george.memoshareapp.test.CardItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomePageWholeAdapter extends RecyclerView.Adapter<HomePageWholeAdapter.ViewHolder>{
+public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWholeRecyclerViewAdapter.ViewHolder>{
     private Context mContext;
     private List<Post> mData;
 
-    public HomePageWholeAdapter(Context context, List<Post> data) {
+    public HomeWholeRecyclerViewAdapter(Context context, List<Post> data) {
         this.mContext = context;
         this.mData = data;
     }
@@ -68,7 +67,7 @@ public class HomePageWholeAdapter extends RecyclerView.Adapter<HomePageWholeAdap
 
         List<String> photoCachePath = post.getPhotoCachePath();
         holder.rv_images.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
-        HomePagePhotoAdapter innerAdapter = new HomePagePhotoAdapter(photoCachePath);
+        HomePhotoRecyclerViewAdapter innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath);
         holder.rv_images.setAdapter(innerAdapter);
 
 //        设置头像，需要contact（@人名所对应的图片，相关adapter未完成）
