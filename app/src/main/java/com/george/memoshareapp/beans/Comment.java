@@ -2,7 +2,9 @@ package com.george.memoshareapp.beans;
 
 import org.litepal.crud.LitePalSupport;
 
+
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * @projectName: Memosahre
@@ -13,7 +15,9 @@ import java.util.List;
  * @date: 2023/5/14 15:18
  * @version: 1.0
  */
-public class Comment extends LitePalSupport {
+
+
+public class Comment extends LitePalSupport implements Serializable {
     private long id;
     private Post post;
     private String commentContent;

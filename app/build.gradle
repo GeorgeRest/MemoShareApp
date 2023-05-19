@@ -32,7 +32,8 @@ android {
 }
 
 dependencies {
-
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.appcompat:appcompat:1.5.0'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -63,6 +64,7 @@ dependencies {
     implementation  'io.github.scwang90:refresh-header-two-level:2.0.6'   //二级刷新头
     implementation  'io.github.scwang90:refresh-footer-ball:2.0.6'        //球脉冲加载
     implementation  'io.github.scwang90:refresh-footer-classics:2.0.6'    //经典加载
+    implementation 'org.greenrobot:eventbus:3.2.0'
 
 
 }

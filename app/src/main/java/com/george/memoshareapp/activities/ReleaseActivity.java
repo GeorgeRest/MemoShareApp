@@ -106,11 +106,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private String release_edit1;
     private List<String> photoPathList;
     private List<String> addedNames = new ArrayList<>();
-    ;
     private SpannableString spannableString;
     private ClickableSpan clickableSpan;
     private String atText;
-    private String phoneNumber;
+    public String phoneNumber;
     private String userInput;
     private String content;
 
@@ -356,7 +355,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
                 content = release_edit.getText().toString();
-                content =removeAtNames(content);
+                content = removeAtNames(content);
                 postManager.getDBParameter(getImageUriList(), phoneNumber, content, recordingsList, addedNames, location, longitude, latitude, PUBLIC_PERMISSION, getSystemTime(), memoryTime());
                 finish();
                 break;
@@ -451,7 +450,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             addedNames.add(name);
         }
         content = this.release_edit.getText().toString().trim();
-        content=removeAtNames(content);
+        content = removeAtNames(content);
         spannableString.setSpan(clickableSpan, 0, atText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         // 将SpannableString添加到EditText的内容中
         release_edit.append(spannableString);
@@ -460,6 +459,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private String removeAtNames(String text) {
         return text.replaceAll("@\\w+", "");
     }
+
     @Override
     public void onRecordingDataReceived(Recordings recording, int type) {
         if (recording != null && type == 1) {
