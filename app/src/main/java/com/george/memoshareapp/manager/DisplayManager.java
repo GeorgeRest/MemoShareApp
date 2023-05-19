@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
 import com.george.memoshareapp.activities.HomePageActivity;
-import com.george.memoshareapp.activities.ReleaseActivity;
 import com.george.memoshareapp.beans.Post;
 
 import org.litepal.LitePal;
@@ -30,6 +29,8 @@ public class DisplayManager {
     Context Context;
     List<Post> treePostList = new ArrayList<>();
 
+    public DisplayManager() {
+    }
     public DisplayManager(Context context) {
         this.Context = context;
         sp = context.getSharedPreferences("User", Context.MODE_PRIVATE);

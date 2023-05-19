@@ -1,19 +1,21 @@
 package com.george.memoshareapp.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,12 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.george.memoshareapp.Fragment.AudioPlayerFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.HomePageActivity;
-import com.george.memoshareapp.activities.ReleaseActivity;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.utils.DateFormat;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
     public HomeWholeRecyclerViewAdapter() {
     }
+    private List<Post> treePosition;
 
     public HomeWholeRecyclerViewAdapter(Context context, List<Post> data) {
         this.mContext = context;
@@ -83,6 +85,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         String location = post.getLocation();
         String publishedText = post.getPublishedText();
         holder.recordings = post.getRecordings();
+
         List<String> photoCachePath = post.getPhotoCachePath();
         holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
         HomePhotoRecyclerViewAdapter innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext);
@@ -112,6 +115,56 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             holder.record_two.setVisibility(View.GONE);
             holder.record_three.setVisibility(View.GONE);
         }
+        holder.innerRecyclerView.setAdapter(innerAdapter);
+
+//        设置头像，需要contact（@人名所对应的图片，相关adapter未完成）
+//        List<String> contacts = post.getContacts();
+//        holder.rv_head_image.setLayoutManager(new GridLayoutManager(mContext, 1));
+//        HomePageHeadImageAdapter headImageAdapter = new HomePageHeadImageAdapter(contacts);
+//        holder.rv_head_image.setAdapter(headImageAdapter);
+
+
+        treePosition = new DisplayManager().showMemoryTree(post.getLatitude(), post.getLongitude());
+
+        if (treePosition != null && treePosition.size() > 0){
+            holder.rl_layout.setBackgroundColor(Color.parseColor("#e7e1ff"));
+//            holder.rv_myself_image.setLayoutManager(new GridLayoutManager(mContext, 10));
+            holder.rv_myself_image.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+            HomePageBottomAdapter homePageBottomAdapter = new HomePageBottomAdapter(treePosition);
+            holder.rv_myself_image.setAdapter(homePageBottomAdapter);
+            holder.image_view1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (holder.rv_myself_image.getVisibility() == View.GONE) {
+                        holder.rv_myself_image.setVisibility(View.VISIBLE);
+                        holder.image_view1.setText("那时那刻");
+                    } else {
+                        holder.rv_myself_image.setVisibility(View.GONE);
+                        holder.image_view1.setText("收起");
+                    }
+                }
+            });
+
+        } else {
+            holder.rl_layout.setBackgroundColor(Color.WHITE);
+            holder.sv_bottom.setVisibility(View.GONE);
+        }
+
+        holder.ll_head.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "点击", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.rl_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "点击", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
     @Override
@@ -169,13 +222,27 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         ImageView record_three;
         public AudioPlayerFragment fragment;
 
+        RelativeLayout rl_layout;
+        LinearLayout ll_head;
+        RecyclerView rv_myself_image;
+        RecyclerView rv_head_image;
+        TextView image_view1;
+        ScrollView sv_bottom;
+        CardView cv_layout;
+
         ViewHolder(View itemView) {
             super(itemView);
             innerRecyclerView = itemView.findViewById(R.id.rv_images);
+            rv_head_image = itemView.findViewById(R.id.rv_head_image);
+            rv_myself_image = itemView.findViewById(R.id.image_recycler_view);
+            cv_layout = itemView.findViewById(R.id.cv_layout);
+            sv_bottom = itemView.findViewById(R.id.sv_bottom);
+
             tv_username = itemView.findViewById(R.id.tv_username);
             tv_time = itemView.findViewById(R.id.tv_time);
             tv_location = itemView.findViewById(R.id.tv_location);
             tv_content = itemView.findViewById(R.id.tv_content);
+            image_view1 = itemView.findViewById(R.id.image_view1);
             record_one = itemView.findViewById(R.id.record_one);
             record_two = itemView.findViewById(R.id.record_two);
             record_three = itemView.findViewById(R.id.record_three);
@@ -184,6 +251,9 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             record_one.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_two.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_three.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
+
+            ll_head = itemView.findViewById(R.id.ll_head);
+            rl_layout = itemView.findViewById(R.id.rl_layout);
         }
         void bind(Post post) {
             isLike = sp.getBoolean(post.getId()+":"+sp.getString("phoneNumber",""), false);
@@ -194,6 +264,8 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             }
         }
     }
+
+
 
 
     private void handleClick(String recordPath, ImageView iv) {
