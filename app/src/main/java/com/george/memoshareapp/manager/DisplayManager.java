@@ -24,7 +24,7 @@ import java.util.List;
  * @version: 1.0
  */
 public class DisplayManager {
-    private final SharedPreferences sp;
+    private SharedPreferences sp;
     private int offset = 0;
     private final int limit = 10;
     Context Context;
@@ -32,7 +32,7 @@ public class DisplayManager {
 
     public DisplayManager(Context context) {
         this.Context = context;
-        sp = context.getSharedPreferences("user", Context.MODE_PRIVATE);
+        sp = context.getSharedPreferences("User", Context.MODE_PRIVATE);
     }
 
 
