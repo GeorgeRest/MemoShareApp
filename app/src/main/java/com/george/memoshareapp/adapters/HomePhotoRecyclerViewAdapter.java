@@ -1,5 +1,6 @@
 package com.george.memoshareapp.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.Post;
 
 import java.util.List;
 
 public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhotoRecyclerViewAdapter.ViewHolder> {
 
     private List<String> mData;
+    private Post post;
 
-
-    public HomePhotoRecyclerViewAdapter(List<String> data) {
+    public HomePhotoRecyclerViewAdapter(List<String> data, Post post) {
         this.mData = data;
+        this.post = post;
     }
 
     @NonNull
@@ -86,6 +89,10 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
                     int position = getAdapterPosition();
                     // 处理子项点击事件的逻辑
                     Toast.makeText(itemView.getContext(), "子项点击，位置：" + position, Toast.LENGTH_SHORT).show();
+
+//                    页面传值，更改键值对即可
+//                    Intent intent = new Intent();
+//                    intent.putExtra("post", post);
                 }
             });
         }

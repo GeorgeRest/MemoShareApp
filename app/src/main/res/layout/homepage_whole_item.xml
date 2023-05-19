@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_margin="5dp">
+    android:paddingTop="10dp"
+    android:background="#f8f4fa">
     <LinearLayout
         android:id="@+id/ll_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginBottom="3dp"
         android:orientation="horizontal">
 
-<!--        <ImageView-->
-<!--            android:layout_width="32dp"-->
-<!--            android:layout_height="32dp"-->
-<!--            android:src="@mipmap/ic_launcher"/>-->
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,25 +38,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="测试"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_alignBottom="@+id/tv_username"
                 android:layout_toRightOf="@id/tv_username"
                 android:text="发布于:12:00"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                android:textColor="@color/secondary_text"/>
 
             <TextView
                 android:id="@+id/tv_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:text="深圳市万科云城设计公社"
                 android:textSize="10sp"
                 android:layout_alignBottom="@+id/tv_time"
-                android:layout_toRightOf="@id/tv_time"/>
+                android:layout_toRightOf="@id/tv_time"
+                android:textColor="@color/secondary_text"/>
         </RelativeLayout>
     </LinearLayout>
 
@@ -65,11 +69,12 @@
         android:id="@+id/cv_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="0dp">
+        app:cardCornerRadius="16dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
 
         <RelativeLayout
-            android:id="@+id/rl_layout"
+        android:id="@+id/rl_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -79,17 +84,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="5dp"
-                android:text="用户发表文本内容" />
+                android:text="用户发表文本内容"
+                android:textColor="@color/black"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_images"
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-            android:clickable="true"
-            android:onClick="onRecyclerViewClicked"
+                android:layout_centerHorizontal="true"
                 android:scrollbarStyle="outsideOverlay" />
 
             <LinearLayout
@@ -131,6 +134,7 @@
                 android:layout_height="21dp"
                 android:layout_below="@id/rv_images"
                 android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
                 android:layout_toLeftOf="@id/chat"
                 android:src="@mipmap/like" />
 
@@ -140,7 +144,7 @@
                 android:layout_height="21dp"
                 android:layout_below="@id/rv_images"
                 android:layout_alignRight="@id/rv_images"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
                 android:src="@mipmap/comment" />
 
@@ -148,33 +152,32 @@
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
     <ScrollView
+        android:id="@+id/sv_bottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="140dp"
             android:orientation="vertical">
 
-            <ImageView
+            <TextView
                 android:id="@+id/image_view1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@mipmap/myself_item_button" />
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center">
-            </RelativeLayout>
+                android:background="@mipmap/myself_item_button"
+                android:text="那时那刻"
+                android:textColor="#997AE7"
+                android:gravity="center"/>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/image_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
-
-                android:background="@drawable/myself_item_backgroud"/>
-
+                android:layout_height="wrap_content"
+                android:background="@drawable/myself_item_backgroud"
+                android:layout_centerHorizontal="true"/>
         </LinearLayout>
 
     </ScrollView>

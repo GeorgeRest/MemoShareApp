@@ -5,7 +5,6 @@ import android.content.Context;
 import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
 import com.george.memoshareapp.activities.HomePageActivity;
-import com.george.memoshareapp.activities.ReleaseActivity;
 import com.george.memoshareapp.beans.Post;
 
 import org.litepal.LitePal;
@@ -28,6 +27,8 @@ public class DisplayManager {
     Context Context;
     List<Post> treePostList = new ArrayList<>();
 
+    public DisplayManager() {
+    }
     public DisplayManager(Context context) {
         this.Context = context;
     }
@@ -43,7 +44,7 @@ public class DisplayManager {
         return postList;
     }
 
-    public void showMemoryTree(double latitude, double longitude) {
+    public List<Post> showMemoryTree(double latitude, double longitude) {
         treePostList.clear();
         LatLng latLng1 = new LatLng(latitude, longitude);
         String phoneNumber = HomePageActivity.phoneNumber;
@@ -63,6 +64,7 @@ public class DisplayManager {
             }
         }
         System.out.println(treePostList.toString());
+        return treePostList;
     }
 
 
