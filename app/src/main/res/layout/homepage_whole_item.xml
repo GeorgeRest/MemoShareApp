@@ -56,12 +56,14 @@
                 android:id="@+id/tv_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="深圳市万科云城设计公社"
-                android:textSize="10sp"
                 android:layout_alignBottom="@+id/tv_time"
+                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/tv_time"
-                android:textColor="@color/secondary_text"/>
+                android:text="深圳市万科云城设计公社"
+                android:textColor="@color/secondary_text"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="10sp" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -170,7 +172,8 @@
                 android:background="@mipmap/myself_item_button"
                 android:text="那时那刻"
                 android:textColor="#997AE7"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:visibility="gone"/>
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -178,7 +181,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/myself_item_backgroud"
-                android:layout_centerHorizontal="true"/>
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"/>
         </LinearLayout>
 
     </ScrollView>

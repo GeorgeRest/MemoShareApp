@@ -48,6 +48,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
     public HomeWholeRecyclerViewAdapter() {
     }
+
     private List<Post> treePosition;
 
     public HomeWholeRecyclerViewAdapter(Context context, List<Post> data) {
@@ -94,8 +95,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.tv_time.setText(DateFormat.getMessageDate(publishedTime));
         holder.tv_location.setText(location);
         holder.tv_content.setText(publishedText);
-
-
         if (holder.recordings != null && !holder.recordings.isEmpty()) {
             holder.record_one.setVisibility(View.GONE);
             holder.record_two.setVisibility(View.GONE);
@@ -124,31 +123,45 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 //        holder.rv_head_image.setAdapter(headImageAdapter);
 
 
-        treePosition = new DisplayManager().showMemoryTree(post.getLatitude(), post.getLongitude());
+        treePosition = new DisplayManager(mContext).showMemoryTree(post.getLatitude(), post.getLongitude());
 
-        if (treePosition != null && treePosition.size() > 0){
-            holder.rl_layout.setBackgroundColor(Color.parseColor("#e7e1ff"));
+        if (treePosition != null && treePosition.size() > 0) {
+
+            if (post.getPhoneNumber().equals(sp.getString("phoneNumber", ""))) {
+                holder.rl_layout.setBackgroundColor(Color.parseColor("#e7e1ff"));
 //            holder.rv_myself_image.setLayoutManager(new GridLayoutManager(mContext, 10));
-            holder.rv_myself_image.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-            HomePageBottomAdapter homePageBottomAdapter = new HomePageBottomAdapter(treePosition);
-            holder.rv_myself_image.setAdapter(homePageBottomAdapter);
-            holder.image_view1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (holder.rv_myself_image.getVisibility() == View.GONE) {
-                        holder.rv_myself_image.setVisibility(View.VISIBLE);
-                        holder.image_view1.setText("那时那刻");
-                    } else {
-                        holder.rv_myself_image.setVisibility(View.GONE);
-                        holder.image_view1.setText("收起");
+                holder.rv_myself_image.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                HomePageBottomAdapter homePageBottomAdapter = new HomePageBottomAdapter(treePosition);
+                holder.rv_myself_image.setAdapter(homePageBottomAdapter);
+                holder.image_view1.setVisibility(View.VISIBLE);
+                holder.rv_myself_image.setVisibility(View.VISIBLE);
+                holder.image_view1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (holder.rv_myself_image.getVisibility() == View.GONE) {
+                            holder.rv_myself_image.setVisibility(View.VISIBLE);
+                            holder.image_view1.setText("那时那刻");
+                        } else {
+                            holder.rv_myself_image.setVisibility(View.GONE);
+                            holder.image_view1.setText("收起");
+                        }
                     }
-                }
-            });
+                });
+            }else{
+                holder.rl_layout.setBackgroundColor(Color.WHITE);
+                holder.image_view1.setVisibility(View.GONE);
+                holder.rv_myself_image.setVisibility(View.GONE);
+//                holder.sv_bottom.setVisibility(View.GONE);
+
+            }
 
         } else {
             holder.rl_layout.setBackgroundColor(Color.WHITE);
-            holder.sv_bottom.setVisibility(View.GONE);
+//            holder.sv_bottom.setVisibility(View.GONE);
+            holder.image_view1.setVisibility(View.GONE);
+            holder.rv_myself_image.setVisibility(View.GONE);
         }
+
 
         holder.ll_head.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,16 +189,16 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     public void onClick(View v) {
         ViewHolder holder = (ViewHolder) v.getTag();
         Post post = mData.get(holder.getAdapterPosition());
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.like:
-                isLike = sp.getBoolean(post.getId()+":"+sp.getString("phoneNumber",""), false);
+                isLike = sp.getBoolean(post.getId() + ":" + sp.getString("phoneNumber", ""), false);
                 isLike = !isLike;
                 if (isLike) {
                     holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like_click));
-                }else{
+                } else {
                     holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like));
                 }
-                editor.putBoolean(post.getId()+":"+sp.getString("phoneNumber",""), isLike);
+                editor.putBoolean(post.getId() + ":" + sp.getString("phoneNumber", ""), isLike);
                 editor.apply();
                 break;
         }
@@ -255,17 +268,16 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             ll_head = itemView.findViewById(R.id.ll_head);
             rl_layout = itemView.findViewById(R.id.rl_layout);
         }
+
         void bind(Post post) {
-            isLike = sp.getBoolean(post.getId()+":"+sp.getString("phoneNumber",""), false);
+            isLike = sp.getBoolean(post.getId() + ":" + sp.getString("phoneNumber", ""), false);
             if (isLike) {
                 like.setBackground(mContext.getResources().getDrawable(R.drawable.like_click));
-            }else{
+            } else {
                 like.setBackground(mContext.getResources().getDrawable(R.drawable.like));
             }
         }
     }
-
-
 
 
     private void handleClick(String recordPath, ImageView iv) {
