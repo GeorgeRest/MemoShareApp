@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.manager.DisplayManager;
+import com.george.memoshareapp.utils.DateFormat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private TextView detail_tv_share_number;
     private TextView detail_tv_like_number;
     private TextView detail_tv_comment_number;
-    private List<String> ceShiList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +71,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
 //       userIcon.setImageResource((Integer) intent.getExtras().get("userIcon"));
         userIcon.setImageResource(R.mipmap.touxiangceshi);
-        userName.setText(post.getPhoneNumber().substring(0,4));
-        publishTime.setText(post.getPublishedTime());
+        userName.setText(post.getPhoneNumber().substring(0,5));
+        publishTime.setText(DateFormat.getCurrentDateTime(post.getPublishedTime()));
+
         location.setText(post.getLocation());
         content.setText(post.getPublishedText());
         photoPath = post.getPhotoCachePath();
@@ -138,8 +139,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         share.setOnClickListener(this);
         comment.setOnClickListener(this);
         like.setOnClickListener(this);
-
-
     }
 
     public void onClick(View view) {
@@ -164,8 +163,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     detail_tv_like_number.setText(converted+"万");
                 }
                 detail_tv_comment_number.setText(commentNumber+"");
-
-
                 break;
 //          case R.id.list中的某条评论:
 //                点击评论，弹出评论框，回复某条评论，
@@ -200,7 +197,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             default:
                 break;
         }
-
     }
     private void showBottomDialog() {
         //1、使用Dialog、设置style
