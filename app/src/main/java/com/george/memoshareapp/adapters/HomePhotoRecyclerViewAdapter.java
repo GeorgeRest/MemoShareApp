@@ -2,7 +2,6 @@ package com.george.memoshareapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.beans.Post;
 
 import java.util.List;
@@ -95,8 +95,9 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
                     Toast.makeText(itemView.getContext(), "子项点击，位置：" + position, Toast.LENGTH_SHORT).show();
                     System.out.println("---------"+post);
 //                    页面传值，更改键值对即可
-//                    Intent intent = new Intent(context,);
-//                    intent.putExtra("post", post);
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra("post", post);
+                    context.startActivity(intent);
                 }
             });
         }

@@ -56,9 +56,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_detail);
 
         init();
-//        intent = getIntent();
-//        post = (Post) intent.getSerializableExtra("key");/////////改key
-//
+        intent = getIntent();
+        post = (Post) intent.getSerializableExtra("post");
         putParameter2View();//传参
         detail_tv_share_number.setText(shareNumber+"");
         detail_tv_like_number.setText(like_number+"");
@@ -66,37 +65,17 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    private void initData() {
-        ceShiList = new ArrayList<>();
-        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQzMjk=");
-        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQzMjg=");
-        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQzMzA=");
-        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQ0ODU=");
-        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQ0ODQ=");
-        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQ0ODM=");
-        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQwMzE=");
-        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzQwMzA=");
-        ceShiList.add("/storage/emulated/0/Android/data/com.george.memoshareapp/files/Pictures/photoCache/Y29udGVudDovL2NvbS5hbmRyb2lkLnByb3ZpZGVycy5tZWRpYS5kb2N1bWVudHMvZG9jdW1lbnQvaW1hZ2UlM0EyMzYzODI=");
-
-        userIcon.setImageResource(R.mipmap.touxiangceshi);
-        userName.setText("9476");
-        publishTime.setText("2023-5-18");
-        location.setText("大连市甘井子区");
-        content.setText("这是一条测试数据");
-//        photoPath = ceShiList;
-
-
-    }
 
 
     private void putParameter2View() {
-        initData();
+
 //       userIcon.setImageResource((Integer) intent.getExtras().get("userIcon"));
-//        userName.setText(post.getPhoneNumber().substring(0,4));
-//        publishTime.setText(post.getPublishedTime());
-//        location.setText(post.getLocation());
-//        content.setText(post.getPublishedText());
-//        photoPath = (List<String>)intent.getExtras().get("photoPathCache");
+        userIcon.setImageResource(R.mipmap.touxiangceshi);
+        userName.setText(post.getPhoneNumber().substring(0,4));
+        publishTime.setText(post.getPublishedTime());
+        location.setText(post.getLocation());
+        content.setText(post.getPublishedText());
+        photoPath = post.getPhotoCachePath();
 
 
 //        if (intent.getExtras().get("like").equals("true")){
@@ -122,7 +101,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 //            comment_count.setText(commentNumber);
 //        }
 
-        displayManager.showPhoto(recyclerView,ceShiList,DetailActivity.this);
+        displayManager.showPhoto(recyclerView,photoPath,DetailActivity.this);
 
 
     }
