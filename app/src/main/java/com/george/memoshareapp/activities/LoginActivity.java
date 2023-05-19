@@ -1,6 +1,8 @@
 package com.george.memoshareapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -37,6 +39,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FragmentManager fragmentManager;
     private TextView tv_yx_lg_regist;
     private TextView tv_forget_pw;
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
 
 
     @Override
@@ -63,6 +67,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         login.setOnClickListener(this);
         tv_yx_lg_regist.setOnClickListener(this);
         tv_forget_pw.setOnClickListener(this);
+        sp = getSharedPreferences("User", Context.MODE_PRIVATE);
+        editor = sp.edit();
 
     }
 
@@ -108,7 +114,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 setDefaultSelection(1);
                 break;
             case R.id.tv_forget_pw:
-                Intent intent = new Intent(this,RetrievePasswordActivity.class);
+                Intent intent = new Intent(this, RetrievePasswordActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_yx_lg_regist:
@@ -151,18 +157,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             if (agreement.isChecked()) {
                 UserManager userManager = new UserManager(this);
-                if(phoneNumber.matches(phoneRegex)){
+                if (phoneNumber.matches(phoneRegex)) {
                     if (userManager.queryUserInfo(phoneNumber, pwNumber)) {
-                    Intent intent = new Intent(this, HomePageActivity.class);
-                    intent.putExtra("phoneNumber", phoneNumber);
-                    startActivity(intent);
-                      Toasty.success(this,"登录成功",Toast.LENGTH_SHORT).show();
-                       finish();
+                        Intent intent = new Intent(this, HomePageActivity.class);
+                        intent.putExtra("phoneNumber", phoneNumber);
+                        editor.putString("phoneNumber", phoneNumber);
+                        editor.apply();
+                        startActivity(intent);
+                        Toasty.success(this, "登录成功", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
-                }else {
-                    Toasty.warning(this,"请输入正确格式的手机号",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toasty.warning(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT).show();
                 }
-            }else {
+            } else {
                 Toasty.info(this, "请勾选同意协议", Toast.LENGTH_SHORT).show();
             }
 
@@ -175,25 +183,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Toasty.info(this, "请将信息填写完整", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (agreement.isChecked()){
+            if (agreement.isChecked()) {
                 UserManager userManager = new UserManager(this);
-                if(phoneNumber.matches(phoneRegex)){
-                    if (userManager.queryUser(phoneNumber) ) {
-                        if( et_code.equals(CodeFragment.codeReal)){
-                                Intent intent = new Intent(this, HomePageActivity.class);
-                                intent.putExtra("phoneNumber",phoneNumber);
-                                 startActivity(intent);
+                if (phoneNumber.matches(phoneRegex)) {
+                    if (userManager.queryUser(phoneNumber)) {
+                        if (et_code.equals(CodeFragment.codeReal)) {
+                            Intent intent = new Intent(this, HomePageActivity.class);
+                            intent.putExtra("phoneNumber", phoneNumber);
+                            startActivity(intent);
                             Toasty.success(this, "登录成功", Toast.LENGTH_SHORT).show();
                             finish();
-                        }else {
+                        } else {
                             Toasty.error(this, "验证码错误", Toast.LENGTH_SHORT).show();
                         }
 
                     }
-                }else {
-                    Toasty.info(this,"请输入正确格式的手机号",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toasty.info(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT).show();
                 }
-            }else {
+            } else {
                 Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT).show();
             }
 

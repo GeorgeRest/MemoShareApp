@@ -119,6 +119,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_release);
         initView();
         initRecyclerView();
+
         phoneNumber = getIntent().getStringExtra("phoneNumber");
         rl_permission.setOnClickListener(this);
         rl_time.setOnClickListener(this);

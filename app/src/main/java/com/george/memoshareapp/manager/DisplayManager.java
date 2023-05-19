@@ -1,6 +1,7 @@
 package com.george.memoshareapp.manager;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,7 @@ import java.util.List;
  * @version: 1.0
  */
 public class DisplayManager {
+    private final SharedPreferences sp;
     private int offset = 0;
     private final int limit = 10;
     Context Context;
@@ -36,6 +38,7 @@ public class DisplayManager {
 
     public DisplayManager(Context context) {
         this.Context = context;
+        sp = context.getSharedPreferences("user", Context.MODE_PRIVATE);
     }
     public DisplayManager(){
     }
@@ -78,10 +81,10 @@ public class DisplayManager {
             return postList;
         }
 
-        public void showMemoryTree(double latitude, double longitude) {
+        public List<Post> showMemoryTree(double latitude, double longitude) {
         treePostList.clear();
         LatLng latLng1 = new LatLng(latitude, longitude);
-        String phoneNumber = HomePageActivity.phoneNumber;
+        String phoneNumber = sp.getString("phoneNumber", "");
         List<Post> postList = LitePal
                 .select("photocachepath", "longitude", "latitude", "contacts")
                 .where("phonenumber !=? and ispublic = ?", phoneNumber,"1")
@@ -97,7 +100,7 @@ public class DisplayManager {
                 }
             }
         }
-        System.out.println(treePostList.toString());
+        return treePostList;
     }
 
         }

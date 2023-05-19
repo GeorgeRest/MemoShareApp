@@ -14,6 +14,7 @@ import java.io.Serializable;
  * @version: 1.0
  */
 public class Comment extends LitePalSupport implements Serializable {
+    private long id;
     private Post post;
     private String commentContent;
     private String commentTime;
@@ -27,6 +28,14 @@ public class Comment extends LitePalSupport implements Serializable {
         this.commentContent = commentContent;
         this.commentTime = commentTime;
         this.commentUserPhoneNumber = commentUserPhoneNumber;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Post getPost() {

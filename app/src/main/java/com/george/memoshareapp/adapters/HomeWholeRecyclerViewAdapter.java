@@ -1,6 +1,8 @@
 package com.george.memoshareapp.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +34,11 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     public AudioPlayerFragment fragment;
     private Map<ImageView, Fragment> buttonFragmentMap = new HashMap<>();
     private static HomeWholeRecyclerViewAdapter instance;
+    private SharedPreferences.Editor editor;
+
+    private SharedPreferences sp;
+    private boolean isLike;
+
     public HomeWholeRecyclerViewAdapter() {
     }
 
@@ -40,16 +47,18 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         this.mData = data;
         instance = this;
     }
+
     public static HomeWholeRecyclerViewAdapter getInstance() {
         return instance;  // 创建一个静态方法来获取当前实例
     }
-
 
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.homepage_whole_item, parent, false);
+        sp = mContext.getSharedPreferences("User", Context.MODE_PRIVATE);
+        editor = sp.edit();
         return new ViewHolder(view);
     }
 
@@ -58,7 +67,10 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.record_one.setTag(holder);
         holder.record_two.setTag(holder);
         holder.record_three.setTag(holder);
+        holder.like.setTag(holder);
         Post post = mData.get(position);
+        holder.bind(post);
+
         String phoneNumber = post.getPhoneNumber();
         String name = phoneNumber.substring(0, 5);
         String publishedTime = post.getPublishedTime();
@@ -67,12 +79,13 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.recordings = post.getRecordings();
         List<String> photoCachePath = post.getPhotoCachePath();
         holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
-        HomePhotoRecyclerViewAdapter innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath,post,mContext);
+        HomePhotoRecyclerViewAdapter innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post,mContext);
         holder.innerRecyclerView.setAdapter(innerAdapter);
         holder.tv_username.setText(name);
         holder.tv_time.setText(DateFormat.getMessageDate(publishedTime));
         holder.tv_location.setText(location);
         holder.tv_content.setText(publishedText);
+
 
         if (holder.recordings != null && !holder.recordings.isEmpty()) {
             holder.record_one.setVisibility(View.GONE);
@@ -103,25 +116,42 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     @Override
     public void onClick(View v) {
         ViewHolder holder = (ViewHolder) v.getTag();
+        Post post = mData.get(holder.getAdapterPosition());
+        switch (v.getId()){
+            case R.id.like:
+                isLike = sp.getBoolean(post.getId()+":"+sp.getString("phoneNumber",""), false);
+                isLike = !isLike;
+                if (isLike) {
+                    holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like_click));
+                }else{
+                    holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like));
+                }
+                editor.putBoolean(post.getId()+":"+sp.getString("phoneNumber",""), isLike);
+                editor.apply();
+                break;
+        }
         if (holder.recordings != null && !holder.recordings.isEmpty()) {
             switch (v.getId()) {
                 case R.id.record_one:
-                    if(holder.recordings.size() > 0)
+                    if (holder.recordings.size() > 0)
                         handleClick(holder.recordings.get(0).getRecordCachePath(), holder.record_one);
                     break;
                 case R.id.record_two:
-                    if(holder.recordings.size() > 1)
+                    if (holder.recordings.size() > 1)
                         handleClick(holder.recordings.get(1).getRecordCachePath(), holder.record_two);
                     break;
                 case R.id.record_three:
-                    if(holder.recordings.size() > 2)
+                    if (holder.recordings.size() > 2)
                         handleClick(holder.recordings.get(2).getRecordCachePath(), holder.record_three);
                     break;
+
             }
         }
+
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView like;
         private TextView tv_username;
         private TextView tv_time;
         private TextView tv_location;
@@ -132,6 +162,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         ImageView record_two;
         ImageView record_three;
         public AudioPlayerFragment fragment;
+
         ViewHolder(View itemView) {
             super(itemView);
             innerRecyclerView = itemView.findViewById(R.id.rv_images);
@@ -142,12 +173,21 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             record_one = itemView.findViewById(R.id.record_one);
             record_two = itemView.findViewById(R.id.record_two);
             record_three = itemView.findViewById(R.id.record_three);
+            like = itemView.findViewById(R.id.like);
+            like.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_one.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_two.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_three.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
         }
+        void bind(Post post) {
+            isLike = sp.getBoolean(post.getId()+":"+sp.getString("phoneNumber",""), false);
+            if (isLike) {
+                like.setBackground(mContext.getResources().getDrawable(R.drawable.like_click));
+            }else{
+                like.setBackground(mContext.getResources().getDrawable(R.drawable.like));
+            }
+        }
     }
-
 
 
     private void handleClick(String recordPath, ImageView iv) {
@@ -179,24 +219,16 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     }
 
 
-    public void addItem(List<Post> item) {
-        mData.addAll(item);
-    }
-
-//    public void addData(Post newData) {
-//        int startPos = this.mData.size();  // 记录添加前的数据量，即新数据添加的起始位置
-//        this.mData.add(newData);  // 添加新的数据
-//        notifyItemRangeInserted(startPos, 1);  // 通知 adapter 在 startPos 位置插入了 newData.size() 条数据
-//    }
-
     public void addData(Post newData) {
         this.mData.add(0, newData);  // 添加新的数据到列表的最前面
         notifyItemInserted(0);  // 通知 adapter 在位置 0 插入了一条数据
 
     }
+
     private int calculateSpanCount(int itemCount) {
         return itemCount > 1 ? 2 : 1;
     }
+
     public void resetFragment() {
         if (fragment != null) {
             fragment.stopPlayback();
@@ -207,4 +239,5 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             fragment = null;
         }
     }
+
 }

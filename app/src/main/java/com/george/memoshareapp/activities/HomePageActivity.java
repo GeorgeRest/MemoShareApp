@@ -1,6 +1,7 @@
 package com.george.memoshareapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -39,7 +40,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     private FragmentManager fragmentManager;
     private ImageView capsuleButton;
-    public static  String phoneNumber;
+    private SharedPreferences sp;
 
 
     @Override
@@ -49,8 +50,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         initViews();
         fragmentManager = getSupportFragmentManager();
         setTabSelection(0);
-        Intent intent = getIntent();
-        phoneNumber = intent.getStringExtra("phoneNumber");
 
     }
 
@@ -65,6 +64,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         icon_three.setOnClickListener(this);
         icon_four.setOnClickListener(this);
         capsuleButton.setOnClickListener(this);
+        sp = getSharedPreferences("User", MODE_PRIVATE);
 
     }
 
@@ -84,7 +84,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 setTabSelection(3);
                 break;
             case R.id.home_capsule:
-                String phoneNumber = getIntent().getStringExtra("phoneNumber");
+                String phoneNumber = sp.getString("phoneNumber", "");
                 Intent intent = new Intent(HomePageActivity.this, ReleaseActivity.class).putExtra("phoneNumber", phoneNumber);
                 startActivity(intent);
             default:
