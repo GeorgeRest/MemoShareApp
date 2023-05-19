@@ -40,7 +40,7 @@ public class DateFormat {
         // 与今天零点比较
         if (original >= today.getTimeInMillis()) {
             // 今天
-            return new SimpleDateFormat("HH:mm").format(date);
+            return "发布于"+new SimpleDateFormat("HH:mm").format(date);
         } else {
             // 与昨天零点比较
             if (original >= today.getTimeInMillis() - oneDay) {

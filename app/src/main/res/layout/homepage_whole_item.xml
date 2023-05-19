@@ -113,12 +113,13 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/like"
                 android:layout_width="25dp"
                 android:layout_height="21dp"
                 android:layout_below="@id/rv_images"
                 android:layout_marginTop="15dp"
                 android:layout_toLeftOf="@id/chat"
-                android:src="@mipmap/like" />
+                android:src="@drawable/like" />
 
             <ImageView
                 android:id="@+id/chat"

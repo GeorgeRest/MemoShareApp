@@ -12,6 +12,7 @@ import org.litepal.crud.LitePalSupport;
  * @version: 1.0
  */
 public class Comment extends LitePalSupport {
+    private long id;
     private Post post;
     private String commentContent;
     private String commentTime;
@@ -25,6 +26,14 @@ public class Comment extends LitePalSupport {
         this.commentContent = commentContent;
         this.commentTime = commentTime;
         this.commentUserPhoneNumber = commentUserPhoneNumber;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Post getPost() {

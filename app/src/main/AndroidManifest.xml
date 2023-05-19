@@ -28,15 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MemoShareApp"
         tools:targetApi="31">
-        <activity
-            android:name=".test.test"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <service
             android:name="com.zlw.main.recorderlib.recorder.RecordService"
@@ -95,15 +87,6 @@
         <activity
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true" />
-        <!--test 用完删除   -->
-        <activity
-            android:name=".activities.TestHomeActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <!--//test 用完删除   -->
+
     </application>
 </manifest>
