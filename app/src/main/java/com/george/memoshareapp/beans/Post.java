@@ -1,7 +1,7 @@
 package com.george.memoshareapp.beans;
 
 import org.litepal.crud.LitePalSupport;
-import org.w3c.dom.Comment;
+
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,6 +16,7 @@ import java.util.List;
  * @version: 1.0
  */
 public class Post extends LitePalSupport implements Serializable {
+    private long id;
     private String phoneNumber;
     private String publishedText;
     private List<String> photoCachePath;
@@ -50,6 +51,13 @@ public class Post extends LitePalSupport implements Serializable {
         this.memoryTime = memoryTime;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;

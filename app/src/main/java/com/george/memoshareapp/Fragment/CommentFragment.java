@@ -1,5 +1,6 @@
 package com.george.memoshareapp.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.beans.Comment;
 
 
@@ -62,34 +64,21 @@ public class CommentFragment extends DialogFragment {
             public void onClick(View v) {
                 String commentText = et_comment_input.getText().toString();
                 if (!commentText.isEmpty()) {
-                    // This assumes you have a method to post the comment to your server
-                    postComment(getArguments().getInt("comment_id", -1), commentText);  //如果找不到id就返回-1,即新建一个评论
+                    passComment2activity(getArguments().getInt("comment_id", -1), commentText);  //如果找不到id就返回-1,即新建一个评论
+                    ((DetailActivity) getActivity()).postComment();
+                    ((DetailActivity) getActivity()).onCommentPosted();
                 }
+                mListener.onCommentPosted();
             }
         });
     }
 
+    private void passComment2activity(int comment_id, String commentText) {
+        Intent intent = ((DetailActivity) getActivity()).getIntent();
+        intent.putExtra("id",comment_id);
+        intent.putExtra("commentText",commentText);
 
-    private void postComment(int commentId, String commentText) {
-        if (commentId == -1) {
-            // This is a new comment, not a reply to an existing comment
-            // TODO: Post the new comment to your server
-            Comment comment = new Comment();
-            comment.setCommentContent(commentText);
-    //        comment.setCommentTime();
-            comment.setCommentUserName("seven");
-            comment.setCommentUserPhoto(R.mipmap.photo_10);
-
-            //todo 把post传到fragment，然后将comment保存到post
-            // 当评论发布成功后，调用 mListener 的 onCommentPosted 方法
-
-        } else {
-            // This is a reply to an existing comment
-            // TODO: Post the reply to your server
-        }
-        if (mListener != null) {
-            mListener.onCommentPosted();
-        }
     }
+
 
 }

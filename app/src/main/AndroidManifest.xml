@@ -28,18 +28,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MemoShareApp"
         tools:targetApi="31">
-        <activity
-            android:name=".activities.DetailActivity_1"
-            android:exported="true" >
-
-        </activity>
 
         <activity
             android:name=".activities.FullScreenImageActivity"
             android:exported="false" />
         <activity
             android:name=".activities.DetailActivity"
-            android:exported="true"></activity>
+            android:exported="true">
+
+        </activity>
 
         <service
             android:name="com.zlw.main.recorderlib.recorder.RecordService"
@@ -76,13 +73,13 @@
             android:name=".activities.SplashActivity"
             android:exported="true"
             android:theme="@style/Splash">
-
-            <!-- 启动页 -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- 启动页 -->
+
         </activity>
         <activity
             android:name=".activities.RegisterActivity"
@@ -99,7 +96,9 @@
 
         <activity
             android:name=".activities.ReleaseActivity"
-            android:exported="true"></activity>
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true"></activity>
