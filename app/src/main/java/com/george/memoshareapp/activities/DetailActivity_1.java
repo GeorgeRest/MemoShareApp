@@ -5,28 +5,31 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
+import com.george.memoshareapp.Fragment.CommentFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.CommentAdapter;
 import com.george.memoshareapp.beans.Comment;
-import com.george.memoshareapp.beans.Post;
-
-import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity_1 extends AppCompatActivity implements CommentFragment.OnCommentPostedListener {
 
     private RecyclerView rv_comment;
     private CommentAdapter commentAdapter;
     private List<Comment> comments;
+    private TextView tv_comments_number;
+    private Button btn_comment;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_detail_1);
 
         initView();
 
@@ -34,6 +37,19 @@ public class DetailActivity extends AppCompatActivity {
         rv_comment.setLayoutManager(new LinearLayoutManager(this));
         commentAdapter = new CommentAdapter(this, comments);
         rv_comment.setAdapter(commentAdapter);
+        tv_comments_number.setText("共"+commentAdapter.getItemCount()+"条评论");
+
+
+        btn_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommentFragment commentFragment = CommentFragment.newInstance(-1);   // 假设 -1 表示新的评论，而不是对现有评论的回复
+                commentFragment.show(getSupportFragmentManager(), "CommentFragment");
+
+            }
+        });
+
+
     }
 
     private void loadComments() {
@@ -124,5 +140,16 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initView() {
         rv_comment = (RecyclerView) findViewById(R.id.rv_comment);
+        tv_comments_number = (TextView) findViewById(R.id.tv_comments_number);
+        btn_comment = findViewById(R.id.btn_comment);
     }
+
+    @Override
+    public void onCommentPosted() {
+        // todo 从数据库请求新的评论列表
+        List<Comment> newcomments = null;
+        // 然后使用新的数据更新 Adapter
+        commentAdapter.setComments(newcomments);
+    }
+
 }

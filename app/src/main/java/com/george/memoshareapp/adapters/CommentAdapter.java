@@ -5,13 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.CustomLinearLayoutManager;
+import com.george.memoshareapp.Fragment.CommentFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.Comment;
 
@@ -23,6 +26,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     private List<Comment> comments = new ArrayList<>();
     private Context context;
     private CommentAdapter commentAdapter;
+
 
 
     public CommentAdapter() {
@@ -69,6 +73,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }else{
             holder.rv_sub_comments.setVisibility(View.GONE);  // 如果没有子评论，就隐藏 RecyclerView
         }
+
+        //为item设置点击事件
+        holder.layout_item.setOnClickListener(new View.OnClickListener() { 
+            @Override
+            public void onClick(View v) {
+                CommentFragment commentFragment = CommentFragment.newInstance((int) comment.getId()); // 使用当前评论的 id 来初始化 Fragment
+                commentFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "CommentFragment");
+            }
+        });
     }
 
     public void setComments(List<Comment> comments) {
@@ -82,6 +95,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         TextView tv_comment_username;
         TextView tv_comment_content;
         RecyclerView rv_sub_comments;
+        LinearLayout layout_item;
 
 
         public CommentViewHolder(@NonNull View itemView) {
@@ -90,7 +104,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             this.tv_comment_username = itemView.findViewById(R.id.tv_comment_username);
             this.tv_comment_content = itemView.findViewById(R.id.tv_comment_content);
             this.rv_sub_comments = itemView.findViewById(R.id.rv_sub_comments);
-
+            this.layout_item = itemView.findViewById(R.id.layout_item);
             this.rv_sub_comments.setVisibility(View.GONE);  // 默认设置为不可见
         }
     }
