@@ -2,7 +2,6 @@ package com.george.memoshareapp.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,14 +118,16 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         Post post = mData.get(holder.getAdapterPosition());
         switch (v.getId()){
             case R.id.like:
-                isLike = sp.getBoolean(post.getId()+":"+sp.getString("phoneNumber",""), false);
+                isLike = sp.getBoolean(post.getId()+":"+sp.getString(post.getPhoneNumber(),""), false);
+
                 isLike = !isLike;
                 if (isLike) {
+
                     holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like_click));
                 }else{
                     holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like));
                 }
-                editor.putBoolean(post.getId()+":"+sp.getString("phoneNumber",""), isLike);
+                editor.putBoolean(post.getId()+":"+sp.getString(post.getPhoneNumber(),""), isLike);
                 editor.apply();
                 break;
         }
@@ -180,7 +181,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             record_three.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
         }
         void bind(Post post) {
-            isLike = sp.getBoolean(post.getId()+":"+sp.getString("phoneNumber",""), false);
+            isLike = sp.getBoolean(post.getId()+":"+sp.getString(post.getPhoneNumber(),""), false);
             if (isLike) {
                 like.setBackground(mContext.getResources().getDrawable(R.drawable.like_click));
             }else{
@@ -224,11 +225,9 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         notifyItemInserted(0);  // 通知 adapter 在位置 0 插入了一条数据
 
     }
-
     private int calculateSpanCount(int itemCount) {
         return itemCount > 1 ? 2 : 1;
     }
-
     public void resetFragment() {
         if (fragment != null) {
             fragment.stopPlayback();
@@ -239,5 +238,4 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             fragment = null;
         }
     }
-
 }

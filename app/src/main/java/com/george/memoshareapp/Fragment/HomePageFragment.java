@@ -86,6 +86,7 @@ public class HomePageFragment extends Fragment {
                     outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), postList);
                     outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     outerRecyclerView.setAdapter(outerAdapter);
+
                 }
                 smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
                 smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
@@ -118,6 +119,13 @@ public class HomePageFragment extends Fragment {
                 break;
         }
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        outerRecyclerView.setAdapter(outerAdapter);
+
     }
 
     @Override

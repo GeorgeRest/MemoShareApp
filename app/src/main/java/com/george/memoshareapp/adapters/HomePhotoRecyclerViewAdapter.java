@@ -2,6 +2,7 @@ package com.george.memoshareapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,8 +96,10 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
                     Toast.makeText(itemView.getContext(), "子项点击，位置：" + position, Toast.LENGTH_SHORT).show();
                     System.out.println("---------"+post);
 //                    页面传值，更改键值对即可
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("User", Context.MODE_PRIVATE);
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra("post", post);
+//                    intent.putExtra("has_liked",sharedPreferences.getBoolean("has_liked",false));
                     context.startActivity(intent);
                 }
             });

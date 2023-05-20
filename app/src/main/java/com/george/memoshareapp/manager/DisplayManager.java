@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.adapters.DetailPhotoRecycleViewAdapter;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.utils.CustomItemDecoration;
@@ -29,7 +28,7 @@ import java.util.List;
  * @version: 1.0
  */
 public class DisplayManager {
-    private final SharedPreferences sp;
+    private  SharedPreferences sp;
     private int offset = 0;
     private final int limit = 10;
     Context Context;
@@ -38,7 +37,6 @@ public class DisplayManager {
 
     public DisplayManager(Context context) {
         this.Context = context;
-        sp = context.getSharedPreferences("user", Context.MODE_PRIVATE);
     }
     public DisplayManager(){
     }
@@ -66,12 +64,7 @@ public class DisplayManager {
         recyclerView.addItemDecoration(new CustomItemDecoration(spacingInPixels));
 
     }
-
-
-
-
-
-        public List<Post> getPostList() {
+    public List<Post> getPostList() {
             List<Post> postList = LitePal.where("ispublic = ?", "1")
                     .limit(limit)
                     .offset(offset)
@@ -80,8 +73,7 @@ public class DisplayManager {
             offset += limit;
             return postList;
         }
-
-        public List<Post> showMemoryTree(double latitude, double longitude) {
+    public List<Post> showMemoryTree(double latitude, double longitude) {
         treePostList.clear();
         LatLng latLng1 = new LatLng(latitude, longitude);
         String phoneNumber = sp.getString("phoneNumber", "");
@@ -102,7 +94,6 @@ public class DisplayManager {
         }
         return treePostList;
     }
-
-        }
+}
 
 
