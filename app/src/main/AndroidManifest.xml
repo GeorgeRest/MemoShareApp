@@ -28,6 +28,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MemoShareApp"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.FullScreenImageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.DetailActivity"
+            android:exported="true"></activity>
 
 
         <service
@@ -44,10 +50,10 @@
 
         <activity
             android:name=".activities.ContactListActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.MapLocationActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.HomePageActivity"
             android:exported="false" />
@@ -68,7 +74,7 @@
         </activity>
         <activity
             android:name=".activities.RegisterActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.MainActivity"
             android:exported="true"></activity>
@@ -83,10 +89,11 @@
         </activity>
         <activity
             android:name=".activities.LoginActivity"
-            android:exported="true" />
+            android:exported="true"></activity>
         <activity
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true" />
 
     </application>
+
 </manifest>

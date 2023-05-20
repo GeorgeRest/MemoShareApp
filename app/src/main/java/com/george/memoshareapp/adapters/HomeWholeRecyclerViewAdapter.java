@@ -18,7 +18,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.Fragment.AudioPlayerFragment;
@@ -89,7 +88,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
         List<String> photoCachePath = post.getPhotoCachePath();
         holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
-        HomePhotoRecyclerViewAdapter innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext);
+        HomePhotoRecyclerViewAdapter innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post,mContext);
         holder.innerRecyclerView.setAdapter(innerAdapter);
         holder.tv_username.setText(name);
         holder.tv_time.setText(DateFormat.getMessageDate(publishedTime));
@@ -191,14 +190,15 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         Post post = mData.get(holder.getAdapterPosition());
         switch (v.getId()) {
             case R.id.like:
-                isLike = sp.getBoolean(post.getId() + ":" + sp.getString("phoneNumber", ""), false);
+                isLike = sp.getBoolean(post.getId() + ":" + sp.getString(post.getPhoneNumber(), ""), false);
                 isLike = !isLike;
                 if (isLike) {
+
                     holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like_click));
                 } else {
                     holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like));
                 }
-                editor.putBoolean(post.getId() + ":" + sp.getString("phoneNumber", ""), isLike);
+                editor.putBoolean(post.getId() + ":" + sp.getString(post.getPhoneNumber(), ""), isLike);
                 editor.apply();
                 break;
         }
@@ -270,7 +270,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         }
 
         void bind(Post post) {
-            isLike = sp.getBoolean(post.getId() + ":" + sp.getString("phoneNumber", ""), false);
+            isLike = sp.getBoolean(post.getId() + ":" + sp.getString(post.getPhoneNumber(), ""), false);
             if (isLike) {
                 like.setBackground(mContext.getResources().getDrawable(R.drawable.like_click));
             } else {
@@ -314,11 +314,9 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         notifyItemInserted(0);  // 通知 adapter 在位置 0 插入了一条数据
 
     }
-
     private int calculateSpanCount(int itemCount) {
         return itemCount > 1 ? 2 : 1;
     }
-
     public void resetFragment() {
         if (fragment != null) {
             fragment.stopPlayback();
@@ -329,5 +327,4 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             fragment = null;
         }
     }
-
 }

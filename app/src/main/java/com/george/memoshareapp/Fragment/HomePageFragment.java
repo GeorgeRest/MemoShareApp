@@ -5,21 +5,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.events.ScrollToTopEvent;
 import com.george.memoshareapp.manager.DisplayManager;
-import com.george.memoshareapp.utils.DateFormat;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
@@ -30,7 +25,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -92,6 +86,7 @@ public class HomePageFragment extends Fragment {
                     outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), postList);
                     outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     outerRecyclerView.setAdapter(outerAdapter);
+
                 }
                 smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
                 smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
@@ -129,6 +124,13 @@ public class HomePageFragment extends Fragment {
                 break;
         }
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        outerRecyclerView.setAdapter(outerAdapter);
+
     }
 
     @Override

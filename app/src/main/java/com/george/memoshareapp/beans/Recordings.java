@@ -5,6 +5,8 @@ import android.os.CountDownTimer;
 import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
+import java.io.Serializable;
+
 /**
  * @projectName: Memosahre
  * @package: com.george.memoshareapp.beans
@@ -14,7 +16,7 @@ import org.litepal.crud.LitePalSupport;
  * @date: 2023/5/11 22:32
  * @version: 1.0
  */
-public class Recordings extends LitePalSupport {
+public class Recordings extends LitePalSupport implements Serializable {
     private Post post;
     private String recordCachePath;
     private long recordTime;

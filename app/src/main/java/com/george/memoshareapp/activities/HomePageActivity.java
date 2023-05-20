@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.george.memoshareapp.Fragment.CalendarTripFragment;
 import com.george.memoshareapp.Fragment.HomeFragment;
-import com.george.memoshareapp.Fragment.HomePageFragment;
 import com.george.memoshareapp.Fragment.MessageFragment;
 import com.george.memoshareapp.Fragment.PersonalPageFragment;
 import com.george.memoshareapp.R;
@@ -166,5 +165,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             transaction.hide(personalPageFragment);
         }
     }
+
 
 }
