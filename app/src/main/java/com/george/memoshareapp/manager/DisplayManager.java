@@ -10,6 +10,7 @@ import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.DetailPhotoRecycleViewAdapter;
+import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.utils.CustomItemDecoration;
 
@@ -35,10 +36,11 @@ public class DisplayManager {
     private DetailPhotoRecycleViewAdapter detailPhotoRecycleViewAdapter;
     List<Post> treePostList = new ArrayList<>();
 
+    public DisplayManager() {
+    }
     public DisplayManager(Context context) {
         this.Context = context;
-    }
-    public DisplayManager(){
+        sp = context.getSharedPreferences("User", Context.MODE_PRIVATE);
     }
 
 

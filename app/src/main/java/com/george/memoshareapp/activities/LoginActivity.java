@@ -160,7 +160,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (phoneNumber.matches(phoneRegex)) {
                     if (userManager.queryUserInfo(phoneNumber, pwNumber)) {
                         Intent intent = new Intent(this, HomePageActivity.class);
-                        intent.putExtra("phoneNumber", phoneNumber);
+//                        intent.putExtra("phoneNumber", phoneNumber);
                         editor.putString("phoneNumber", phoneNumber);
                         editor.apply();
                         startActivity(intent);
@@ -190,6 +190,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (et_code.equals(CodeFragment.codeReal)) {
                             Intent intent = new Intent(this, HomePageActivity.class);
                             intent.putExtra("phoneNumber", phoneNumber);
+                            editor.putString("phoneNumber", phoneNumber);
+                            editor.apply();
                             startActivity(intent);
                             Toasty.success(this, "登录成功", Toast.LENGTH_SHORT).show();
                             finish();

@@ -93,13 +93,18 @@ public class HomePageFragment extends Fragment {
                 smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
                     @Override
                     public void onLoadMore(RefreshLayout refreshlayout) {
-                        List<Post> newPosts = HomePageFragment.this.displayManager.getPostList();
-                        if (newPosts.isEmpty()||newPosts.size()==0) {
+                        List<Post> newPosts = displayManager.getPostList();
+                        if (newPosts.isEmpty() || newPosts.size() == 0) {
                             refreshlayout.setNoMoreData(true);
+                            System.out.println(postList+"-----------1");
                         } else {
+                            int initialSize = postList.size();
                             postList.addAll(newPosts);
-                            outerAdapter.notifyDataSetChanged();
+                            outerAdapter.notifyItemRangeInserted(initialSize,newPosts.size());
+                            System.out.println(postList+"-----------2");
+                            
                         }
+                        System.out.println(postList+"-----------3");
                         refreshlayout.finishLoadMore();
                     }
                 });
@@ -133,6 +138,7 @@ public class HomePageFragment extends Fragment {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onScrollToTopEvent(ScrollToTopEvent event) {
         Log.d(TAG, "onScrollToTopEvent: 事件接收成功");
