@@ -88,10 +88,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         Toasty.error(this, "验证码输入错误", Toast.LENGTH_SHORT,true).show();
                         return;
                     }
-                    if(!rb_agree.isChecked()){
-                        Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT,true).show();
-                        return;
-                    }
+//                    if(!rb_agree.isChecked()){
+//                        Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT,true).show();
+//                        return;
+//                    }
                     if (UserManager.saveUserInfo(phone, pw)){
                         Toasty.success(this, "注册成功", Toast.LENGTH_SHORT).show();
                         finish();

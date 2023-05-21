@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.george.memoshareapp.Fragment.HomePageFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.events.LastClickedPositionEvent;
@@ -54,7 +53,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private boolean has_like;
     private SharedPreferences sharedPreferences1;
     private SharedPreferences.Editor editor1;
-    private int likesCount;
+    private long likesCount;
     private boolean homePageAlreadyPressedLike=false;
     private boolean isliked;
 
@@ -70,7 +69,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
         editor1 = sharedPreferences1.edit();
 
-        int likesCount = sharedPreferences1.getInt(post.getId() + "_likes_count", 0);
+         likesCount = post.getLike();
         has_like = sharedPreferences1.getBoolean(post.getId() + ":" + sharedPreferences1.getString(post.getPhoneNumber(),""), false);
 
         detail_tv_like_number.setText(String.valueOf(likesCount));
@@ -81,7 +80,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             homePageAlreadyPressedLike=false;
         }
         if (homePageAlreadyPressedLike){
-            detail_tv_like_number.setText(String.valueOf(likesCount+1));
+            detail_tv_like_number.setText(String.valueOf(++likesCount));
         }else{
             detail_tv_like_number.setText(String.valueOf(likesCount));
         }
@@ -182,7 +181,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 //
 //                break;
             case R.id.detail_iv_like:
-                likesCount = sharedPreferences1.getInt(post.getId() + "_likes_count", 0);
                 if (has_like) {
                     has_like = false;
                     like.setImageResource(R.mipmap.like);
@@ -194,7 +192,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     likesCount++;
                     isliked = true;
                 }
-                editor1.putInt(post.getId() + "_likes_count", likesCount);
                 editor1.putBoolean(post.getId() + ":" + sharedPreferences1.getString(post.getPhoneNumber(),""), has_like);
                 editor1.apply();
                 update();
@@ -256,7 +253,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 dialog.dismiss();
             }
         });
-
+        post.setLike(likesCount);
+        post.save();
     }
 
 

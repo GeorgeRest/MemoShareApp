@@ -25,8 +25,8 @@ import com.george.memoshareapp.Fragment.AudioPlayerFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.beans.Post;
-import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.beans.Recordings;
+import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
 
 import java.util.HashMap;
