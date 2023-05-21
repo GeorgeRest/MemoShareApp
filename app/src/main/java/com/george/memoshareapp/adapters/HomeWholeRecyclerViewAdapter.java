@@ -45,6 +45,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     private ImageView currentPlayingImageView = null;
     private SharedPreferences sp;
     private boolean isLike;
+    private String phoneNumber;
 
     public HomeWholeRecyclerViewAdapter() {
     }
@@ -67,6 +68,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.homepage_whole_item, parent, false);
         sp = mContext.getSharedPreferences("User", Context.MODE_PRIVATE);
+        phoneNumber = sp.getString("phoneNumber", "");
         editor = sp.edit();
         return new ViewHolder(view);
     }
@@ -127,7 +129,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
         if (treePosition != null && treePosition.size() > 0) {
 
-            if (post.getPhoneNumber().equals(sp.getString("phoneNumber", ""))) {
+            if (post.getPhoneNumber().equals(phoneNumber)) {
                 holder.rl_layout.setBackgroundResource(R.drawable.cardview_bg);
 //            holder.rv_myself_image.setLayoutManager(new GridLayoutManager(mContext, 10));
                 holder.rv_myself_image.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
@@ -191,7 +193,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         Post post = mData.get(holder.getAdapterPosition());
         switch (v.getId()) {
             case R.id.like:
-                isLike = sp.getBoolean(post.getId() + ":" + sp.getString(post.getPhoneNumber(), ""), false);
+                isLike = sp.getBoolean(post.getId() + ":" + phoneNumber, false);
                 isLike = !isLike;
                 if (isLike) {
 
@@ -199,7 +201,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 } else {
                     holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like));
                 }
-                editor.putBoolean(post.getId() + ":" + sp.getString(post.getPhoneNumber(), ""), isLike);
+                editor.putBoolean(post.getId() + ":" + phoneNumber, isLike);
                 editor.apply();
                 break;
         }
@@ -277,7 +279,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         }
 
         void bind(Post post) {
-            isLike = sp.getBoolean(post.getId() + ":" + sp.getString(post.getPhoneNumber(), ""), false);
+            isLike = sp.getBoolean(post.getId() + ":" + phoneNumber, false);
             if (isLike) {
                 like.setBackground(mContext.getResources().getDrawable(R.drawable.like_click));
             } else {
