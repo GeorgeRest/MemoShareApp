@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -24,11 +25,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.george.memoshareapp.Fragment.AudioPlayerFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.HomePageActivity;
+import com.george.memoshareapp.beans.ContactInfo;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.utils.DateFormat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +48,9 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
     private SharedPreferences sp;
     private boolean isLike;
+    private List<ContactInfo> contactPicture = new ArrayList<>();
+    private Map<String, Integer> nameToPictureMap = new HashMap<>();
+    private List<String> contactName= new ArrayList<>();
 
     public HomeWholeRecyclerViewAdapter() {
     }
@@ -68,6 +74,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.homepage_whole_item, parent, false);
         sp = mContext.getSharedPreferences("User", Context.MODE_PRIVATE);
         editor = sp.edit();
+        initDate();
         return new ViewHolder(view);
     }
 
@@ -88,7 +95,12 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.recordings = post.getRecordings();
 
         List<String> photoCachePath = post.getPhotoCachePath();
-        holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
+        if (photoCachePath == null || photoCachePath.size() == 0) {
+            holder.innerRecyclerView.setVisibility(View.GONE);
+        } else {
+            holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
+        }
+
         HomePhotoRecyclerViewAdapter innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext);
         holder.innerRecyclerView.setAdapter(innerAdapter);
         holder.tv_username.setText(name);
@@ -116,11 +128,50 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         }
         holder.innerRecyclerView.setAdapter(innerAdapter);
 
-//        设置头像，需要contact（@人名所对应的图片，相关adapter未完成）
-//        List<String> contacts = post.getContacts();
-//        holder.rv_head_image.setLayoutManager(new GridLayoutManager(mContext, 1));
-//        HomePageHeadImageAdapter headImageAdapter = new HomePageHeadImageAdapter(contacts);
+////        设置头像，需要contact（@人名所对应的图片，相关adapter未完成）
+//        holder.rv_head_image.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+//        HomePageHeadImageAdapter headImageAdapter = new HomePageHeadImageAdapter(mContext, contactPicture, contactName);
 //        holder.rv_head_image.setAdapter(headImageAdapter);
+        contactName = post.getContacts();
+        for (ContactInfo info : contactPicture) {
+            nameToPictureMap.put(info.getName(), info.getPicture());
+        }
+//        holder.iv_head_image_1.setVisibility(View.GONE);
+        holder.iv_head_image_2.setVisibility(View.GONE);
+        holder.iv_head_image_3.setVisibility(View.GONE);
+        holder.tv_head_out_number.setVisibility(View.GONE);
+//        holder.ll_head_images.bringToFront();
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.rl_layout.getLayoutParams();
+//        params.addRule(RelativeLayout.BELOW, R.id.ll_head_images);
+//        holder.rl_layout.setLayoutParams(params);
+
+        if (contactName != null && contactName.size() > 0) {
+            switch (contactName.size()) {
+                default:
+                    holder.tv_head_out_number.setVisibility(View.VISIBLE);
+                    holder.tv_head_out_number.setText("+" + (contactName.size() - 2));
+                case 2:
+                    if (contactName.get(1) != null){
+                        holder.iv_head_image_3.setVisibility(View.VISIBLE);
+                        holder.iv_head_image_3.setImageResource(nameToPictureMap.get(contactName.get(1)));
+                    }
+                case 1:
+                    if (contactName.get(0) != null){
+                        holder.iv_head_image_2.setVisibility(View.VISIBLE);
+                        holder.iv_head_image_2.setImageResource(nameToPictureMap.get(contactName.get(0)));
+                    }
+//                case 1:
+//                    if (contactName.get(0) != null){
+//                        holder.iv_head_image_1.setVisibility(View.VISIBLE);
+//                        holder.iv_head_image_1.setImageResource(nameToPictureMap.get(contactName.get(0)));
+//                    }
+//                    break;
+            }
+        } else {
+//            holder.iv_head_image_1.setVisibility(View.GONE);
+            holder.iv_head_image_2.setVisibility(View.GONE);
+            holder.iv_head_image_3.setVisibility(View.GONE);
+        }
 
 
         treePosition = new DisplayManager(mContext).showMemoryTree(post.getLatitude(), post.getLongitude());
@@ -134,16 +185,16 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 HomePageBottomAdapter homePageBottomAdapter = new HomePageBottomAdapter(treePosition);
                 holder.rv_myself_image.setAdapter(homePageBottomAdapter);
                 holder.image_view1.setVisibility(View.VISIBLE);
-                holder.rv_myself_image.setVisibility(View.VISIBLE);
+//                holder.rv_myself_image.setVisibility(View.VISIBLE);
                 holder.image_view1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (holder.rv_myself_image.getVisibility() == View.GONE) {
                             holder.rv_myself_image.setVisibility(View.VISIBLE);
-                            holder.image_view1.setText("那时那刻");
+                            holder.image_view1.setText("收起");
                         } else {
                             holder.rv_myself_image.setVisibility(View.GONE);
-                            holder.image_view1.setText("收起");
+                            holder.image_view1.setText("那时那刻");
                         }
                     }
                 });
@@ -163,12 +214,12 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         }
 
 
-        holder.ll_head.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, "点击", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        holder.ll_head.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(mContext, "点击", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         holder.rl_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,6 +274,12 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout ll_head_images;
+        RelativeLayout rl_head_images;
+        TextView tv_head_out_number;
+        ImageView iv_head_image_3;
+        ImageView iv_head_image_2;
+        ImageView iv_head_image_1;
         private ImageView like;
         private TextView tv_username;
         private TextView tv_time;
@@ -236,7 +293,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         public AudioPlayerFragment fragment;
 
         RelativeLayout rl_layout;
-        LinearLayout ll_head;
+        ConstraintLayout ll_head;
         RecyclerView rv_myself_image;
         RecyclerView rv_head_image;
         TextView image_view1;
@@ -246,7 +303,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         ViewHolder(View itemView) {
             super(itemView);
             innerRecyclerView = itemView.findViewById(R.id.rv_images);
-            rv_head_image = itemView.findViewById(R.id.rv_head_image);
+//            rv_head_image = itemView.findViewById(R.id.rv_head_image);
             rv_myself_image = itemView.findViewById(R.id.image_recycler_view);
             cv_layout = itemView.findViewById(R.id.cv_layout);
             sv_bottom = itemView.findViewById(R.id.sv_bottom);
@@ -265,8 +322,15 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             record_two.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_three.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
 
-            ll_head = itemView.findViewById(R.id.ll_head);
-            rl_layout = itemView.findViewById(R.id.rl_layout);
+//            ll_head = itemView.findViewById(R.id.ll_head);
+
+            iv_head_image_1 = (ImageView) itemView.findViewById(R.id.iv_head_image_1);
+            iv_head_image_2 = (ImageView) itemView.findViewById(R.id.iv_head_image_2);
+            iv_head_image_3 = (ImageView) itemView.findViewById(R.id.iv_head_image_3);
+            tv_head_out_number = (TextView) itemView.findViewById(R.id.tv_head_out_number);
+            rl_head_images = (RelativeLayout) itemView.findViewById(R.id.rl_head_images);
+            rl_layout = (RelativeLayout) itemView.findViewById(R.id.rl_layout);
+            ll_head_images = (LinearLayout) itemView.findViewById(R.id.ll_head_images);
         }
 
         void bind(Post post) {
@@ -328,6 +392,28 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             fragmentTransaction.commit();
             fragment = null;
         }
+    }
+
+    private void initDate(){
+        contactPicture.add(new ContactInfo("张三",R.mipmap.photo_1));
+        contactPicture.add(new ContactInfo("李潇",R.mipmap.photo_2));
+        contactPicture.add(new ContactInfo("唐莉",R.mipmap.photo_3));
+        contactPicture.add(new ContactInfo("程思迪",R.mipmap.photo_4));
+        contactPicture.add(new ContactInfo("Audss",R.mipmap.photo_5));
+        contactPicture.add(new ContactInfo("王五",R.mipmap.photo_6));
+        contactPicture.add(new ContactInfo("CC",R.mipmap.photo_7));
+        contactPicture.add(new ContactInfo("张明敏",R.mipmap.photo_8));
+        contactPicture.add(new ContactInfo("lilies",R.mipmap.photo_9));
+        contactPicture.add(new ContactInfo("大师",R.mipmap.photo_10));
+        contactPicture.add(new ContactInfo("历史老师",R.mipmap.photo_2));
+        contactPicture.add(new ContactInfo("Kato",R.mipmap.photo_7));
+        contactPicture.add(new ContactInfo("seven",R.mipmap.photo_5));
+        contactPicture.add(new ContactInfo("吴仪",R.mipmap.photo_1));
+        contactPicture.add(new ContactInfo("李宏",R.mipmap.photo_3));
+        contactPicture.add(new ContactInfo("高倩倩",R.mipmap.photo_10));
+        contactPicture.add(new ContactInfo("福福",R.mipmap.photo_4));
+        contactPicture.add(new ContactInfo("小庞",R.mipmap.photo_9));
+        contactPicture.add(new ContactInfo("***",R.mipmap.photo_6));
     }
 
 }
