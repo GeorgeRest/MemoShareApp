@@ -56,6 +56,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private long likesCount;
     private boolean homePageAlreadyPressedLike=false;
     private boolean isliked;
+    private String phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         editor1 = sharedPreferences1.edit();
 
          likesCount = post.getLike();
-        has_like = sharedPreferences1.getBoolean(post.getId() + ":" + sharedPreferences1.getString(post.getPhoneNumber(),""), false);
+        phoneNumber = sharedPreferences1.getString("phoneNumber", "");
+        has_like = sharedPreferences1.getBoolean(post.getId() + ":" + phoneNumber, true);
+//        has_like = intent.getBooleanExtra("islike", false);
 
         detail_tv_like_number.setText(String.valueOf(likesCount));
         if (has_like) {
@@ -192,7 +195,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     likesCount++;
                     isliked = true;
                 }
-                editor1.putBoolean(post.getId() + ":" + sharedPreferences1.getString(post.getPhoneNumber(),""), has_like);
+                editor1.putBoolean(post.getId() + ":" + phoneNumber, has_like);
                 editor1.apply();
                 update();
                 if (likesCount >10000){
@@ -253,8 +256,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 dialog.dismiss();
             }
         });
-        post.setLike(likesCount);
-        post.save();
+
     }
 
 
@@ -265,5 +267,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         EventBus.getDefault().post(new LastClickedPositionEvent(id));
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        post.setLike(likesCount);
+        post.save();
+    }
 }

@@ -3,7 +3,6 @@ package com.george.memoshareapp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,7 +96,9 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
 //                    页面传值，更改键值对即可
                     SharedPreferences sharedPreferences = context.getSharedPreferences("User", Context.MODE_PRIVATE);
                     Intent intent = new Intent(context, DetailActivity.class);
+                    boolean islike = sharedPreferences.getBoolean(post.getId() + ":" + sharedPreferences.getString("phoneNumber", ""), false);
                     intent.putExtra("post", post);
+                    intent.putExtra("islike", islike);
                     context.startActivity(intent);
                 }
             });
