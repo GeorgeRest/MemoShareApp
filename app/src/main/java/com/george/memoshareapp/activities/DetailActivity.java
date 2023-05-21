@@ -14,10 +14,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.george.memoshareapp.Fragment.HomePageFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.events.LastClickedPositionEvent;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
+
+import org.greenrobot.eventbus.EventBus;
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,6 +197,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 editor1.putInt(post.getId() + "_likes_count", likesCount);
                 editor1.putBoolean(post.getId() + ":" + sharedPreferences1.getString(post.getPhoneNumber(),""), has_like);
                 editor1.apply();
+                update();
                 if (likesCount >10000){
                     double converted = Math.floor((double) likesCount / 10000 * 10) / 10;
 
@@ -253,10 +259,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
 
+
+    private void update() {
+        int totalCount = LitePal.count(Post.class);
+        int id = totalCount - (int) post.getId();
+        EventBus.getDefault().post(new LastClickedPositionEvent(id));
     }
 
 

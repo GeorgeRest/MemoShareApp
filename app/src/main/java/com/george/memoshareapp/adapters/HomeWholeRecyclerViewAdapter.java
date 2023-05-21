@@ -18,6 +18,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.Fragment.AudioPlayerFragment;
@@ -41,7 +42,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     private Map<ImageView, Fragment> buttonFragmentMap = new HashMap<>();
     private static HomeWholeRecyclerViewAdapter instance;
     private SharedPreferences.Editor editor;
-
+    private ImageView currentPlayingImageView = null;
     private SharedPreferences sp;
     private boolean isLike;
 
@@ -78,7 +79,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.like.setTag(holder);
         Post post = mData.get(position);
         holder.bind(post);
-
         String phoneNumber = post.getPhoneNumber();
         String name = phoneNumber.substring(0, 5);
         String publishedTime = post.getPublishedTime();
@@ -87,8 +87,9 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.recordings = post.getRecordings();
 
         List<String> photoCachePath = post.getPhotoCachePath();
+
         holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
-        HomePhotoRecyclerViewAdapter innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post,mContext);
+        HomePhotoRecyclerViewAdapter innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext);
         holder.innerRecyclerView.setAdapter(innerAdapter);
         holder.tv_username.setText(name);
         holder.tv_time.setText(DateFormat.getMessageDate(publishedTime));
@@ -127,10 +128,10 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         if (treePosition != null && treePosition.size() > 0) {
 
             if (post.getPhoneNumber().equals(sp.getString("phoneNumber", ""))) {
-                holder.rl_layout.setBackgroundColor(Color.parseColor("#e7e1ff"));
+                holder.rl_layout.setBackgroundResource(R.drawable.cardview_bg);
 //            holder.rv_myself_image.setLayoutManager(new GridLayoutManager(mContext, 10));
                 holder.rv_myself_image.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-                HomePageBottomAdapter homePageBottomAdapter = new HomePageBottomAdapter(treePosition);
+                HomePageBottomAdapter homePageBottomAdapter = new HomePageBottomAdapter(mContext,treePosition);
                 holder.rv_myself_image.setAdapter(homePageBottomAdapter);
                 holder.image_view1.setVisibility(View.VISIBLE);
                 holder.rv_myself_image.setVisibility(View.VISIBLE);
@@ -146,7 +147,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                         }
                     }
                 });
-            }else{
+            } else {
                 holder.rl_layout.setBackgroundColor(Color.WHITE);
                 holder.image_view1.setVisibility(View.GONE);
                 holder.rv_myself_image.setVisibility(View.GONE);
@@ -205,16 +206,22 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         if (holder.recordings != null && !holder.recordings.isEmpty()) {
             switch (v.getId()) {
                 case R.id.record_one:
-                    if (holder.recordings.size() > 0)
+                    if (holder.recordings.size() > 0) {
                         handleClick(holder.recordings.get(0).getRecordCachePath(), holder.record_one);
+                        holder.record_one.setImageResource(R.drawable.record_bg_click);
+                    }
                     break;
                 case R.id.record_two:
-                    if (holder.recordings.size() > 1)
+                    if (holder.recordings.size() > 1) {
                         handleClick(holder.recordings.get(1).getRecordCachePath(), holder.record_two);
+                        holder.record_two.setImageResource(R.drawable.record_bg_click);
+                    }
                     break;
                 case R.id.record_three:
-                    if (holder.recordings.size() > 2)
+                    if (holder.recordings.size() > 2) {
                         handleClick(holder.recordings.get(2).getRecordCachePath(), holder.record_three);
+                        holder.record_three.setImageResource(R.drawable.record_bg_click);
+                    }
                     break;
 
             }
@@ -223,11 +230,11 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView like;
-        private TextView tv_username;
-        private TextView tv_time;
-        private TextView tv_location;
-        private TextView tv_content;
+        ImageView like;
+        TextView tv_username;
+        TextView tv_time;
+        TextView tv_location;
+        TextView tv_content;
         RecyclerView innerRecyclerView;
         List<Recordings> recordings;
         ImageView record_one;
@@ -281,17 +288,21 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
 
     private void handleClick(String recordPath, ImageView iv) {
+        if (currentPlayingImageView != null && currentPlayingImageView != iv) {
+            currentPlayingImageView.setImageResource(R.drawable.record_homepage);
+        }
         if (fragment == null) {
+            currentPlayingImageView = iv;
             addFragment(recordPath, iv);
         } else {
             AudioPlayerFragment bt_fragment = (AudioPlayerFragment) buttonFragmentMap.get(iv);
             if (fragment != bt_fragment) {
                 fragment.stopPlayback();
-                HomePageActivity mContext = (HomePageActivity) this.mContext;
                 FragmentTransaction fragmentTransaction = ((HomePageActivity) this.mContext).getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.remove(fragment);
                 fragmentTransaction.commit();
                 fragment = null;
+                currentPlayingImageView = iv;
                 addFragment(recordPath, iv);
             } else {
                 fragment.togglePlayback();
@@ -314,9 +325,11 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         notifyItemInserted(0);  // 通知 adapter 在位置 0 插入了一条数据
 
     }
+
     private int calculateSpanCount(int itemCount) {
         return itemCount > 1 ? 2 : 1;
     }
+
     public void resetFragment() {
         if (fragment != null) {
             fragment.stopPlayback();
@@ -325,6 +338,12 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             fragmentTransaction.remove(fragment);
             fragmentTransaction.commit();
             fragment = null;
+        }
+    }
+    public void resetPlayingButton() {
+        if (currentPlayingImageView != null) {
+            currentPlayingImageView.setImageResource(R.drawable.record_homepage);  // Use your own default image here
+            currentPlayingImageView = null;
         }
     }
 }

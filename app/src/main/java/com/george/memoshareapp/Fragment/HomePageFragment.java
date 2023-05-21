@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.events.LastClickedPositionEvent;
 import com.george.memoshareapp.events.ScrollToTopEvent;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
@@ -49,7 +50,7 @@ public class HomePageFragment extends Fragment {
     private DisplayManager displayManager;
     private List<Post> postList;
     private RecyclerView outerRecyclerView;
-
+    public static int lastClickedPosition=-1;
     public HomePageFragment() {
 
     }
@@ -126,17 +127,19 @@ public class HomePageFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        outerRecyclerView.setAdapter(outerAdapter);
-
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLastClickedPositionEvent(LastClickedPositionEvent event) {
+        lastClickedPosition = event.getPosition();
+        if (lastClickedPosition != -1) {
+            outerAdapter.notifyItemChanged(lastClickedPosition);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

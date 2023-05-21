@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
+import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.DetailPhotoRecycleViewAdapter;
 import com.george.memoshareapp.activities.HomePageActivity;
