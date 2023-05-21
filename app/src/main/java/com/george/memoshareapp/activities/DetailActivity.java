@@ -54,9 +54,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private SharedPreferences sharedPreferences1;
     private SharedPreferences.Editor editor1;
     private long likesCount;
-    private boolean homePageAlreadyPressedLike=false;
-    private boolean isliked;
+    private boolean onclicklike=false;
+
     private String phoneNumber;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,27 +73,20 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
          likesCount = post.getLike();
         phoneNumber = sharedPreferences1.getString("phoneNumber", "");
-        has_like = sharedPreferences1.getBoolean(post.getId() + ":" + phoneNumber, true);
-//        has_like = intent.getBooleanExtra("islike", false);
-
+        has_like = sharedPreferences1.getBoolean(post.getId() + ":" + phoneNumber, false);
         detail_tv_like_number.setText(String.valueOf(likesCount));
+
+
+
         if (has_like) {
             like.setImageResource(R.mipmap.like_press);
-            homePageAlreadyPressedLike=true;
-        }else {
-            homePageAlreadyPressedLike=false;
-        }
-        if (homePageAlreadyPressedLike){
-            detail_tv_like_number.setText(String.valueOf(++likesCount));
-        }else{
+           likesCount++;
             detail_tv_like_number.setText(String.valueOf(likesCount));
+        } else {
+            like.setImageResource(R.mipmap.like);
         }
-
-
 
         putParameter2View();//传参
-
-
     }
 
 
@@ -153,6 +147,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         like.setOnClickListener(this);
     }
 
+    private void count(){
+
+    }
+
+
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.detail_iv_back:
@@ -185,15 +184,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 //                break;
             case R.id.detail_iv_like:
                 if (has_like) {
-                    has_like = false;
                     like.setImageResource(R.mipmap.like);
                     likesCount--;
-                    isliked = false;
+                    has_like = false;
                 } else {
-                    has_like = true;
                     like.setImageResource(R.mipmap.like_press);
                     likesCount++;
-                    isliked = true;
+                    has_like = true;
                 }
                 editor1.putBoolean(post.getId() + ":" + phoneNumber, has_like);
                 editor1.apply();
@@ -202,8 +199,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     double converted = Math.floor((double) likesCount / 10000 * 10) / 10;
 
                     detail_tv_like_number.setText(converted+"万");
+                }else {
+                    detail_tv_like_number.setText(String.valueOf(likesCount));
                 }
-                detail_tv_like_number.setText(String.valueOf(likesCount));
+
                 break;
             default:
                 break;
@@ -258,6 +257,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         });
 
     }
+
+
 
 
 
