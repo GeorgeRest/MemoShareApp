@@ -56,6 +56,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private long likesCount;
     private boolean homePageAlreadyPressedLike=false;
     private boolean isliked;
+    private String phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +68,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         post = (Post) intent.getSerializableExtra("post");
 
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
+        phoneNumber = sharedPreferences1.getString("phoneNumber", "");
         editor1 = sharedPreferences1.edit();
 
          likesCount = post.getLike();
-        has_like = sharedPreferences1.getBoolean(post.getId() + ":" + sharedPreferences1.getString(post.getPhoneNumber(),""), false);
+        has_like = sharedPreferences1.getBoolean(post.getId() + ":" + sharedPreferences1, false);
 
         detail_tv_like_number.setText(String.valueOf(likesCount));
         if (has_like) {
@@ -192,7 +194,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     likesCount++;
                     isliked = true;
                 }
-                editor1.putBoolean(post.getId() + ":" + sharedPreferences1.getString(post.getPhoneNumber(),""), has_like);
+                editor1.putBoolean(post.getId() + ":" + phoneNumber, has_like);
                 editor1.apply();
                 update();
                 if (likesCount >10000){
@@ -264,6 +266,4 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         int id = totalCount - (int) post.getId();
         EventBus.getDefault().post(new LastClickedPositionEvent(id));
     }
-
-
 }

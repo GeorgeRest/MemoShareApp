@@ -68,14 +68,15 @@ public class DisplayManager {
 
     }
     public List<Post> getPostList() {
-            List<Post> postList = LitePal.where("ispublic = ?", "1")
-                    .limit(limit)
-                    .offset(offset)
-                    .order("id desc")
+        List<Post> postList = LitePal.where("ispublic = ?", "1")
+                .limit(limit)
+                .offset(offset)
+                .order("id desc")
                 .find(Post.class, true);
-            offset += limit;
-            return postList;
-        }
+        offset += limit;
+        return postList;
+    }
+
     public List<Post> showMemoryTree(double latitude, double longitude) {
         treePostList.clear();
         LatLng latLng1 = new LatLng(latitude, longitude);
@@ -86,7 +87,7 @@ public class DisplayManager {
                 .find(Post.class, true);
         if (postList != null) {
             for (Post post : postList) {
-                if (!Double.isNaN(post.getLatitude()) && !Double.isNaN(post.getLongitude())) {
+                if (post.getLatitude() != 0.0 && post.getLongitude() != 0.0) {
                     LatLng latLng2 = new LatLng(post.getLatitude(), post.getLongitude());
                     float distance = AMapUtils.calculateLineDistance(latLng1, latLng2);
                     if (distance < 2000) {

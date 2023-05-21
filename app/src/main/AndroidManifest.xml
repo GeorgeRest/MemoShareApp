@@ -33,7 +33,9 @@
             android:exported="false" />
         <activity
             android:name=".activities.DetailActivity"
-            android:exported="true"></activity>
+            android:exported="true">
+
+        </activity>
 
 
         <service
