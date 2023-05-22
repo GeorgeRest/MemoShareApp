@@ -53,6 +53,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     //图片选择库
     implementation 'com.zhihu.android:matisse:0.4.3'
+
     implementation 'com.belerweb:pinyin4j:2.5.1'                      //使用Pinyin4j将中文字符串转换为拼音
     implementation 'androidx.appcompat:appcompat:1.0.0'                 //必须 1.0.0 以上
     implementation  'io.github.scwang90:refresh-layout-kernel:2.0.6'      //核心必须依赖

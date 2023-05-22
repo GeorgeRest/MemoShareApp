@@ -1,9 +1,10 @@
 package com.george.memoshareapp.beans;
 
 import org.litepal.crud.LitePalSupport;
-import org.w3c.dom.Comment;
+
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,8 +18,6 @@ import java.util.List;
  */
 public class Post extends LitePalSupport implements Serializable {
     private long id;
-
-
     private String phoneNumber;
     private String publishedText;
     private List<String> photoCachePath;
@@ -32,17 +31,19 @@ public class Post extends LitePalSupport implements Serializable {
     private String memoryTime;
     private long like;
     private long share;
-    private List<Comment> comments;
+    private List<CommentBean> commentBeans;
+
 
     public Post() {
-
+        commentBeans = new ArrayList<>();
     }
 
-    public Post(String phoneNumber, String publishedText, List<String> photoCachePath, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
+
+    public Post(String phoneNumber, String publishedText, List<String> photoCachePath, List<Recordings> recordings, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
         this.phoneNumber = phoneNumber;
         this.publishedText = publishedText;
         this.photoCachePath = photoCachePath;
-        this.recordings = record;
+        this.recordings = recordings;
         this.contacts = contacts;
         this.location = location;
         this.longitude = longitude;
@@ -55,6 +56,7 @@ public class Post extends LitePalSupport implements Serializable {
     public long getLike() {
         return like;
     }
+
     public long getId() {
         return id;
     }
@@ -69,123 +71,146 @@ public class Post extends LitePalSupport implements Serializable {
 
     public long getShare() {
         return share;
-    }
+        public long getId () {
+            return id;
+        }
 
-    public void setShare(long share) {
-        this.share = share;
-    }
+        public void setId ( long id){
+            this.id = id;
+        }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+        public String getPhoneNumber () {
+            return phoneNumber;
+        }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+        public void setPhoneNumber (String phoneNumber){
+            this.phoneNumber = phoneNumber;
+        }
 
-    public String getPublishedText() {
-        return publishedText;
-    }
+        public String getPublishedText () {
+            return publishedText;
+        }
 
-    public void setPublishedText(String publishedText) {
-        this.publishedText = publishedText;
-    }
+        public void setPublishedText (String publishedText){
+            this.publishedText = publishedText;
+        }
 
-    public List<String> getPhotoCachePath() {
-        return photoCachePath;
-    }
+        public List<String> getPhotoCachePath () {
+            return photoCachePath;
+        }
 
-    public void setPhotoCachePath(List<String> photoCachePath) {
-        this.photoCachePath = photoCachePath;
-    }
+        public void setPhotoCachePath (List < String > photoCachePath) {
+            this.photoCachePath = photoCachePath;
+        }
 
-    public List<Recordings> getRecordings() {
-        return recordings;
-    }
+        public List<Recordings> getRecordings () {
+            return recordings;
+        }
 
-    public void setRecordings(List<Recordings> recordings) {
-        this.recordings = recordings;
-    }
+        public void setRecordings (List < Recordings > recordings) {
+            this.recordings = recordings;
+        }
 
-    public List<String> getContacts() {
-        return contacts;
-    }
+        public List<String> getContacts () {
+            return contacts;
+        }
 
-    public void setContacts(List<String> contacts) {
-        this.contacts = contacts;
-    }
+        public void setContacts (List < String > contacts) {
+            this.contacts = contacts;
+        }
 
-    public String getLocation() {
-        return location;
-    }
+        public String getLocation () {
+            return location;
+        }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+        public void setLocation (String location){
+            this.location = location;
+        }
 
-    public double getLongitude() {
-        return longitude;
-    }
+        public double getLongitude () {
+            return longitude;
+        }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
+        public void setLongitude ( double longitude){
+            this.longitude = longitude;
+        }
 
-    public double getLatitude() {
-        return latitude;
-    }
+        public double getLatitude () {
+            return latitude;
+        }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
+        public void setLatitude ( double latitude){
+            this.latitude = latitude;
+        }
 
-    public int getIsPublic() {
-        return isPublic;
-    }
+        public int getIsPublic () {
+            return isPublic;
+        }
 
-    public void setIsPublic(int isPublic) {
-        this.isPublic = isPublic;
-    }
+        public void setIsPublic ( int isPublic){
+            this.isPublic = isPublic;
+        }
 
-    public String getPublishedTime() {
-        return publishedTime;
-    }
+        public String getPublishedTime () {
+            return publishedTime;
+        }
 
-    public void setPublishedTime(String publishedTime) {
-        this.publishedTime = publishedTime;
-    }
+        public void setPublishedTime (String publishedTime){
+            this.publishedTime = publishedTime;
+        }
 
-    public String getMemoryTime() {
-        return memoryTime;
-    }
+        public String getMemoryTime () {
+            return memoryTime;
+        }
 
-    public void setMemoryTime(String memoryTime) {
-        this.memoryTime = memoryTime;
-    }
+        public void setMemoryTime (String memoryTime){
+            this.memoryTime = memoryTime;
+        }
 
-    public List<Comment> getComments() {
-        return comments;
-    }
+        public List<CommentBean> getComments () {
+            if (commentBeans == null) {
+                commentBeans = new ArrayList<>();
+            }
+            return commentBeans;
+        }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
+        public void setComments (List < CommentBean > commentBeans) {
+            this.commentBeans = commentBeans;
+        }
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "phoneNumber='" + phoneNumber + '\'' +
-                ", publishedText='" + publishedText + '\'' +
-                ", photoCachePath=" + photoCachePath +
-                ", recordings=" + recordings +
-                ", contacts=" + contacts +
-                ", location='" + location + '\'' +
-                ", longitude=" + longitude +
-                ", latitude=" + latitude +
-                ", isPublic=" + isPublic +
-                ", publishedTime='" + publishedTime + '\'' +
-                ", memoryTime='" + memoryTime + '\'' +
-                ", comments=" + comments +
-                '}';
+
+        public long getLike () {
+            return like;
+        }
+
+        public void setLike ( long like){
+            this.like = like;
+        }
+
+        public long getShare () {
+            return share;
+        }
+
+        public void setShare ( long share){
+            this.share = share;
+        }
+
+        @Override
+        public String toString () {
+            return "Post{" +
+                    "phoneNumber='" + phoneNumber + '\'' +
+                    ", publishedText='" + publishedText + '\'' +
+                    ", photoCachePath=" + photoCachePath +
+                    ", recordings=" + recordings +
+                    ", contacts=" + contacts +
+                    ", location='" + location + '\'' +
+                    ", longitude=" + longitude +
+                    ", latitude=" + latitude +
+                    ", isPublic=" + isPublic +
+                    ", publishedTime='" + publishedTime + '\'' +
+                    ", memoryTime='" + memoryTime + '\'' +
+                    ", comments=" + comments +
+                    '}';
+        }
     }
 }

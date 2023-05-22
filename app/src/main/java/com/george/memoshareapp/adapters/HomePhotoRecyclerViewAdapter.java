@@ -99,6 +99,7 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
                     boolean islike = sharedPreferences.getBoolean(post.getId() + ":" + sharedPreferences.getString("phoneNumber", ""), false);
                     intent.putExtra("post", post);
                     intent.putExtra("islike", islike);
+
                     context.startActivity(intent);
                 }
             });

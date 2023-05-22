@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="15dp">
+        <!-- 评论人头像 -->
+        <ImageView
+            android:id="@+id/commentItemImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginRight="10dp" />
+
+        <!-- 评论人昵称、评论时间、评论内容、回复 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!-- 评论人昵称 -->
+            <TextView
+                android:id="@+id/commentNickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="xxx"
+                android:textSize="15sp"
+                android:textColor="#80202025"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="1dp"/>
+
+            <!-- 评论时间 -->
+            <TextView
+                android:id="@+id/commentItemTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12:15"
+                android:textColor="#66202025"
+                android:textSize="8sp"
+                android:layout_below="@id/commentNickname"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="1dp"/>
+            <!-- 评论人内容 -->
+            <TextView
+                android:id="@+id/commentItemContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="kkkkkkkkkkkkkkkkkkkkk"
+                android:textSize="13sp"
+                android:textColor="#202025"
+                android:layout_below="@id/commentItemTime"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="1dp"/>
+        </RelativeLayout>
+    </LinearLayout>
+    <!-- 评论回复列表 -->
+    <com.george.memoshareapp.view.NoScrollListView
+        android:id="@+id/replyList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="#00000000"
+        android:layout_marginLeft="35dp"
+        android:layout_marginBottom="10dp"/>
+</LinearLayout>
