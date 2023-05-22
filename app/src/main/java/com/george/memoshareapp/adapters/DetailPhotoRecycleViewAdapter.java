@@ -39,8 +39,8 @@ public class DetailPhotoRecycleViewAdapter extends RecyclerView.Adapter<DetailPh
         int size = mData.size();
         ViewGroup.LayoutParams layoutParams = holder.imageView.getLayoutParams();
         if (size == 1) {
-            layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_large);
-            layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_large);
+            layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_detail);
+            layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_detail);
         }
         if (size == 2 || size == 4) {
             layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_medium);

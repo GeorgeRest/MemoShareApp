@@ -54,7 +54,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private SharedPreferences sharedPreferences1;
     private SharedPreferences.Editor editor1;
     private long likesCount;
-    private boolean onclicklike=false;
+
 
     private String phoneNumber;
 
@@ -65,8 +65,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_detail);
 
         init();
-        intent = getIntent();
-        post = (Post) intent.getSerializableExtra("post");
+
 
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
         editor1 = sharedPreferences1.edit();
@@ -75,9 +74,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         phoneNumber = sharedPreferences1.getString("phoneNumber", "");
         has_like = sharedPreferences1.getBoolean(post.getId() + ":" + phoneNumber, false);
         detail_tv_like_number.setText(String.valueOf(likesCount));
-
-
-
         if (has_like) {
             like.setImageResource(R.mipmap.like_press);
            likesCount++;
@@ -85,7 +81,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         } else {
             like.setImageResource(R.mipmap.like);
         }
-
         putParameter2View();//传参
     }
 
@@ -122,6 +117,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
 
     private void init() {
+        intent = getIntent();
+        post = (Post) intent.getSerializableExtra("post");
 
         displayManager = new DisplayManager();
         photoPath = new ArrayList<>();
@@ -147,9 +144,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         like.setOnClickListener(this);
     }
 
-    private void count(){
-
-    }
 
 
     public void onClick(View view) {
@@ -272,6 +266,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     protected void onDestroy() {
         super.onDestroy();
         post.setLike(likesCount);
-        post.save();
+        post.update(post.getId());
     }
 }

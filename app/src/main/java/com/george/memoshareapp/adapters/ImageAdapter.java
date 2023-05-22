@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.ReleasePhotoImageDetailActivity;
+import com.george.memoshareapp.interfaces.PhotoChangedListener;
 
 import java.util.List;
 
@@ -29,10 +30,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     private final Context context;
     private final List<Uri> imageUriList;
     private int moveButtonPosition = -1;
+    private PhotoChangedListener photoChangedListener;
 
-    public ImageAdapter(Context context, List<Uri> imageUriList) {
+
+
+    public ImageAdapter(PhotoChangedListener photoChangedListener,Context context, List<Uri> imageUriList) {
         this.context = context;
         this.imageUriList = imageUriList;
+        this.photoChangedListener = photoChangedListener;
         updateImageListAndButtonPosition(9);
     }
 
@@ -94,6 +99,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 moveButton.setOnClickListener(this);
             }
         }
+
 
         public void bind(int position) {
             if (getItemViewType() == VIEW_TYPE_IMAGE) {
@@ -168,6 +174,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
                 imageUriList.add(null);
             }
             updateImageListAndButtonPosition(9);
+            if (photoChangedListener != null) {
+                photoChangedListener.onPhotoChanged();
+            }
+
+
         }
 
         @Override
