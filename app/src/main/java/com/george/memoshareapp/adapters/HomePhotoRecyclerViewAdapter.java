@@ -59,7 +59,7 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
         holder.imageView.setLayoutParams(layoutParams);
         String url = mData.get(position);
         if (url != null && !url.isEmpty()) {
-             Glide.with(holder.imageView.getContext()).load(url).into(holder.imageView);
+            Glide.with(holder.imageView.getContext()).load(url).into(holder.imageView);
         }
 
         if (position == 3 && size > 4) {
@@ -96,7 +96,6 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
 //                    页面传值，更改键值对即可
                     SharedPreferences sharedPreferences = context.getSharedPreferences("User", Context.MODE_PRIVATE);
                     Intent intent = new Intent(context, DetailActivity.class);
-                    boolean islike = sharedPreferences.getBoolean(post.getId() + ":" + sharedPreferences.getString("phoneNumber", ""), false);
                     intent.putExtra("post", post);
                     intent.putExtra("islike", islike);
 

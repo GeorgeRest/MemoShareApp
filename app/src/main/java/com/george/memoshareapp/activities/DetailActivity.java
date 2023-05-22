@@ -68,8 +68,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private SharedPreferences sharedPreferences1;
     private SharedPreferences.Editor editor1;
     private long likesCount;
-    private boolean homePageAlreadyPressedLike=false;
-    private boolean isliked;
+
+
     private String phoneNumber;
 
     private EditText commentEdit;		    //评论输入框
@@ -87,29 +87,28 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private TextView set_comments_number;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
         init();
-        intent = getIntent();
-        post = (Post) intent.getSerializableExtra("post");
+
 
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
         editor1 = sharedPreferences1.edit();
 
          likesCount = post.getLike();
         phoneNumber = sharedPreferences1.getString("phoneNumber", "");
-        has_like = sharedPreferences1.getBoolean(post.getId() + ":" + phoneNumber, true);
-//        has_like = intent.getBooleanExtra("islike", false);
-
+        has_like = sharedPreferences1.getBoolean(post.getId() + ":" + phoneNumber, false);
         detail_tv_like_number.setText(String.valueOf(likesCount));
         if (has_like) {
             like.setImageResource(R.mipmap.like_press);
-            homePageAlreadyPressedLike=true;
-        }else {
-            homePageAlreadyPressedLike=false;
+           likesCount++;
+            detail_tv_like_number.setText(String.valueOf(likesCount));
+        } else {
+            like.setImageResource(R.mipmap.like);
         }
         if (homePageAlreadyPressedLike){
             detail_tv_like_number.setText(String.valueOf(++likesCount));
@@ -165,6 +164,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         shareNumber = sharedPreferences.getInt("shareNumber", 0);
     //    commentNumber = sharedPreferences.getInt("commentNumber", 0);
         like_number = sharedPreferences.getInt("likeNumber", 0);
+        intent = getIntent();
+        post = (Post) intent.getSerializableExtra("post");
 
         displayManager = new DisplayManager();
         photoPath = new ArrayList<>();
@@ -215,6 +216,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+
+
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.detail_iv_back:
@@ -249,15 +252,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
             case R.id.detail_iv_like:
                 if (has_like) {
-                    has_like = false;
                     like.setImageResource(R.mipmap.like);
                     likesCount--;
-                    isliked = false;
+                    has_like = false;
                 } else {
-                    has_like = true;
                     like.setImageResource(R.mipmap.like_press);
                     likesCount++;
-                    isliked = true;
+                    has_like = true;
                 }
                 editor1.putBoolean(post.getId() + ":" + phoneNumber, has_like);
                 editor1.apply();
@@ -266,8 +267,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     double converted = Math.floor((double) likesCount / 10000 * 10) / 10;
 
                     detail_tv_like_number.setText(converted+"万");
+                }else {
+                    detail_tv_like_number.setText(String.valueOf(likesCount));
                 }
-                detail_tv_like_number.setText(String.valueOf(likesCount));
+
                 break;
             default:
                 break;
@@ -325,6 +328,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
+
+
     private void update() {
         int totalCount = LitePal.count(Post.class);
         int id = totalCount - (int) post.getId();
@@ -340,7 +345,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         editor.apply();
 
         post.setLike(likesCount);
-        post.save();
+        post.update(post.getId());
     }
 
 
