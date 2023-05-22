@@ -1,51 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/layout_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="8dp">
-
+        android:paddingBottom="15dp">
+        <!-- 评论人头像 -->
         <ImageView
-            android:id="@+id/iv_comment_userphoto"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@mipmap/ic_launcher" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/commentItemImg"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:orientation="vertical">
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginRight="10dp" />
 
+        <!-- 评论人昵称、评论时间、评论内容、回复 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!-- 评论人昵称 -->
             <TextView
-                android:id="@+id/tv_comment_username"
+                android:id="@+id/commentNickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Username"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:text="xxx"
+                android:textSize="15sp"
+                android:textColor="#80202025"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="1dp"/>
 
+            <!-- 评论时间 -->
             <TextView
-                android:id="@+id/tv_comment_content"
+                android:id="@+id/commentItemTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Comment Content"
-                android:textSize="14sp" />
-        </LinearLayout>
+                android:text="12:15"
+                android:textColor="#66202025"
+                android:textSize="8sp"
+                android:layout_below="@id/commentNickname"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="1dp"/>
+            <!-- 评论人内容 -->
+            <TextView
+                android:id="@+id/commentItemContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="kkkkkkkkkkkkkkkkkkkkk"
+                android:textSize="13sp"
+                android:textColor="#202025"
+                android:layout_below="@id/commentItemTime"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="1dp"/>
+        </RelativeLayout>
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_sub_comments"
+    <!-- 评论回复列表 -->
+    <com.george.memoshareapp.view.NoScrollListView
+        android:id="@+id/replyList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp" />
-
+        android:divider="#00000000"
+        android:layout_marginLeft="35dp"
+        android:layout_marginBottom="10dp"/>
 </LinearLayout>
-

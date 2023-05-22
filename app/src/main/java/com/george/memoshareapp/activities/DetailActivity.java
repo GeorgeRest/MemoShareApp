@@ -3,25 +3,32 @@ package com.george.memoshareapp.activities;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.george.memoshareapp.Fragment.CommentFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.CommentAdapter;
-import com.george.memoshareapp.beans.Comment;
+import com.george.memoshareapp.beans.CommentBean;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.beans.ReplyBean;
 import com.george.memoshareapp.manager.DisplayManager;
+import com.george.memoshareapp.view.NoScrollListView;
 
 import org.litepal.LitePal;
 
@@ -44,7 +51,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private Post post;
     private List<String> photoPath;
     private RecyclerView recyclerView;
-    private List<String> commentList = new ArrayList<>();
     private int commentNumber = 0;
     private DisplayManager displayManager;
     private boolean IS_LIKE = false;
@@ -56,35 +62,36 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private TextView detail_tv_comment_number;
     private List<String> ceShiList;
 
-    private RecyclerView rv_comment;
+    private EditText commentEdit;		    //评论输入框
+    private NoScrollListView commentList;   //评论数据列表
+    private LinearLayout bottomLinear;	    //底部分享、评论等线性布局
+    private LinearLayout commentLinear;	    //评论输入框线性布局
+
+    private int count;					    //记录评论ID
+    private boolean isReply;			    //是否是回复
+    private String commentText = "";		//记录对话框中的内容
     private CommentAdapter commentAdapter;
-    private List<Comment> comments;
-    private TextView tv_comments_number;
-    private String TAG = "DetailActivity---------------";
+    private List<CommentBean> list;
+    private int postion_reply;
+    private ImageView submitComment;           //发送按钮
+    private TextView set_comments_number;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        //commentNumber = commentAdapter.getItemCount();
         init();
-        intent = getIntent();
-        post = (Post) intent.getSerializableExtra("post");
+
         putParameter2View();//传参
+        commentNumber = commentAdapter.getCount();
         detail_tv_share_number.setText(shareNumber+"");
         detail_tv_like_number.setText(like_number+"");
         detail_tv_comment_number.setText(commentNumber+"");
-
-        comments = getComments();
-        rv_comment.setLayoutManager(new LinearLayoutManager(this));
-        commentAdapter = new CommentAdapter(this, comments);
-        rv_comment.setAdapter(commentAdapter);
-       // tv_comments_number.setText("共"+commentNumber+"条评论");
+        set_comments_number.setText("共"+commentNumber+"条评论");
 
     }
-
-
 
     private void putParameter2View() {
 
@@ -96,32 +103,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         content.setText(post.getPublishedText());
         photoPath = post.getPhotoCachePath();
 
-
-//        if (intent.getExtras().get("like").equals("true")){
-//            like.setImageResource(R.mipmap.like_press);
-//            IS_LIKE =true;
-//            like_number++;
-//            if (like_number>10000){
-//                double converted = Math.floor((double) like_number / 10000 * 10) / 10;
-//
-//                detail_tv_like_number.setText(converted+"万");
-//            }
-//            detail_tv_like_number.setText(like_number+"");
-//        }
-        //如果传进来的评论不为空，那么就把评论加进来
-//        if (intent.getExtras().get("comment")!=null){
-//            commentList = (List<String>) intent.getExtras().get("comment");
-//            commentNumber = commentList.size();
-//            if (commentNumber>10000){
-//                double converted = Math.floor((double) commentNumber / 10000 * 10) / 10;
-//
-//                comment_count.setText(converted+"万");
-//            }
-//            comment_count.setText(commentNumber);
-//        }
-
         displayManager.showPhoto(recyclerView,photoPath,DetailActivity.this);
-
 
     }
 
@@ -151,14 +133,36 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         detail_tv_like_number = (TextView) findViewById(R.id.detail_tv_like_number);
         detail_tv_comment_number = (TextView) findViewById(R.id.detail_tv_comment_number);
         recyclerView = findViewById(R.id.recycler_view);
+        submitComment = (ImageView) findViewById(R.id.submitComment);
+
+
+        commentEdit = (EditText) findViewById(R.id.commentEdit);
+        commentList = (NoScrollListView) findViewById(R.id.commentList);
+        bottomLinear = (LinearLayout) findViewById(R.id.bottomLinear);
+        commentLinear = (LinearLayout) findViewById(R.id.commentLinear);
+        set_comments_number = (TextView) findViewById(R.id.tv_comments_number);
+
         back.setOnClickListener(this);
         userIcon.setOnClickListener(this);
         share.setOnClickListener(this);
         comment.setOnClickListener(this);
         like.setOnClickListener(this);
+        submitComment.setOnClickListener(this);
+        intent = getIntent();
+        post = (Post) intent.getSerializableExtra("post");
+        commentAdapter = new CommentAdapter(this, getCommentData(),R.layout.comment_item);
+        commentList.setAdapter(commentAdapter);
 
-        rv_comment = (RecyclerView) findViewById(R.id.rv_comment);
-        tv_comments_number = (TextView) findViewById(R.id.tv_comments_number);
+        commentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                isReply = true;
+                postion_reply = position;
+                commentLinear.setVisibility(View.VISIBLE);
+                bottomLinear.setVisibility(View.GONE);
+                onFocusChange(true);
+            }
+        });
 
     }
 
@@ -173,33 +177,27 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.detail_iv_share:
                 showBottomDialog();
                 break;
-            case R.id.detail_iv_comment:
-                comment.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        CommentFragment commentFragment = CommentFragment.newInstance(-1);   // 假设 -1 表示新的评论，而不是对现有评论的回复
-                        commentFragment.show(getSupportFragmentManager(), "CommentFragment");
-                    }
-                });
-//                commentNumber++;
-//                if (commentNumber>10000){
-//                    double converted = Math.floor((double) commentNumber / 10000 * 10) / 10;
-//
-//                    detail_tv_like_number.setText(converted+"万");
-//                    tv_comments_number.setText("共"+converted+"万条评论");
-//                }else {
-//                    tv_comments_number.setText("共" + commentNumber + "条评论");
-//                    detail_tv_comment_number.setText(commentNumber + "");
-//                }
 
+            case R.id.detail_iv_comment:		//底部评论按钮
+                isReply = false;
+                commentLinear.setVisibility(View.VISIBLE);
+                bottomLinear.setVisibility(View.GONE);
+                onFocusChange(true);
                 break;
-//          case R.id.list中的某条评论:
-//                点击评论，弹出评论框，回复某条评论，
-//                将评论的用户名，评论内容，本机用户头像传入，显示在评论框中
-//                点击评论框中的发送按钮，将评论内容，评论时间，用户名，本机用户头像传入，显示在评论列表中
-//                评论数量+1
-//
-//                break;
+
+            case R.id.submitComment:	//发表评论按钮
+                if(isEditEmply()){		//判断用户是否输入内容
+                    if(isReply){
+                        replyComment();
+                    }else{
+                        publishComment();
+                    }
+                    bottomLinear.setVisibility(View.VISIBLE);
+                    commentLinear.setVisibility(View.GONE);
+                    onFocusChange(false);
+                }
+                break;
+
             case R.id.detail_iv_like:
                 if (IS_LIKE ==true){
                     like.setImageResource(R.mipmap.like);
@@ -288,161 +286,224 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    private List<Comment> getComments() {
-        comments = new ArrayList<>();
 
-        //LitePal.findAll(Post.class,true,)
-        //创建1条评论
-        Comment comment1 = new Comment();
-        comment1.setCommentUserName("Courtney Henry");
-        comment1.setCommentContent("在其中去之前作曲者庆中秋掌权  2小时前");
-        comment1.setCommentUserPhoto(R.mipmap.photo_1);
-        //comment.setDate(new Date());
-        comments.add(comment1);
+    /**
+     * 获取评论列表数据
+     */
+    private List<CommentBean> getCommentData(){
+        list = new ArrayList<CommentBean>();
 
-        comment1.setPost(post);
-        post.setComments(comments);
-        post.save();
-        comment1.save();
+        List<CommentBean> commentBeans = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(CommentBean.class);
+        for (CommentBean commentBean:commentBeans) {
+            List<ReplyBean> replyBeans = LitePal.where("commentbean_id = ?", String.valueOf(commentBean.getId())).find(ReplyBean.class);
+            commentBean.setReplyList(replyBeans);
+            list.add(commentBean);
+        }
 
 
-        //创建1条评论
-        Comment comment2 = new Comment();
-        comment2.setCommentUserName("Bessie Cooper");
-        comment2.setCommentContent("在其中去之前作曲者庆中秋掌权  2小时前");
-        comment2.setCommentUserPhoto(R.mipmap.photo_2);
-        //comment.setDate(new Date());
-        comments.add(comment2);
+//        CommentBean comment1 = new CommentBean();
+//        comment1.setCommentUserPhoto(R.mipmap.photo_1);
+//        comment1.setCommentUserName("Courtney Henry");
+//        comment1.setCommentTime("11:30");
+//        comment1.setCommentContent("在其中去之前作曲者庆中秋掌权");
+//        comment1.setReplyList(getReplyData());
+//        comment1.setPost(post);
+//        post.getComments().add(comment1);
+//        comment1.save();
+//
+//        post.save();
+//        list.add(comment1);
+//
+////        // 你想要获取的Post对象的ID
+////        long postId =post.getId();
+////
+////        // 加载Post对象及其所有的关联对象
+////        Post post1 = LitePal.find(Post.class, postId, true);
+//
+////        post1.setComments(list);
+//
+//        CommentBean comment2 = new CommentBean();
+//        comment2.setCommentUserPhoto(R.mipmap.photo_2);
+//        comment2.setCommentUserName("Courtney Henry");
+//        comment2.setCommentTime("11:40");
+//        comment2.setCommentContent("在其中去之前作曲者庆中秋掌权在其中去之前作曲者庆中秋掌权 ");
+//        comment2.setReplyList(getReplyData());
+//        comment2.setPost(post);
+//        comment2.save();
+//        list.add(comment2);
+//
+//        CommentBean comment3 = new CommentBean();
+//        comment3.setCommentUserPhoto(R.mipmap.photo_3);
+//        comment3.setCommentUserName("Courtney Henry");
+//        comment3.setCommentTime("12:30");
+//        comment3.setCommentContent("在其中去之前作曲者庆中秋掌权 在其中去之前作曲者庆中秋掌权在其中去之前作曲者庆中秋掌权在其中去之前作曲者庆中秋掌权");
+//        comment3.setReplyList(getReplyData());
+//        comment3.setPost(post);
+//        comment3.save();
+//        list.add(comment3);
+//
+//        CommentBean comment4 = new CommentBean();
+//        comment4.setCommentUserPhoto(R.mipmap.photo_4);
+//        comment4.setCommentUserName("Courtney Henry");
+//        comment4.setCommentTime("14:30");
+//        comment4.setCommentContent("在其中去之前作曲者庆中秋掌权");
+//        comment4.setReplyList(getReplyData());
+//        comment4.setPost(post);
+//        comment4.save();
+//        list.add(comment4);
+//
+//        CommentBean comment5 = new CommentBean();
+//        comment5.setCommentUserPhoto(R.mipmap.photo_5);
+//        comment5.setCommentUserName("Courtney Henry");
+//        comment5.setCommentTime("14:50");
+//        comment5.setCommentContent("在其中去之前作曲者庆中秋掌权在其中去之前作曲者庆中秋掌权");
+//        comment5.setReplyList(getReplyData());
+//        comment5.setPost(post);
+//        comment5.save();
+//        list.add(comment5);
+//
+//
+//        CommentBean comment6 = new CommentBean();
+//        comment6.setCommentUserPhoto(R.mipmap.photo_6);
+//        comment6.setCommentUserName("Courtney Henry");
+//        comment6.setCommentTime("15:30");
+//        comment6.setCommentContent("在其中去之前作曲者庆中秋掌权在其中去之前作曲者庆中秋掌权");
+//        comment6.setReplyList(getReplyData());
+//        comment6.setPost(post);
+//        comment6.save();
+//        list.add(comment6);
+//
+//        CommentBean comment7 = new CommentBean();
+//        comment7.setCommentUserPhoto(R.mipmap.photo_7);
+//        comment7.setCommentUserName("Courtney Henry");
+//        comment7.setCommentTime("17:30");
+//        comment7.setCommentContent("在其中去之前作曲者庆中秋掌权");
+//        comment7.setReplyList(getReplyData());
+//        comment7.setPost(post);
+//        comment7.save();
+//        list.add(comment7);
 
-        comment2.setPost(post);
-        post.setComments(comments);
-        post.save();
-        comment2.save();
-
-        //创建1条评论
-        Comment comment3 = new Comment();
-        comment3.setCommentUserName("Ronald Richards");
-        comment3.setCommentContent("在其中去之前作曲者庆中秋掌权者在其中去之前作曲者庆中秋掌权者在其中去之前作曲者庆中秋掌权者  2小时前");
-        comment3.setCommentUserPhoto(R.mipmap.photo_3);
-        //comment.setDate(new Date());
-        //创建对应的子评论
-        List<Comment> subComments3 = new ArrayList<>();
-        Comment subComment = new Comment();
-        subComment.setCommentUserName("Jacob Jones");
-        subComment.setCommentContent("在其中去之前作曲者庆中秋掌权者在其中去之前作曲者庆中秋掌权者在其中去之前作曲者庆中秋掌权者  2小时前");
-        subComment.setCommentUserPhoto(R.mipmap.photo_4);
-        //subComment.setDate(new Date());
-        subComments3.add(subComment);
-
-        comment3.setSubComments(subComments3);
-        comments.add(comment3);
-
-        comment3.setPost(post);
-        post.setComments(comments);
-        post.save();
-        comment3.save();
-
-        //创建1条评论
-        Comment comment4 = new Comment();
-        comment4.setCommentUserName("Floyd Miles");
-        comment4.setCommentContent("在其中去之前作曲者庆中秋掌权  2小时前");
-        comment4.setCommentUserPhoto(R.mipmap.photo_5);
-        //comment.setDate(new Date());
-        //创建对应的子评论
-        List<Comment> subComments4 = new ArrayList<>();
-        Comment subComment1 = new Comment();
-        subComment1.setCommentUserName("Ronald Richards");
-        subComment1.setCommentContent("在其中去之前作曲者庆中秋掌权者在其中去之前作曲者庆中秋掌权者在其中去之前作曲者庆中秋掌权者  2小时前");
-        subComment1.setCommentUserPhoto(R.mipmap.photo_6);
-        //subComment.setDate(new Date());
-        subComments4.add(subComment1);
-
-        Comment subComment2 = new Comment();
-        subComment2.setCommentUserName("Jacob Jones");
-        subComment2.setCommentContent("回复Ronald Richards: 在其中去之前作曲者庆中秋掌权者在其中去  2小时前");
-        subComment2.setCommentUserPhoto(R.mipmap.photo_7);
-        //subComment.setDate(new Date());
-        subComments4.add(subComment2);
-        comment4.setSubComments(subComments4);
-        comments.add(comment4);
-
-        comment4.setPost(post);
-        post.setComments(comments);
-        post.save();
-        comment4.save();
-
-        //创建1条评论
-        Comment comment5 = new Comment();
-        comment5.setCommentUserName("Darlene Robertson");
-        comment5.setCommentContent("在其中去之前作曲者庆中秋掌权者在其中去之前作曲者庆中秋掌权者在其中去  昨天 12:30");
-        comment5.setCommentUserPhoto(R.mipmap.photo_8);
-        //comment.setDate(new Date());
-        comments.add(comment5);
-
-        comment5.setPost(post);
-        post.setComments(comments);
-        post.save();
-        comment5.save();
-
-        //创建1条评论
-        Comment comment6 = new Comment();
-        comment6.setCommentUserName("Ronald Richards");
-        comment6.setCommentContent("在其中去之前作曲者庆中秋掌权者在其中去之前作曲者庆中秋掌权者在其中去之前作曲者庆中秋掌权者  05/27 13:39");
-        comment6.setCommentUserPhoto(R.mipmap.photo_9);
-        //comment.setDate(new Date());
-        comments.add(comment6);
-
-        comment6.setPost(post);
-        post.setComments(comments);
-        post.save();
-        comment6.save();
-
-        return comments;
+        return list;
     }
 
-    public void postComment() {
-        int comment_id = intent.getIntExtra("id", -1);
-        String commentText = intent.getStringExtra("commentText");
-        Log.d(TAG, "postComment: "+commentText);
-        if (comment_id == -1) {
-            // 创建一条新的评论
+    /**
+     * 获取回复列表数据
+     */
+    private List<ReplyBean> getReplyData(){
+        List<ReplyBean> replyList = new ArrayList<ReplyBean>();
+        return replyList;
+    }
 
-            Comment comment = new Comment();
-            comment.setCommentContent(commentText);
-            //comment.setCommentTime();
-            comment.setCommentUserName("seven");
-            comment.setCommentUserPhoto(R.mipmap.photo_10);
-            comments.add(comment);
+    /**
+     * 显示或隐藏输入法
+     */
+    private void onFocusChange(boolean hasFocus){
+        final boolean isFocus = hasFocus;
+        (new Handler()).postDelayed(new Runnable() {
+            public void run() {
+                InputMethodManager imm = (InputMethodManager)
+                        commentEdit.getContext().getSystemService(INPUT_METHOD_SERVICE);
+                if(isFocus)  {
+                    //显示输入法
+                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                }else{
+                    //隐藏输入法
+                    imm.hideSoftInputFromWindow(commentEdit.getWindowToken(),0);
+                }
+            }
+        }, 100);
+    }
 
-            comment.setPost(post);
-    //        post.save();
-            comment.save();
+    /**
+     * 判断对话框中是否输入内容
+     */
+    private boolean isEditEmply(){
+        commentText = commentEdit.getText().toString().trim();
+        if(commentText.equals("")){
+            Toast.makeText(getApplicationContext(), "评论不能为空", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        commentEdit.setText("");
+        return true;
+    }
 
-        } else {
-            // 回复评论，创建子评论
-            Comment comment1 = LitePal.where("id = ?", String.valueOf(comment_id)).findFirst(Comment.class);
-            List<Comment> subCommentsList = new ArrayList<>();
-            Comment subComment = new Comment();
-            subComment.setCommentUserName("seven");
-            subComment.setCommentContent(commentText);
-            subComment.setCommentUserPhoto(R.mipmap.photo_10);
-            //subComment.setDate(new Date());
-            subComment.save();
-            subCommentsList.add(subComment);
-            comment1.setSubComments(subCommentsList);
-            comment1.setPost(post);
-            post.save();
-            comment1.save();
+    /**
+     * 发表评论
+     */
+    private void publishComment(){
+        CommentBean bean = new CommentBean();
+        bean.setCommentUserPhoto(R.mipmap.photo_10);
+        bean.setCommentUserName("seven");
+        bean.setCommentTime("13:30");
+        bean.setCommentUserPhoneNumber("12345");
+        bean.setCommentContent(commentText);
+        bean.save();
+        SQLiteDatabase db = LitePal.getDatabase();
+        String sql = "UPDATE CommentBean SET post_id = ? WHERE id = ?";
+        db.execSQL(sql, new Object[] {post.getId(), bean.getId()});
+        list.add(bean);
+        commentAdapter.notifyDataSetChanged();
+        commentNumber++;
+        detail_tv_comment_number.setText(String.valueOf(commentNumber));
+        set_comments_number.setText("共"+commentNumber+"条评论");
+    }
+
+    /**
+     * 回复评论
+     */
+    private void replyComment(){
+        ReplyBean bean = new ReplyBean();
+        bean.setReplyUserPhoto(R.mipmap.photo_10);
+        bean.setReplyNickname("seven");
+        bean.setReplyTime("11:10");
+        bean.setCommentNickname(list.get(postion_reply).getCommentUserName());
+        bean.setReplyContent(commentText);
+        bean.save();
+        SQLiteDatabase db = LitePal.getDatabase();
+        String sql = "UPDATE ReplyBean SET commentbean_id = ? WHERE id = ?";
+        db.execSQL(sql, new Object[] {list.get(postion_reply).getId(), bean.getId()});
+
+        commentAdapter.getReplyComment(bean, postion_reply);
+        commentAdapter.notifyDataSetChanged();
+
+    }
+    /**
+     * 事件点击监听器
+     */
+//    private final class ClickListener implements View.OnClickListener {
+//        @Override
+//        public void onClick(View v) {
+//            switch (v.getId()) {
+//                case R.id.submitComment:	//发表评论按钮
+//                    if(isEditEmply()){		//判断用户是否输入内容
+//                        if(isReply){
+//                            replyComment();
+//                        }else{
+//                            publishComment();
+//                        }
+//                        bottomLinear.setVisibility(View.VISIBLE);
+//                        commentLinear.setVisibility(View.GONE);
+//                        onFocusChange(false);
+//                    }
+//                    break;
+//                case R.id.detail_iv_comment:		//底部评论按钮
+//                    isReply = false;
+//                    commentLinear.setVisibility(View.VISIBLE);
+//                    bottomLinear.setVisibility(View.GONE);
+//                    onFocusChange(true);
+//                    break;
+//            }
+//        }
+//    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //判断控件是否显示
+        if(commentLinear.getVisibility() == View.VISIBLE){
+            commentLinear.setVisibility(View.GONE);
+            bottomLinear.setVisibility(View.VISIBLE);
         }
     }
 
-
-    public void onCommentPosted() {
-        int post_id = (int)post.getId();
-        Post post1 = LitePal.where("id = ?", String.valueOf(post_id)).findFirst(Post.class,true);
-        List<Comment> newcomments = post1.getComments();
-        // 然后使用新的数据更新 Adapter
-        commentAdapter.setComments(newcomments);
-        rv_comment.setAdapter(commentAdapter);
-    }
 }

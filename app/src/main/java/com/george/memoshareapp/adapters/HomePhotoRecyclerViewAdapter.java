@@ -97,6 +97,7 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
 //                    页面传值，更改键值对即可
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra("post", post);
+
                     context.startActivity(intent);
                 }
             });

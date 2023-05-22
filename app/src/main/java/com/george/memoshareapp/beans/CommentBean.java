@@ -3,6 +3,7 @@ package com.george.memoshareapp.beans;
 import org.litepal.crud.LitePalSupport;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 
@@ -17,32 +18,15 @@ import java.io.Serializable;
  */
 
 
-public class Comment extends LitePalSupport implements Serializable {
+public class CommentBean extends LitePalSupport implements Serializable {
     private long id;
     private Post post;
     private String commentContent;
     private String commentTime;
     private String commentUserPhoneNumber;
-
-    private List<Comment> subComments;    // 子评论列表
-    private String commentUserName;
-    private int commentUserPhoto;
-
-
-    public Comment() {
-    }
-
-
-    public Comment(Post post, String commentContent, String commentTime, String commentUserPhoneNumber, List<Comment> subComments, String commentUserName, int commentUserPhoto) {
-        this.post = post;
-        this.commentContent = commentContent;
-        this.commentTime = commentTime;
-        this.commentUserPhoneNumber = commentUserPhoneNumber;
-        this.subComments = subComments;
-        this.commentUserName = commentUserName;
-        this.commentUserPhoto = commentUserPhoto;
-
-    }
+    private String commentUserName;         //(后期修改)
+    private int commentUserPhoto;           //(后期修改)
+    private List<ReplyBean> replyBeanList = new ArrayList<>();      //回复内容列表
 
     public long getId() {
         return id;
@@ -84,14 +68,6 @@ public class Comment extends LitePalSupport implements Serializable {
         this.commentUserPhoneNumber = commentUserPhoneNumber;
     }
 
-    public List<Comment> getSubComments() {
-        return subComments;
-    }
-
-    public void setSubComments(List<Comment> subComments) {
-        this.subComments = subComments;
-    }
-
     public String getCommentUserName() {
         return commentUserName;
     }
@@ -108,4 +84,26 @@ public class Comment extends LitePalSupport implements Serializable {
         this.commentUserPhoto = commentUserPhoto;
     }
 
+    public List<ReplyBean> getReplyList() {
+        return replyBeanList;
+    }
+
+
+    public void setReplyList(List<ReplyBean> replyBeanList) {
+        this.replyBeanList = replyBeanList;
+    }
+
+    @Override
+    public String toString() {
+        return "CommentBean{" +
+                "id=" + id +
+                ", post=" + post +
+                ", commentContent='" + commentContent + '\'' +
+                ", commentTime='" + commentTime + '\'' +
+                ", commentUserPhoneNumber='" + commentUserPhoneNumber + '\'' +
+                ", commentUserName='" + commentUserName + '\'' +
+                ", commentUserPhoto=" + commentUserPhoto +
+                ", replyBeanList=" + replyBeanList +
+                '}';
+    }
 }

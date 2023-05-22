@@ -4,6 +4,7 @@ import org.litepal.crud.LitePalSupport;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,10 +31,11 @@ public class Post extends LitePalSupport implements Serializable {
     private String memoryTime;
     private long like;
     private long share;
-    private List<Comment> comments;
+    private List<CommentBean> commentBeans;
+
 
     public Post() {
-
+        commentBeans = new ArrayList<>();
     }
 
 
@@ -147,12 +149,15 @@ public class Post extends LitePalSupport implements Serializable {
         this.memoryTime = memoryTime;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public List<CommentBean> getComments() {
+        if (commentBeans == null) {
+            commentBeans = new ArrayList<>();
+        }
+        return commentBeans;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public void setComments(List<CommentBean> commentBeans) {
+        this.commentBeans = commentBeans;
     }
 
 
@@ -186,7 +191,7 @@ public class Post extends LitePalSupport implements Serializable {
                 ", isPublic=" + isPublic +
                 ", publishedTime='" + publishedTime + '\'' +
                 ", memoryTime='" + memoryTime + '\'' +
-                ", comments=" + comments +
+                ", comments=" + commentBeans +
                 '}';
     }
 }

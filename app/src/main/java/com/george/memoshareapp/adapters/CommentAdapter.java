@@ -4,108 +4,92 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.george.memoshareapp.CustomLinearLayoutManager;
-import com.george.memoshareapp.Fragment.CommentFragment;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.beans.Comment;
+import com.george.memoshareapp.beans.CommentBean;
+import com.george.memoshareapp.beans.ReplyBean;
+import com.george.memoshareapp.view.NoScrollListView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
+public class CommentAdapter extends BaseAdapter {
 
-    private List<Comment> comments = new ArrayList<>();
+    private int resourceId;
     private Context context;
-    private CommentAdapter commentAdapter;
-
-
-
-    public CommentAdapter() {
-    }
-
-    public CommentAdapter(Context context, List<Comment> comments) {
-        this.comments = comments;
+    private List<CommentBean> list;
+    private LayoutInflater inflater;
+    public CommentAdapter(Context context, List<CommentBean> list, int resourceId){
+        this.list = list;
         this.context = context;
+        this.resourceId = resourceId;
+        inflater = LayoutInflater.from(context);
     }
 
     @Override
-    public int getItemCount() {
-        return comments.size();
-    }
-
-
-    @NonNull
-    @Override
-    public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.comment_item, parent, false);
-        CommentViewHolder holder = new CommentViewHolder(view);
-        return holder;
+    public int getCount() {
+        return list.size();
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CommentViewHolder holder, int position) {
-        Comment comment = comments.get(position);
-        holder.tv_comment_username.setText(comment.getCommentUserName());
-        holder.iv_comment_userphoto.setImageResource(comment.getCommentUserPhoto());
-        holder.tv_comment_content.setText(comment.getCommentContent());
+    public Object getItem(int position) {
+        return list.get(position);
+    }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-
-        List<Comment> subComments = comment.getSubComments();
-        if (subComments != null && !subComments.isEmpty()) {
-            // 设置子评论的 RecyclerView
-            CommentAdapter subCommentAdapter = new CommentAdapter(context, subComments);
-            holder.rv_sub_comments.setLayoutManager(new CustomLinearLayoutManager(holder.itemView.getContext()));
-            holder.rv_sub_comments.setAdapter(subCommentAdapter);
-            subCommentAdapter.setComments(subComments);
-
-            holder.rv_sub_comments.setVisibility(View.VISIBLE);  // 如果有子评论，就显示 RecyclerView
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        CommentBean bean = list.get(position);
+        ViewHolder holder = null;
+        if(convertView == null){
+            holder = new ViewHolder();
+            convertView = inflater.inflate(resourceId, null);
+            holder.commentItemImg = (ImageView)
+                    convertView.findViewById(R.id.commentItemImg);
+            holder.commentNickname = (TextView)
+                    convertView.findViewById(R.id.commentNickname);
+            holder.commentItemTime = (TextView)
+                    convertView.findViewById(R.id.commentItemTime);
+            holder.commentItemContent = (TextView)
+                    convertView.findViewById(R.id.commentItemContent);
+            holder.replyList = (NoScrollListView)
+                    convertView.findViewById(R.id.replyList);
+            convertView.setTag(holder);
         }else{
-            holder.rv_sub_comments.setVisibility(View.GONE);  // 如果没有子评论，就隐藏 RecyclerView
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        //为item设置点击事件
-        holder.layout_item.setOnClickListener(new View.OnClickListener() { 
-            @Override
-            public void onClick(View v) {
-                CommentFragment commentFragment = CommentFragment.newInstance((int) comment.getId()); // 使用当前评论的 id 来初始化 Fragment
-                commentFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "CommentFragment");
-            }
-        });
+        holder.commentItemImg.setImageResource(bean.getCommentUserPhoto());
+        holder.commentNickname.setText(bean.getCommentUserName());
+        holder.commentItemTime.setText(bean.getCommentTime());
+        holder.commentItemContent.setText(bean.getCommentContent());
+
+        ReplyAdapter adapter = new ReplyAdapter(context, bean.getReplyList(), R.layout.reply_item);
+        holder.replyList.setAdapter(adapter);
+
+        return convertView;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-        notifyDataSetChanged();    // 当评论列表改变时，通知 RecyclerView 更新界面
+    private final class ViewHolder{
+        public ImageView commentItemImg;			//评论人图片
+        public TextView commentNickname;			//评论人昵称
+        public TextView commentItemTime;			//评论时间
+        public TextView commentItemContent;			//评论内容
+        public NoScrollListView replyList;			//评论回复列表
     }
 
-    class CommentViewHolder extends RecyclerView.ViewHolder{
-
-        ImageView iv_comment_userphoto;
-        TextView tv_comment_username;
-        TextView tv_comment_content;
-        RecyclerView rv_sub_comments;
-        LinearLayout layout_item;
-
-
-        public CommentViewHolder(@NonNull View itemView) {
-            super(itemView);
-            this.iv_comment_userphoto = itemView.findViewById(R.id.iv_comment_userphoto);
-            this.tv_comment_username = itemView.findViewById(R.id.tv_comment_username);
-            this.tv_comment_content = itemView.findViewById(R.id.tv_comment_content);
-            this.rv_sub_comments = itemView.findViewById(R.id.rv_sub_comments);
-            this.layout_item = itemView.findViewById(R.id.layout_item);
-            this.rv_sub_comments.setVisibility(View.GONE);  // 默认设置为不可见
-        }
+    /**
+     * 获取回复评论
+     */
+    public void getReplyComment(ReplyBean bean, int position){
+        List<ReplyBean> rList = list.get(position).getReplyList();
+        rList.add(rList.size(), bean);
     }
+
 }

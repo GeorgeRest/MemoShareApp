@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:background="@color/divider"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.DetailActivity">
+    android:background="@color/divider"
+    tools:context=".activities.DetailActivity"
+    android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
-
         <ImageView
             android:id="@+id/detail_iv_back"
             android:layout_width="30dp"
@@ -21,7 +20,6 @@
             android:layout_gravity="center"
             android:onClick="onClick"
             android:src="@mipmap/back_register_contact" />
-
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
@@ -34,22 +32,20 @@
             android:textSize="20dp" />
 
     </RelativeLayout>
-    <LinearLayout
-        android:layout_marginTop="40dp"
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="#BDB8B8"/>
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="41dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingTop="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="10dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -98,13 +94,14 @@
                         android:textSize="12dp" />
                 </LinearLayout>
             </RelativeLayout>
+
             <TextView
                 android:id="@+id/detail_tv_content"
-                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:text="今天天气好好呀~"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
@@ -119,57 +116,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#F8F4FA" />
-<!--            <RelativeLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content">-->
-<!--                <TextView-->
-<!--                    android:layout_toLeftOf="@id/detail_tv_comment_count"-->
-<!--                    android:id="@+id/detail_tv_gong"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="共"-->
-<!--                    android:textColor="@color/primary_text"-->
-<!--                    android:textSize="10dp"/>-->
-<!--                <TextView-->
-<!--                    android:id="@+id/detail_tv_comment_count"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="XX"-->
-<!--                    android:layout_centerHorizontal="true"-->
-<!--                    android:textColor="@color/primary_text"-->
-<!--                    android:textSize="10dp"/>-->
-<!--                <TextView-->
-<!--                    android:layout_toRightOf="@id/detail_tv_comment_count"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="条评论"-->
-<!--                    android:textColor="@color/primary_text"-->
-
-<!--                    android:textSize="10dp"/>-->
-
-<!--            </RelativeLayout>-->
-
 
             <TextView
                 android:id="@+id/tv_comments_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="共xx条评论"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:text="共10条评论" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_comment"
+            <com.george.memoshareapp.view.NoScrollListView
+                android:id="@+id/commentList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fcv_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:divider="#00000000" />
         </LinearLayout>
     </ScrollView>
+
     <LinearLayout
+        android:id="@+id/bottomLinear"
         android:background="@color/white"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
@@ -178,8 +143,7 @@
             android:layout_gravity="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            >
+            android:layout_weight="1">
             <ImageView
                 android:id="@+id/detail_iv_share"
                 android:layout_marginLeft="40dp"
@@ -234,10 +198,53 @@
                 android:textColor="#403D3D"/>
         </LinearLayout>
 
-
     </LinearLayout>
-</RelativeLayout>
 
+            <!-- 输入框、留言按钮 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#CCCCCC"
+        android:id="@+id/commentLinear"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        <!-- 输入框 -->
+        <EditText
+            android:id="@+id/commentEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
+            android:maxLength="100"
+            android:minHeight="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:inputType="textMultiLine"
+            android:gravity="left"
+            android:maxLines="6"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"/>
+        <!-- 留言按钮 -->
+<!--        <Button-->
+<!--            android:id="@+id/submitComment"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:textColor="#000000"-->
+<!--            android:text="发送"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:background="#FFFFFF"-->
+<!--            android:layout_gravity="center_vertical"/>-->
+        <ImageView
+            android:id="@+id/submitComment"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:src="@drawable/button_send"
+            android:background="@drawable/bg_send_selector"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+        </LinearLayout>
 
 
 
