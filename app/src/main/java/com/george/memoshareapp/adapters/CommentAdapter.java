@@ -1,6 +1,7 @@
 package com.george.memoshareapp.adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +22,12 @@ public class CommentAdapter extends BaseAdapter {
     private Context context;
     private List<CommentBean> list;
     private LayoutInflater inflater;
-    public CommentAdapter(Context context, List<CommentBean> list, int resourceId){
+    private Handler handler;
+    public CommentAdapter(Context context, List<CommentBean> list, int resourceId, Handler handler){
         this.list = list;
         this.context = context;
         this.resourceId = resourceId;
+        this.handler = handler;
         inflater = LayoutInflater.from(context);
     }
 
@@ -73,6 +76,8 @@ public class CommentAdapter extends BaseAdapter {
         ReplyAdapter adapter = new ReplyAdapter(context, bean.getReplyList(), R.layout.reply_item);
         holder.replyList.setAdapter(adapter);
 
+        TextviewClickListener tcl = new TextviewClickListener(position);
+        holder.commentItemContent.setOnClickListener(tcl);
         return convertView;
     }
 
@@ -90,6 +95,24 @@ public class CommentAdapter extends BaseAdapter {
     public void getReplyComment(ReplyBean bean, int position){
         List<ReplyBean> rList = list.get(position).getReplyList();
         rList.add(rList.size(), bean);
+    }
+
+    /**
+     * 事件点击监听器
+     */
+    private final class TextviewClickListener implements View.OnClickListener {
+        private int position;
+        public TextviewClickListener(int position){
+            this.position = position;
+        }
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.commentItemContent:
+                    handler.sendMessage(handler.obtainMessage(10, position));
+                    break;
+            }
+        }
     }
 
 }

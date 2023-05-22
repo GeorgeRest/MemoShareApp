@@ -1,11 +1,13 @@
 package com.george.memoshareapp.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -68,11 +70,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private LinearLayout commentLinear;	    //评论输入框线性布局
 
     private int count;					    //记录评论ID
+    private int position;				    //记录回复评论的索引
     private boolean isReply;			    //是否是回复
     private String commentText = "";		//记录对话框中的内容
     private CommentAdapter commentAdapter;
     private List<CommentBean> list;
-    private int postion_reply;
     private ImageView submitComment;           //发送按钮
     private TextView set_comments_number;
 
@@ -150,19 +152,19 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         submitComment.setOnClickListener(this);
         intent = getIntent();
         post = (Post) intent.getSerializableExtra("post");
-        commentAdapter = new CommentAdapter(this, getCommentData(),R.layout.comment_item);
+        commentAdapter = new CommentAdapter(this, getCommentData(),R.layout.comment_item,handler);
         commentList.setAdapter(commentAdapter);
 
-        commentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                isReply = true;
-                postion_reply = position;
-                commentLinear.setVisibility(View.VISIBLE);
-                bottomLinear.setVisibility(View.GONE);
-                onFocusChange(true);
-            }
-        });
+//        commentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                isReply = true;
+//                postion_reply = position;
+//                commentLinear.setVisibility(View.VISIBLE);
+//                bottomLinear.setVisibility(View.GONE);
+//                onFocusChange(true);
+//            }
+//        });
 
     }
 
@@ -394,6 +396,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         return replyList;
     }
 
+
     /**
      * 显示或隐藏输入法
      */
@@ -456,17 +459,32 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         bean.setReplyUserPhoto(R.mipmap.photo_10);
         bean.setReplyNickname("seven");
         bean.setReplyTime("11:10");
-        bean.setCommentNickname(list.get(postion_reply).getCommentUserName());
+        bean.setCommentNickname(list.get(position).getCommentUserName());
         bean.setReplyContent(commentText);
         bean.save();
         SQLiteDatabase db = LitePal.getDatabase();
         String sql = "UPDATE ReplyBean SET commentbean_id = ? WHERE id = ?";
-        db.execSQL(sql, new Object[] {list.get(postion_reply).getId(), bean.getId()});
+        db.execSQL(sql, new Object[] {list.get(position).getId(), bean.getId()});
 
-        commentAdapter.getReplyComment(bean, postion_reply);
+        commentAdapter.getReplyComment(bean,position);
         commentAdapter.notifyDataSetChanged();
 
     }
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what == 10){
+                isReply = true;
+                position = (Integer)msg.obj;
+                System.out.println("=================postion"+position);
+                commentLinear.setVisibility(View.VISIBLE);
+                bottomLinear.setVisibility(View.GONE);
+                onFocusChange(true);
+            }
+        }
+    };
     /**
      * 事件点击监听器
      */
