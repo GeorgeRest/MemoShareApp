@@ -28,15 +28,13 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.CommentAdapter;
 import com.george.memoshareapp.beans.CommentBean;
 import com.george.memoshareapp.beans.Post;
-import com.george.memoshareapp.events.LastClickedPositionEvent;
 import com.george.memoshareapp.beans.ReplyBean;
+import com.george.memoshareapp.events.LastClickedPositionEvent;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
-
-import org.greenrobot.eventbus.EventBus;
-import org.litepal.LitePal;
 import com.george.memoshareapp.view.NoScrollListView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
@@ -44,6 +42,7 @@ import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private  int like_number;
     private ImageView userIcon;
     private TextView userName;
     private TextView publishTime;
@@ -60,6 +59,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private int commentNumber = 0;
     private DisplayManager displayManager;
     private boolean IS_LIKE = false;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
     private int shareNumber;
     private TextView detail_tv_share_number;
     private TextView detail_tv_like_number;
@@ -71,6 +72,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
 
     private String phoneNumber;
+    private List<String> ceShiList;
 
     private EditText commentEdit;		    //评论输入框
     private NoScrollListView commentList;   //评论数据列表
@@ -88,6 +90,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +102,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
         editor1 = sharedPreferences1.edit();
 
-         likesCount = post.getLike();
+        likesCount = post.getLike();
         phoneNumber = sharedPreferences1.getString("phoneNumber", "");
         has_like = sharedPreferences1.getBoolean(post.getId() + ":" + phoneNumber, false);
         detail_tv_like_number.setText(String.valueOf(likesCount));
@@ -110,22 +113,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         } else {
             like.setImageResource(R.mipmap.like);
         }
-        if (homePageAlreadyPressedLike){
-            detail_tv_like_number.setText(String.valueOf(++likesCount));
-        }else{
-            detail_tv_like_number.setText(String.valueOf(likesCount));
-        }
-
-
-
-
         putParameter2View();//传参
         commentNumber = commentAdapter.getCount();
         detail_tv_share_number.setText(shareNumber+"");
         detail_tv_like_number.setText(like_number+"");
         detail_tv_comment_number.setText(commentNumber+"");
         set_comments_number.setText("共"+commentNumber+"条评论");
-
 
     }
 
@@ -155,8 +148,67 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         displayManager.showPhoto(recyclerView,photoPath,DetailActivity.this);
 
+
     }
 
+
+//    private void init() {
+//        sharedPreferences = getSharedPreferences("commentNumberAndLikeNumber", DetailActivity.MODE_PRIVATE);
+//
+//        shareNumber = sharedPreferences.getInt("shareNumber", 0);
+//    //    commentNumber = sharedPreferences.getInt("commentNumber", 0);
+//        like_number = sharedPreferences.getInt("likeNumber", 0);
+//
+//
+//        editor = sharedPreferences.edit();
+//        displayManager = new DisplayManager();
+//        photoPath = new ArrayList<>();
+//
+//        userName = (TextView) findViewById(R.id.detail_tv_username);
+//        publishTime = (TextView) findViewById(R.id.detail_tv_publish_time);
+//        location = (TextView) findViewById(R.id.detail_tv_location);
+//        content = (TextView) findViewById(R.id.detail_tv_content);
+//        back = (ImageView) findViewById(R.id.detail_iv_back);
+//        userIcon = (ImageView)findViewById(R.id.detail_iv_user_icon);
+//        share = (ImageView) findViewById(R.id.detail_iv_share);
+//        comment = (ImageView) findViewById(R.id.detail_iv_comment);
+//        like = (ImageView) findViewById(R.id.detail_iv_like);
+//        detail_tv_share_number = (TextView) findViewById(R.id.detail_tv_share_number);
+//        detail_tv_like_number = (TextView) findViewById(R.id.detail_tv_like_number);
+//        detail_tv_comment_number = (TextView) findViewById(R.id.detail_tv_comment_number);
+//        recyclerView = findViewById(R.id.recycler_view);
+//        submitComment = (ImageView) findViewById(R.id.submitComment);
+//
+//
+//        commentEdit = (EditText) findViewById(R.id.commentEdit);
+//        commentList = (NoScrollListView) findViewById(R.id.commentList);
+//        bottomLinear = (LinearLayout) findViewById(R.id.bottomLinear);
+//        commentLinear = (LinearLayout) findViewById(R.id.commentLinear);
+//        set_comments_number = (TextView) findViewById(R.id.tv_comments_number);
+//
+//        back.setOnClickListener(this);
+//        userIcon.setOnClickListener(this);
+//        share.setOnClickListener(this);
+//        comment.setOnClickListener(this);
+//        like.setOnClickListener(this);
+//        submitComment.setOnClickListener(this);
+//        intent = getIntent();
+//        post = (Post) intent.getSerializableExtra("post");
+//        commentAdapter = new CommentAdapter(this, getCommentData(),R.layout.comment_item,handler);
+//        commentList.setAdapter(commentAdapter);
+//
+////        commentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+////            @Override
+////            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+////                isReply = true;
+////                postion_reply = position;
+////                commentLinear.setVisibility(View.VISIBLE);
+////                bottomLinear.setVisibility(View.GONE);
+////                onFocusChange(true);
+////            }
+////        });
+//
+//    }
 
     private void init() {
         sharedPreferences = getSharedPreferences("commentNumberAndLikeNumber", DetailActivity.MODE_PRIVATE);
@@ -183,15 +235,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         detail_tv_like_number = (TextView) findViewById(R.id.detail_tv_like_number);
         detail_tv_comment_number = (TextView) findViewById(R.id.detail_tv_comment_number);
         recyclerView = findViewById(R.id.recycler_view);
-        submitComment = (ImageView) findViewById(R.id.submitComment);
-
-
         commentEdit = (EditText) findViewById(R.id.commentEdit);
         commentList = (NoScrollListView) findViewById(R.id.commentList);
         bottomLinear = (LinearLayout) findViewById(R.id.bottomLinear);
         commentLinear = (LinearLayout) findViewById(R.id.commentLinear);
         set_comments_number = (TextView) findViewById(R.id.tv_comments_number);
-
+        submitComment = (ImageView) findViewById(R.id.submitComment);
         back.setOnClickListener(this);
         userIcon.setOnClickListener(this);
         share.setOnClickListener(this);
@@ -202,18 +251,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         post = (Post) intent.getSerializableExtra("post");
         commentAdapter = new CommentAdapter(this, getCommentData(),R.layout.comment_item,handler);
         commentList.setAdapter(commentAdapter);
-
-//        commentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                isReply = true;
-//                postion_reply = position;
-//                commentLinear.setVisibility(View.VISIBLE);
-//                bottomLinear.setVisibility(View.GONE);
-//                onFocusChange(true);
-//            }
-//        });
-
     }
 
 
@@ -270,11 +307,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 }else {
                     detail_tv_like_number.setText(String.valueOf(likesCount));
                 }
-
                 break;
             default:
                 break;
         }
+
     }
     private void showBottomDialog() {
         //1、使用Dialog、设置style
@@ -339,13 +376,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        editor.putInt("shareNumber",shareNumber);
-    //    editor.putInt("commentNumber",commentNumber);
-        editor.putInt("likeNumber", like_number);
-        editor.apply();
-
         post.setLike(likesCount);
-        post.update(post.getId());
+        post .update(post.getId());
     }
 
 
@@ -362,88 +394,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             list.add(commentBean);
         }
 
-
-//        CommentBean comment1 = new CommentBean();
-//        comment1.setCommentUserPhoto(R.mipmap.photo_1);
-//        comment1.setCommentUserName("Courtney Henry");
-//        comment1.setCommentTime("11:30");
-//        comment1.setCommentContent("在其中去之前作曲者庆中秋掌权");
-//        comment1.setReplyList(getReplyData());
-//        comment1.setPost(post);
-//        post.getComments().add(comment1);
-//        comment1.save();
-//
-//        post.save();
-//        list.add(comment1);
-//
-////        // 你想要获取的Post对象的ID
-////        long postId =post.getId();
-////
-////        // 加载Post对象及其所有的关联对象
-////        Post post1 = LitePal.find(Post.class, postId, true);
-//
-////        post1.setComments(list);
-//
-//        CommentBean comment2 = new CommentBean();
-//        comment2.setCommentUserPhoto(R.mipmap.photo_2);
-//        comment2.setCommentUserName("Courtney Henry");
-//        comment2.setCommentTime("11:40");
-//        comment2.setCommentContent("在其中去之前作曲者庆中秋掌权在其中去之前作曲者庆中秋掌权 ");
-//        comment2.setReplyList(getReplyData());
-//        comment2.setPost(post);
-//        comment2.save();
-//        list.add(comment2);
-//
-//        CommentBean comment3 = new CommentBean();
-//        comment3.setCommentUserPhoto(R.mipmap.photo_3);
-//        comment3.setCommentUserName("Courtney Henry");
-//        comment3.setCommentTime("12:30");
-//        comment3.setCommentContent("在其中去之前作曲者庆中秋掌权 在其中去之前作曲者庆中秋掌权在其中去之前作曲者庆中秋掌权在其中去之前作曲者庆中秋掌权");
-//        comment3.setReplyList(getReplyData());
-//        comment3.setPost(post);
-//        comment3.save();
-//        list.add(comment3);
-//
-//        CommentBean comment4 = new CommentBean();
-//        comment4.setCommentUserPhoto(R.mipmap.photo_4);
-//        comment4.setCommentUserName("Courtney Henry");
-//        comment4.setCommentTime("14:30");
-//        comment4.setCommentContent("在其中去之前作曲者庆中秋掌权");
-//        comment4.setReplyList(getReplyData());
-//        comment4.setPost(post);
-//        comment4.save();
-//        list.add(comment4);
-//
-//        CommentBean comment5 = new CommentBean();
-//        comment5.setCommentUserPhoto(R.mipmap.photo_5);
-//        comment5.setCommentUserName("Courtney Henry");
-//        comment5.setCommentTime("14:50");
-//        comment5.setCommentContent("在其中去之前作曲者庆中秋掌权在其中去之前作曲者庆中秋掌权");
-//        comment5.setReplyList(getReplyData());
-//        comment5.setPost(post);
-//        comment5.save();
-//        list.add(comment5);
-//
-//
-//        CommentBean comment6 = new CommentBean();
-//        comment6.setCommentUserPhoto(R.mipmap.photo_6);
-//        comment6.setCommentUserName("Courtney Henry");
-//        comment6.setCommentTime("15:30");
-//        comment6.setCommentContent("在其中去之前作曲者庆中秋掌权在其中去之前作曲者庆中秋掌权");
-//        comment6.setReplyList(getReplyData());
-//        comment6.setPost(post);
-//        comment6.save();
-//        list.add(comment6);
-//
-//        CommentBean comment7 = new CommentBean();
-//        comment7.setCommentUserPhoto(R.mipmap.photo_7);
-//        comment7.setCommentUserName("Courtney Henry");
-//        comment7.setCommentTime("17:30");
-//        comment7.setCommentContent("在其中去之前作曲者庆中秋掌权");
-//        comment7.setReplyList(getReplyData());
-//        comment7.setPost(post);
-//        comment7.save();
-//        list.add(comment7);
 
         return list;
     }

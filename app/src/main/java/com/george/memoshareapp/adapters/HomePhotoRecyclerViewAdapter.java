@@ -97,8 +97,6 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
                     SharedPreferences sharedPreferences = context.getSharedPreferences("User", Context.MODE_PRIVATE);
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra("post", post);
-                    intent.putExtra("islike", islike);
-
                     context.startActivity(intent);
                 }
             });
