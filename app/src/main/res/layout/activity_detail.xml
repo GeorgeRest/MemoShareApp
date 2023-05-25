@@ -90,6 +90,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:text="大连市高新万达"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:textColor="#656161"
                         android:textSize="12dp" />
                 </LinearLayout>

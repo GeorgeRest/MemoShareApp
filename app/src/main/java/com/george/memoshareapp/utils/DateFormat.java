@@ -76,5 +76,17 @@ public class DateFormat {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(date);
 
     }
-
+    public static String convertToTime(String inputDate) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm");
+        try {
+            Date date = inputFormat.parse(inputDate);
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 }
+
+

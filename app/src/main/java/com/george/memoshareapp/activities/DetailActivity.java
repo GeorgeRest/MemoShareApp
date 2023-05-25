@@ -8,13 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,7 +40,6 @@ import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private  int like_number;
     private ImageView userIcon;
     private TextView userName;
     private TextView publishTime;
@@ -59,8 +56,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private int commentNumber = 0;
     private DisplayManager displayManager;
     private boolean IS_LIKE = false;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
     private int shareNumber;
     private TextView detail_tv_share_number;
     private TextView detail_tv_like_number;
@@ -69,10 +64,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private SharedPreferences sharedPreferences1;
     private SharedPreferences.Editor editor1;
     private long likesCount;
-
-
+    private boolean homePageAlreadyPressedLike=false;
     private String phoneNumber;
-    private List<String> ceShiList;
+
 
     private EditText commentEdit;		    //评论输入框
     private NoScrollListView commentList;   //评论数据列表
@@ -87,8 +81,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private List<CommentBean> list;
     private ImageView submitComment;           //发送按钮
     private TextView set_comments_number;
-
-
 
 
     @Override
@@ -108,17 +100,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         detail_tv_like_number.setText(String.valueOf(likesCount));
         if (has_like) {
             like.setImageResource(R.mipmap.like_press);
-           likesCount++;
             detail_tv_like_number.setText(String.valueOf(likesCount));
         } else {
             like.setImageResource(R.mipmap.like);
         }
         putParameter2View();//传参
-        commentNumber = commentAdapter.getCount();
-        detail_tv_share_number.setText(shareNumber+"");
-        detail_tv_like_number.setText(like_number+"");
-        detail_tv_comment_number.setText(commentNumber+"");
-        set_comments_number.setText("共"+commentNumber+"条评论");
 
     }
 
@@ -134,88 +120,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
 
 
-        //如果传进来的评论不为空，那么就把评论加进来
-//        if (intent.getExtras().get("comment")!=null){
-//            commentList = (List<String>) intent.getExtras().get("comment");
-//            commentNumber = commentList.size();
-//            if (commentNumber>10000){
-//                double converted = Math.floor((double) commentNumber / 10000 * 10) / 10;
-//
-//                comment_count.setText(converted+"万");
-//            }
-//            comment_count.setText(commentNumber);
-//        }
-
         displayManager.showPhoto(recyclerView,photoPath,DetailActivity.this);
-
 
     }
 
 
-//    private void init() {
-//        sharedPreferences = getSharedPreferences("commentNumberAndLikeNumber", DetailActivity.MODE_PRIVATE);
-//
-//        shareNumber = sharedPreferences.getInt("shareNumber", 0);
-//    //    commentNumber = sharedPreferences.getInt("commentNumber", 0);
-//        like_number = sharedPreferences.getInt("likeNumber", 0);
-//
-//
-//        editor = sharedPreferences.edit();
-//        displayManager = new DisplayManager();
-//        photoPath = new ArrayList<>();
-//
-//        userName = (TextView) findViewById(R.id.detail_tv_username);
-//        publishTime = (TextView) findViewById(R.id.detail_tv_publish_time);
-//        location = (TextView) findViewById(R.id.detail_tv_location);
-//        content = (TextView) findViewById(R.id.detail_tv_content);
-//        back = (ImageView) findViewById(R.id.detail_iv_back);
-//        userIcon = (ImageView)findViewById(R.id.detail_iv_user_icon);
-//        share = (ImageView) findViewById(R.id.detail_iv_share);
-//        comment = (ImageView) findViewById(R.id.detail_iv_comment);
-//        like = (ImageView) findViewById(R.id.detail_iv_like);
-//        detail_tv_share_number = (TextView) findViewById(R.id.detail_tv_share_number);
-//        detail_tv_like_number = (TextView) findViewById(R.id.detail_tv_like_number);
-//        detail_tv_comment_number = (TextView) findViewById(R.id.detail_tv_comment_number);
-//        recyclerView = findViewById(R.id.recycler_view);
-//        submitComment = (ImageView) findViewById(R.id.submitComment);
-//
-//
-//        commentEdit = (EditText) findViewById(R.id.commentEdit);
-//        commentList = (NoScrollListView) findViewById(R.id.commentList);
-//        bottomLinear = (LinearLayout) findViewById(R.id.bottomLinear);
-//        commentLinear = (LinearLayout) findViewById(R.id.commentLinear);
-//        set_comments_number = (TextView) findViewById(R.id.tv_comments_number);
-//
-//        back.setOnClickListener(this);
-//        userIcon.setOnClickListener(this);
-//        share.setOnClickListener(this);
-//        comment.setOnClickListener(this);
-//        like.setOnClickListener(this);
-//        submitComment.setOnClickListener(this);
-//        intent = getIntent();
-//        post = (Post) intent.getSerializableExtra("post");
-//        commentAdapter = new CommentAdapter(this, getCommentData(),R.layout.comment_item,handler);
-//        commentList.setAdapter(commentAdapter);
-//
-////        commentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-////            @Override
-////            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-////                isReply = true;
-////                postion_reply = position;
-////                commentLinear.setVisibility(View.VISIBLE);
-////                bottomLinear.setVisibility(View.GONE);
-////                onFocusChange(true);
-////            }
-////        });
-//
-//    }
-
     private void init() {
-        sharedPreferences = getSharedPreferences("commentNumberAndLikeNumber", DetailActivity.MODE_PRIVATE);
-
-        shareNumber = sharedPreferences.getInt("shareNumber", 0);
-    //    commentNumber = sharedPreferences.getInt("commentNumber", 0);
-        like_number = sharedPreferences.getInt("likeNumber", 0);
         intent = getIntent();
         post = (Post) intent.getSerializableExtra("post");
 
@@ -235,12 +145,15 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         detail_tv_like_number = (TextView) findViewById(R.id.detail_tv_like_number);
         detail_tv_comment_number = (TextView) findViewById(R.id.detail_tv_comment_number);
         recyclerView = findViewById(R.id.recycler_view);
+        submitComment = (ImageView) findViewById(R.id.submitComment);
+
+
         commentEdit = (EditText) findViewById(R.id.commentEdit);
         commentList = (NoScrollListView) findViewById(R.id.commentList);
         bottomLinear = (LinearLayout) findViewById(R.id.bottomLinear);
         commentLinear = (LinearLayout) findViewById(R.id.commentLinear);
         set_comments_number = (TextView) findViewById(R.id.tv_comments_number);
-        submitComment = (ImageView) findViewById(R.id.submitComment);
+
         back.setOnClickListener(this);
         userIcon.setOnClickListener(this);
         share.setOnClickListener(this);
@@ -251,6 +164,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         post = (Post) intent.getSerializableExtra("post");
         commentAdapter = new CommentAdapter(this, getCommentData(),R.layout.comment_item,handler);
         commentList.setAdapter(commentAdapter);
+
     }
 
 
@@ -307,11 +221,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 }else {
                     detail_tv_like_number.setText(String.valueOf(likesCount));
                 }
+
                 break;
             default:
                 break;
         }
-
     }
     private void showBottomDialog() {
         //1、使用Dialog、设置style
@@ -377,7 +291,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     protected void onDestroy() {
         super.onDestroy();
         post.setLike(likesCount);
-        post .update(post.getId());
+        post.update(post.getId());
     }
 
 
@@ -393,8 +307,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             commentBean.setReplyList(replyBeans);
             list.add(commentBean);
         }
-
-
         return list;
     }
 
@@ -498,31 +410,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     /**
      * 事件点击监听器
      */
-//    private final class ClickListener implements View.OnClickListener {
-//        @Override
-//        public void onClick(View v) {
-//            switch (v.getId()) {
-//                case R.id.submitComment:	//发表评论按钮
-//                    if(isEditEmply()){		//判断用户是否输入内容
-//                        if(isReply){
-//                            replyComment();
-//                        }else{
-//                            publishComment();
-//                        }
-//                        bottomLinear.setVisibility(View.VISIBLE);
-//                        commentLinear.setVisibility(View.GONE);
-//                        onFocusChange(false);
-//                    }
-//                    break;
-//                case R.id.detail_iv_comment:		//底部评论按钮
-//                    isReply = false;
-//                    commentLinear.setVisibility(View.VISIBLE);
-//                    bottomLinear.setVisibility(View.GONE);
-//                    onFocusChange(true);
-//                    break;
-//            }
-//        }
-//    }
+
 
     @Override
     public void onBackPressed() {

@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 
 import androidx.annotation.RequiresApi;
 
+import com.george.memoshareapp.activities.ReleaseActivity;
 import com.george.memoshareapp.dialog.LoadingDialog;
 
 import java.io.File;
@@ -25,11 +26,11 @@ public class SavePhotoRunnable implements Runnable {
     private List<Uri> photoPath;
     private Context context;
     private String photoAbsolutePath;
-    private List<String> photoPathList=new ArrayList<>();
+    private List<String> photoPathList = new ArrayList<>();
     private String uriStringPath;
     private LoadingDialog loadingDialog;
 
-    public SavePhotoRunnable(Uri uri,File file,File photoFolder,List<Uri> photoPath, Context context) {
+    public SavePhotoRunnable(Uri uri, File file, File photoFolder, List<Uri> photoPath, Context context) {
         handler = new Handler();
         this.context = context;
         this.photoPath = photoPath;
@@ -42,37 +43,33 @@ public class SavePhotoRunnable implements Runnable {
     @Override
     public void run() {
 
-            try {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        showLoading();
-                        loadingDialog.startAnim();
-                    }
-                });
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
-                FileOutputStream outputStream = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                outputStream.flush();
-                outputStream.close();
+        try {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    showLoading();
+                    loadingDialog.startAnim();
+                }
+            });
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
+            FileOutputStream outputStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.flush();
+            outputStream.close();
 
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            finally {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadingDialog.endAnim();
-                        clearLoading();
-                    }
-                });
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    loadingDialog.endAnim();
+                    clearLoading();
+                }
+            });
         }
-
-
-
+    }
 
 
     private void showLoading() {
@@ -83,12 +80,12 @@ public class SavePhotoRunnable implements Runnable {
     }
 
     private void clearLoading() {
-        if (loadingDialog != null) {
-            loadingDialog.dismiss();
-            loadingDialog = null;
+        if (!((ReleaseActivity) context).isFinishing() && !((ReleaseActivity) context).isDestroyed()) {
+            if (loadingDialog != null) {
+                loadingDialog.dismiss();
+                loadingDialog = null;
+            }
         }
-
-
     }
 }
 

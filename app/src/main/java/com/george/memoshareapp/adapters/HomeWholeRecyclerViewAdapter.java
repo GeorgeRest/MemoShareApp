@@ -51,7 +51,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     private String phoneNumber;
     private List<ContactInfo> contactPicture = new ArrayList<>();
     private Map<String, Integer> nameToPictureMap = new HashMap<>();
-    private List<String> contactName= new ArrayList<>();
+    private List<String> contactName = new ArrayList<>();
 
     public HomeWholeRecyclerViewAdapter() {
     }
@@ -88,8 +88,8 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.like.setTag(holder);
         Post post = mData.get(position);
         holder.bind(post);
-        String phoneNumber = post.getPhoneNumber();
-        String name = phoneNumber.substring(0, 5);
+        String phoneNumber_name = post.getPhoneNumber();
+        String name = phoneNumber_name.substring(0, 5);
         String publishedTime = post.getPublishedTime();
         String location = post.getLocation();
         String publishedText = post.getPublishedText();
@@ -97,7 +97,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
         List<String> photoCachePath = post.getPhotoCachePath();
 
-if (photoCachePath == null || photoCachePath.size() == 0) {
+        if (photoCachePath == null || photoCachePath.size() == 0) {
             holder.innerRecyclerView.setVisibility(View.GONE);
         } else {
             holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
@@ -152,12 +152,12 @@ if (photoCachePath == null || photoCachePath.size() == 0) {
                     holder.tv_head_out_number.setVisibility(View.VISIBLE);
                     holder.tv_head_out_number.setText("+" + (contactName.size() - 2));
                 case 2:
-                    if (contactName.get(1) != null){
+                    if (contactName.get(1) != null) {
                         holder.iv_head_image_3.setVisibility(View.VISIBLE);
                         holder.iv_head_image_3.setImageResource(nameToPictureMap.get(contactName.get(1)));
                     }
                 case 1:
-                    if (contactName.get(0) != null){
+                    if (contactName.get(0) != null) {
                         holder.iv_head_image_2.setVisibility(View.VISIBLE);
                         holder.iv_head_image_2.setImageResource(nameToPictureMap.get(contactName.get(0)));
                     }
@@ -183,7 +183,7 @@ if (photoCachePath == null || photoCachePath.size() == 0) {
                 holder.rl_layout.setBackgroundResource(R.drawable.cardview_bg);
 //            holder.rv_myself_image.setLayoutManager(new GridLayoutManager(mContext, 10));
                 holder.rv_myself_image.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-                HomePageBottomAdapter homePageBottomAdapter = new HomePageBottomAdapter(mContext,treePosition);
+                HomePageBottomAdapter homePageBottomAdapter = new HomePageBottomAdapter(mContext, treePosition);
                 holder.rv_myself_image.setAdapter(homePageBottomAdapter);
                 holder.image_view1.setVisibility(View.VISIBLE);
 //                holder.rv_myself_image.setVisibility(View.VISIBLE);
@@ -241,15 +241,21 @@ if (photoCachePath == null || photoCachePath.size() == 0) {
     public void onClick(View v) {
         ViewHolder holder = (ViewHolder) v.getTag();
         Post post = mData.get(holder.getAdapterPosition());
+
         switch (v.getId()) {
             case R.id.like:
+                long likeCount = post.getLike();
+                long id = post.getId();
                 isLike = sp.getBoolean(post.getId() + ":" + phoneNumber, false);
                 isLike = !isLike;
                 if (isLike) {
-
                     holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like_click));
+                   post.setLike(++likeCount);
+                   post.update(id);
                 } else {
                     holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like));
+                    post.setLike(--likeCount);
+                    post.update(id);
                 }
                 editor.putBoolean(post.getId() + ":" + phoneNumber, isLike);
                 editor.apply();
@@ -406,6 +412,7 @@ if (photoCachePath == null || photoCachePath.size() == 0) {
             fragment = null;
         }
     }
+
     public void resetPlayingButton() {
         if (currentPlayingImageView != null) {
             currentPlayingImageView.setImageResource(R.drawable.record_homepage);  // Use your own default image here
@@ -413,26 +420,26 @@ if (photoCachePath == null || photoCachePath.size() == 0) {
         }
     }
 
-    private void initDate(){
-        contactPicture.add(new ContactInfo("张三",R.mipmap.photo_1));
-        contactPicture.add(new ContactInfo("李潇",R.mipmap.photo_2));
-        contactPicture.add(new ContactInfo("唐莉",R.mipmap.photo_3));
-        contactPicture.add(new ContactInfo("程思迪",R.mipmap.photo_4));
-        contactPicture.add(new ContactInfo("Audss",R.mipmap.photo_5));
-        contactPicture.add(new ContactInfo("王五",R.mipmap.photo_6));
-        contactPicture.add(new ContactInfo("CC",R.mipmap.photo_7));
-        contactPicture.add(new ContactInfo("张明敏",R.mipmap.photo_8));
-        contactPicture.add(new ContactInfo("lilies",R.mipmap.photo_9));
-        contactPicture.add(new ContactInfo("大师",R.mipmap.photo_10));
-        contactPicture.add(new ContactInfo("历史老师",R.mipmap.photo_2));
-        contactPicture.add(new ContactInfo("Kato",R.mipmap.photo_7));
-        contactPicture.add(new ContactInfo("seven",R.mipmap.photo_5));
-        contactPicture.add(new ContactInfo("吴仪",R.mipmap.photo_1));
-        contactPicture.add(new ContactInfo("李宏",R.mipmap.photo_3));
-        contactPicture.add(new ContactInfo("高倩倩",R.mipmap.photo_10));
-        contactPicture.add(new ContactInfo("福福",R.mipmap.photo_4));
-        contactPicture.add(new ContactInfo("小庞",R.mipmap.photo_9));
-        contactPicture.add(new ContactInfo("***",R.mipmap.photo_6));
+    private void initDate() {
+        contactPicture.add(new ContactInfo("张三", R.mipmap.photo_1));
+        contactPicture.add(new ContactInfo("李潇", R.mipmap.photo_2));
+        contactPicture.add(new ContactInfo("唐莉", R.mipmap.photo_3));
+        contactPicture.add(new ContactInfo("程思迪", R.mipmap.photo_4));
+        contactPicture.add(new ContactInfo("Audss", R.mipmap.photo_5));
+        contactPicture.add(new ContactInfo("王五", R.mipmap.photo_6));
+        contactPicture.add(new ContactInfo("CC", R.mipmap.photo_7));
+        contactPicture.add(new ContactInfo("张明敏", R.mipmap.photo_8));
+        contactPicture.add(new ContactInfo("lilies", R.mipmap.photo_9));
+        contactPicture.add(new ContactInfo("大师", R.mipmap.photo_10));
+        contactPicture.add(new ContactInfo("历史老师", R.mipmap.photo_2));
+        contactPicture.add(new ContactInfo("Kato", R.mipmap.photo_7));
+        contactPicture.add(new ContactInfo("seven", R.mipmap.photo_5));
+        contactPicture.add(new ContactInfo("吴仪", R.mipmap.photo_1));
+        contactPicture.add(new ContactInfo("李宏", R.mipmap.photo_3));
+        contactPicture.add(new ContactInfo("高倩倩", R.mipmap.photo_10));
+        contactPicture.add(new ContactInfo("福福", R.mipmap.photo_4));
+        contactPicture.add(new ContactInfo("小庞", R.mipmap.photo_9));
+        contactPicture.add(new ContactInfo("***", R.mipmap.photo_6));
     }
 
 }
