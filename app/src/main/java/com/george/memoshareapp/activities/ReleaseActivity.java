@@ -80,7 +80,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private double longitude;
     private String location;
     private List<Recordings> recordingsList = new ArrayList<>();
-    ;
     private int StyleType = 5;
     private EditText release_edit;
     private ImageView release_back;
@@ -348,15 +347,16 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(this, "请输入内容，或添加图片或语音", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 getSystemTime();
-
                 if (location == null) {
                     location = "";
                 }
-
                 content = release_edit.getText().toString();
                 content = removeAtNames(content);
+                if (getImageUriList().size()==0){
+                    Toast.makeText(this, "请添加图片", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 postManager.getDBParameter(getImageUriList(), phoneNumber, content, recordingsList, addedNames, location, longitude, latitude, PUBLIC_PERMISSION, getSystemTime(), memoryTime());
                 finish();
                 break;
