@@ -440,10 +440,10 @@
 
             <ImageView
                 android:id="@+id/like"
-                android:layout_width="25dp"
-                android:layout_height="21dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_below="@id/rv_images"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="15dp"
                 android:layout_toLeftOf="@id/chat"
                 android:src="@drawable/like" />
@@ -461,6 +461,7 @@
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+
     <ScrollView
         android:id="@+id/sv_bottom"
         android:layout_width="match_parent"
@@ -478,19 +479,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@mipmap/myself_item_button"
+                android:gravity="center"
                 android:text="那时那刻"
                 android:textColor="#997AE7"
-                android:gravity="center"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/image_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/myself_item_backgroud"
                 android:layout_centerHorizontal="true"
-                android:visibility="gone"/>
+                android:background="@drawable/myself_item_backgroud"
+                android:visibility="gone" />
         </LinearLayout>
 
     </ScrollView>

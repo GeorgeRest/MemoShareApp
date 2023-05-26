@@ -1,21 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 默认进度条颜色 -->
     <item android:id="@android:id/background">
         <shape>
-            <solid android:color="#808080"/>
+            <solid android:color="#cbcbcb" /> <!-- 灰色 -->
         </shape>
     </item>
-    <item android:id="@android:id/secondaryProgress">
-        <clip>
-            <shape>
-                <solid android:color="@color/colorPrimary"/>
-            </shape>
-        </clip>
-    </item>
+    <!-- 渐变进度条颜色 -->
     <item android:id="@android:id/progress">
         <clip>
             <shape>
-                <solid android:color="@color/colorPrimary"/>
+                <gradient
+                    android:angle="0"
+                    android:centerColor="#EECAFF"
+                    android:endColor="#CAB5FF"
+                    android:startColor="#969AF5"
+                    android:type="linear" />
             </shape>
         </clip>
     </item>

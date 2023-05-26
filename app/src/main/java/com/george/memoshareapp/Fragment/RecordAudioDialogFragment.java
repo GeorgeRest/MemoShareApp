@@ -198,7 +198,7 @@ public class RecordAudioDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if(!isRecording){
-                   return;
+                    return;
                 }
                 mChronometerTime.stop();
                 timeWhenPaused = 0;

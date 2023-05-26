@@ -371,17 +371,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.record:
-                final RecordAudioDialogFragment fragment = RecordAudioDialogFragment.newInstance();
+                RecordAudioDialogFragment fragment = RecordAudioDialogFragment.newInstance();
                 fragment.show(getSupportFragmentManager(), RecordAudioDialogFragment.class.getSimpleName());
                 fragment.setDataListener(this);
-//                fragment.setOnCancelListener(new RecordAudioDialogFragment.OnAudioCancelListener() {
-//                    @Override
-//                    public void onCancel() {
-//                        if (!fragment.isRecording()) {
-//                            fragment.dismiss();
-//                        }
-//                    }
-//                });
                 break;
 
         }

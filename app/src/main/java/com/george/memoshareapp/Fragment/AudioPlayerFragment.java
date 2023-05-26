@@ -46,19 +46,7 @@ public class AudioPlayerFragment extends Fragment {
         cancelRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mediaPlayer != null) {
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    mediaPlayer = null;
-                    handler.removeCallbacks(runnable);
-                    getActivity().getSupportFragmentManager().beginTransaction().remove(AudioPlayerFragment.this).commit();
-                    HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
-                    if (adapter != null) {
-                        adapter.resetFragment();
-                        adapter.resetPlayingButton();
-                    }
-
-                }
+                closeRecord();
             }
         });
 
@@ -88,8 +76,33 @@ public class AudioPlayerFragment extends Fragment {
             fileLengthTextView.setText(getTime(mediaPlayer.getDuration()));
             mediaPlayer.start();
             updateSeekBar();
+
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    closeRecord();
+                }
+            });
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void closeRecord() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+            handler.removeCallbacks(runnable);
+            getActivity().getSupportFragmentManager().beginTransaction().remove(AudioPlayerFragment.this).commit();
+            HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
+            if (adapter != null) {
+                adapter.resetFragment();
+                adapter.resetPlayingButton();
+            }
         }
     }
 

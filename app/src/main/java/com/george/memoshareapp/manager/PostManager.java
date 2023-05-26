@@ -91,7 +91,7 @@ public class PostManager {
         post.save();
         if (post.getIsPublic() != 0) {
             HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
-            adapter.addData(post);
+            adapter.addData(post,imageUriList);
             EventBus.getDefault().post(new ScrollToTopEvent());
         }
         executor.shutdown();

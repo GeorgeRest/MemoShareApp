@@ -3,6 +3,7 @@ package com.george.memoshareapp.adapters;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
     private Context mContext;
     private List<Post> mData;
+    private List<Uri> photoUri;
     public AudioPlayerFragment fragment;
     private Map<ImageView, Fragment> buttonFragmentMap = new HashMap<>();
     private static HomeWholeRecyclerViewAdapter instance;
@@ -102,7 +104,12 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         } else {
             holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
         }
-        HomePhotoRecyclerViewAdapter innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext);
+        HomePhotoRecyclerViewAdapter innerAdapter=null;
+        if(photoUri!=null){
+            innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext, photoUri);
+        }else{
+            innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext);
+        }
         holder.innerRecyclerView.setAdapter(innerAdapter);
         holder.tv_username.setText(name);
         holder.tv_time.setText(DateFormat.getMessageDate(publishedTime));
@@ -115,10 +122,10 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             switch (holder.recordings.size()) {
                 case 3:
                     holder.record_three.setVisibility(View.VISIBLE);
-                    // no break here
+
                 case 2:
                     holder.record_two.setVisibility(View.VISIBLE);
-                    // no break here
+
                 case 1:
                     holder.record_one.setVisibility(View.VISIBLE);
             }
@@ -249,11 +256,11 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 isLike = sp.getBoolean(post.getId() + ":" + phoneNumber, false);
                 isLike = !isLike;
                 if (isLike) {
-                    holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like_click));
+                    holder.like.setImageResource(R.drawable.like_press);
                    post.setLike(++likeCount);
                    post.update(id);
                 } else {
-                    holder.like.setBackground(mContext.getResources().getDrawable(R.drawable.like));
+                    holder.like.setImageResource(R.drawable.like);
                     post.setLike(--likeCount);
                     post.update(id);
                 }
@@ -351,9 +358,9 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         void bind(Post post) {
             isLike = sp.getBoolean(post.getId() + ":" + phoneNumber, false);
             if (isLike) {
-                like.setBackground(mContext.getResources().getDrawable(R.drawable.like_click));
+                like.setImageResource(R.drawable.like_press);
             } else {
-                like.setBackground(mContext.getResources().getDrawable(R.drawable.like));
+                like.setImageResource(R.drawable.like);
             }
         }
     }
@@ -392,9 +399,12 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     }
 
 
-    public void addData(Post newData) {
+    public void addData(Post newData, List<Uri>photoUri) {
         this.mData.add(0, newData);  // 添加新的数据到列表的最前面
-        notifyItemInserted(0);  // 通知 adapter 在位置 0 插入了一条数据
+        this.photoUri=photoUri;
+        notifyItemInserted(0);
+
+        // 通知 adapter 在位置 0 插入了一条数据
 
     }
 

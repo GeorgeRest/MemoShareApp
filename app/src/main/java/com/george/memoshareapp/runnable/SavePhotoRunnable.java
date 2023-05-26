@@ -57,7 +57,6 @@ public class SavePhotoRunnable implements Runnable {
             outputStream.flush();
             outputStream.close();
 
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -88,6 +87,5 @@ public class SavePhotoRunnable implements Runnable {
         }
     }
 }
-
 
 
