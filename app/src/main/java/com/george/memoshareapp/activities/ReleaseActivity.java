@@ -78,6 +78,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private double longitude;
     private String location;
     private List<Recordings> recordingsList = new ArrayList<>();
+    ;
     private int StyleType = 5;
     private EditText release_edit;
     private ImageView release_back;
@@ -342,19 +343,18 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.release_button:
                 if (isInputEmpty()) {
-                    Toast.makeText(this, "请输入内容，或添加图片或语音", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                getSystemTime();
-                if (location == null) {
-                    location = "";
-                }
-                content = release_edit.getText().toString();
-                content = removeAtNames(content);
-                if (getImageUriList().size()==0){
                     Toast.makeText(this, "请添加图片", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                getSystemTime();
+
+                if (location == null) {
+                    location = "";
+                }
+
+                content = release_edit.getText().toString();
+                content = removeAtNames(content);
                 postManager.getDBParameter(getImageUriList(), phoneNumber, content, recordingsList, addedNames, location, longitude, latitude, PUBLIC_PERMISSION, getSystemTime(), memoryTime());
                 finish();
                 break;
@@ -427,13 +427,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     release_button.setImageResource(R.mipmap.release_buttton);
                 }
 
-
-//                if (!release_edit.getText().toString().isEmpty() || !getImageUriList().isEmpty() || !recordingsList.isEmpty()) {
-//                    release_button.setImageResource(R.mipmap.re_press);
-//                } else {
-//                    release_button.setImageResource(R.mipmap.release_buttton);
-//                }
-
                 break;
         }
     }
@@ -492,9 +485,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
     private boolean isInputEmpty() {
-//        boolean isEditTextEmpty = release_edit.getText().toString().trim().isEmpty();
+        boolean isEditTextEmpty = release_edit.getText().toString().trim().isEmpty();
         boolean isImageUriListEmpty = getImageUriList().isEmpty();
-//        boolean isRecordingsListEmpty = recordingsList.isEmpty();
+        boolean isRecordingsListEmpty = recordingsList.isEmpty();
 //        return isEditTextEmpty && isImageUriListEmpty && isRecordingsListEmpty;
         return isImageUriListEmpty;
     }
@@ -503,7 +496,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         boolean isPhotoListEmpty = getImageUriList().isEmpty(); // getImageUriList() 是你的方法，用于获取所有非空照片的Uri。
         boolean isAudioListEmpty = recordingsList.isEmpty(); // recordingsList是你的语音列表
 
-        if (!isEditTextEmpty || !isPhotoListEmpty || !isAudioListEmpty) {
+//        if (!isEditTextEmpty || !isPhotoListEmpty || !isAudioListEmpty) {
+        if(!isPhotoListEmpty){
             release_button.setImageResource(R.mipmap.re_press);
         } else {
             release_button.setImageResource(R.mipmap.release_buttton);
