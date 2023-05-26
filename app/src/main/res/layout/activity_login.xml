@@ -33,28 +33,34 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="15dp">
                 <TextView
                     android:id="@+id/tv_pw_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="密码登录 "/>
+                    android:text="密码登录 "
+                    android:textSize="16sp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="|"/>
+                    android:text="|"
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/tv_code_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="手机验证码登录"/>
+                    android:text="手机验证码登录"
+                    android:textSize="16sp"/>
             </LinearLayout>
             <FrameLayout
             android:id="@+id/frameLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp">
             </FrameLayout>
             <RelativeLayout
             android:layout_width="match_parent"
@@ -67,7 +73,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:text="忘记密码"
-                    android:textSize="16dp" />
+                    android:textSize="15sp"
+                    android:layout_marginLeft="15dp"/>
 
                 <TextView
                     android:id="@+id/tv_yx_lg_regist"
@@ -75,13 +82,14 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:text="去注册"
-                    android:textSize="16dp" />
+                    android:textSize="15sp"
+                    android:layout_marginRight="15dp"/>
 
                 <ImageButton
                     android:id="@+id/ib_yx_lg_login"
                     android:layout_width="match_parent"
                     android:layout_height="47dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="35dp"
                     android:background="@mipmap/button_login" />
             </RelativeLayout>
             <LinearLayout
