@@ -27,6 +27,127 @@ public class Post extends LitePalSupport implements Serializable {
     private double longitude;
     private double latitude;
     private int isPublic;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPublishedText() {
+        return publishedText;
+    }
+
+    public void setPublishedText(String publishedText) {
+        this.publishedText = publishedText;
+    }
+
+    public List<String> getPhotoCachePath() {
+        return photoCachePath;
+    }
+
+    public void setPhotoCachePath(List<String> photoCachePath) {
+        this.photoCachePath = photoCachePath;
+    }
+
+    public List<Recordings> getRecordings() {
+        return recordings;
+    }
+
+    public void setRecordings(List<Recordings> recordings) {
+        this.recordings = recordings;
+    }
+
+    public List<String> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<String> contacts) {
+        this.contacts = contacts;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public int getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(int isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public String getPublishedTime() {
+        return publishedTime;
+    }
+
+    public void setPublishedTime(String publishedTime) {
+        this.publishedTime = publishedTime;
+    }
+
+    public String getMemoryTime() {
+        return memoryTime;
+    }
+
+    public void setMemoryTime(String memoryTime) {
+        this.memoryTime = memoryTime;
+    }
+
+    public long getLike() {
+        return like;
+    }
+
+    public void setLike(long like) {
+        this.like = like;
+    }
+
+    public long getShare() {
+        return share;
+    }
+
+    public void setShare(long share) {
+        this.share = share;
+    }
+
+    public List<CommentBean> getCommentBeans() {
+        return commentBeans;
+    }
+
+    public void setCommentBeans(List<CommentBean> commentBeans) {
+        this.commentBeans = commentBeans;
+    }
+
     private String publishedTime;
     private String memoryTime;
     private long like;
@@ -53,164 +174,5 @@ public class Post extends LitePalSupport implements Serializable {
         this.memoryTime = memoryTime;
     }
 
-    public long getLike() {
-        return like;
-    }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setLike(long like) {
-        this.like = like;
-    }
-
-    public long getShare() {
-        return share;
-        public long getId () {
-            return id;
-        }
-
-        public void setId ( long id){
-            this.id = id;
-        }
-
-        public String getPhoneNumber () {
-            return phoneNumber;
-        }
-
-        public void setPhoneNumber (String phoneNumber){
-            this.phoneNumber = phoneNumber;
-        }
-
-        public String getPublishedText () {
-            return publishedText;
-        }
-
-        public void setPublishedText (String publishedText){
-            this.publishedText = publishedText;
-        }
-
-        public List<String> getPhotoCachePath () {
-            return photoCachePath;
-        }
-
-        public void setPhotoCachePath (List < String > photoCachePath) {
-            this.photoCachePath = photoCachePath;
-        }
-
-        public List<Recordings> getRecordings () {
-            return recordings;
-        }
-
-        public void setRecordings (List < Recordings > recordings) {
-            this.recordings = recordings;
-        }
-
-        public List<String> getContacts () {
-            return contacts;
-        }
-
-        public void setContacts (List < String > contacts) {
-            this.contacts = contacts;
-        }
-
-        public String getLocation () {
-            return location;
-        }
-
-        public void setLocation (String location){
-            this.location = location;
-        }
-
-        public double getLongitude () {
-            return longitude;
-        }
-
-        public void setLongitude ( double longitude){
-            this.longitude = longitude;
-        }
-
-        public double getLatitude () {
-            return latitude;
-        }
-
-        public void setLatitude ( double latitude){
-            this.latitude = latitude;
-        }
-
-        public int getIsPublic () {
-            return isPublic;
-        }
-
-        public void setIsPublic ( int isPublic){
-            this.isPublic = isPublic;
-        }
-
-        public String getPublishedTime () {
-            return publishedTime;
-        }
-
-        public void setPublishedTime (String publishedTime){
-            this.publishedTime = publishedTime;
-        }
-
-        public String getMemoryTime () {
-            return memoryTime;
-        }
-
-        public void setMemoryTime (String memoryTime){
-            this.memoryTime = memoryTime;
-        }
-
-        public List<CommentBean> getComments () {
-            if (commentBeans == null) {
-                commentBeans = new ArrayList<>();
-            }
-            return commentBeans;
-        }
-
-        public void setComments (List < CommentBean > commentBeans) {
-            this.commentBeans = commentBeans;
-        }
-
-
-        public long getLike () {
-            return like;
-        }
-
-        public void setLike ( long like){
-            this.like = like;
-        }
-
-        public long getShare () {
-            return share;
-        }
-
-        public void setShare ( long share){
-            this.share = share;
-        }
-
-        @Override
-        public String toString () {
-            return "Post{" +
-                    "phoneNumber='" + phoneNumber + '\'' +
-                    ", publishedText='" + publishedText + '\'' +
-                    ", photoCachePath=" + photoCachePath +
-                    ", recordings=" + recordings +
-                    ", contacts=" + contacts +
-                    ", location='" + location + '\'' +
-                    ", longitude=" + longitude +
-                    ", latitude=" + latitude +
-                    ", isPublic=" + isPublic +
-                    ", publishedTime='" + publishedTime + '\'' +
-                    ", memoryTime='" + memoryTime + '\'' +
-                    ", comments=" + comments +
-                    '}';
-        }
-    }
 }

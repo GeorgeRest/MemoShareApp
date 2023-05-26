@@ -8,13 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,15 +26,13 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.CommentAdapter;
 import com.george.memoshareapp.beans.CommentBean;
 import com.george.memoshareapp.beans.Post;
-import com.george.memoshareapp.events.LastClickedPositionEvent;
 import com.george.memoshareapp.beans.ReplyBean;
+import com.george.memoshareapp.events.LastClickedPositionEvent;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
-
-import org.greenrobot.eventbus.EventBus;
-import org.litepal.LitePal;
 import com.george.memoshareapp.view.NoScrollListView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
@@ -104,7 +100,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         detail_tv_like_number.setText(String.valueOf(likesCount));
         if (has_like) {
             like.setImageResource(R.mipmap.like_press);
-           likesCount++;
             detail_tv_like_number.setText(String.valueOf(likesCount));
         } else {
             like.setImageResource(R.mipmap.like);

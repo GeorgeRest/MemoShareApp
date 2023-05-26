@@ -55,8 +55,6 @@ public class SavePhotoRunnable implements Runnable {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 outputStream.flush();
                 outputStream.close();
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
