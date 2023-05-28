@@ -1,6 +1,7 @@
 package com.george.memoshareapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.Fragment.AudioPlayerFragment;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.beans.ContactInfo;
 import com.george.memoshareapp.beans.Post;
@@ -52,6 +54,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     private List<ContactInfo> contactPicture = new ArrayList<>();
     private Map<String, Integer> nameToPictureMap = new HashMap<>();
     private List<String> contactName= new ArrayList<>();
+    private Post post;
 
     public HomeWholeRecyclerViewAdapter() {
     }
@@ -86,6 +89,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.record_two.setTag(holder);
         holder.record_three.setTag(holder);
         holder.like.setTag(holder);
+        holder.chat.setTag(holder);
         Post post = mData.get(position);
         holder.bind(post);
         String phoneNumber = post.getPhoneNumber();
@@ -228,8 +232,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 Toast.makeText(mContext, "点击", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     @Override
@@ -240,7 +242,8 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     @Override
     public void onClick(View v) {
         ViewHolder holder = (ViewHolder) v.getTag();
-        Post post = mData.get(holder.getAdapterPosition());
+        post = mData.get(holder.getAdapterPosition());
+        System.out.println("===================="+ post);
         switch (v.getId()) {
             case R.id.like:
                 isLike = sp.getBoolean(post.getId() + ":" + phoneNumber, false);
@@ -252,15 +255,13 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 }
                 editor.putBoolean(post.getId() + ":" + phoneNumber, isLike);
                 editor.apply();
-
                 break;
-
-
-
-
-
-
-
+            case R.id.chat:
+                    Intent intent = new Intent(mContext, DetailActivity.class);
+                    intent.putExtra("shouldCheckComments", true);
+                    intent.putExtra("post", post);
+                    mContext.startActivity(intent);
+                break;
         }
         if (holder.recordings != null && !holder.recordings.isEmpty()) {
             switch (v.getId()) {
@@ -282,13 +283,12 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                         holder.record_three.setImageResource(R.drawable.record_bg_click);
                     }
                     break;
-
             }
         }
-
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView chat;
         ImageView like;
         TextView tv_username;
         TextView tv_time;
@@ -332,6 +332,8 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             record_two = itemView.findViewById(R.id.record_two);
             record_three = itemView.findViewById(R.id.record_three);
             like = itemView.findViewById(R.id.like);
+            chat = itemView.findViewById(R.id.chat);
+            chat.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             like.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_one.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_two.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
