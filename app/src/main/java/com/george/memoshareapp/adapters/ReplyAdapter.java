@@ -2,10 +2,12 @@ package com.george.memoshareapp.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +28,13 @@ public class ReplyAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private SpannableString ss;
     private Context context;
+    private Handler handler;
 
-    public ReplyAdapter(Context context, List<ReplyBean> list, int resourceId){
+    public ReplyAdapter(Context context, List<ReplyBean> list, int resourceId,Handler handler){
         this.list = list;
         this.context = context;
         this.resourceId = resourceId;
+        this.handler = handler;
         inflater = LayoutInflater.from(context);
     }
 
@@ -58,36 +62,60 @@ public class ReplyAdapter extends BaseAdapter {
             convertView = inflater.inflate(resourceId, null);
             holder.replyPhoto= (ImageView) convertView.findViewById(R.id.iv_reply_photo);
             holder.replyName= (TextView)convertView.findViewById(R.id.tv_reply_name);
-            holder.replyTime= (TextView)convertView.findViewById(R.id.tv_replyTime);
-            holder.replyText= (TextView)convertView.findViewById(R.id.replyContent);
+//            holder.replyTime= (TextView)convertView.findViewById(R.id.tv_replyTime);
+            holder.replyTextAndTime= (TextView)convertView.findViewById(R.id.replyContentAndTime);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
     }
         holder.replyPhoto.setImageResource(bean.getReplyUserPhoto());
         holder.replyName.setText(bean.getReplyNickname());
-        holder.replyTime.setText(getTimeFormatText(bean.getReplyTime()));
-        holder.replyText.setText(bean.getReplyContent());
+//        holder.replyTime.setText(getTimeFormatText(bean.getReplyTime()));
 
-        final String commentNickName = bean.getCommentNickname();
-        String replyContentStr = bean.getReplyContent();
+        String content = bean.getReplyContent();
+        String time = getTimeFormatText(bean.getReplyTime());
+        SpannableString spannableString = new SpannableString(content + "   " + time);
+        String commentNickName = bean.getCommentNickname();
         ss = new SpannableString("回复"+commentNickName
-                +"："+replyContentStr);
+                +"："+spannableString);
         ss.setSpan(new ForegroundColorSpan(Color.parseColor("#80202025")),2,
                 commentNickName.length()+2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        holder.replyText.setText(ss);
+        // 设置评论时间的字体大小和颜色
+        ss.setSpan(new RelativeSizeSpan(0.75f), commentNickName.length()+2+content.length() + 3, commentNickName.length()+3+content.length() + 3 + time.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE); // 75% of original size
+        ss.setSpan(new ForegroundColorSpan(Color.parseColor("#66202025")), commentNickName.length()+2+content.length() + 3, commentNickName.length()+3+content.length() + 3 + time.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE); // set color
+        holder.replyTextAndTime.setText(ss);
         //添加点击事件时，必须设置
-        holder.replyText.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.replyTextAndTime.setMovementMethod(LinkMovementMethod.getInstance());
+
+        TextviewClickListener tcl = new TextviewClickListener(position);
+        holder.replyTextAndTime.setOnClickListener(tcl);
         return convertView;
     }
 
     private final class ViewHolder{
         public ImageView replyPhoto;
         public TextView replyName;
-        public TextView replyText;
-        public TextView replyTime;
+        public TextView replyTextAndTime;
+//        public TextView replyTime;
     }
 
+    /**
+     * 事件点击监听器
+     */
+    private final class TextviewClickListener implements View.OnClickListener {
+        private int position;
+        public TextviewClickListener(int position){
+            this.position = position;
+        }
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.replyContentAndTime:
+                    handler.sendMessage(handler.obtainMessage(10, position));
+                    break;
+            }
+        }
+    }
     /**
      * 时间差
      *
