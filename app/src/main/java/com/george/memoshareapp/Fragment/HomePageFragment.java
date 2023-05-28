@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.events.LastClickedPositionEvent;
 import com.george.memoshareapp.events.ScrollToTopEvent;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
@@ -49,7 +50,7 @@ public class HomePageFragment extends Fragment {
     private DisplayManager displayManager;
     private List<Post> postList;
     private RecyclerView outerRecyclerView;
-
+    public static int lastClickedPosition=-1;
     public HomePageFragment() {
 
     }
@@ -86,19 +87,25 @@ public class HomePageFragment extends Fragment {
                     outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), postList);
                     outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     outerRecyclerView.setAdapter(outerAdapter);
+
                 }
                 smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
                 smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
                 smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
                     @Override
                     public void onLoadMore(RefreshLayout refreshlayout) {
-                        List<Post> newPosts = HomePageFragment.this.displayManager.getPostList();
-                        if (newPosts.isEmpty()||newPosts.size()==0) {
+                        List<Post> newPosts = displayManager.getPostList();
+                        if (newPosts.isEmpty() || newPosts.size() == 0) {
                             refreshlayout.setNoMoreData(true);
+                            System.out.println(postList+"-----------1");
                         } else {
+                            int initialSize = postList.size();
                             postList.addAll(newPosts);
-                            outerAdapter.notifyDataSetChanged();
+                            outerAdapter.notifyItemRangeInserted(initialSize,newPosts.size());
+                            System.out.println(postList+"-----------2");
+                            
                         }
+                        System.out.println(postList+"-----------3");
                         refreshlayout.finishLoadMore();
                     }
                 });
@@ -120,11 +127,21 @@ public class HomePageFragment extends Fragment {
         return rootView;
     }
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLastClickedPositionEvent(LastClickedPositionEvent event) {
+        lastClickedPosition = event.getPosition();
+        if (lastClickedPosition != -1) {
+            outerAdapter.notifyItemChanged(lastClickedPosition);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onScrollToTopEvent(ScrollToTopEvent event) {
         Log.d(TAG, "onScrollToTopEvent: 事件接收成功");
