@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,6 +82,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private List<CommentBean> list;
     private ImageView submitComment;           //发送按钮
     private TextView set_comments_number;
+    private ScrollView scrollView;
 
 
     @Override
@@ -89,6 +91,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_detail);
 
         init();
+
+
 
 
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
@@ -118,8 +122,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         content.setText(post.getPublishedText());
         photoPath = post.getPhotoCachePath();
 
-
-
         displayManager.showPhoto(recyclerView,photoPath,DetailActivity.this);
 
     }
@@ -128,7 +130,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void init() {
         intent = getIntent();
         post = (Post) intent.getSerializableExtra("post");
-
+        scrollView = (ScrollView) findViewById(R.id.scroll_view);
         displayManager = new DisplayManager();
         photoPath = new ArrayList<>();
 
@@ -164,6 +166,22 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         post = (Post) intent.getSerializableExtra("post");
         commentAdapter = new CommentAdapter(this, getCommentData(),R.layout.comment_item,handler);
         commentList.setAdapter(commentAdapter);
+
+        if (list.size() < 9) {
+            scrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            });
+        } else {
+            scrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.scrollTo(0, 1200);
+                }
+            });
+        }
 
     }
 

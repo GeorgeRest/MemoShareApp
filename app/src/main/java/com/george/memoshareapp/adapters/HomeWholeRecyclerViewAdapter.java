@@ -97,7 +97,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
         List<String> photoCachePath = post.getPhotoCachePath();
 
-if (photoCachePath == null || photoCachePath.size() == 0) {
+        if (photoCachePath == null || photoCachePath.size() == 0) {
             holder.innerRecyclerView.setVisibility(View.GONE);
         } else {
             holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
@@ -252,7 +252,15 @@ if (photoCachePath == null || photoCachePath.size() == 0) {
                 }
                 editor.putBoolean(post.getId() + ":" + phoneNumber, isLike);
                 editor.apply();
+
                 break;
+
+
+
+
+
+
+
         }
         if (holder.recordings != null && !holder.recordings.isEmpty()) {
             switch (v.getId()) {

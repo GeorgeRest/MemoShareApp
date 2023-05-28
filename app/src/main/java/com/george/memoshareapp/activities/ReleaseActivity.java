@@ -78,7 +78,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private double longitude;
     private String location;
     private List<Recordings> recordingsList = new ArrayList<>();
-    ;
     private int StyleType = 5;
     private EditText release_edit;
     private ImageView release_back;
