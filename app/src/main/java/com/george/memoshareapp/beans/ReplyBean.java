@@ -2,6 +2,8 @@ package com.george.memoshareapp.beans;
 
 import org.litepal.crud.LitePalSupport;
 
+import java.util.Date;
+
 public class ReplyBean extends LitePalSupport {
     private int id;					    //内容ID
     private CommentBean commentBean;    //回复对应的评论
@@ -11,7 +13,7 @@ public class ReplyBean extends LitePalSupport {
     private String commentPhoneNumber;	//被回复人账号
     private String commentNickname;	    //被回复人昵称（后期修改）
     private String replyContent;	    //回复的内容
-    private String replyTime;         //回复时间
+    private Date replyTime;         //回复时间
 
 
     public int getId() {
@@ -78,11 +80,11 @@ public class ReplyBean extends LitePalSupport {
         this.replyContent = replyContent;
     }
 
-    public String getReplyTime() {
+    public Date getReplyTime() {
         return replyTime;
     }
 
-    public void setReplyTime(String replyTime) {
-        this.replyTime = replyTime;
+    public void setReplyTime(Date replyTime) {
+        this.replyTime = replyTime == null ? new Date() : replyTime;
     }
 }

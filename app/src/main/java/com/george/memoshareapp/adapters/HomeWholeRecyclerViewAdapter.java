@@ -293,11 +293,6 @@ if (photoCachePath == null || photoCachePath.size() == 0) {
         ImageView iv_head_image_3;
         ImageView iv_head_image_2;
         ImageView iv_head_image_1;
-        private ImageView like;
-        private TextView tv_username;
-        private TextView tv_time;
-        private TextView tv_location;
-        private TextView tv_content;
         RecyclerView innerRecyclerView;
         List<Recordings> recordings;
         ImageView record_one;

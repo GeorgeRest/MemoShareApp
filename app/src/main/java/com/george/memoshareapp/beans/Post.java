@@ -53,9 +53,6 @@ public class Post extends LitePalSupport implements Serializable {
         this.memoryTime = memoryTime;
     }
 
-    public long getLike() {
-        return like;
-    }
 
     public long getId() {
         return id;
@@ -65,21 +62,9 @@ public class Post extends LitePalSupport implements Serializable {
         this.id = id;
     }
 
-    public void setLike(long like) {
-        this.like = like;
-    }
 
-    public long getShare() {
-        return share;
-        public long getId () {
-            return id;
-        }
 
-        public void setId ( long id){
-            this.id = id;
-        }
-
-        public String getPhoneNumber () {
+        public String getPhoneNumber() {
             return phoneNumber;
         }
 
@@ -167,16 +152,16 @@ public class Post extends LitePalSupport implements Serializable {
             this.memoryTime = memoryTime;
         }
 
-        public List<CommentBean> getComments () {
-            if (commentBeans == null) {
-                commentBeans = new ArrayList<>();
-            }
-            return commentBeans;
-        }
-
-        public void setComments (List < CommentBean > commentBeans) {
-            this.commentBeans = commentBeans;
-        }
+//        public List<CommentBean> getComments () {
+//            if (commentBeans == null) {
+//                commentBeans = new ArrayList<>();
+//            }
+//            return commentBeans;
+//        }
+//
+//        public void setComments (List < CommentBean > commentBeans) {
+//            this.commentBeans = commentBeans;
+//        }
 
 
         public long getLike () {
@@ -195,22 +180,25 @@ public class Post extends LitePalSupport implements Serializable {
             this.share = share;
         }
 
-        @Override
-        public String toString () {
-            return "Post{" +
-                    "phoneNumber='" + phoneNumber + '\'' +
-                    ", publishedText='" + publishedText + '\'' +
-                    ", photoCachePath=" + photoCachePath +
-                    ", recordings=" + recordings +
-                    ", contacts=" + contacts +
-                    ", location='" + location + '\'' +
-                    ", longitude=" + longitude +
-                    ", latitude=" + latitude +
-                    ", isPublic=" + isPublic +
-                    ", publishedTime='" + publishedTime + '\'' +
-                    ", memoryTime='" + memoryTime + '\'' +
-                    ", comments=" + comments +
-                    '}';
-        }
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", publishedText='" + publishedText + '\'' +
+                ", photoCachePath=" + photoCachePath +
+                ", recordings=" + recordings +
+                ", contacts=" + contacts +
+                ", location='" + location + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", isPublic=" + isPublic +
+                ", publishedTime='" + publishedTime + '\'' +
+                ", memoryTime='" + memoryTime + '\'' +
+                ", like=" + like +
+                ", share=" + share +
+                ", commentBeans=" + commentBeans +
+                '}';
     }
 }
+

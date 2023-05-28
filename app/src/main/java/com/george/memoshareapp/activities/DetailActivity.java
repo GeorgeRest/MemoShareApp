@@ -29,6 +29,7 @@ import com.george.memoshareapp.adapters.CommentAdapter;
 import com.george.memoshareapp.beans.CommentBean;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.ReplyBean;
+import com.george.memoshareapp.events.LastClickedPositionEvent;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
 import com.george.memoshareapp.view.NoScrollListView;
@@ -134,7 +135,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
 
     private void init() {
-
         displayManager = new DisplayManager();
         photoPath = new ArrayList<>();
 
@@ -156,6 +156,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         bottomLinear = (LinearLayout) findViewById(R.id.bottomLinear);
         commentLinear = (LinearLayout) findViewById(R.id.commentLinear);
         set_comments_number = (TextView) findViewById(R.id.tv_comments_number);
+        submitComment = (ImageView) findViewById(R.id.submitComment);
         back.setOnClickListener(this);
         userIcon.setOnClickListener(this);
         share.setOnClickListener(this);
@@ -302,8 +303,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             commentBean.setReplyList(replyBeans);
             list.add(commentBean);
         }
-
-
         return list;
     }
 
@@ -356,7 +355,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         CommentBean bean = new CommentBean();
         bean.setCommentUserPhoto(R.mipmap.photo_10);
         bean.setCommentUserName("seven");
-        bean.setCommentTime("13:30");
+        bean.setCommentTime(null);
         bean.setCommentUserPhoneNumber("12345");
         bean.setCommentContent(commentText);
         bean.save();
@@ -377,7 +376,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         ReplyBean bean = new ReplyBean();
         bean.setReplyUserPhoto(R.mipmap.photo_10);
         bean.setReplyNickname("seven");
-        bean.setReplyTime("11:10");
+        bean.setReplyTime(null);
         bean.setCommentNickname(list.get(position).getCommentUserName());
         bean.setReplyContent(commentText);
         bean.save();
