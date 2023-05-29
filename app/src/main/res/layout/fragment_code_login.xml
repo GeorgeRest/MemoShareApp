@@ -12,14 +12,16 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_rounded_rectangle_register"
         android:hint="请输入手机号"
-        android:textColorHint="#A3A1A1"
+        android:textSize="15dp"
+        android:textColorHint="#C7C6CE"
         android:inputType="phone"
         android:paddingLeft="15dp" />
 
         <RelativeLayout
+            android:id="@+id/rl_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="15dp">
 
             <EditText
                 android:id="@+id/fragment_et_code"
@@ -30,21 +32,30 @@
                 android:inputType="phone"
                 android:paddingLeft="15dp"
                 android:textColor="@color/black"
-                android:textColorHint="#A3A1A1" />
+                android:textColorHint="#C7C6CE"
+                android:textSize="15dp" />
 
+            <ImageView
+                android:layout_width="83dp"
 
-
+                android:layout_height="wrap_content"
+                android:src="@mipmap/code"
+                android:layout_alignTop="@id/fragment_et_code"
+                android:layout_alignBottom="@id/fragment_et_code"
+                android:layout_alignParentRight="true"
+                />
             <TextView
                 android:id="@+id/tv_getCode"
-                android:layout_width="100dp"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@id/fragment_et_code"
                 android:layout_alignBottom="@id/fragment_et_code"
                 android:layout_alignParentRight="true"
-                android:background="@mipmap/code"
                 android:gravity="center"
                 android:text="获取验证码"
                 android:textColor="#EFE9E9" />
+
+
         </RelativeLayout>
 
 </LinearLayout>

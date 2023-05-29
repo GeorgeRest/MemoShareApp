@@ -234,6 +234,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"/>
+
         <ImageView
             android:id="@+id/submitComment"
             android:layout_width="80dp"
