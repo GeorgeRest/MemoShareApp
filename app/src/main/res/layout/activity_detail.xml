@@ -12,6 +12,7 @@
         android:layout_height="40dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
+
         <ImageView
             android:id="@+id/detail_iv_back"
             android:layout_width="30dp"
@@ -19,42 +20,47 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:onClick="onClick"
-            android:src="@mipmap/back_register_contact" />
+            android:src="@mipmap/back" />
+
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
             android:maxWidth="200dp"
             android:text="详情"
             android:textColor="#525259"
-            android:textSize="20dp" />
+            android:textSize="15dp" />
 
     </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F8F4FA" />
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:scrollbars="none"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:paddingTop="10dp">
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            >
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp">
 
-                <com.george.memoshareapp.view.CircleImageView
+                <com.george.memoshareapp.view.NiceImageView
                     android:id="@+id/detail_iv_user_icon"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
@@ -82,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:text="2023-5-2  23:36"
                         android:textColor="#656161"
-                        android:textSize="12dp" />
+                        android:textSize="10dp" />
 
                     <TextView
                         android:id="@+id/detail_tv_location"
@@ -91,15 +97,16 @@
                         android:layout_marginLeft="10dp"
                         android:text="大连市高新万达"
                         android:textColor="#656161"
-                        android:textSize="12dp" />
+                        android:textSize="10dp" />
                 </LinearLayout>
             </RelativeLayout>
 
             <TextView
+                android:layout_marginLeft="32dp"
                 android:id="@+id/detail_tv_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="8dp"
                 android:text="今天天气好好呀~"
                 android:textColor="@color/black" />
 
@@ -107,14 +114,15 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="10dp"
                 android:background="#F8F4FA" />
 
             <TextView
@@ -125,6 +133,7 @@
                 android:text="共10条评论" />
 
             <com.george.memoshareapp.view.NoScrollListView
+                android:padding="10dp"
                 android:id="@+id/commentList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -200,7 +209,7 @@
 
     </LinearLayout>
 
-            <!-- 输入框、留言按钮 -->
+    <!-- 输入框、留言按钮 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -225,7 +234,6 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"/>
-        <!-- 发送 -->
         <ImageView
             android:id="@+id/submitComment"
             android:layout_width="80dp"
@@ -235,7 +243,4 @@
             android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical" />
     </LinearLayout>
-        </LinearLayout>
-
-
-
+</LinearLayout>

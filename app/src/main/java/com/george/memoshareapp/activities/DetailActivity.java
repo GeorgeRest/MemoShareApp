@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,6 +84,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private SharedPreferences.Editor editor1;
     private long likesCount;
     private String phoneNumber;
+    private ScrollView scrollView;
 
 
     @Override
@@ -100,7 +102,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         detail_tv_like_number.setText(String.valueOf(likesCount));
         if (has_like) {
             like.setImageResource(R.mipmap.like_press);
-            likesCount++;
             detail_tv_like_number.setText(String.valueOf(likesCount));
         } else {
             like.setImageResource(R.mipmap.like);
@@ -136,6 +137,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         displayManager = new DisplayManager();
         photoPath = new ArrayList<>();
 
+        scrollView = (ScrollView) findViewById(R.id.scroll_view);
         userName = (TextView) findViewById(R.id.detail_tv_username);
         publishTime = (TextView) findViewById(R.id.detail_tv_publish_time);
         location = (TextView) findViewById(R.id.detail_tv_location);
@@ -165,6 +167,25 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         post = (Post) intent.getSerializableExtra("post");
         commentAdapter = new CommentAdapter(this, getCommentData(),R.layout.comment_item,handler);
         commentList.setAdapter(commentAdapter);
+
+        boolean shouldCheckComments = getIntent().getBooleanExtra("shouldCheckComments", false);
+        if (shouldCheckComments) {
+            if (list.size() < 9) {
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                });
+            } else {
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.scrollTo(0, 1200);
+                    }
+                });
+            }
+        }
     }
 
     public void onClick(View view) {

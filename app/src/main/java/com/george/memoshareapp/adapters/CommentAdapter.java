@@ -101,7 +101,7 @@ public class CommentAdapter extends BaseAdapter {
         public ImageView commentItemImg;			//评论人图片
         public TextView commentNickname;			//评论人昵称
 //        public TextView commentItemTime;			//评论时间
-        public TextView commentItemContentAndTime;			//评论内容
+        public TextView commentItemContentAndTime;	//评论内容
         public NoScrollListView replyList;			//评论回复列表
     }
 
