@@ -10,11 +10,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.text.TextWatcher;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.Gravity;
@@ -80,7 +78,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private double longitude;
     private String location;
     private List<Recordings> recordingsList = new ArrayList<>();
-    ;
     private int StyleType = 5;
     private EditText release_edit;
     private ImageView release_back;
@@ -122,26 +119,26 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         rl_time.setOnClickListener(this);
         release_button.setOnClickListener(this);
         release_back.setOnClickListener(this);
-        release_edit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().isEmpty() || !getImageUriList().isEmpty() || !recordingsList.isEmpty()) {
-                    release_button.setImageResource(R.mipmap.re_press);
-                } else {
-                    release_button.setImageResource(R.mipmap.release_buttton);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+//        release_edit.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if (!s.toString().isEmpty() || !getImageUriList().isEmpty() || !recordingsList.isEmpty()) {
+//                    release_button.setImageResource(R.mipmap.re_press);
+//                } else {
+//                    release_button.setImageResource(R.mipmap.release_buttton);
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
 
 
     }
@@ -345,7 +342,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.release_button:
                 if (isInputEmpty()) {
-                    Toast.makeText(this, "请输入内容，或添加图片或语音", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "请添加图片", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -415,7 +412,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case RESULT_OK:
                 getPhotoFromAlbum(data);
-                if (!release_edit.getText().toString().isEmpty() || !getImageUriList().isEmpty() || !recordingsList.isEmpty()) {
+                if (!getImageUriList().isEmpty() ) {
                     release_button.setImageResource(R.mipmap.re_press);
                 } else {
                     release_button.setImageResource(R.mipmap.release_buttton);
@@ -467,11 +464,11 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         if (recording != null && type == 0) {
             recordingsList.remove(recording);
         }
-        if (!release_edit.getText().toString().isEmpty() || !getImageUriList().isEmpty() || !recordingsList.isEmpty()) {
-            release_button.setImageResource(R.mipmap.re_press);
-        } else {
-            release_button.setImageResource(R.mipmap.release_buttton);
-        }
+//        if (!release_edit.getText().toString().isEmpty() || !getImageUriList().isEmpty() || !recordingsList.isEmpty()) {
+//            release_button.setImageResource(R.mipmap.re_press);
+//        } else {
+//            release_button.setImageResource(R.mipmap.release_buttton);
+//        }
         Log.d("TAG", "onRecordingDataReceived: " + recordingsList.size());
         for (Recordings recordings : recordingsList) {
             String recordCachePath = recordings.getRecordCachePath();
@@ -482,14 +479,16 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         boolean isEditTextEmpty = release_edit.getText().toString().trim().isEmpty();
         boolean isImageUriListEmpty = getImageUriList().isEmpty();
         boolean isRecordingsListEmpty = recordingsList.isEmpty();
-        return isEditTextEmpty && isImageUriListEmpty && isRecordingsListEmpty;
+//        return isEditTextEmpty && isImageUriListEmpty && isRecordingsListEmpty;
+        return isImageUriListEmpty;
     }
     private void updateReleaseButton() {
         boolean isEditTextEmpty = release_edit.getText().toString().isEmpty();
         boolean isPhotoListEmpty = getImageUriList().isEmpty(); // getImageUriList() 是你的方法，用于获取所有非空照片的Uri。
         boolean isAudioListEmpty = recordingsList.isEmpty(); // recordingsList是你的语音列表
 
-        if (!isEditTextEmpty || !isPhotoListEmpty || !isAudioListEmpty) {
+//        if (!isEditTextEmpty || !isPhotoListEmpty || !isAudioListEmpty) {
+        if(!isPhotoListEmpty){
             release_button.setImageResource(R.mipmap.re_press);
         } else {
             release_button.setImageResource(R.mipmap.release_buttton);

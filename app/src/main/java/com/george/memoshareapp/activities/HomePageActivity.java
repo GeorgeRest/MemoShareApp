@@ -64,7 +64,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         icon_four.setOnClickListener(this);
         capsuleButton.setOnClickListener(this);
         sp = getSharedPreferences("User", MODE_PRIVATE);
-
     }
 
     @Override
