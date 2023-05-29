@@ -10,28 +10,27 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.media.AudioFormat;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
@@ -51,7 +50,6 @@ import com.zlw.main.recorderlib.recorder.listener.RecordStateListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,26 +71,16 @@ public class RecordAudioDialogFragment extends DialogFragment {
 
     private int mRecordPromptCount = 0;
     private static final int MAX_RECORD_TIME = 60;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
-    private Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            onRecord(false);
-        }
-    };
-
     private boolean mStartRecording = true;
     long timeWhenPaused = 0;
     private boolean isRecording = false;
-    private FloatingActionButton mFabRecord;
+    private FloatingActionButton record_start;
     private Chronometer mChronometerTime;
     private ImageView mIvClose;
-    private OnAudioCancelListener mListener;
     private RecordManager recordManager;
     private TextView record;
     public static int recordCount = 0;
     private RelativeLayout recordContainer;
-    private long elapsedMillis;
     private TextView newTextview;
     private Map<TextView, Recordings> recordMap;
     private SharedPreferences prefs;
@@ -107,6 +95,9 @@ public class RecordAudioDialogFragment extends DialogFragment {
     private static Map<ImageView, TextView> deleteMap = new HashMap<>();
     private static List<TextViewAndButton> textViewList = new ArrayList<>();
     private int marginTop;
+    private FloatingActionButton record_stop;
+    private LinearLayout ll_release;
+    private boolean isClosed = false;
 
     public static RecordAudioDialogFragment newInstance() {
         RecordAudioDialogFragment dialogFragment = new RecordAudioDialogFragment();
@@ -146,18 +137,26 @@ public class RecordAudioDialogFragment extends DialogFragment {
                 recordManager.setRecordResultListener(new RecordResultListener() {
                     @Override
                     public void onResult(File result) {
-                        //录音文件
-
-                        elapsedMillis = SystemClock.elapsedRealtime() - mChronometerTime.getBase();
-                        int formattedTime = formatElapsedTime(elapsedMillis);
+                        if(isClosed){
+                            boolean deleted = result.delete();
+                            Log.d(TAG, "onResult: "+deleted);
+                            return;
+                        }
+                        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                        retriever.setDataSource(result.getAbsolutePath());
+                        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                        long totalDurationMs = Long.parseLong(time);  // 总时长，单位为毫秒
+                        int formattedTime = formatElapsedTime(totalDurationMs);
+                        Log.d(TAG, "onResult: " + formattedTime + "“" + time);
                         newTextview.setText(formattedTime + "“");
                         recordMap = new HashMap<>();
                         Recordings recordings = new Recordings();
-                        Log.d(TAG, "onResult: "+recordings.getRecordCachePath());
-                        recordings.setRecordTime(elapsedMillis);
+                        recordings.setRecordTime(Long.parseLong(time));
                         recordings.setRecordCachePath(result.getAbsolutePath());
+                        Log.d(TAG, "onResult: " + recordings.getRecordCachePath());
+
                         if (recordingDataListener != null) {
-                            recordingDataListener.onRecordingDataReceived(recordings,1);
+                            recordingDataListener.onRecordingDataReceived(recordings, 1);
                         }
                         recordMap.put(newTextview, recordings);
                     }
@@ -179,29 +178,59 @@ public class RecordAudioDialogFragment extends DialogFragment {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_record_audio, null);
         initView(view);
+
         ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary));
-        mFabRecord.setBackgroundTintList(colorStateList);
-        mFabRecord.setRippleColor(getResources().getColor(R.color.colorPrimaryDark));
-        mFabRecord.setOnClickListener(new View.OnClickListener() {
+        record_start.setBackgroundTintList(colorStateList);
+        record_start.setRippleColor(getResources().getColor(R.color.colorPrimaryDark));
+        record_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onRecord(mStartRecording);
                 if (mStartRecording) {
-                    mHandler.postDelayed(mRunnable, MAX_RECORD_TIME * 1000);  // 开始计时
+                    mChronometerTime.start();
                 } else {
-                    mHandler.removeCallbacks(mRunnable);  // 取消计时
+                    mChronometerTime.stop();
                 }
                 mStartRecording = !mStartRecording;
+            }
+        });
+        record_stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isRecording){
+                    return;
+                }
+                mChronometerTime.stop();
+                timeWhenPaused = 0;
+                isRecording = false;
+                setCancelable(true);
+                Toasty.info(getActivity(), "录音结束...", Toast.LENGTH_SHORT).show();
+                recordManager.stop();
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                animatorStart();
+                dismiss();
             }
         });
 
         mIvClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onCancel();
-                if (isRecording) {
-                    onRecord(false);
+                isClosed=true;
+                if(!isRecording){
+                    getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    dismiss();
                 }
+                mChronometerTime.stop();
+                timeWhenPaused = 0;
+                isRecording = false;
+                setCancelable(true);
+                recordManager.stop();
+                Toasty.info(getActivity(), "取消录音", Toast.LENGTH_SHORT).show();
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                dismiss();
+
+
+
             }
         });
         builder.setView(view);
@@ -211,11 +240,28 @@ public class RecordAudioDialogFragment extends DialogFragment {
 
     private void initView(View view) {
         mChronometerTime = (Chronometer) view.findViewById(R.id.record_audio_chronometer_time);
-        mFabRecord = (FloatingActionButton) view.findViewById(R.id.record_audio_fab_record);
+        record_start = (FloatingActionButton) view.findViewById(R.id.record_start);
         mIvClose = (ImageView) view.findViewById(R.id.record_audio_iv_close);
         record = (TextView) getActivity().findViewById(R.id.record);
         recordContainer = (RelativeLayout) getActivity().findViewById(R.id.record_container);
+        record_stop = (FloatingActionButton) view.findViewById(R.id.record_stop);
         prefs = getActivity().getSharedPreferences("RecordCountPrefs", Context.MODE_PRIVATE);
+        ll_release = (LinearLayout) getActivity().findViewById(R.id.ll_release);
+
+
+        ll_release.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (textViewList != null && !textViewList.isEmpty()) {
+                    for (TextViewAndButton item : textViewList) {
+                        if (item.deleteButton.getVisibility() == View.VISIBLE) {
+                            item.deleteButton.setVisibility(View.GONE);
+                        }
+                    }
+                }
+                return false;
+            }
+        });
         editor = prefs.edit();
         editor.clear();
         editor.apply();
@@ -223,32 +269,30 @@ public class RecordAudioDialogFragment extends DialogFragment {
     }
 
     private void onRecord(boolean start) {
-
         if (start) {
-            mFabRecord.setImageResource(R.drawable.ic_media_stop);
-
+            record_start.setImageResource(R.drawable.ic_media_pause);
             Toasty.info(getActivity(), "开始录音...", Toast.LENGTH_SHORT).show();
-            mChronometerTime.setBase(SystemClock.elapsedRealtime());
+            if (isRecording) {
+                mChronometerTime.setBase(SystemClock.elapsedRealtime() - timeWhenPaused);
+                recordManager.resume();
+            } else {
+                mChronometerTime.setBase(SystemClock.elapsedRealtime());
+                recordManager.start();
+            }
             mChronometerTime.start();
-            recordManager.start();
             isRecording = true;
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             setCancelable(false);
 
         } else {
-            mFabRecord.setImageResource(R.drawable.ic_mic_white_36dp);
+            record_start.setImageResource(R.drawable.ic_mic_white_36dp);
+            timeWhenPaused = SystemClock.elapsedRealtime() - mChronometerTime.getBase();
             mChronometerTime.stop();
-            timeWhenPaused = 0;
-            isRecording = false;
-            setCancelable(true);
-            Toasty.info(getActivity(), "录音结束...", Toast.LENGTH_SHORT).show();
-            recordManager.stop();
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            animatorStart();
-            dismiss();
-
+            recordManager.pause();
+            Toasty.info(getActivity(), "暂停录音...", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private void animatorStart() {
         float currentX = record.getX();
@@ -287,8 +331,10 @@ public class RecordAudioDialogFragment extends DialogFragment {
         Log.d(TAG, "addNewImageViewAt: " + newTextview);
 
         ImageView deleteButton = new ImageView(getContext());
+
         TextViewAndButton textViewAndButton = new TextViewAndButton(newTextview, deleteButton);
         textViewList.add(textViewAndButton);
+
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -297,7 +343,7 @@ public class RecordAudioDialogFragment extends DialogFragment {
 
                 Recordings recordings = recordMap.get(textViewAndButton.textView);
                 if (recordingDataListener != null) {
-                    recordingDataListener.onRecordingDataReceived(recordings,0);
+                    recordingDataListener.onRecordingDataReceived(recordings, 0);
                 }
                 recordContainer.removeView(textViewAndButton.deleteButton);
                 textViewList.remove(textViewAndButton);
@@ -309,19 +355,18 @@ public class RecordAudioDialogFragment extends DialogFragment {
                     textParams.setMargins(prevTextViewRight, marginTop, 0, 0);
                     item.textView.setLayoutParams(textParams);
 
-                    // Adjust the position of the delete button associated with the TextView
                     RelativeLayout.LayoutParams buttonParams = (RelativeLayout.LayoutParams) item.deleteButton.getLayoutParams();
                     buttonParams.setMargins(prevTextViewRight, marginTop, 0, 0);
                     item.deleteButton.setLayoutParams(buttonParams);
 
-                    prevTextViewRight += item.textView.getWidth();
+                    prevTextViewRight += item.textView.getWidth()+3;
                 }
                 recordCount--;
                 if (recordCount < 3) {
                     record.setVisibility(View.VISIBLE);
                 }
                 float currentX = record.getX();
-                int distance = record.getWidth()+2;
+                int distance = record.getWidth() + 2;
                 float targetX = currentX - distance;
                 ObjectAnimator animator = ObjectAnimator.ofFloat(record, "translationX", targetX);
                 animator.setDuration(0);
@@ -334,7 +379,7 @@ public class RecordAudioDialogFragment extends DialogFragment {
         deleteButtonParams.addRule(RelativeLayout.ALIGN_START, newTextview.getId());
         deleteButtonParams.addRule(RelativeLayout.ALIGN_TOP, newTextview.getId());
         deleteButtonParams.setMargins((int) x, 20, 0, 0);
-
+        deleteButton.setVisibility(View.GONE);
         deleteButton.setLayoutParams(deleteButtonParams);
 
 
@@ -431,6 +476,16 @@ public class RecordAudioDialogFragment extends DialogFragment {
             record.setVisibility(View.GONE);
         }
 
+        newTextview.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                for (TextViewAndButton item : textViewList) {
+                    item.deleteButton.setVisibility(View.VISIBLE);
+                }
+
+                return true;
+            }
+        });
     }
 
 
@@ -449,17 +504,17 @@ public class RecordAudioDialogFragment extends DialogFragment {
         return !mStartRecording;
     }
 
-    public void setOnCancelListener(OnAudioCancelListener listener) {
-        this.mListener = listener;
-
-    }
+//    public void setOnCancelListener(OnAudioCancelListener listener) {
+//        this.mListener = listener;
+//
+//    }
 
     public void setDataListener(RecordingDataListener listener) {
         this.recordingDataListener = listener;
     }
 
 
-    public interface OnAudioCancelListener {
-        void onCancel();
-    }
+//    public interface OnAudioCancelListener {
+//        void onCancel();
+//    }
 }

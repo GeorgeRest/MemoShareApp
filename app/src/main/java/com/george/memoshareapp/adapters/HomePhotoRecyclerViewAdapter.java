@@ -3,6 +3,8 @@ package com.george.memoshareapp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.beans.Post;
 
+import java.io.File;
 import java.util.List;
 
 public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhotoRecyclerViewAdapter.ViewHolder> {
@@ -24,11 +27,19 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
     private List<String> mData;
     private Post post;
     Context context;
+    private List<Uri> photoPathList;
 
-    public HomePhotoRecyclerViewAdapter(List<String> data, Post post,Context context) {
+    public HomePhotoRecyclerViewAdapter(List<String> data, Post post, Context context) {
         this.mData = data;
         this.post = post;
-        this.context=context;
+        this.context = context;
+    }
+
+    public HomePhotoRecyclerViewAdapter(List<String> data, Post post, Context context, List<Uri> photoPathList) {
+        this.mData = data;
+        this.post = post;
+        this.context = context;
+        this.photoPathList = photoPathList;
     }
 
     @NonNull
@@ -46,20 +57,29 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
             if (position == 0) {
                 layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_large);
                 layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_large);
-            }else {
+            } else {
                 holder.imageView.setVisibility(View.GONE);
             }
         } else {
             layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_small);
             layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_small);
-            if (position > 3){
+            if (position > 3) {
                 holder.imageView.setVisibility(View.GONE);
             }
         }
         holder.imageView.setLayoutParams(layoutParams);
         String url = mData.get(position);
-        if (url != null && !url.isEmpty()) {
-             Glide.with(holder.imageView.getContext()).load(url).into(holder.imageView);
+        if (photoPathList != null) {
+            Uri uri = photoPathList.get(position);
+            Glide.with(holder.imageView.getContext())
+                    .load(uri)
+                    .into(holder.imageView);
+            Log.d("TAG", "onBindViewHolder: "+uri.toString());
+        } else if (url != null && !url.isEmpty()) {
+            Glide.with(holder.imageView.getContext())
+                    .load(new File(url))
+                    .into(holder.imageView);
+            Log.d("TAG", "onBindViewHolder: "+url);
         }
 
         if (position == 3 && size > 4) {
@@ -72,9 +92,9 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
 
     @Override
     public int getItemCount() {
-        if (mData.size() <=4) {
+        if (mData.size() <= 4) {
             return mData.size();
-        }else {
+        } else {
             return 4;
         }
     }
@@ -82,6 +102,7 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView extraImageCount;
+
         ViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image_view);
@@ -92,14 +113,11 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     // 处理子项点击事件的逻辑
-                    System.out.println("---------"+post);
+                    System.out.println("---------" + post);
 //                    页面传值，更改键值对即可
                     SharedPreferences sharedPreferences = context.getSharedPreferences("User", Context.MODE_PRIVATE);
                     Intent intent = new Intent(context, DetailActivity.class);
-                    boolean islike = sharedPreferences.getBoolean(post.getId() + ":" + sharedPreferences.getString("phoneNumber", ""), false);
                     intent.putExtra("post", post);
-                    intent.putExtra("islike", islike);
-
                     context.startActivity(intent);
                 }
             });

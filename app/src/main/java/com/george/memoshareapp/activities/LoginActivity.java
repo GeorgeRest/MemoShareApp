@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         hideFragment(transaction);
         switch (index) {
             case 0:
-                tv_pw_login.setTextColor(Color.BLACK);
+                tv_pw_login.setTextColor(Color.parseColor("#55377a"));
                 if (PwFragment == null) {
                     PwFragment = new PWLoginFragment();
                     transaction.add(R.id.frameLayout, PwFragment);
@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case 1:
             default:
-                tv_code_login.setTextColor(Color.BLACK);
+                tv_code_login.setTextColor(Color.parseColor("#55377a"));
                 if (CodeFragment == null) {
                     CodeFragment = new CodeLoginFragment();
                     transaction.add(R.id.frameLayout, CodeFragment);
@@ -162,6 +162,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Intent intent = new Intent(this, HomePageActivity.class);
 //                        intent.putExtra("phoneNumber", phoneNumber);
                         editor.putString("phoneNumber", phoneNumber);
+                        editor.putBoolean("isLogin",true);
                         editor.apply();
                         startActivity(intent);
                         Toasty.success(this, "登录成功", Toast.LENGTH_SHORT).show();
@@ -191,6 +192,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Intent intent = new Intent(this, HomePageActivity.class);
                             intent.putExtra("phoneNumber", phoneNumber);
                             editor.putString("phoneNumber", phoneNumber);
+                            editor.putBoolean("isLogin",true);
                             editor.apply();
                             startActivity(intent);
                             Toasty.success(this, "登录成功", Toast.LENGTH_SHORT).show();

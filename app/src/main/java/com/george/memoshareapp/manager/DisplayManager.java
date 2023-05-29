@@ -82,7 +82,6 @@ public class DisplayManager {
         LatLng latLng1 = new LatLng(latitude, longitude);
         String phoneNumber = sp.getString("phoneNumber", "");
         List<Post> postList = LitePal
-                .select("photocachepath", "longitude", "latitude", "contacts")
                 .where("phonenumber !=? and ispublic = ?", phoneNumber,"1")
                 .find(Post.class, true);
         if (postList != null) {

@@ -13,17 +13,19 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_rounded_rectangle_register"
         android:hint="请输入手机号"
-        android:textColorHint="#A3A1A1"
+        android:textSize="15dp"
+        android:textColorHint="#C7C6CE"
         android:inputType="phone"
         android:paddingLeft="15dp" />
     <EditText
                 android:id="@+id/et_pw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
                 android:background="@drawable/button_rounded_rectangle_register"
                 android:hint="请输入密码"
-                android:textColorHint="#A3A1A1"
+        android:textSize="15dp"
+                android:textColorHint="#C7C6CE"
                 android:textColor="@color/black"
                 android:inputType="textPassword"
                 android:paddingLeft="15dp" />

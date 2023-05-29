@@ -1,27 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginRight="3dp"
+    android:layout_width="80dp"
+    android:layout_height="105dp"
     android:layout_marginLeft="3dp"
-    app:cardCornerRadius="8dp">
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="3dp"
+    android:layout_marginBottom="8dp"
+   >
 
-    <LinearLayout
+
+
+    <ImageView
+        android:id="@+id/bottom_image_view"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@mipmap/img" />
+
+    <ImageView
+        android:id="@+id/bottom_image_view1"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/vector_drawable" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circle_image"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="2dp"
+        android:src="@mipmap/img" />
+
+    <TextView
+        android:id="@+id/bottom_time"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="80dp"
-            android:layout_height="100dp"
-            android:scaleType="centerCrop" />
-    </LinearLayout>
-
-</androidx.cardview.widget.CardView>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="1dp"
+        android:layout_marginRight="4dp"
+        android:text="20:21"
+        android:textColor="@color/black"
+        android:textSize="12dp" />
+</RelativeLayout>
 

@@ -4,13 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import android.util.Log;
-
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
-
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.events.ScrollToTopEvent;
@@ -91,7 +89,7 @@ public class PostManager {
         post.save();
         if (post.getIsPublic() != 0) {
             HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
-            adapter.addData(post);
+            adapter.addData(post,imageUriList);
             EventBus.getDefault().post(new ScrollToTopEvent());
         }
         executor.shutdown();

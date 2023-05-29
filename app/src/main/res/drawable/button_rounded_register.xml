@@ -5,7 +5,7 @@
     <solid android:color="#D5F4F4F4" />   <!-- 设置背景颜色 -->
     <size
         android:width="250dp"
-        android:height="45dp" />
+        android:height="37dp" />
     <stroke
         android:width="0dp"
         android:color="#E3DBDB"

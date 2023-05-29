@@ -84,6 +84,4 @@ public class LoadingDialog extends Dialog {
     }
 
 
-
-
 }
