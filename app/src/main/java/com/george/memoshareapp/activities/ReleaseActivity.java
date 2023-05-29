@@ -21,7 +21,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,10 +37,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.Fragment.RecordAudioDialogFragment;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.adapters.ImageAdapter;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
+import com.george.memoshareapp.interfaces.PhotoChangedListener;
 import com.george.memoshareapp.interfaces.RecordingDataListener;
 import com.george.memoshareapp.manager.PostManager;
 import com.george.memoshareapp.utils.CustomItemDecoration;
@@ -53,7 +52,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener, RecordingDataListener {
+public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener, RecordingDataListener, PhotoChangedListener {
 
     private static final String TAG = "ReleaseActivity";
     private static String timeHourMinute;
@@ -74,8 +73,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
     private Post post;
     private TextView record;
-    private Button mBtnRecordAudio;
-    private Button mBtnPlayAudio;
+
     private RelativeLayout rl_location;
     private TextView tv_location;
     private double latitude;
@@ -86,8 +84,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private int StyleType = 5;
     private EditText release_edit;
     private ImageView release_back;
-    private String editTextContent;
-    private TextView at;
+
     private RelativeLayout addat;
 
     private static final int MAX_IMAGES = 9;  // Maximum number of images
@@ -103,15 +100,15 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private String hour;
     private String minute;
     private String contactName;
-    private String release_edit1;
-    private List<String> photoPathList;
+
     private List<String> addedNames = new ArrayList<>();
     private SpannableString spannableString;
     private ClickableSpan clickableSpan;
     private String atText;
     public String phoneNumber;
-    private String userInput;
+
     private String content;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,13 +130,11 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().isEmpty()) {
+                if (!s.toString().isEmpty() || !getImageUriList().isEmpty() || !recordingsList.isEmpty()) {
                     release_button.setImageResource(R.mipmap.re_press);
-
                 } else {
                     release_button.setImageResource(R.mipmap.release_buttton);
                 }
-
             }
 
             @Override
@@ -186,7 +181,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
         // Add blank items in RecyclerView
         imageUriList.add(null);
-        imageAdapter = new ImageAdapter(this, imageUriList);
+        imageAdapter = new ImageAdapter(this,this, imageUriList);
         recyclerView.setAdapter(imageAdapter);
 
         // 设置 RecyclerView 中的 item 的相对位置
@@ -323,6 +318,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 imageAdapter.updateImageListAndButtonPosition(MAX_IMAGES);
             }
         }
+
     }
 
     //imageUriList即是所选择照片的uri，但因为我的逻辑需要判断list尾部是否存在null，在获取list时要做出判断，若有则需要移除，具体逻辑如下
@@ -348,6 +344,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 showDatePickerDialog(this, StyleType, release_time, calendar);
                 break;
             case R.id.release_button:
+                if (isInputEmpty()) {
+                    Toast.makeText(this, "请输入内容，或添加图片或语音", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 getSystemTime();
 
@@ -371,17 +371,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 break;
 
             case R.id.record:
-                final RecordAudioDialogFragment fragment = RecordAudioDialogFragment.newInstance();
+                RecordAudioDialogFragment fragment = RecordAudioDialogFragment.newInstance();
                 fragment.show(getSupportFragmentManager(), RecordAudioDialogFragment.class.getSimpleName());
                 fragment.setDataListener(this);
-                fragment.setOnCancelListener(new RecordAudioDialogFragment.OnAudioCancelListener() {
-                    @Override
-                    public void onCancel() {
-                        if (!fragment.isRecording()) {
-                            fragment.dismiss();
-                        }
-                    }
-                });
                 break;
 
         }
@@ -423,6 +415,12 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case RESULT_OK:
                 getPhotoFromAlbum(data);
+                if (!release_edit.getText().toString().isEmpty() || !getImageUriList().isEmpty() || !recordingsList.isEmpty()) {
+                    release_button.setImageResource(R.mipmap.re_press);
+                } else {
+                    release_button.setImageResource(R.mipmap.release_buttton);
+                }
+
                 break;
         }
     }
@@ -469,11 +467,39 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         if (recording != null && type == 0) {
             recordingsList.remove(recording);
         }
+        if (!release_edit.getText().toString().isEmpty() || !getImageUriList().isEmpty() || !recordingsList.isEmpty()) {
+            release_button.setImageResource(R.mipmap.re_press);
+        } else {
+            release_button.setImageResource(R.mipmap.release_buttton);
+        }
         Log.d("TAG", "onRecordingDataReceived: " + recordingsList.size());
         for (Recordings recordings : recordingsList) {
             String recordCachePath = recordings.getRecordCachePath();
             System.out.println(recordCachePath);
         }
     }
+    private boolean isInputEmpty() {
+        boolean isEditTextEmpty = release_edit.getText().toString().trim().isEmpty();
+        boolean isImageUriListEmpty = getImageUriList().isEmpty();
+        boolean isRecordingsListEmpty = recordingsList.isEmpty();
+        return isEditTextEmpty && isImageUriListEmpty && isRecordingsListEmpty;
+    }
+    private void updateReleaseButton() {
+        boolean isEditTextEmpty = release_edit.getText().toString().isEmpty();
+        boolean isPhotoListEmpty = getImageUriList().isEmpty(); // getImageUriList() 是你的方法，用于获取所有非空照片的Uri。
+        boolean isAudioListEmpty = recordingsList.isEmpty(); // recordingsList是你的语音列表
 
+        if (!isEditTextEmpty || !isPhotoListEmpty || !isAudioListEmpty) {
+            release_button.setImageResource(R.mipmap.re_press);
+        } else {
+            release_button.setImageResource(R.mipmap.release_buttton);
+        }
+    }
+
+
+
+    @Override
+    public void onPhotoChanged() {
+        updateReleaseButton();
+    }
 }

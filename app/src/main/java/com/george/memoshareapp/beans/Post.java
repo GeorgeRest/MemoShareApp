@@ -1,9 +1,10 @@
 package com.george.memoshareapp.beans;
 
 import org.litepal.crud.LitePalSupport;
-import org.w3c.dom.Comment;
+
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,8 +18,6 @@ import java.util.List;
  */
 public class Post extends LitePalSupport implements Serializable {
     private long id;
-
-
     private String phoneNumber;
     private String publishedText;
     private List<String> photoCachePath;
@@ -32,17 +31,19 @@ public class Post extends LitePalSupport implements Serializable {
     private String memoryTime;
     private long like;
     private long share;
-    private List<Comment> comments;
+    private List<CommentBean> commentBeans;
+
 
     public Post() {
-
+        commentBeans = new ArrayList<>();
     }
 
-    public Post(String phoneNumber, String publishedText, List<String> photoCachePath, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
+
+    public Post(String phoneNumber, String publishedText, List<String> photoCachePath, List<Recordings> recordings, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime) {
         this.phoneNumber = phoneNumber;
         this.publishedText = publishedText;
         this.photoCachePath = photoCachePath;
-        this.recordings = record;
+        this.recordings = recordings;
         this.contacts = contacts;
         this.location = location;
         this.longitude = longitude;
@@ -52,27 +53,12 @@ public class Post extends LitePalSupport implements Serializable {
         this.memoryTime = memoryTime;
     }
 
-    public long getLike() {
-        return like;
-    }
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public void setLike(long like) {
-        this.like = like;
-    }
-
-    public long getShare() {
-        return share;
-    }
-
-    public void setShare(long share) {
-        this.share = share;
     }
 
     public String getPhoneNumber() {
@@ -163,18 +149,35 @@ public class Post extends LitePalSupport implements Serializable {
         this.memoryTime = memoryTime;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public long getLike() {
+        return like;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public void setLike(long like) {
+        this.like = like;
+    }
+
+    public long getShare() {
+        return share;
+    }
+
+    public void setShare(long share) {
+        this.share = share;
+    }
+
+    public List<CommentBean> getCommentBeans() {
+        return commentBeans;
+    }
+
+    public void setCommentBeans(List<CommentBean> commentBeans) {
+        this.commentBeans = commentBeans;
     }
 
     @Override
     public String toString() {
         return "Post{" +
-                "phoneNumber='" + phoneNumber + '\'' +
+                "id=" + id +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", publishedText='" + publishedText + '\'' +
                 ", photoCachePath=" + photoCachePath +
                 ", recordings=" + recordings +
@@ -185,7 +188,10 @@ public class Post extends LitePalSupport implements Serializable {
                 ", isPublic=" + isPublic +
                 ", publishedTime='" + publishedTime + '\'' +
                 ", memoryTime='" + memoryTime + '\'' +
-                ", comments=" + comments +
+                ", like=" + like +
+                ", share=" + share +
+                ", commentBeans=" + commentBeans +
                 '}';
     }
 }
+

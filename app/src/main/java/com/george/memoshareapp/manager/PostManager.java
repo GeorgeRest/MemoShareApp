@@ -9,15 +9,12 @@ import androidx.annotation.RequiresApi;
 
 import android.util.Log;
 
-import com.george.memoshareapp.Fragment.HomePageFragment;
-import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
-import com.george.memoshareapp.beans.Comment;
+
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.events.ScrollToTopEvent;
 import com.george.memoshareapp.runnable.SavePhotoRunnable;
-import com.george.memoshareapp.utils.DateFormat;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -94,7 +91,7 @@ public class PostManager {
         post.save();
         if (post.getIsPublic() != 0) {
             HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
-            adapter.addData(post);
+            adapter.addData(post,imageUriList);
             EventBus.getDefault().post(new ScrollToTopEvent());
         }
         executor.shutdown();

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/ll_release"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="#F8F4FA">
+    android:background="#F8F4FA"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -24,38 +27,43 @@
             android:layout_alignParentRight="true"
             android:src="@mipmap/release_buttton" />
     </RelativeLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp"
-                ><EditText
+                android:padding="20dp">
+
+                <EditText
                     android:id="@+id/release_edit"
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="分享新鲜事..."
-                    android:background="@null"/>
+                    android:background="@null"
+                    android:hint="分享新鲜事..." />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="50dp"/>
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <RelativeLayout
                     android:id="@+id/record_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/record"
@@ -64,33 +72,32 @@
                         android:layout_marginTop="6dp"
                         android:background="@mipmap/voice" />
 
-        </RelativeLayout>
-
-
+                </RelativeLayout>
 
 
                 <RelativeLayout
                     android:id="@+id/rl_location"
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:visibility="gone">
+
                     <ImageView
                         android:layout_width="12dp"
                         android:layout_height="12dp"
                         android:layout_centerVertical="true"
                         android:src="@mipmap/location_icon" />
 
-            <TextView
-                android:id="@+id/tv_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:text="大连外国语大学"
-                android:textColor="#A9A9A9" />
-        </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tv_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:text="大连外国语大学"
+                        android:textColor="#A9A9A9" />
+                </RelativeLayout>
 
 
             </LinearLayout>
@@ -99,18 +106,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <RelativeLayout
                     android:id="@+id/rl_addat"
                     android:layout_width="match_parent"
                     android:layout_height="43dp"
                     android:background="@color/white">
+
                     <ImageView
                         android:id="@+id/at"
                         android:layout_width="12dp"
                         android:layout_height="12dp"
                         android:layout_centerVertical="true"
-                        android:src="@mipmap/at_icon"
-                        android:layout_marginLeft="30dp"/>
+                        android:layout_marginLeft="30dp"
+                        android:src="@mipmap/at_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -151,17 +160,18 @@
 
                 <RelativeLayout
                     android:id="@+id/RL_permission"
-                    android:layout_marginTop="2dp"
                     android:layout_width="match_parent"
                     android:layout_height="43dp"
+                    android:layout_marginTop="2dp"
                     android:background="@color/white">
+
                     <ImageView
                         android:id="@+id/permission_icon"
                         android:layout_width="12dp"
                         android:layout_height="12dp"
                         android:layout_centerVertical="true"
-                        android:src="@mipmap/permission_icon"
-                        android:layout_marginLeft="30dp"/>
+                        android:layout_marginLeft="30dp"
+                        android:src="@mipmap/permission_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -195,19 +205,21 @@
 
 
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/RL_time"
-                    android:layout_marginTop="2dp"
                     android:layout_width="match_parent"
                     android:layout_height="43dp"
+                    android:layout_marginTop="2dp"
                     android:background="@color/white">
+
                     <ImageView
                         android:id="@+id/memoirs_icon"
                         android:layout_width="12dp"
                         android:layout_height="12dp"
                         android:layout_centerVertical="true"
-                        android:src="@mipmap/memoirs_icon"
-                        android:layout_marginLeft="30dp"/>
+                        android:layout_marginLeft="30dp"
+                        android:src="@mipmap/memoirs_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -238,6 +250,7 @@
                         android:layout_marginRight="15dp"
                         android:text=""
                         android:textColor="@color/black" />
+
                     <TextView
 
                         android:layout_width="wrap_content"
@@ -252,10 +265,6 @@
                 </RelativeLayout>
 
 
-
-
-
-
             </LinearLayout>
         </LinearLayout>
 
@@ -267,7 +276,6 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="#2196F3"
-        android:visibility="invisible"
-        />
+        android:visibility="invisible" />
 
 </LinearLayout>

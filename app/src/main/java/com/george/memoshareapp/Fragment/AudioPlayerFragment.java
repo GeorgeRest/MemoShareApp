@@ -22,7 +22,7 @@ import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import java.io.IOException;
 
 public class AudioPlayerFragment extends Fragment {
-    public static  String AUDIO_FILE_PATH = "";
+    public static String AUDIO_FILE_PATH = "";
     private MediaPlayer mediaPlayer = null;
     private Handler handler;
     private Runnable runnable;
@@ -46,22 +46,9 @@ public class AudioPlayerFragment extends Fragment {
         cancelRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mediaPlayer != null) {
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    mediaPlayer = null;
-                    handler.removeCallbacks(runnable);
-                    getActivity().getSupportFragmentManager().beginTransaction().remove(AudioPlayerFragment.this).commit();
-                    HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
-                    if (adapter != null) {
-                        adapter.resetFragment();
-                    }
-
-                }
-                }
+                closeRecord();
+            }
         });
-
-
 
 
         return view;
@@ -89,8 +76,33 @@ public class AudioPlayerFragment extends Fragment {
             fileLengthTextView.setText(getTime(mediaPlayer.getDuration()));
             mediaPlayer.start();
             updateSeekBar();
+
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    closeRecord();
+                }
+            });
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void closeRecord() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+            handler.removeCallbacks(runnable);
+            getActivity().getSupportFragmentManager().beginTransaction().remove(AudioPlayerFragment.this).commit();
+            HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
+            if (adapter != null) {
+                adapter.resetFragment();
+                adapter.resetPlayingButton();
+            }
         }
     }
 
@@ -98,7 +110,7 @@ public class AudioPlayerFragment extends Fragment {
         int secondsTotal = duration / 1000; // 将毫秒转换为秒
         int minutes = secondsTotal / 60; // 计算分钟数
         int seconds = secondsTotal % 60; // 计算秒数
-       return String.format("%02d:%02d", minutes, seconds);
+        return String.format("%02d:%02d", minutes, seconds);
     }
 
     private void updateSeekBar() {
@@ -143,8 +155,9 @@ public class AudioPlayerFragment extends Fragment {
             }
         }
     }
+
     public void stopPlayback() {
-        if(mediaPlayer!=null){
+        if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;

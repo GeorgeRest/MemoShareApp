@@ -162,6 +162,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Intent intent = new Intent(this, HomePageActivity.class);
 //                        intent.putExtra("phoneNumber", phoneNumber);
                         editor.putString("phoneNumber", phoneNumber);
+                        editor.putBoolean("isLogin",true);
                         editor.apply();
                         startActivity(intent);
                         Toasty.success(this, "登录成功", Toast.LENGTH_SHORT).show();
@@ -191,6 +192,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Intent intent = new Intent(this, HomePageActivity.class);
                             intent.putExtra("phoneNumber", phoneNumber);
                             editor.putString("phoneNumber", phoneNumber);
+                            editor.putBoolean("isLogin",true);
                             editor.apply();
                             startActivity(intent);
                             Toasty.success(this, "登录成功", Toast.LENGTH_SHORT).show();

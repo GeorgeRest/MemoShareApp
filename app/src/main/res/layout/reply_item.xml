@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp" >
+
+<!--    回复人头像-->
+    <ImageView
+        android:id="@+id/iv_reply_photo"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@mipmap/photo_1"
+        android:layout_marginRight="8dp"/>
+
+<!--    回复人昵称-->
+    <TextView
+        android:id="@+id/tv_reply_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="seven"
+        android:textColor="#80202025"
+        android:textSize="13sp"
+        android:layout_toRightOf="@+id/iv_reply_photo"
+        android:layout_marginTop="1dp"/>
+
+<!--    回复时间-->
+    <TextView
+        android:id="@+id/tv_replyTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12:50"
+        android:textColor="#66202025"
+        android:textSize="7sp"
+        android:layout_below="@id/tv_reply_name"
+        android:layout_toRightOf="@+id/iv_reply_photo"
+        android:layout_marginTop="1dp" />
+
+    <!-- 回复的内容 -->
+    <TextView
+        android:id="@+id/replyContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hhhhhhhhhhhhhhh"
+        android:textColor="#202025"
+        android:textSize="12sp"
+        android:layout_toRightOf="@+id/iv_reply_photo"
+        android:layout_below="@+id/tv_replyTime"
+        android:layout_marginTop="1dp"/>
+
+</RelativeLayout>
