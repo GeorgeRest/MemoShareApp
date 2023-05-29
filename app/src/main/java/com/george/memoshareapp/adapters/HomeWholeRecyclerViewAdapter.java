@@ -187,10 +187,15 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
 
         treePosition = new DisplayManager(mContext).showMemoryTree(post.getLatitude(), post.getLongitude());
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) holder.cv_layout.getLayoutParams();
+        layoutParams.bottomMargin = 0;
+        holder.cv_layout.setLayoutParams(layoutParams);
 
         if (treePosition != null && treePosition.size() > 0) {
 
             if (post.getPhoneNumber().equals(phoneNumber)) {
+                layoutParams.bottomMargin = 0;
+                holder.cv_layout.setLayoutParams(layoutParams);
                 holder.rl_layout.setBackgroundResource(R.drawable.cardview_bg);
 //            holder.rv_myself_image.setLayoutManager(new GridLayoutManager(mContext, 10));
                 holder.rv_myself_image.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
@@ -215,7 +220,8 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 holder.image_view1.setVisibility(View.GONE);
                 holder.rv_myself_image.setVisibility(View.GONE);
 //                holder.sv_bottom.setVisibility(View.GONE);
-
+                layoutParams.bottomMargin = 5;
+                holder.cv_layout.setLayoutParams(layoutParams);
             }
 
         } else {
@@ -223,6 +229,8 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 //            holder.sv_bottom.setVisibility(View.GONE);
             holder.image_view1.setVisibility(View.GONE);
             holder.rv_myself_image.setVisibility(View.GONE);
+            layoutParams.bottomMargin = 5;
+            holder.cv_layout.setLayoutParams(layoutParams);
         }
 
 
