@@ -53,6 +53,7 @@ public class Post extends LitePalSupport implements Serializable {
         this.memoryTime = memoryTime;
     }
 
+
     public long getId() {
         return id;
     }
@@ -61,9 +62,11 @@ public class Post extends LitePalSupport implements Serializable {
         this.id = id;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
@@ -171,9 +174,7 @@ public class Post extends LitePalSupport implements Serializable {
 
     public void setCommentBeans(List<CommentBean> commentBeans) {
         this.commentBeans = commentBeans;
-    }
-
-    @Override
+    }@Override
     public String toString() {
         return "Post{" +
                 "id=" + id +

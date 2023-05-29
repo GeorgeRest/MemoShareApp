@@ -4,6 +4,7 @@ import org.litepal.crud.LitePalSupport;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.io.Serializable;
 
@@ -22,7 +23,7 @@ public class CommentBean extends LitePalSupport implements Serializable {
     private long id;
     private Post post;
     private String commentContent;
-    private String commentTime;
+    private Date commentTime;
     private String commentUserPhoneNumber;
     private String commentUserName;         //(后期修改)
     private int commentUserPhoto;           //(后期修改)
@@ -52,12 +53,12 @@ public class CommentBean extends LitePalSupport implements Serializable {
         this.commentContent = commentContent;
     }
 
-    public String getCommentTime() {
+    public Date getCommentTime() {
         return commentTime;
     }
 
-    public void setCommentTime(String commentTime) {
-        this.commentTime = commentTime;
+    public void setCommentTime(Date commentTime) {
+        this.commentTime = commentTime == null ? new Date() : commentTime;
     }
 
     public String getCommentUserPhoneNumber() {
