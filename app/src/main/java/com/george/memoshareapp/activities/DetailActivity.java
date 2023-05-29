@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private  int like_number;
     private ImageView userIcon;
     private TextView userName;
     private TextView publishTime;
@@ -56,17 +58,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private int commentNumber = 0;
     private DisplayManager displayManager;
     private boolean IS_LIKE = false;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
     private int shareNumber;
     private TextView detail_tv_share_number;
     private TextView detail_tv_like_number;
     private TextView detail_tv_comment_number;
-    private boolean has_like;
-    private SharedPreferences sharedPreferences1;
-    private SharedPreferences.Editor editor1;
-    private long likesCount;
-    private boolean homePageAlreadyPressedLike=false;
-    private String phoneNumber;
-
+    private List<String> ceShiList;
 
     private EditText commentEdit;		    //评论输入框
     private NoScrollListView commentList;   //评论数据列表
@@ -76,11 +74,17 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private int count;					    //记录评论ID
     private int position;				    //记录回复评论的索引
     private boolean isReply;			    //是否是回复
-    private String commentText = "";		//记录对话框中的内容
+    private String text = "";		    //记录对话框中的内容
     private CommentAdapter commentAdapter;
     private List<CommentBean> list;
     private ImageView submitComment;           //发送按钮
     private TextView set_comments_number;
+    private boolean has_like;
+    private SharedPreferences sharedPreferences1;
+    private SharedPreferences.Editor editor1;
+    private long likesCount;
+    private String phoneNumber;
+    private ScrollView scrollView;
 
 
     @Override
@@ -89,8 +93,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_detail);
 
         init();
-
-
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
         editor1 = sharedPreferences1.edit();
 
@@ -105,6 +107,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             like.setImageResource(R.mipmap.like);
         }
         putParameter2View();//传参
+        commentNumber = commentAdapter.getCount();
+        detail_tv_share_number.setText(shareNumber+"");
+        detail_tv_like_number.setText(like_number+"");
+        detail_tv_comment_number.setText(commentNumber+"");
+        set_comments_number.setText("共"+commentNumber+"条评论");
 
     }
 
@@ -122,16 +129,15 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         displayManager.showPhoto(recyclerView,photoPath,DetailActivity.this);
 
+
     }
 
 
     private void init() {
-        intent = getIntent();
-        post = (Post) intent.getSerializableExtra("post");
-
         displayManager = new DisplayManager();
         photoPath = new ArrayList<>();
 
+        scrollView = (ScrollView) findViewById(R.id.scroll_view);
         userName = (TextView) findViewById(R.id.detail_tv_username);
         publishTime = (TextView) findViewById(R.id.detail_tv_publish_time);
         location = (TextView) findViewById(R.id.detail_tv_location);
@@ -145,15 +151,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         detail_tv_like_number = (TextView) findViewById(R.id.detail_tv_like_number);
         detail_tv_comment_number = (TextView) findViewById(R.id.detail_tv_comment_number);
         recyclerView = findViewById(R.id.recycler_view);
-        submitComment = (ImageView) findViewById(R.id.submitComment);
-
-
         commentEdit = (EditText) findViewById(R.id.commentEdit);
         commentList = (NoScrollListView) findViewById(R.id.commentList);
         bottomLinear = (LinearLayout) findViewById(R.id.bottomLinear);
         commentLinear = (LinearLayout) findViewById(R.id.commentLinear);
         set_comments_number = (TextView) findViewById(R.id.tv_comments_number);
-
+        submitComment = (ImageView) findViewById(R.id.submitComment);
         back.setOnClickListener(this);
         userIcon.setOnClickListener(this);
         share.setOnClickListener(this);
@@ -165,9 +168,25 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         commentAdapter = new CommentAdapter(this, getCommentData(),R.layout.comment_item,handler);
         commentList.setAdapter(commentAdapter);
 
+        boolean shouldCheckComments = getIntent().getBooleanExtra("shouldCheckComments", false);
+        if (shouldCheckComments) {
+            if (list.size() < 9) {
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                });
+            } else {
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.scrollTo(0, 1200);
+                    }
+                });
+            }
+        }
     }
-
-
 
     public void onClick(View view) {
         switch (view.getId()) {
@@ -221,11 +240,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 }else {
                     detail_tv_like_number.setText(String.valueOf(likesCount));
                 }
-
                 break;
             default:
                 break;
         }
+
     }
     private void showBottomDialog() {
         //1、使用Dialog、设置style
@@ -276,10 +295,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         });
 
     }
-
-
-
-
 
     private void update() {
         int totalCount = LitePal.count(Post.class);
@@ -343,8 +358,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      * 判断对话框中是否输入内容
      */
     private boolean isEditEmply(){
-        commentText = commentEdit.getText().toString().trim();
-        if(commentText.equals("")){
+        text = commentEdit.getText().toString().trim();
+        if(text.equals("")){
             Toast.makeText(getApplicationContext(), "评论不能为空", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -359,9 +374,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         CommentBean bean = new CommentBean();
         bean.setCommentUserPhoto(R.mipmap.photo_10);
         bean.setCommentUserName("seven");
-        bean.setCommentTime("13:30");
+        bean.setCommentTime(null);
         bean.setCommentUserPhoneNumber("12345");
-        bean.setCommentContent(commentText);
+        bean.setCommentContent(text);
         bean.save();
         SQLiteDatabase db = LitePal.getDatabase();
         String sql = "UPDATE CommentBean SET post_id = ? WHERE id = ?";
@@ -380,9 +395,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         ReplyBean bean = new ReplyBean();
         bean.setReplyUserPhoto(R.mipmap.photo_10);
         bean.setReplyNickname("seven");
-        bean.setReplyTime("11:10");
+        bean.setReplyTime(null);
         bean.setCommentNickname(list.get(position).getCommentUserName());
-        bean.setReplyContent(commentText);
+        bean.setReplyContent(text);
         bean.save();
         SQLiteDatabase db = LitePal.getDatabase();
         String sql = "UPDATE ReplyBean SET commentbean_id = ? WHERE id = ?";
@@ -410,7 +425,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     /**
      * 事件点击监听器
      */
-
 
     @Override
     public void onBackPressed() {
