@@ -37,7 +37,7 @@ import java.util.List;
  * @date: 2023/5/14 23:09
  * @version: 1.0
  */
-public class HomePageFragment extends Fragment {
+public class HomePageFragment extends Fragment {//内部
 
     private static final String ARG_PARAM1 = "param1";
     private static final int PAGE_SIZE = 10;
@@ -109,8 +109,6 @@ public class HomePageFragment extends Fragment {
                         refreshlayout.finishLoadMore();
                     }
                 });
-
-
                 break;
 
             case "推荐":

@@ -102,10 +102,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         detail_tv_like_number.setText(String.valueOf(likesCount));
         if (has_like) {
             like.setImageResource(R.mipmap.like_press);
-            detail_tv_like_number.setText(String.valueOf(likesCount));
         } else {
             like.setImageResource(R.mipmap.like);
         }
+        detail_tv_like_number.setText(String.valueOf(likesCount));
         putParameter2View();//传参
         commentNumber = commentAdapter.getCount();
         detail_tv_share_number.setText(shareNumber+"");
