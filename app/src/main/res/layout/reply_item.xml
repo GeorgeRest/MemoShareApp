@@ -5,11 +5,11 @@
     android:padding="10dp" >
 
 <!--    回复人头像-->
-    <ImageView
+    <com.george.memoshareapp.view.NiceImageView
         android:id="@+id/iv_reply_photo"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:src="@mipmap/photo_1"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@mipmap/head_portrait"
         android:layout_marginRight="8dp"/>
 
 <!--    回复人昵称-->
