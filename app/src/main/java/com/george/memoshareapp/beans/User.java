@@ -15,6 +15,19 @@ public class User extends LitePalSupport {
     private long id;
     private String phoneNumber;
     private String password;
+    private int followCount;//关注数
+    private int fansCount;//粉丝数
+    private int friendCount;//好友数
+
+    public User(long id, String phoneNumber, String password, int followCount, int fansCount, int friendCount) {
+        this.id = id;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.followCount = followCount;
+        this.fansCount = fansCount;
+        this.friendCount = friendCount;
+    }
+
     public User() {
     }
 
@@ -26,9 +39,28 @@ public class User extends LitePalSupport {
         this.id = id;
     }
 
-    public User(String phoneNumber, String password) {
-        this.phoneNumber = phoneNumber;
-        this.password = password;
+    public int getFollowCount() {
+        return followCount;
+    }
+
+    public void setFollowCount(int followCount) {
+        this.followCount = followCount;
+    }
+
+    public int getFansCount() {
+        return fansCount;
+    }
+
+    public void setFansCount(int fansCount) {
+        this.fansCount = fansCount;
+    }
+
+    public int getFriendCount() {
+        return friendCount;
+    }
+
+    public void setFriendCount(int friendCount) {
+        this.friendCount = friendCount;
     }
 
     public String getPhoneNumber() {

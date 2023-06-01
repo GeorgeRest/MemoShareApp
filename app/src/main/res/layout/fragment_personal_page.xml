@@ -36,22 +36,19 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/person_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 app:layout_collapseMode="pin">
-
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="你的文字"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:visibility="invisible"/>
 
             </androidx.appcompat.widget.Toolbar>
-
-
-
-
-
-
-
-
-
-
-
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -173,52 +170,34 @@
             app:tabMode="fixed"
             app:tabGravity="fill" />
 
+
     </com.google.android.material.appbar.AppBarLayout>
 
-<!--    <androidx.core.widget.NestedScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="vertical"-->
-<!--            android:padding="10dp">-->
-
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginLeft="15dp"-->
-<!--                android:layout_marginTop="35dp"-->
-<!--                android:layout_marginRight="15dp"-->
-<!--                android:layout_marginBottom="15dp"-->
-<!--                app:cardCornerRadius="4dp">-->
-
-<!--                <TextView-->
-
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="10dp"-->
-<!--                    android:text="zugxxxxxxxxxxxxxxx"/>-->
-<!--            </androidx.cardview.widget.CardView>-->
-<!--        </LinearLayout>-->
-<!--    </androidx.core.widget.NestedScrollView>-->
-<!--    <Button-->
-<!--        android:layout_marginTop="600dp"-->
-<!--        android:id="@+id/quit_login"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_marginBottom="30dp"-->
-<!--        android:text="退出登录"-->
-<!--        android:onClick="quitLogin"/>-->
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/person_pager"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="250dp"></androidx.viewpager2.widget.ViewPager2>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/person_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="250dp">
 
+        </androidx.viewpager2.widget.ViewPager2>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+
+    <Button
+        android:layout_marginTop="600dp"
+        android:id="@+id/quit_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:text="退出登录"
+        android:onClick="quitLogin"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

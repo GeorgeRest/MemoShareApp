@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.PersonPageAdapter;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -23,6 +25,8 @@ public class NewPersonPageFragment extends Fragment {
     public ViewPager2 mViewPager2;
     private List<String> mData = new ArrayList<>();
     private PersonPageAdapter personpageadapter;
+    private AppBarLayout appBarLayout;
+    private TextView toolbarTitle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,22 @@ public class NewPersonPageFragment extends Fragment {
                 tab.setText(mData.get(position));
             }
         }).attach();
+
+        appBarLayout = rootView.findViewById(R.id.appBar);
+        toolbarTitle = rootView.findViewById(R.id.toolbar_title);
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+
+                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
+                    toolbarTitle.setVisibility(View.VISIBLE);
+                } else {
+                    toolbarTitle.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
     }
 
     private void initData() {
