@@ -28,6 +28,11 @@ public class User extends LitePalSupport {
         this.friendCount = friendCount;
     }
 
+    public User(String phoneNumber, String password) {
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+    }
+
     public User() {
     }
 

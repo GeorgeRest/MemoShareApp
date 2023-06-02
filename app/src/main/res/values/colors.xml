@@ -16,5 +16,6 @@
     <color name="text">#FFFFFF</color>
     <color name="white">#FFFFFF</color>
     <color name="new_text_color">#FE832A</color>
+    <color name="collapsingToolbarLayout">#FBE1FF</color>
 </resources>
 

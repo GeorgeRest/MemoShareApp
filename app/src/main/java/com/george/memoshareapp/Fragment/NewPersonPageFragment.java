@@ -1,5 +1,6 @@
 package com.george.memoshareapp.Fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,23 +51,17 @@ public class NewPersonPageFragment extends Fragment {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 tab.setText(mData.get(position));
+
             }
         }).attach();
+        mTabLayout.setTabTextColors(Color.WHITE, Color.parseColor("#685C97"));
 
         appBarLayout = rootView.findViewById(R.id.appBar);
-        toolbarTitle = rootView.findViewById(R.id.toolbar_title);
 
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 
-                if (Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
-                    toolbarTitle.setVisibility(View.VISIBLE);
-                } else {
-                    toolbarTitle.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+
+
+
 
     }
 
