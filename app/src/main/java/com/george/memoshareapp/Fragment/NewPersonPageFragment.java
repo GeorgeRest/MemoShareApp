@@ -57,6 +57,13 @@ public class NewPersonPageFragment extends Fragment {
         mTabLayout.setTabTextColors(Color.WHITE, Color.parseColor("#685C97"));
 
         appBarLayout = rootView.findViewById(R.id.appBar);
+        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+            View tab = ((ViewGroup) mTabLayout.getChildAt(0)).getChildAt(i);
+            if (tab != null) {
+                // 设置为null移除背景和点击效果
+                tab.setBackground(null);
+            }
+        }
 
 
 
