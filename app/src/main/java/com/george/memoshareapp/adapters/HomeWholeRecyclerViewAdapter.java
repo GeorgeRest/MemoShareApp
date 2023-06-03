@@ -34,7 +34,6 @@ import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.manager.DisplayManager;
-import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.DateFormat;
 
 import org.litepal.LitePal;
@@ -281,11 +280,13 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                     values.put("post_id", post.getId());
                     LitePal.getDatabase().insert("post_user", null, values);
 
-
                 } else {
                     holder.like.setImageResource(R.drawable.like);
                     post.setLike(--likeCount);
                     post.update(id);
+//                    ContentValues values = new ContentValues();
+//                    values.put("user_id", -1);
+//                    LitePal.update(Post.class, values,id);
                     LitePal.getDatabase().delete("post_user", "user_id = ? and post_id = ?",
                             new String[]{String.valueOf(user.getId()), String.valueOf(post.getId())});
 
