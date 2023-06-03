@@ -147,7 +147,7 @@ public class MapLocationActivity extends AppCompatActivity {
                         aMap.setMyLocationEnabled(true);
                         aMap.setMyLocationEnabled(true);
                         // 搜索周边地点
-                        searchNearbyPlaces(currentLocation);
+                        searchNearbyPlaces(currentLocation)  ;
                     }
                 }
             }

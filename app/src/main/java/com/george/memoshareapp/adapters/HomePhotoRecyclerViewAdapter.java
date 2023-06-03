@@ -28,18 +28,20 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
     private Post post;
     Context context;
     private List<Uri> photoPathList;
-
-    public HomePhotoRecyclerViewAdapter(List<String> data, Post post, Context context) {
+    private int outerAdapterPosition;
+    public HomePhotoRecyclerViewAdapter(List<String> data, Post post, Context context,int outerAdapterPosition) {
         this.mData = data;
         this.post = post;
         this.context = context;
+        this.outerAdapterPosition=outerAdapterPosition;
     }
 
-    public HomePhotoRecyclerViewAdapter(List<String> data, Post post, Context context, List<Uri> photoPathList) {
+    public HomePhotoRecyclerViewAdapter(List<String> data, Post post, Context context, List<Uri> photoPathList,int outerAdapterPosition) {
         this.mData = data;
         this.post = post;
         this.context = context;
         this.photoPathList = photoPathList;
+        this.outerAdapterPosition=outerAdapterPosition;
     }
 
     @NonNull
@@ -69,7 +71,7 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
         }
         holder.imageView.setLayoutParams(layoutParams);
         String url = mData.get(position);
-        if (photoPathList != null) {
+        if (outerAdapterPosition==0&&photoPathList != null) {
             Uri uri = photoPathList.get(position);
             Glide.with(holder.imageView.getContext())
                     .load(uri)

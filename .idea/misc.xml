@@ -85,7 +85,9 @@
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/homepage_photo_item.xml" value="0.26927083333333335" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/homepage_top_navigation_bar.xml" value="0.328125" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/homepage_whole_item.xml" value="0.37067395264116576" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_cardview_like.xml" value="0.33" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_nearby_place.xml" value="0.2703125" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/like_fragment.xml" value="0.28873873873873873" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/myelf_item_image.xml" value="0.2855855855855856" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/myself_photo_item.xml" value="0.2855855855855856" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/pager_item.xml" value="0.2855855855855856" />
@@ -107,7 +109,7 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

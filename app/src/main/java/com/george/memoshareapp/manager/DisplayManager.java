@@ -12,7 +12,9 @@ import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.DetailPhotoRecycleViewAdapter;
 import com.george.memoshareapp.activities.HomePageActivity;
+import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.utils.CustomItemDecoration;
 
 import org.litepal.LitePal;
@@ -76,6 +78,22 @@ public class DisplayManager {
         offset += limit;
         return postList;
     }
+    public List<Post> getLikePost() {
+        List<Post> LikePostList = new ArrayList<>();
+        String phoneNumber = sp.getString("phoneNumber", "");
+        User user = LitePal.where("phonenumber = ?", phoneNumber)
+                .findFirst(User.class, true);
+        List<Post> postList = user.getLikePosts();
+        for (Post post : postList) {
+            List<ImageParameters> imageParametersList = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(ImageParameters.class);
+            post.setImageParameters(imageParametersList);
+            System.out.println(post.getImageParameters().size());
+            LikePostList.add(post); // 把修改过的post添加到LikePostList
+        }
+        return LikePostList; // 返回LikePostList，而不是postList
+    }
+
+
 
     public List<Post> showMemoryTree(double latitude, double longitude) {
         treePostList.clear();

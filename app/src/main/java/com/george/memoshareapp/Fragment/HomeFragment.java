@@ -1,10 +1,12 @@
 package com.george.memoshareapp.Fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,6 +14,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.HomePagerAdapter;
+import com.george.memoshareapp.test.LikeFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -44,6 +47,14 @@ public class HomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         initData();
         initView(rootView);
+
+        ImageView more = rootView.findViewById(R.id.fragment_home_more);
+        more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+           startActivity(new Intent(getActivity(), LikeFragment.class));
+            }
+        });
         return rootView;
     }
 
@@ -58,6 +69,8 @@ public class HomeFragment extends Fragment {
                 tab.setText(mData.get(position));
             }
         }).attach();
+
+
     }
 
     private void initData() {
