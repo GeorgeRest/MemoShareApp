@@ -25,9 +25,6 @@ public class User extends LitePalSupport implements Serializable {
     private String gender;
     private Date birthday;
     private String region;
-    private List<User> followers = new ArrayList<>(); //粉丝
-    private List<User> following = new ArrayList<>();   //关注
-    private List<User> friends = new ArrayList<>(); //朋友
     private List<Post> likePosts =new ArrayList<>();
 
     public User() {
@@ -110,27 +107,4 @@ public class User extends LitePalSupport implements Serializable {
         this.region = region;
     }
 
-    public List<User> getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(List<User> followers) {
-        this.followers = followers;
-    }
-
-    public List<User> getFollowing() {
-        return following;
-    }
-
-    public void setFollowing(List<User> following) {
-        this.following = following;
-    }
-
-    public List<User> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<User> friends) {
-        this.friends = friends;
-    }
 }
