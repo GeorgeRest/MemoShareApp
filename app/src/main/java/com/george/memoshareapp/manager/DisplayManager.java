@@ -38,6 +38,7 @@ public class DisplayManager {
     Context Context;
     private DetailPhotoRecycleViewAdapter detailPhotoRecycleViewAdapter;
     List<Post> treePostList = new ArrayList<>();
+    private String phoneNumber;
 
     public DisplayManager() {
     }
@@ -81,8 +82,9 @@ public class DisplayManager {
     public List<Post> getLikePost() {
         List<Post> LikePostList = new ArrayList<>();
         String phoneNumber = sp.getString("phoneNumber", "");
-        User user = LitePal.where("phonenumber = ?", phoneNumber)
-                .findFirst(User.class, true);
+        User user = LitePal.select("id")
+                .where("phoneNumber = ?", phoneNumber)
+                .findFirst(User.class);
         List<Post> postList = user.getLikePosts();
         for (Post post : postList) {
             List<ImageParameters> imageParametersList = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(ImageParameters.class);

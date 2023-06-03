@@ -101,7 +101,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         likesCount = post.getLike();
         phoneNumber = sharedPreferences1.getString("phoneNumber", "");
-        user = LitePal.where("phonenumber = ?", phoneNumber).findFirst(User.class);
+        user = LitePal.select("id")
+                .where("phoneNumber = ?", phoneNumber)
+                .findFirst(User.class);
         has_like = sharedPreferences1.getBoolean(post.getId() + ":" + phoneNumber, false);
         detail_tv_like_number.setText(String.valueOf(likesCount));
         if (has_like) {

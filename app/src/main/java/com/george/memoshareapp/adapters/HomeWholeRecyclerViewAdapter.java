@@ -263,7 +263,9 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     public void onClick(View v) {
         ViewHolder holder = (ViewHolder) v.getTag();
         post = mData.get(holder.getAdapterPosition());
-        User user = LitePal.where("phonenumber = ?", phoneNumber).findFirst(User.class);
+        User user = LitePal.select("id, phoneNumber, password")
+                .where("phoneNumber = ?", phoneNumber)
+                .findFirst(User.class);
         System.out.println("====================" + post);
         switch (v.getId()) {
             case R.id.like:

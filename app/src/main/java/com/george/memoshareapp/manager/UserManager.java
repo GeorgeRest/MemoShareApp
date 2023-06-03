@@ -63,13 +63,17 @@ public class UserManager {
 
     public boolean changePassword(String phone, String pw) {
         LitePal.getDatabase();
-        User user = LitePal.where("phonenumber=?", phone).findFirst(User.class);
+        User user = LitePal.select("id, phoneNumber, password")
+                .where("phoneNumber = ?", phone)
+                .findFirst(User.class);
         user.setPassword(pw);
         return user.save();
     }
 
     public boolean queryUserInfo(String phone, String pw) {
-        User user = LitePal.where("phonenumber=?", phone).findFirst(User.class);
+        User user = LitePal.select("id, phoneNumber, password")
+                .where("phoneNumber = ?", phone)
+                .findFirst(User.class);
         if (user == null) {
             Toasty.info(context, "请先注册", Toast.LENGTH_SHORT, true).show();
             return false;
@@ -82,7 +86,9 @@ public class UserManager {
     }
 
     public boolean queryUser(String phone) {
-        User user = LitePal.where("phonenumber=?", phone).findFirst(User.class);
+        User user = LitePal.select("id, phoneNumber, password")
+                .where("phoneNumber = ?", phone)
+                .findFirst(User.class);
         if (user == null) {
             Toasty.info(context, "请先注册", Toast.LENGTH_SHORT, true).show();
             return false;
