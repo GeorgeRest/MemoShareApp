@@ -20,14 +20,36 @@ public class User extends LitePalSupport implements Serializable {
     private long id;
     private String phoneNumber;
     private String password;
-    private String name;
-    private String signature;
-    private String gender;
-    private Date birthday;
-    private String region;
-    private List<Post> likePosts =new ArrayList<>();
+    private String name; //忆享用户+id 例如：忆享用户1  需重新注册
+    private String headPortraitPath; //默认头像 如果用户没传头像 所有用户使用默认头像 背景同理
+    private String signature;   //暂时还没有简介(这是一句话)
+    private String gender; //男
+    private String birthday;
+    private String region; //中国
+    private String BackGroundPath; //默认背景
+    private List<Post> likePosts = new ArrayList<>();
 
     public User() {
+    }
+
+    public void generateDefaultName(int userIndex) {
+        name = "忆享用户" + userIndex;
+    }
+
+    public String getHeadPortraitPath() {
+        return headPortraitPath;
+    }
+
+    public void setHeadPortraitPath(String headPortraitPath) {
+        this.headPortraitPath = headPortraitPath;
+    }
+
+    public String getBackGroundPath() {
+        return BackGroundPath;
+    }
+
+    public void setBackGroundPath(String backGroundPath) {
+        BackGroundPath = backGroundPath;
     }
 
     public long getId() {
@@ -91,11 +113,11 @@ public class User extends LitePalSupport implements Serializable {
         this.gender = gender;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
@@ -106,5 +128,6 @@ public class User extends LitePalSupport implements Serializable {
     public void setRegion(String region) {
         this.region = region;
     }
+
 
 }

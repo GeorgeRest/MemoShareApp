@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<com.scwang.smart.refresh.layout.SmartRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/refreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#f9fbff">
+    android:layout_height="match_parent">
 
-
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleViewStagged"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp"/>
-</RelativeLayout>
+        android:background="#f9fbff">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleViewStagged"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+
+            android:dividerHeight="0dp" />
+    </RelativeLayout>
+
+    <com.scwang.smart.refresh.footer.ClassicsFooter
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+</com.scwang.smart.refresh.layout.SmartRefreshLayout>
+

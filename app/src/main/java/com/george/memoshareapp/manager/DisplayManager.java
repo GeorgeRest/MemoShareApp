@@ -32,7 +32,7 @@ import java.util.List;
  * @version: 1.0
  */
 public class DisplayManager {
-    private  SharedPreferences sp;
+    private SharedPreferences sp;
     private int offset = 0;
     private final int limit = 10;
     Context Context;
@@ -42,13 +42,14 @@ public class DisplayManager {
 
     public DisplayManager() {
     }
+
     public DisplayManager(Context context) {
         this.Context = context;
         sp = context.getSharedPreferences("User", Context.MODE_PRIVATE);
     }
 
 
-    public void showPhoto(RecyclerView recyclerView,List<String> photoPath, Context context) {
+    public void showPhoto(RecyclerView recyclerView, List<String> photoPath, Context context) {
 
 
         switch (photoPath.size()) {
@@ -64,12 +65,13 @@ public class DisplayManager {
                 break;
         }
         recyclerView.setHasFixedSize(true);
-        detailPhotoRecycleViewAdapter = new DetailPhotoRecycleViewAdapter(context,photoPath);
+        detailPhotoRecycleViewAdapter = new DetailPhotoRecycleViewAdapter(context, photoPath);
         recyclerView.setAdapter(detailPhotoRecycleViewAdapter);
         int spacingInPixels = context.getResources().getDimensionPixelSize(R.dimen.grid_expected_size);
         recyclerView.addItemDecoration(new CustomItemDecoration(spacingInPixels));
 
     }
+
     public List<Post> getPostList() {
         List<Post> postList = LitePal.where("ispublic = ?", "1")
                 .limit(limit)
@@ -79,12 +81,12 @@ public class DisplayManager {
         offset += limit;
         return postList;
     }
+
     public List<Post> getLikePost() {
         List<Post> LikePostList = new ArrayList<>();
         String phoneNumber = sp.getString("phoneNumber", "");
-        User user = LitePal.select("id")
-                .where("phoneNumber = ?", phoneNumber)
-                .findFirst(User.class);
+        User user = LitePal.where("phoneNumber = ?", phoneNumber)
+                .findFirst(User.class, true);
         List<Post> postList = user.getLikePosts();
         for (Post post : postList) {
             List<ImageParameters> imageParametersList = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(ImageParameters.class);
@@ -95,6 +97,30 @@ public class DisplayManager {
         return LikePostList; // 返回LikePostList，而不是postList
     }
 
+    public List<Post> getLikePost(int offset) {
+        List<Post> LikePostList = new ArrayList<>();
+        String phoneNumber = sp.getString("phoneNumber", "");
+        User user = LitePal.where("phoneNumber = ?", phoneNumber)
+                .findFirst(User.class, true);
+
+        List<Post> allLikedPosts = user.getLikePosts();
+
+        if (offset >= allLikedPosts.size()) {
+            return LikePostList;
+        }
+
+        int toIndex = Math.min(offset + 10, allLikedPosts.size());
+
+        List<Post> postList = allLikedPosts.subList(offset, toIndex);
+
+        for (Post post : postList) {
+            List<ImageParameters> imageParametersList = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(ImageParameters.class);
+            post.setImageParameters(imageParametersList);
+            System.out.println(post.getImageParameters().size());
+            LikePostList.add(post); // 把修改过的post添加到LikePostList
+        }
+        return LikePostList; // 返回LikePostList，而不是postList
+    }
 
 
     public List<Post> showMemoryTree(double latitude, double longitude) {
@@ -102,7 +128,7 @@ public class DisplayManager {
         LatLng latLng1 = new LatLng(latitude, longitude);
         String phoneNumber = sp.getString("phoneNumber", "");
         List<Post> postList = LitePal
-                .where("phonenumber !=? and ispublic = ?", phoneNumber,"1")
+                .where("phonenumber !=? and ispublic = ?", phoneNumber, "1")
                 .find(Post.class, true);
         if (postList != null) {
             for (Post post : postList) {

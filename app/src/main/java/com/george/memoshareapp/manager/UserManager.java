@@ -53,7 +53,16 @@ public class UserManager {
     public static boolean saveUserInfo(String phone, String pw) {
         LitePal.getDatabase();
         User user = new User(phone, pw);
-        return user.save();
+        user.setRegion("中国");
+        user.setGender("男");
+        user.setSignature("暂时还没有简介");
+        if (user.save()) {
+            long userId = user.getId();
+            user.generateDefaultName((int) userId);
+            user.update(user.getId());
+            return true;
+        }
+        return false;
     }
 
     public User isPhoneNumberRegistered(String phone) {
