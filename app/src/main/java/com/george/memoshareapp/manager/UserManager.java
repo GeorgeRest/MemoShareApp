@@ -58,7 +58,9 @@ public class UserManager {
 
     public User isPhoneNumberRegistered(String phone) {
         LitePal.getDatabase();
-        return LitePal.where("phonenumber=?", phone).findFirst(User.class);
+        return LitePal.select("id")
+                .where("phoneNumber = ?", phone)
+                .findFirst(User.class);
     }
 
     public boolean changePassword(String phone, String pw) {
