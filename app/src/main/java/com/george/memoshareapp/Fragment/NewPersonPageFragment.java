@@ -1,10 +1,13 @@
 package com.george.memoshareapp.Fragment;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.activities.LoginActivity;
 import com.george.memoshareapp.adapters.PersonPageAdapter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
@@ -28,11 +32,12 @@ public class NewPersonPageFragment extends Fragment {
     private PersonPageAdapter personpageadapter;
     private AppBarLayout appBarLayout;
     private TextView toolbarTitle;
-
+    private Button quit;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,10 +69,16 @@ public class NewPersonPageFragment extends Fragment {
                 tab.setBackground(null);
             }
         }
-
-
-
-
+        SharedPreferences sp = getActivity().getSharedPreferences("User", getActivity().MODE_PRIVATE);
+        quit = (Button) rootView.findViewById(R.id.quit_login);
+        quit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sp.edit().putBoolean("isLogin", false).commit();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
+            }
+        });
 
 
     }

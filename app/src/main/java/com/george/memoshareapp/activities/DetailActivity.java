@@ -120,6 +120,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         set_comments_number.setText("共" + commentNumber + "条评论");
 
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        likesCount = post.getLike();
+        detail_tv_like_number.setText(String.valueOf(likesCount));
+    }
+
 
     private void putParameter2View() {
 
