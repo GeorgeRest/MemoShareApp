@@ -6,6 +6,7 @@ import org.litepal.crud.LitePalSupport;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @projectName: Memosahre
@@ -32,6 +33,8 @@ public class Post extends LitePalSupport implements Serializable {
     private long like;
     private long share;
     private List<CommentBean> commentBeans;
+    private List<User> user=new ArrayList<>();
+    private List<ImageParameters> imageParameters;
 
 
     public Post() {
@@ -53,12 +56,21 @@ public class Post extends LitePalSupport implements Serializable {
         this.memoryTime = memoryTime;
     }
 
+
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public List<ImageParameters> getImageParameters() {
+        return imageParameters;
+    }
+
+    public void setImageParameters(List<ImageParameters> imageParameters) {
+        this.imageParameters = imageParameters;
     }
 
     public String getPhoneNumber() {
@@ -173,6 +185,14 @@ public class Post extends LitePalSupport implements Serializable {
         this.commentBeans = commentBeans;
     }
 
+    public List<User> getUser() {
+        return user;
+    }
+
+    public void setUser(List<User> user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -192,6 +212,19 @@ public class Post extends LitePalSupport implements Serializable {
                 ", share=" + share +
                 ", commentBeans=" + commentBeans +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return id == post.id && Double.compare(post.longitude, longitude) == 0 && Double.compare(post.latitude, latitude) == 0 && isPublic == post.isPublic && like == post.like && share == post.share && Objects.equals(phoneNumber, post.phoneNumber) && Objects.equals(publishedText, post.publishedText) && Objects.equals(photoCachePath, post.photoCachePath) && Objects.equals(recordings, post.recordings) && Objects.equals(contacts, post.contacts) && Objects.equals(location, post.location) && Objects.equals(publishedTime, post.publishedTime) && Objects.equals(memoryTime, post.memoryTime) && Objects.equals(commentBeans, post.commentBeans) && Objects.equals(user, post.user) && Objects.equals(imageParameters, post.imageParameters);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, phoneNumber, publishedText, photoCachePath, recordings, contacts, location, longitude, latitude, isPublic, publishedTime, memoryTime, like, share, commentBeans, user);
     }
 }
 

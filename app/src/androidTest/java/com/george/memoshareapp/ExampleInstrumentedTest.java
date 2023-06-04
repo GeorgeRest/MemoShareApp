@@ -10,6 +10,11 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
+import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.manager.DisplayManager;
+
+import java.util.List;
+
 /**
  * Instrumented test, which will execute on an Android device.
  *
@@ -17,10 +22,17 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+
+    private Context appContext;
+
     @Test
     public void useAppContext() {
         // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("com.george.litepaltest1", appContext.getPackageName());
+    }
+    @Test
+    public  void test_displayManager_getLikePost(){
+
     }
 }

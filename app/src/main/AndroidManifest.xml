@@ -29,14 +29,17 @@
         android:theme="@style/Theme.MemoShareApp"
         tools:targetApi="31">
         <activity
+            android:name=".test.LikeFragment"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+<activity
             android:name=".activities.FullScreenImageActivity"
             android:exported="false" />
-        <activity
-            android:name=".activities.DetailActivity"
-            android:exported="true">
-
-        </activity>
-
         <service
             android:name="com.zlw.main.recorderlib.recorder.RecordService"
             android:enabled="true"
@@ -51,6 +54,9 @@
 
         <activity
             android:name=".activities.ContactListActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.DetailActivity"
             android:exported="true" />
         <activity
             android:name=".activities.MapLocationActivity"
@@ -82,7 +88,11 @@
         <activity
             android:name=".activities.ReleaseActivity"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.LoginActivity"

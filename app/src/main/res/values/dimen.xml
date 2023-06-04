@@ -5,4 +5,5 @@
     <dimen name="image_size_detail">300dp</dimen>
     <dimen name="image_size_medium">210dp</dimen>
     <dimen name="image_size_small">140dp</dimen>
+    <dimen name="spacing">3dp</dimen>
 </resources>

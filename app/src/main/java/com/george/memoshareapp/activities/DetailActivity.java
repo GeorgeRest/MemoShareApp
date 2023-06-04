@@ -2,6 +2,7 @@ package com.george.memoshareapp.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,6 +29,7 @@ import com.george.memoshareapp.adapters.CommentAdapter;
 import com.george.memoshareapp.beans.CommentBean;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.ReplyBean;
+import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.events.LastClickedPositionEvent;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
@@ -41,7 +43,7 @@ import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private  int like_number;
+    private int like_number;
     private ImageView userIcon;
     private TextView userName;
     private TextView publishTime;
@@ -66,15 +68,15 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private TextView detail_tv_comment_number;
     private List<String> ceShiList;
 
-    private EditText commentEdit;		    //评论输入框
+    private EditText commentEdit;            //评论输入框
     private NoScrollListView commentList;   //评论数据列表
-    private LinearLayout bottomLinear;	    //底部分享、评论等线性布局
-    private LinearLayout commentLinear;	    //评论输入框线性布局
+    private LinearLayout bottomLinear;        //底部分享、评论等线性布局
+    private LinearLayout commentLinear;        //评论输入框线性布局
 
-    private int count;					    //记录评论ID
-    private int position;				    //记录回复评论的索引
-    private boolean isReply;			    //是否是回复
-    private String text = "";		    //记录对话框中的内容
+    private int count;                        //记录评论ID
+    private int position;                    //记录回复评论的索引
+    private boolean isReply;                //是否是回复
+    private String text = "";            //记录对话框中的内容
     private CommentAdapter commentAdapter;
     private List<CommentBean> list;
     private ImageView submitComment;           //发送按钮
@@ -85,6 +87,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private long likesCount;
     private String phoneNumber;
     private ScrollView scrollView;
+    private User user;
 
 
     @Override
@@ -98,6 +101,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         likesCount = post.getLike();
         phoneNumber = sharedPreferences1.getString("phoneNumber", "");
+        user = LitePal.select("id")
+                .where("phoneNumber = ?", phoneNumber)
+                .findFirst(User.class);
         has_like = sharedPreferences1.getBoolean(post.getId() + ":" + phoneNumber, false);
         detail_tv_like_number.setText(String.valueOf(likesCount));
         if (has_like) {
@@ -108,17 +114,17 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         detail_tv_like_number.setText(String.valueOf(likesCount));
         putParameter2View();//传参
         commentNumber = commentAdapter.getCount();
-        detail_tv_share_number.setText(shareNumber+"");
-        detail_tv_like_number.setText(like_number+"");
-        detail_tv_comment_number.setText(commentNumber+"");
-        set_comments_number.setText("共"+commentNumber+"条评论");
+        detail_tv_share_number.setText(shareNumber + "");
+        detail_tv_like_number.setText(like_number + "");
+        detail_tv_comment_number.setText(commentNumber + "");
+        set_comments_number.setText("共" + commentNumber + "条评论");
 
     }
 
     private void putParameter2View() {
 
         userIcon.setImageResource(R.mipmap.touxiangceshi);
-        userName.setText(post.getPhoneNumber().substring(0,5));
+        userName.setText(post.getPhoneNumber().substring(0, 5));
         publishTime.setText(DateFormat.getCurrentDateTime(post.getPublishedTime()));
 
         location.setText(post.getLocation());
@@ -126,8 +132,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         photoPath = post.getPhotoCachePath();
 
 
-
-        displayManager.showPhoto(recyclerView,photoPath,DetailActivity.this);
+        displayManager.showPhoto(recyclerView, photoPath, DetailActivity.this);
 
 
     }
@@ -136,14 +141,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void init() {
         displayManager = new DisplayManager();
         photoPath = new ArrayList<>();
-
         scrollView = (ScrollView) findViewById(R.id.scroll_view);
         userName = (TextView) findViewById(R.id.detail_tv_username);
         publishTime = (TextView) findViewById(R.id.detail_tv_publish_time);
         location = (TextView) findViewById(R.id.detail_tv_location);
         content = (TextView) findViewById(R.id.detail_tv_content);
         back = (ImageView) findViewById(R.id.detail_iv_back);
-        userIcon = (ImageView)findViewById(R.id.detail_iv_user_icon);
+        userIcon = (ImageView) findViewById(R.id.detail_iv_user_icon);
         share = (ImageView) findViewById(R.id.detail_iv_share);
         comment = (ImageView) findViewById(R.id.detail_iv_comment);
         like = (ImageView) findViewById(R.id.detail_iv_like);
@@ -165,7 +169,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         submitComment.setOnClickListener(this);
         intent = getIntent();
         post = (Post) intent.getSerializableExtra("post");
-        commentAdapter = new CommentAdapter(this, getCommentData(),R.layout.comment_item,handler);
+        commentAdapter = new CommentAdapter(this, getCommentData(), R.layout.comment_item, handler);
         commentList.setAdapter(commentAdapter);
 
         boolean shouldCheckComments = getIntent().getBooleanExtra("shouldCheckComments", false);
@@ -200,18 +204,18 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 showBottomDialog();
                 break;
 
-            case R.id.detail_iv_comment:		//底部评论按钮
+            case R.id.detail_iv_comment:        //底部评论按钮
                 isReply = false;
                 commentLinear.setVisibility(View.VISIBLE);
                 bottomLinear.setVisibility(View.GONE);
                 onFocusChange(true);
                 break;
 
-            case R.id.submitComment:	//发表评论按钮
-                if(isEditEmply()){		//判断用户是否输入内容
-                    if(isReply){
+            case R.id.submitComment:    //发表评论按钮
+                if (isEditEmply()) {        //判断用户是否输入内容
+                    if (isReply) {
                         replyComment();
-                    }else{
+                    } else {
                         publishComment();
                     }
                     bottomLinear.setVisibility(View.VISIBLE);
@@ -225,19 +229,25 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     like.setImageResource(R.mipmap.like);
                     likesCount--;
                     has_like = false;
+                    LitePal.getDatabase().delete("post_user", "user_id = ? and post_id = ?",
+                            new String[]{String.valueOf(user.getId()), String.valueOf(post.getId())});
                 } else {
                     like.setImageResource(R.mipmap.like_press);
                     likesCount++;
                     has_like = true;
+                    ContentValues values = new ContentValues();
+                    values.put("user_id", user.getId());
+                    values.put("post_id", post.getId());
+                    LitePal.getDatabase().insert("post_user", null, values);
                 }
                 editor1.putBoolean(post.getId() + ":" + phoneNumber, has_like);
                 editor1.apply();
                 update();
-                if (likesCount >10000){
+                if (likesCount > 10000) {
                     double converted = Math.floor((double) likesCount / 10000 * 10) / 10;
 
-                    detail_tv_like_number.setText(converted+"万");
-                }else {
+                    detail_tv_like_number.setText(converted + "万");
+                } else {
                     detail_tv_like_number.setText(String.valueOf(likesCount));
                 }
                 break;
@@ -246,6 +256,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         }
 
     }
+
     private void showBottomDialog() {
         //1、使用Dialog、设置style
         final Dialog dialog = new Dialog(this, R.style.DialogTheme);
@@ -269,11 +280,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 //跳转到联系人界面，最上面有最近的联系人，下面是所有联系人
                 //将链接发送到联系人中
                 shareNumber++;
-                if (shareNumber>10000){
+                if (shareNumber > 10000) {
                     double converted = Math.floor((double) shareNumber / 10000 * 10) / 10;
-                    detail_tv_share_number.setText(converted+"万");
+                    detail_tv_share_number.setText(converted + "万");
                 }
-                detail_tv_share_number.setText(shareNumber+"");
+                detail_tv_share_number.setText(shareNumber + "");
 
                 dialog.dismiss();
             }
@@ -305,19 +316,29 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        post.setLike(likesCount);
-        post.update(post.getId());
+
+        if (has_like) {
+            post.setLike(likesCount);
+            post.update(post.getId());
+
+        } else {
+            post.setLike(likesCount);
+            post.update(post.getId());
+
+
+        }
+
     }
 
 
     /**
      * 获取评论列表数据
      */
-    private List<CommentBean> getCommentData(){
+    private List<CommentBean> getCommentData() {
         list = new ArrayList<CommentBean>();
 
         List<CommentBean> commentBeans = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(CommentBean.class);
-        for (CommentBean commentBean:commentBeans) {
+        for (CommentBean commentBean : commentBeans) {
             List<ReplyBean> replyBeans = LitePal.where("commentbean_id = ?", String.valueOf(commentBean.getId())).find(ReplyBean.class);
             commentBean.setReplyList(replyBeans);
             list.add(commentBean);
@@ -328,7 +349,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     /**
      * 获取回复列表数据
      */
-    private List<ReplyBean> getReplyData(){
+    private List<ReplyBean> getReplyData() {
         List<ReplyBean> replyList = new ArrayList<ReplyBean>();
         return replyList;
     }
@@ -337,18 +358,18 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     /**
      * 显示或隐藏输入法
      */
-    private void onFocusChange(boolean hasFocus){
+    private void onFocusChange(boolean hasFocus) {
         final boolean isFocus = hasFocus;
         (new Handler()).postDelayed(new Runnable() {
             public void run() {
                 InputMethodManager imm = (InputMethodManager)
                         commentEdit.getContext().getSystemService(INPUT_METHOD_SERVICE);
-                if(isFocus)  {
+                if (isFocus) {
                     //显示输入法
                     imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-                }else{
+                } else {
                     //隐藏输入法
-                    imm.hideSoftInputFromWindow(commentEdit.getWindowToken(),0);
+                    imm.hideSoftInputFromWindow(commentEdit.getWindowToken(), 0);
                 }
             }
         }, 100);
@@ -357,9 +378,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     /**
      * 判断对话框中是否输入内容
      */
-    private boolean isEditEmply(){
+    private boolean isEditEmply() {
         text = commentEdit.getText().toString().trim();
-        if(text.equals("")){
+        if (text.equals("")) {
             Toast.makeText(getApplicationContext(), "评论不能为空", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -370,7 +391,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     /**
      * 发表评论
      */
-    private void publishComment(){
+    private void publishComment() {
         CommentBean bean = new CommentBean();
         bean.setCommentUserPhoto(R.mipmap.photo_10);
         bean.setCommentUserName("seven");
@@ -380,18 +401,18 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         bean.save();
         SQLiteDatabase db = LitePal.getDatabase();
         String sql = "UPDATE CommentBean SET post_id = ? WHERE id = ?";
-        db.execSQL(sql, new Object[] {post.getId(), bean.getId()});
+        db.execSQL(sql, new Object[]{post.getId(), bean.getId()});
         list.add(bean);
         commentAdapter.notifyDataSetChanged();
         commentNumber++;
         detail_tv_comment_number.setText(String.valueOf(commentNumber));
-        set_comments_number.setText("共"+commentNumber+"条评论");
+        set_comments_number.setText("共" + commentNumber + "条评论");
     }
 
     /**
      * 回复评论
      */
-    private void replyComment(){
+    private void replyComment() {
         ReplyBean bean = new ReplyBean();
         bean.setReplyUserPhoto(R.mipmap.photo_10);
         bean.setReplyNickname("seven");
@@ -401,27 +422,29 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         bean.save();
         SQLiteDatabase db = LitePal.getDatabase();
         String sql = "UPDATE ReplyBean SET commentbean_id = ? WHERE id = ?";
-        db.execSQL(sql, new Object[] {list.get(position).getId(), bean.getId()});
+        db.execSQL(sql, new Object[]{list.get(position).getId(), bean.getId()});
 
-        commentAdapter.getReplyComment(bean,position);
+        commentAdapter.getReplyComment(bean, position);
         commentAdapter.notifyDataSetChanged();
 
     }
+
     @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what == 10){
+            if (msg.what == 10) {
                 isReply = true;
-                position = (Integer)msg.obj;
-                System.out.println("=================postion"+position);
+                position = (Integer) msg.obj;
+                System.out.println("=================postion" + position);
                 commentLinear.setVisibility(View.VISIBLE);
                 bottomLinear.setVisibility(View.GONE);
                 onFocusChange(true);
             }
         }
     };
+
     /**
      * 事件点击监听器
      */
@@ -430,7 +453,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     public void onBackPressed() {
         super.onBackPressed();
         //判断控件是否显示
-        if(commentLinear.getVisibility() == View.VISIBLE){
+        if (commentLinear.getVisibility() == View.VISIBLE) {
             commentLinear.setVisibility(View.GONE);
             bottomLinear.setVisibility(View.VISIBLE);
         }

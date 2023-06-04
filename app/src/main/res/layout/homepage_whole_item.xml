@@ -1,260 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<RelativeLayout-->
-<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="wrap_content"-->
-<!--    android:paddingTop="10dp"-->
-<!--    android:background="#f8f4fa">-->
-<!--    <View-->
-<!--        android:id="@+id/dummy"-->
-<!--        android:layout_width="32dp"-->
-<!--        android:layout_height="32dp"-->
-<!--        android:visibility="invisible" />-->
-<!--    <androidx.cardview.widget.CardView-->
-<!--        android:id="@+id/cv_layout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:cardCornerRadius="16dp"-->
-<!--        android:layout_marginLeft="15dp"-->
-<!--        android:layout_marginRight="15dp"-->
-<!--        android:layout_below="@+id/dummy">-->
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/rl_layout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/tv_content"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginLeft="50dp"-->
-<!--                android:layout_marginTop="5dp"-->
-<!--                android:text="用户发表文本内容"-->
-<!--                android:textColor="@color/black"/>-->
-
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:id="@+id/rv_images"-->
-<!--                android:layout_width="280dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@id/tv_content"-->
-<!--                android:layout_centerHorizontal="true"-->
-<!--                android:scrollbarStyle="outsideOverlay" />-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@id/rv_images"-->
-<!--                android:layout_alignLeft="@id/rv_images"-->
-<!--                android:layout_marginTop="5dp"-->
-<!--                android:layout_marginBottom="15dp"-->
-<!--                android:orientation="horizontal">-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/record_one"-->
-<!--                    android:layout_width="36dp"-->
-<!--                    android:layout_height="36dp"-->
-<!--                    android:src="@mipmap/record_homepage"-->
-<!--                    android:visibility="gone"-->
-<!--                    android:clickable="true"/>-->
-<!--                <ImageView-->
-<!--                    android:id="@+id/record_two"-->
-<!--                    android:layout_width="36dp"-->
-<!--                    android:layout_height="36dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:src="@mipmap/record_homepage"-->
-<!--                    android:visibility="gone"-->
-<!--                    android:clickable="true"/>-->
-<!--                <ImageView-->
-<!--                    android:id="@+id/record_three"-->
-<!--                    android:layout_width="36dp"-->
-<!--                    android:layout_height="36dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:src="@mipmap/record_homepage"-->
-<!--                    android:visibility="gone"-->
-<!--                    android:clickable="true"/>-->
-<!--            </LinearLayout>-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/like"-->
-<!--                android:layout_width="25dp"-->
-<!--                android:layout_height="21dp"-->
-<!--                android:layout_below="@id/rv_images"-->
-<!--                android:layout_marginTop="15dp"-->
-<!--                android:layout_marginBottom="15dp"-->
-<!--                android:layout_toLeftOf="@id/chat"-->
-<!--                android:src="@drawable/like" />-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/chat"-->
-<!--                android:layout_width="25dp"-->
-<!--                android:layout_height="21dp"-->
-<!--                android:layout_below="@id/rv_images"-->
-<!--                android:layout_alignRight="@id/rv_images"-->
-<!--                android:layout_marginLeft="20dp"-->
-<!--                android:layout_marginTop="15dp"-->
-<!--                android:src="@mipmap/comment" />-->
-
-
-<!--        </RelativeLayout>-->
-<!--    </androidx.cardview.widget.CardView>-->
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/rl_head_images"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_toRightOf="@+id/dummy"-->
-<!--            android:layout_marginBottom="-80dp"-->
-<!--            android:layout_above="@+id/cv_layout"-->
-<!--            android:translationZ="2dp">-->
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:id="@+id/card_view"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:cardCornerRadius="16dp"-->
-<!--                app:cardElevation="0dp">-->
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/ll_head_images"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:background="#5F49BB"-->
-<!--                    android:padding="3dp"-->
-<!--                    android:layout_above="@+id/cv_layout">-->
-
-<!--                    <androidx.cardview.widget.CardView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        app:cardCornerRadius="16dp"-->
-<!--                        app:cardElevation="0dp">-->
-<!--                        <ImageView-->
-<!--                            android:id="@+id/iv_head_image_1"-->
-<!--                            android:layout_width="32dp"-->
-<!--                            android:layout_height="32dp"-->
-<!--                            android:src="@mipmap/default_image" />-->
-<!--                    </androidx.cardview.widget.CardView>-->
-
-<!--                    <androidx.cardview.widget.CardView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        app:cardCornerRadius="16dp"-->
-<!--                        app:cardElevation="0dp">-->
-<!--                        <ImageView-->
-<!--                            android:id="@+id/iv_head_image_2"-->
-<!--                            android:layout_width="32dp"-->
-<!--                            android:layout_height="32dp" />-->
-<!--                    </androidx.cardview.widget.CardView>-->
-
-<!--                    <androidx.cardview.widget.CardView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        app:cardCornerRadius="16dp"-->
-<!--                        app:cardElevation="0dp">-->
-<!--                        <ImageView-->
-<!--                            android:id="@+id/iv_head_image_3"-->
-<!--                            android:layout_width="32dp"-->
-<!--                            android:layout_height="32dp" />-->
-<!--                        <TextView-->
-<!--                            android:id="@+id/tv_head_out_number"-->
-<!--                            android:layout_width="32dp"-->
-<!--                            android:layout_height="32dp"-->
-<!--                            android:text=""-->
-<!--                            android:layout_centerInParent="true"-->
-<!--                            android:textColor="@android:color/white"-->
-<!--                            android:background="#80000000"-->
-<!--                            android:gravity="center"-->
-<!--                            android:textSize="7.5sp" />-->
-<!--                    </androidx.cardview.widget.CardView>-->
-
-<!--                </LinearLayout>-->
-<!--            </androidx.cardview.widget.CardView>-->
-
-<!--            <RelativeLayout-->
-<!--                android:id="@+id/rl_username"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_toRightOf="@+id/card_view"-->
-<!--                android:layout_alignBottom="@+id/card_view"-->
-<!--                android:layout_alignTop="@+id/card_view">-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_username"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="测试"-->
-<!--                    android:textSize="16sp"-->
-<!--                    android:textColor="@color/black"/>-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_time"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginLeft="5dp"-->
-<!--                    android:layout_alignBottom="@+id/tv_username"-->
-<!--                    android:layout_toRightOf="@id/tv_username"-->
-<!--                    android:text="发布于:12:00"-->
-<!--                    android:textSize="10sp"-->
-<!--                    android:textColor="@color/secondary_text"/>-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_location"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_alignBottom="@+id/tv_time"-->
-<!--                    android:layout_marginLeft="5dp"-->
-<!--                    android:layout_toRightOf="@id/tv_time"-->
-<!--                    android:text="深圳市万科云城设计公社"-->
-<!--                    android:textColor="@color/secondary_text"-->
-<!--                    android:maxLines="1"-->
-<!--                    android:ellipsize="end"-->
-<!--                    android:textSize="10sp" />-->
-<!--            </RelativeLayout>-->
-
-<!--        </RelativeLayout>-->
-
-
-<!--    <ScrollView-->
-<!--        android:id="@+id/sv_bottom"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_below="@+id/cv_layout">-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="140dp"-->
-<!--            android:orientation="vertical">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/image_view1"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:background="@mipmap/myself_item_button"-->
-<!--                android:text="那时那刻"-->
-<!--                android:textColor="#997AE7"-->
-<!--                android:gravity="center"-->
-<!--                android:visibility="gone"/>-->
-
-
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:id="@+id/image_recycler_view"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@drawable/myself_item_backgroud"-->
-<!--                android:layout_centerHorizontal="true"-->
-<!--                android:visibility="gone"/>-->
-<!--        </LinearLayout>-->
-
-<!--    </ScrollView>-->
-<!--</RelativeLayout>-->
-
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:background="#f8f4fa">
+    android:paddingTop="5dp">
     <View
         android:id="@+id/dummy"
         android:layout_width="32dp"
@@ -270,15 +20,16 @@
             android:id="@+id/card_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp">
+            app:cardCornerRadius="100dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#5F49BB">
             <LinearLayout
                 android:id="@+id/ll_head_images"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="#5F49BB"
-                android:padding="3dp">
+                android:padding="2dp">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
@@ -335,16 +86,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/card_view"
-            android:layout_alignBottom="@+id/card_view"
-            android:layout_alignTop="@+id/card_view">
+            android:layout_marginTop="7dp"
+            android:layout_marginLeft="3dp">
 
             <TextView
                 android:id="@+id/tv_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="测试"
-                android:textSize="16sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textSize="17sp" />
 
             <TextView
                 android:id="@+id/tv_time"
@@ -353,6 +104,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_alignBottom="@+id/tv_username"
                 android:layout_toRightOf="@id/tv_username"
+                android:layout_marginBottom="2dp"
                 android:text="发布于:12:00"
                 android:textSize="10sp"
                 android:textColor="@color/secondary_text"/>
@@ -381,7 +133,8 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/dummy">
+        android:layout_below="@+id/dummy"
+        android:layout_marginBottom="5dp">
         <RelativeLayout
             android:id="@+id/rl_layout"
             android:layout_width="match_parent"
@@ -391,10 +144,14 @@
                 android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginLeft="58dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="5dp"
                 android:text="用户发表文本内容"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_marginRight="58dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_images"

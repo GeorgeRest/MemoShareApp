@@ -103,7 +103,6 @@ public class HomePageFragment extends Fragment {//内部
                             postList.addAll(newPosts);
                             outerAdapter.notifyItemRangeInserted(initialSize,newPosts.size());
                             System.out.println(postList+"-----------2");
-                            
                         }
                         System.out.println(postList+"-----------3");
                         refreshlayout.finishLoadMore();

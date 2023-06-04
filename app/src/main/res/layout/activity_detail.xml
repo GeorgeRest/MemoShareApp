@@ -169,23 +169,25 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_gravity="center"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1">
+
             <ImageView
                 android:id="@+id/detail_iv_comment"
-                android:layout_marginLeft="50dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/comment_button"/>
+                android:layout_marginLeft="50dp"
+                android:src="@mipmap/comment_button" />
+
             <TextView
                 android:id="@+id/detail_tv_comment_number"
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#403D3D"/>
+                android:layout_marginLeft="10dp"
+                android:text="1"
+                android:textColor="#403D3D" />
         </LinearLayout>
         <LinearLayout
             android:layout_gravity="center"
@@ -198,12 +200,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/like"/>
+
             <TextView
                 android:id="@+id/detail_tv_like_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text=""
-                android:textColor="#403D3D"/>
+                android:textColor="#403D3D" />
         </LinearLayout>
 
     </LinearLayout>
