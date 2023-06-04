@@ -98,6 +98,16 @@
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true" />
 
+        <activity android:name=".activities.TestUserPublishActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
+
     </application>
 
 </manifest>

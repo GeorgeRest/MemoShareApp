@@ -82,7 +82,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         phoneNumber = sp.getString("phoneNumber", "");
         editor = sp.edit();
         initDate();
-        return new ViewHolder(view);
+        return new   ViewHolder(view);
     }
 
     @Override

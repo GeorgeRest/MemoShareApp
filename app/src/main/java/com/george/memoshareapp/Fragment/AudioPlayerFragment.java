@@ -18,6 +18,7 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.adapters.HomePagerAdapter;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
+import com.george.memoshareapp.adapters.UserPublishRecyclerAdapter;
 
 import java.io.IOException;
 
@@ -30,6 +31,7 @@ public class AudioPlayerFragment extends Fragment {
     private TextView currentProgressTextView;
     private TextView fileLengthTextView;
     private ImageView cancelRecord;
+
 
 
     @Nullable
@@ -99,9 +101,14 @@ public class AudioPlayerFragment extends Fragment {
             handler.removeCallbacks(runnable);
             getActivity().getSupportFragmentManager().beginTransaction().remove(AudioPlayerFragment.this).commit();
             HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
+            UserPublishRecyclerAdapter instance = UserPublishRecyclerAdapter.getInstance();
             if (adapter != null) {
                 adapter.resetFragment();
                 adapter.resetPlayingButton();
+            }
+            if (instance != null) {
+                instance.resetFragment();
+                instance.resetPlayingButton();
             }
         }
     }
