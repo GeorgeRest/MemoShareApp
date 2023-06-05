@@ -105,7 +105,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 .where("phoneNumber = ?", phoneNumber)
                 .findFirst(User.class);
         has_like = sharedPreferences1.getBoolean(post.getId() + ":" + phoneNumber, false);
-        detail_tv_like_number.setText(String.valueOf(likesCount));
+
         if (has_like) {
             like.setImageResource(R.mipmap.like_press);
         } else {
@@ -459,6 +459,16 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        if (has_like) {
+            post.setLike(likesCount);
+            post.update(post.getId());
+
+        } else {
+            post.setLike(likesCount);
+            post.update(post.getId());
+
+
+        }
         //判断控件是否显示
         if (commentLinear.getVisibility() == View.VISIBLE) {
             commentLinear.setVisibility(View.GONE);
