@@ -1,5 +1,6 @@
 package com.george.memoshareapp.adapters;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,8 +32,12 @@ import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.beans.ContactInfo;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
+import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
+
+import org.litepal.LitePal;
+import org.litepal.crud.LitePalSupport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,11 +113,11 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         } else {
             holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
         }
-        HomePhotoRecyclerViewAdapter innerAdapter=null;
-        if(photoUri!=null){
-            innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext, photoUri);
-        }else{
-            innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext);
+        HomePhotoRecyclerViewAdapter innerAdapter = null;
+        if (photoUri != null) {
+            innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext, photoUri, position);
+        } else {
+            innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext, position);
         }
         holder.innerRecyclerView.setAdapter(innerAdapter);
         holder.tv_username.setText(name);
@@ -257,8 +262,11 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     @Override
     public void onClick(View v) {
         ViewHolder holder = (ViewHolder) v.getTag();
-         post = mData.get(holder.getAdapterPosition());
-System.out.println("===================="+ post);
+        post = mData.get(holder.getAdapterPosition());
+        User user = LitePal.select("id, phoneNumber, password")
+                .where("phoneNumber = ?", phoneNumber)
+                .findFirst(User.class);
+        System.out.println("====================" + post);
         switch (v.getId()) {
             case R.id.like:
                 long likeCount = post.getLike();
@@ -267,21 +275,32 @@ System.out.println("===================="+ post);
                 isLike = !isLike;
                 if (isLike) {
                     holder.like.setImageResource(R.drawable.like_press);
-                   post.setLike(++likeCount);
-                   post.update(id);
+                    post.setLike(++likeCount);
+                    post.update(id);
+                    ContentValues values = new ContentValues();
+                    values.put("user_id", user.getId());
+                    values.put("post_id", post.getId());
+                    LitePal.getDatabase().insert("post_user", null, values);
+
                 } else {
                     holder.like.setImageResource(R.drawable.like);
                     post.setLike(--likeCount);
                     post.update(id);
+//                    ContentValues values = new ContentValues();
+//                    values.put("user_id", -1);
+//                    LitePal.update(Post.class, values,id);
+                    LitePal.getDatabase().delete("post_user", "user_id = ? and post_id = ?",
+                            new String[]{String.valueOf(user.getId()), String.valueOf(post.getId())});
+
                 }
                 editor.putBoolean(post.getId() + ":" + phoneNumber, isLike);
                 editor.apply();
                 break;
             case R.id.chat:
-                    Intent intent = new Intent(mContext, DetailActivity.class);
-                    intent.putExtra("shouldCheckComments", true);
-                    intent.putExtra("post", post);
-                    mContext.startActivity(intent);
+                Intent intent = new Intent(mContext, DetailActivity.class);
+                intent.putExtra("shouldCheckComments", true);
+                intent.putExtra("post", post);
+                mContext.startActivity(intent);
                 break;
         }
         if (holder.recordings != null && !holder.recordings.isEmpty()) {
@@ -416,9 +435,9 @@ System.out.println("===================="+ post);
     }
 
 
-    public void addData(Post newData, List<Uri>photoUri) {
+    public void addData(Post newData, List<Uri> photoUri) {
         this.mData.add(0, newData);  // 添加新的数据到列表的最前面
-        this.photoUri=photoUri;
+        this.photoUri = photoUri;
         notifyItemInserted(0);
 
         // 通知 adapter 在位置 0 插入了一条数据

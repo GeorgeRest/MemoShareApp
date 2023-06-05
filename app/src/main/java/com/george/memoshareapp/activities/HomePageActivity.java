@@ -13,7 +13,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.george.memoshareapp.Fragment.CalendarTripFragment;
 import com.george.memoshareapp.Fragment.HomeFragment;
 import com.george.memoshareapp.Fragment.MessageFragment;
-import com.george.memoshareapp.Fragment.PersonalPageFragment;
+
+import com.george.memoshareapp.Fragment.NewPersonPageFragment;
 import com.george.memoshareapp.R;
 
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener {
@@ -26,7 +27,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private MessageFragment messageFragment;
 
 
-    private PersonalPageFragment personalPageFragment;
+    private NewPersonPageFragment newPersonPageFragment;
 
     private ImageView icon_one;
 
@@ -128,13 +129,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             case 3:
             default:
                 icon_four.setImageResource(R.drawable.bottom_icon_four_click);
-                if (personalPageFragment == null) {
+                if (newPersonPageFragment == null) {
 
-                    personalPageFragment = new PersonalPageFragment();
-                    transaction.add(R.id.content, personalPageFragment);
+                    newPersonPageFragment = new NewPersonPageFragment();
+                    transaction.add(R.id.content, newPersonPageFragment);
                 } else {
 
-                    transaction.show(personalPageFragment);
+                    transaction.show(newPersonPageFragment);
                 }
                 break;
         }
@@ -160,8 +161,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         if (messageFragment != null) {
             transaction.hide(messageFragment);
         }
-        if (personalPageFragment != null) {
-            transaction.hide(personalPageFragment);
+        if (newPersonPageFragment != null) {
+            transaction.hide(newPersonPageFragment);
         }
     }
 
