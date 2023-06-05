@@ -32,15 +32,6 @@
             android:name=".EditProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".test.LikeFragment"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activities.FullScreenImageActivity"
             android:exported="false" />
 

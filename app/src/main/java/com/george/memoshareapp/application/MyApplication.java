@@ -4,8 +4,6 @@ import android.app.Application;
 
 import com.amap.api.maps2d.model.LatLng;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.george.memoshareapp.adapters.LikeAdapter;
-import com.george.memoshareapp.test.LikeFragment;
 import com.george.memoshareapp.utils.LocationUtil;
 
 import org.litepal.LitePal;
@@ -37,13 +35,13 @@ public class MyApplication extends Application {
 
         LitePal.initialize(this);
         Fresco.initialize(this);
-//        new LocationUtil(this).getLocation(new LocationUtil.LocationCallback() {
-//            @Override
-//            public void onLocationBack(LatLng latLng) {
-//                currentLatLng = latLng;
-//                System.out.println("currentLatLng = " + currentLatLng);
-//            }
-//        });
+        new LocationUtil(this).getLocation(new LocationUtil.LocationCallback() {
+            @Override
+            public void onLocationBack(LatLng latLng) {
+                currentLatLng = latLng;
+                System.out.println("currentLatLng = " + currentLatLng);
+            }
+        });
     }
     public static MyApplication getInstance() {
         return instance;
