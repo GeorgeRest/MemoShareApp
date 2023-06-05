@@ -6,17 +6,42 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.amap.api.maps2d.model.LatLng;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.adapters.LikeAdapter;
+import com.george.memoshareapp.application.MyApplication;
+import com.george.memoshareapp.beans.ImageParameters;
+import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.manager.DisplayManager;
+import com.george.memoshareapp.test.LikeFragment;
+import com.george.memoshareapp.test.SpacesItemDecoration;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
+
+import java.util.List;
 
 public class NewPersonFragment extends Fragment {
     //内部 选 点赞和发布
 
     private static final String ARG_PARAM1 = "param1";
     private String mParam1;
+    private RecyclerView recycleViewStagged;
+    private LatLng currentLatLng;
+    private List<ImageParameters> parameters;
+    private SmartRefreshLayout smartRefreshLayout;
+    private List<Post> likePost;
+    private LikeAdapter recyclerViewAdapter;
+    private int offset = 0;
 
     public NewPersonFragment() {
     }
+
     public static NewPersonFragment newInstance(String param1) {
         NewPersonFragment fragment = new NewPersonFragment();
         Bundle args = new Bundle();
@@ -24,6 +49,7 @@ public class NewPersonFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +67,42 @@ public class NewPersonFragment extends Fragment {
                 break;
             case "点赞":
                 rootView = inflater.inflate(R.layout.personalpage_pagefragment_dainzan, container, false);
+                recycleViewStagged = (RecyclerView) rootView.findViewById(R.id.recycleViewStagged);
+                smartRefreshLayout = (SmartRefreshLayout) rootView.findViewById(R.id.refreshLayout);
+                StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+                recycleViewStagged.setLayoutManager(layoutManager);
+                likePost = new DisplayManager(getActivity()).getLikePost(offset);
+                currentLatLng = ((MyApplication) getActivity().getApplication()).getCurrentLatLng();
+                recyclerViewAdapter = new LikeAdapter(getActivity(), likePost, currentLatLng);
+                ((DefaultItemAnimator) recycleViewStagged.getItemAnimator()).setSupportsChangeAnimations(false);
+                ((SimpleItemAnimator) recycleViewStagged.getItemAnimator()).setSupportsChangeAnimations(false);
+
+                recycleViewStagged.getItemAnimator().setChangeDuration(0);
+
+                recycleViewStagged.setHasFixedSize(true);
+                int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
+                recycleViewStagged.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
+                recycleViewStagged.setAdapter(recyclerViewAdapter);
+                DisplayManager displayManager = new DisplayManager(getActivity());
+                smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+                    @Override
+                    public void onLoadMore(RefreshLayout refreshlayout) {
+
+                        List<Post> newPosts = displayManager.getLikePost(offset);
+                        if (newPosts.isEmpty() || newPosts.size() == 0) {
+                            refreshlayout.setNoMoreData(true);
+                        } else {
+                            int initialSize = likePost.size();
+                            likePost.addAll(newPosts);
+                            recyclerViewAdapter.notifyItemRangeInserted(initialSize, newPosts.size());
+                            offset += 10;
+                        }
+                        refreshlayout.finishLoadMore();
+                    }
+                });
                 break;
+
             default:
                 break;
         }

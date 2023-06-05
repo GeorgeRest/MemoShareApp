@@ -80,7 +80,6 @@ public class NewPersonPageFragment extends Fragment {
             }
         });
 
-
     }
 
     private void initData() {
