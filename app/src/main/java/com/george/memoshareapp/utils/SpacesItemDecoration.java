@@ -1,4 +1,4 @@
-package com.george.memoshareapp.test;
+package com.george.memoshareapp.utils;
 
 import android.graphics.Rect;
 import android.view.View;

@@ -174,32 +174,19 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/person_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/person_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="250dp">
-
-
-        </androidx.viewpager2.widget.ViewPager2>
-
-
-    </androidx.core.widget.NestedScrollView>
-
+    </androidx.viewpager2.widget.ViewPager2>
 
     <Button
-        android:layout_marginTop="600dp"
         android:id="@+id/quit_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
+        android:layout_gravity="bottom"
         android:text="退出登录"
         android:onClick="quitLogin"/>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

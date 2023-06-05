@@ -14,6 +14,9 @@ public class LocationUtil {
     private LocationCallback mLocationCallback;
 
     public LocationUtil(Context context) {
+        AMapLocationClient.setApiKey("b73d5e0ad525991966aed0de9c8cecc5");
+        AMapLocationClient.updatePrivacyShow(context, true, true);
+        AMapLocationClient.updatePrivacyAgree(context, true);
         try {
             locationClient = new AMapLocationClient(context);
         } catch (Exception e) {
@@ -47,7 +50,6 @@ public class LocationUtil {
                         mLocationCallback.onLocationBack(result);
                     }
                 } else {
-
 
                 }
             }

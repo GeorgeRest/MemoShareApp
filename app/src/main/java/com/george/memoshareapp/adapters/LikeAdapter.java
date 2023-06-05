@@ -2,6 +2,7 @@ package com.george.memoshareapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -27,6 +28,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.view.ProportionalImageView;
@@ -50,7 +52,7 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.ViewHolder> {
     private Context context;
     private List<Post> posts;
     private LatLng currentLatLng;
-
+    private double maxRatio=1.33;
     public LikeAdapter(Context context, List<Post> posts, LatLng currentLatLng) {
         this.context = context;
         this.posts = posts;
@@ -78,23 +80,19 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.ViewHolder> {
         double longitude = post.getLongitude();
         if (latitude != 0.0 || longitude != 0.0) {
             LatLng latLng = new LatLng(latitude, longitude);
-            System.out.println(latLng+"-----------"+currentLatLng);
             float distance = AMapUtils.calculateArea(latLng, currentLatLng);
+            System.out.println("--------------distance:" + distance);
             DecimalFormat decimalFormat = new DecimalFormat("0.00");
             String formattedDistance = decimalFormat.format(distance / 1000.0f);
             float distanceKm = Float.parseFloat(formattedDistance);
             holder.distance.setText(distanceKm + "km");
         }
-
         holder.title.setText(title);
-
-        // Calculate the ratio using the obtained width and height.
         double ratio = (double) height / width;
-
-        // Set the height ratio before loading the image.
+        if(ratio>maxRatio){
+            ratio=maxRatio;
+        }
         holder.iv_photo.setHeightRatio(ratio);
-
-        // Load the image using Glide, without obtaining the bitmap first.
         Glide.with(context)
                 .load(photoCachePath)
                 .placeholder(R.drawable.loading)
@@ -120,7 +118,18 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.ViewHolder> {
             distance = (TextView) view.findViewById(R.id.like_distance);
             iv_photo = (ProportionalImageView) view.findViewById(R.id.iv_cardview_like);
             circleImageView = (CircleImageView) view.findViewById(R.id.iv_cardview_like_user);
-
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        Post clickedPost = posts.get(position);
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.putExtra("post", clickedPost);
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }
     }
 }
