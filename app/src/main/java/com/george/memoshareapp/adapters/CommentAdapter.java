@@ -91,7 +91,7 @@ public class CommentAdapter extends BaseAdapter {
         holder.commentItemContentAndTime.setText(spannableString);
 
 
-        ReplyAdapter adapter = new ReplyAdapter(context, bean.getReplyList(), R.layout.reply_item,handler,position);
+        ReplyAdapter adapter = new ReplyAdapter(context, bean.getReplyList(), R.layout.item_reply,handler,position);
 
         holder.replyList.setAdapter(adapter);
 

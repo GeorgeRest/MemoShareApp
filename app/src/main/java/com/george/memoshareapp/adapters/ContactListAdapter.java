@@ -23,10 +23,6 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
         this.contactList = contactList;
     }
 
-//    public void setContacts(List<ContactInfo> contactList) {
-//        this.contactList = contactList;
-//        notifyDataSetChanged();    // 更新适配器中的数据
-//    }
 
     @Override
     public int getCount() {
@@ -50,7 +46,7 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if(convertView == null){
-            convertView = View.inflate(context, R.layout.contact_list_item,null);
+            convertView = View.inflate(context, R.layout.item_contact_list,null);
             holder = new ViewHolder();
             holder.iv_photo = convertView.findViewById(R.id.iv_photo);
             holder.tv_name = convertView.findViewById(R.id.tv_name);

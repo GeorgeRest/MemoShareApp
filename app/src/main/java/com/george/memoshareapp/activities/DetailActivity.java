@@ -169,7 +169,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         intent = getIntent();
         post = (Post) intent.getSerializableExtra("post");
         manager = new DisplayManager();
-        commentAdapter = new CommentAdapter(this,manager.getCommentData(post),R.layout.comment_item,handler);
+        commentAdapter = new CommentAdapter(this,manager.getCommentData(post),R.layout.item_comment,handler);
         commentList.setAdapter(commentAdapter);
 
         boolean shouldCheckComments = getIntent().getBooleanExtra("shouldCheckComments", false);

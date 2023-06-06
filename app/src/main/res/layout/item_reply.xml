@@ -23,20 +23,6 @@
         android:layout_toRightOf="@+id/iv_reply_photo"
         android:layout_marginTop="1dp"/>
 
-<!--&lt;!&ndash;    回复时间&ndash;&gt;-->
-<!--    <TextView-->
-<!--        android:id="@+id/tv_replyTime"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="2小时前"-->
-<!--        android:textColor="#66202025"-->
-<!--        android:textSize="10sp"-->
-<!--        android:layout_below="@id/tv_reply_name"-->
-<!--        android:layout_toRightOf="@+id/replyContent"-->
-<!--        android:layout_alignBottom="@+id/replyContent"-->
-<!--        android:layout_marginTop="2dp"-->
-<!--        android:layout_marginLeft="7dp"/>-->
-
     <!-- 回复的内容 -->
     <TextView
         android:id="@+id/replyContentAndTime"
