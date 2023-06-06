@@ -30,7 +30,7 @@ public class Post extends LitePalSupport implements Serializable {
     private int isPublic;
     private String publishedTime;
     private String memoryTime;
-    private long like;
+    private long like=-1;
     private long share;
     private List<CommentBean> commentBeans;
     private List<User> user=new ArrayList<>();
