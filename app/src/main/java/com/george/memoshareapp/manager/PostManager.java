@@ -49,7 +49,6 @@ public class PostManager {
     public void getDBParameter(List<Uri> imageUriList, String phoneNumber, String editTextContent, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime) {
         this.imageUriList = imageUriList;
         saveContent2DB(phoneNumber, editTextContent, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -105,6 +104,8 @@ public class PostManager {
             recordings.save();
         }
         post.save();
+        post.setLike(0);
+        post.update(post.getId());
         if (post.getIsPublic() != 0) {
             HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
             adapter.addData(post, imageUriList);

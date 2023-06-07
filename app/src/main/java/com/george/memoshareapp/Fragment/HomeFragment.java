@@ -14,7 +14,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.HomePagerAdapter;
-import com.george.memoshareapp.test.LikeFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -48,13 +47,6 @@ public class HomeFragment extends Fragment {//外部
         initData();
         initView(rootView);
 
-        ImageView more = rootView.findViewById(R.id.fragment_home_more);
-        more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-           startActivity(new Intent(getActivity(), LikeFragment.class));
-            }
-        });
         return rootView;
     }
 

@@ -33,12 +33,14 @@ import com.george.memoshareapp.beans.ContactInfo;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.beans.UserLikePost;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
 
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +65,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     private Post post;
 
     public HomeWholeRecyclerViewAdapter() {
+
     }
 
     private List<Post> treePosition;
@@ -265,10 +268,11 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         User user = LitePal.select("id, phoneNumber, password")
                 .where("phoneNumber = ?", phoneNumber)
                 .findFirst(User.class);
+        Post newPost = LitePal.where("id = ?", String.valueOf(post.getId())).findFirst(Post.class);
         System.out.println("====================" + post);
         switch (v.getId()) {
             case R.id.like:
-                long likeCount = post.getLike();
+                long likeCount = newPost.getLike();
                 long id = post.getId();
                 isLike = sp.getBoolean(post.getId() + ":" + phoneNumber, false);
                 isLike = !isLike;
@@ -280,17 +284,12 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                     values.put("user_id", user.getId());
                     values.put("post_id", post.getId());
                     LitePal.getDatabase().insert("post_user", null, values);
-
                 } else {
                     holder.like.setImageResource(R.drawable.like);
                     post.setLike(--likeCount);
                     post.update(id);
-//                    ContentValues values = new ContentValues();
-//                    values.put("user_id", -1);
-//                    LitePal.update(Post.class, values,id);
                     LitePal.getDatabase().delete("post_user", "user_id = ? and post_id = ?",
                             new String[]{String.valueOf(user.getId()), String.valueOf(post.getId())});
-
                 }
                 editor.putBoolean(post.getId() + ":" + phoneNumber, isLike);
                 editor.apply();

@@ -98,14 +98,14 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         init();
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
         editor1 = sharedPreferences1.edit();
-
+        Post post = LitePal.where("id = ?", String.valueOf(this.post.getId())).findFirst(Post.class);
         likesCount = post.getLike();
         phoneNumber = sharedPreferences1.getString("phoneNumber", "");
         user = LitePal.select("id")
                 .where("phoneNumber = ?", phoneNumber)
                 .findFirst(User.class);
-        has_like = sharedPreferences1.getBoolean(post.getId() + ":" + phoneNumber, false);
-
+        has_like = sharedPreferences1.getBoolean(this.post.getId() + ":" + phoneNumber, false);
+        detail_tv_like_number.setText(String.valueOf(likesCount));
         if (has_like) {
             like.setImageResource(R.mipmap.like_press);
         } else {
@@ -115,18 +115,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         putParameter2View();//传参
         commentNumber = commentAdapter.getCount();
         detail_tv_share_number.setText(shareNumber + "");
-        detail_tv_like_number.setText(like_number + "");
+        detail_tv_like_number.setText(likesCount + "");
         detail_tv_comment_number.setText(commentNumber + "");
         set_comments_number.setText("共" + commentNumber + "条评论");
 
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        likesCount = post.getLike();
-        detail_tv_like_number.setText(String.valueOf(likesCount));
-    }
-
 
     private void putParameter2View() {
 
@@ -238,6 +231,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     has_like = false;
                     LitePal.getDatabase().delete("post_user", "user_id = ? and post_id = ?",
                             new String[]{String.valueOf(user.getId()), String.valueOf(post.getId())});
+
                 } else {
                     like.setImageResource(R.mipmap.like_press);
                     likesCount++;
@@ -246,7 +240,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     values.put("user_id", user.getId());
                     values.put("post_id", post.getId());
                     LitePal.getDatabase().insert("post_user", null, values);
+
                 }
+                post.setLike(likesCount);
+                post.update(post.getId());
                 editor1.putBoolean(post.getId() + ":" + phoneNumber, has_like);
                 editor1.apply();
                 update();
@@ -320,22 +317,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         EventBus.getDefault().post(new LastClickedPositionEvent(id));
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
 
-        if (has_like) {
-            post.setLike(likesCount);
-            post.update(post.getId());
-
-        } else {
-            post.setLike(likesCount);
-            post.update(post.getId());
-
-
-        }
-
-    }
 
 
     /**
@@ -459,16 +441,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (has_like) {
-            post.setLike(likesCount);
-            post.update(post.getId());
-
-        } else {
-            post.setLike(likesCount);
-            post.update(post.getId());
-
-
-        }
         //判断控件是否显示
         if (commentLinear.getVisibility() == View.VISIBLE) {
             commentLinear.setVisibility(View.GONE);

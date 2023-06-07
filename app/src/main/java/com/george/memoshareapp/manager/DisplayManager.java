@@ -2,12 +2,15 @@ package com.george.memoshareapp.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.text.TextUtils;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.DetailPhotoRecycleViewAdapter;
@@ -20,6 +23,7 @@ import com.george.memoshareapp.utils.CustomItemDecoration;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,6 +45,7 @@ public class DisplayManager {
     private String phoneNumber;
 
     public DisplayManager() {
+
     }
 
     public DisplayManager(Context context) {
@@ -82,37 +87,22 @@ public class DisplayManager {
         return postList;
     }
 
-    public List<Post> getLikePost() {
-        List<Post> LikePostList = new ArrayList<>();
-        String phoneNumber = sp.getString("phoneNumber", "");
-        User user = LitePal.where("phoneNumber = ?", phoneNumber)
-                .findFirst(User.class, true);
-        List<Post> postList = user.getLikePosts();
-        for (Post post : postList) {
-            List<ImageParameters> imageParametersList = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(ImageParameters.class);
-            post.setImageParameters(imageParametersList);
-            System.out.println(post.getImageParameters().size());
-            LikePostList.add(post); // 把修改过的post添加到LikePostList
-        }
-        return LikePostList; // 返回LikePostList，而不是postList
-    }
 
     public List<Post> getLikePost(int offset) {
         List<Post> LikePostList = new ArrayList<>();
         String phoneNumber = sp.getString("phoneNumber", "");
-        User user = LitePal.where("phoneNumber = ?", phoneNumber)
+        User user = LitePal
+                .where("phoneNumber = ?", phoneNumber)
                 .findFirst(User.class, true);
 
         List<Post> allLikedPosts = user.getLikePosts();
-
+        Collections.reverse(allLikedPosts);
         if (offset >= allLikedPosts.size()) {
             return LikePostList;
         }
-
         int toIndex = Math.min(offset + 10, allLikedPosts.size());
 
         List<Post> postList = allLikedPosts.subList(offset, toIndex);
-
         for (Post post : postList) {
             List<ImageParameters> imageParametersList = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(ImageParameters.class);
             post.setImageParameters(imageParametersList);
@@ -121,7 +111,6 @@ public class DisplayManager {
         }
         return LikePostList; // 返回LikePostList，而不是postList
     }
-
 
     public List<Post> showMemoryTree(double latitude, double longitude) {
         treePostList.clear();
