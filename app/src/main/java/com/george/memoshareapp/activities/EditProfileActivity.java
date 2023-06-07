@@ -4,17 +4,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.george.memoshareapp.R;
 
-public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
+import org.devio.takephoto.app.TakePhotoActivity;
+
+public class EditProfileActivity extends TakePhotoActivity implements View.OnClickListener {
 
     private RelativeLayout rl_name;
     private RelativeLayout rl_signature;
     private RelativeLayout rl_gender;
     private RelativeLayout rl_birthday;
     private RelativeLayout rl_region;
+    private ImageView camera;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         rl_gender = (RelativeLayout) findViewById(R.id.rl_gender);
         rl_birthday = (RelativeLayout) findViewById(R.id.rl_birthday);
         rl_region = (RelativeLayout) findViewById(R.id.rl_region);
+        camera =(ImageView) findViewById(R.id.camera);
         rl_name.setOnClickListener(this);
         rl_signature.setOnClickListener(this);
         rl_gender.setOnClickListener(this);
@@ -40,6 +46,10 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
 
         switch (v.getId()) {
+            case R.id.camera:
+
+
+                break;
             case R.id.rl_name:
 
                 break;

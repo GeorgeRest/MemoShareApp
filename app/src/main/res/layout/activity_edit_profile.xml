@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="15dp">
+    android:layout_margin="15dp"
+    android:background="#ffffff">
 
     <ImageView
         android:id="@+id/imageView"
@@ -13,7 +14,7 @@
         android:layout_height="29dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        app:srcCompat="@drawable/back_white" />
+        android:src="@drawable/back_gray" />
 
     <TextView
         android:id="@+id/textView"
@@ -35,12 +36,30 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
         android:layout_below="@id/textView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        tools:src="@tools:sample/avatars" />
+        tools:src="@mipmap/head_portrait" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_below="@id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/gray_overlay" />
+
+    <ImageView
+        android:id="@+id/camera"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/textView"
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="65dp"
+        tools:src="@mipmap/edit_camera" />
 
     <RelativeLayout
         android:id="@+id/rl_name"

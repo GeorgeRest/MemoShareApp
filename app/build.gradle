@@ -70,7 +70,7 @@ dependencies {
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.facebook.fresco:fresco:3.0.0'
-
+    implementation 'org.devio.takephoto:takephoto_library:4.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
 
