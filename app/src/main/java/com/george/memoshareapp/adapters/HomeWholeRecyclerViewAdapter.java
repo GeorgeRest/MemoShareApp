@@ -33,14 +33,12 @@ import com.george.memoshareapp.beans.ContactInfo;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
-import com.george.memoshareapp.beans.UserLikePost;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
 
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +61,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     private Map<String, Integer> nameToPictureMap = new HashMap<>();
     private List<String> contactName = new ArrayList<>();
     private Post post;
+    private ViewHolder holder;
 
     public HomeWholeRecyclerViewAdapter() {
 
@@ -89,6 +88,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         phoneNumber = sp.getString("phoneNumber", "");
         editor = sp.edit();
         initDate();
+
         return new ViewHolder(view);
     }
 
@@ -261,9 +261,11 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         return mData.size();
     }
 
+
+
     @Override
     public void onClick(View v) {
-        ViewHolder holder = (ViewHolder) v.getTag();
+        holder = (ViewHolder) v.getTag();
         post = mData.get(holder.getAdapterPosition());
         User user = LitePal.select("id, phoneNumber, password")
                 .where("phoneNumber = ?", phoneNumber)

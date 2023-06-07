@@ -72,6 +72,7 @@ public class HomePageFragment extends Fragment {//内部
         EventBus.getDefault().register(this);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = null;
@@ -123,6 +124,7 @@ public class HomePageFragment extends Fragment {//内部
         }
         return rootView;
     }
+
 
 
     @Override
