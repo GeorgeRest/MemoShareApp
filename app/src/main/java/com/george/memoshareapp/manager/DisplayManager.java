@@ -16,8 +16,10 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.DetailPhotoRecycleViewAdapter;
 import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.beans.ImageParameters;
+import com.george.memoshareapp.beans.CommentBean;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.beans.ReplyBean;
 import com.george.memoshareapp.utils.CustomItemDecoration;
 
 import org.litepal.LitePal;
@@ -111,6 +113,27 @@ public class DisplayManager {
         }
         return LikePostList; // 返回LikePostList，而不是postList
     }
+
+    /**
+     * 获取评论列表数据
+     */
+    public List<CommentBean> getCommentData(Post post){
+        ArrayList<CommentBean> commentList = new ArrayList<>();
+
+        List<CommentBean> commentBeans = LitePal.where("post_id = ?", String.valueOf(post.getId()))
+                .limit(limit)
+                .offset(offset)
+                .find(CommentBean.class);
+        for (CommentBean commentBean:commentBeans) {
+            List<ReplyBean> replyBeans = LitePal.where("commentbean_id = ?", String.valueOf(commentBean.getId())).find(ReplyBean.class);
+            commentBean.setReplyList(replyBeans);
+            commentList.add(commentBean);
+        }
+        offset += limit;
+        return commentList;
+    }
+
+
 
     public List<Post> showMemoryTree(double latitude, double longitude) {
         treePostList.clear();
