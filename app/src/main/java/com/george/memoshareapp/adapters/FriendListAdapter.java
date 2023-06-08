@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 public class FriendListAdapter extends BaseAdapter {
 
 
+
     @Override
     public int getCount() {
         return 0;
