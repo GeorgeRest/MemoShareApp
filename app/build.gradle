@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.george.memoshareapp"
@@ -54,7 +54,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     //图片选择库
-    implementation 'com.zhihu.android:matisse:0.4.3'
 
     implementation 'com.belerweb:pinyin4j:2.5.1'                      //使用Pinyin4j将中文字符串转换为拼音
     implementation 'androidx.appcompat:appcompat:1.0.0'                 //必须 1.0.0 以上
@@ -70,8 +69,19 @@ dependencies {
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.facebook.fresco:fresco:3.0.0'
-    implementation 'org.devio.takephoto:takephoto_library:4.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
+
+    // PictureSelector 基础 (必须)
+    implementation 'io.github.lucksiege:pictureselector:v3.11.1'
+
+    // 图片压缩 (按需引入)
+    implementation 'io.github.lucksiege:compress:v3.11.1'
+
+    // 图片裁剪 (按需引入)
+    implementation 'io.github.lucksiege:ucrop:v3.11.1'
+
+    // 自定义相机 (按需引入)
+    implementation 'io.github.lucksiege:camerax:v3.11.1'
 
 }

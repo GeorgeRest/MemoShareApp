@@ -41,9 +41,10 @@
         android:layout_below="@id/textView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        tools:src="@mipmap/head_portrait" />
+        tools:src="@drawable/horizental_photo" />
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/camera"
         android:layout_width="95dp"
         android:layout_height="95dp"
         android:layout_below="@id/textView"
@@ -52,7 +53,6 @@
         android:background="@drawable/gray_overlay" />
 
     <ImageView
-        android:id="@+id/camera"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_below="@id/textView"
