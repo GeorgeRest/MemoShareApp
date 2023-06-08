@@ -2,24 +2,30 @@ package com.george.memoshareapp.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.text.TextUtils;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.DetailPhotoRecycleViewAdapter;
 import com.george.memoshareapp.activities.HomePageActivity;
+import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.CommentBean;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.beans.ReplyBean;
 import com.george.memoshareapp.utils.CustomItemDecoration;
 
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,22 +38,25 @@ import java.util.List;
  * @version: 1.0
  */
 public class DisplayManager {
-    private  SharedPreferences sp;
+    private SharedPreferences sp;
     private int offset = 0;
     private final int limit = 10;
     Context Context;
     private DetailPhotoRecycleViewAdapter detailPhotoRecycleViewAdapter;
     List<Post> treePostList = new ArrayList<>();
+    private String phoneNumber;
 
     public DisplayManager() {
+
     }
+
     public DisplayManager(Context context) {
         this.Context = context;
         sp = context.getSharedPreferences("User", Context.MODE_PRIVATE);
     }
 
 
-    public void showPhoto(RecyclerView recyclerView,List<String> photoPath, Context context) {
+    public void showPhoto(RecyclerView recyclerView, List<String> photoPath, Context context) {
 
 
         switch (photoPath.size()) {
@@ -63,12 +72,13 @@ public class DisplayManager {
                 break;
         }
         recyclerView.setHasFixedSize(true);
-        detailPhotoRecycleViewAdapter = new DetailPhotoRecycleViewAdapter(context,photoPath);
+        detailPhotoRecycleViewAdapter = new DetailPhotoRecycleViewAdapter(context, photoPath);
         recyclerView.setAdapter(detailPhotoRecycleViewAdapter);
         int spacingInPixels = context.getResources().getDimensionPixelSize(R.dimen.grid_expected_size);
         recyclerView.addItemDecoration(new CustomItemDecoration(spacingInPixels));
 
     }
+
     public List<Post> getPostList() {
         List<Post> postList = LitePal.where("ispublic = ?", "1")
                 .limit(limit)
@@ -80,13 +90,40 @@ public class DisplayManager {
     }
 
 
+    public List<Post> getLikePost(int offset) {
+        List<Post> LikePostList = new ArrayList<>();
+        String phoneNumber = sp.getString("phoneNumber", "");
+        User user = LitePal
+                .where("phoneNumber = ?", phoneNumber)
+                .findFirst(User.class, true);
+
+        List<Post> allLikedPosts = user.getLikePosts();
+        Collections.reverse(allLikedPosts);
+        if (offset >= allLikedPosts.size()) {
+            return LikePostList;
+        }
+        int toIndex = Math.min(offset + 10, allLikedPosts.size());
+
+        List<Post> postList = allLikedPosts.subList(offset, toIndex);
+        for (Post post : postList) {
+            List<ImageParameters> imageParametersList = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(ImageParameters.class);
+            post.setImageParameters(imageParametersList);
+            System.out.println(post.getImageParameters().size());
+            LikePostList.add(post); // 把修改过的post添加到LikePostList
+        }
+        return LikePostList; // 返回LikePostList，而不是postList
+    }
+
+
+
+
 
     public List<Post> showMemoryTree(double latitude, double longitude) {
         treePostList.clear();
         LatLng latLng1 = new LatLng(latitude, longitude);
         String phoneNumber = sp.getString("phoneNumber", "");
         List<Post> postList = LitePal
-                .where("phonenumber !=? and ispublic = ?", phoneNumber,"1")
+                .where("phonenumber !=? and ispublic = ?", phoneNumber, "1")
                 .find(Post.class, true);
         if (postList != null) {
             for (Post post : postList) {

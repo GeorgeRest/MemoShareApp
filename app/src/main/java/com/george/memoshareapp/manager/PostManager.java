@@ -1,6 +1,7 @@
 package com.george.memoshareapp.manager;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -9,10 +10,12 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
+import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.events.ScrollToTopEvent;
 import com.george.memoshareapp.runnable.SavePhotoRunnable;
+import com.george.memoshareapp.utils.ImageUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -30,11 +33,13 @@ public class PostManager {
     private Context context;
     private List<Uri> imageUriList;
     private List<String> photoPathList = new ArrayList<>();
+    private List<ImageParameters> imageParametersList = new ArrayList<>();
     private String uriStringPath;
     private String photoAbsolutePath;
     private File file;
     private SavePhotoRunnable savePhotoRunnable;
     private Uri uri;
+    private ImageParameters imageParameters;
 
     public PostManager(Context context) {
         this.context = context;
@@ -44,7 +49,6 @@ public class PostManager {
     public void getDBParameter(List<Uri> imageUriList, String phoneNumber, String editTextContent, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime) {
         this.imageUriList = imageUriList;
         saveContent2DB(phoneNumber, editTextContent, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -75,6 +79,13 @@ public class PostManager {
                 photoAbsolutePath = file.getAbsolutePath();
                 photoPathList.add(photoAbsolutePath);
             }
+            BitmapFactory.Options options = ImageUtil.getBitmapOptionsFromImageUri(context, uri);
+            if (options != null) {
+                int imageWidth = options.outWidth;
+                int imageHeight = options.outHeight;
+                imageParameters = new ImageParameters(photoAbsolutePath, imageWidth, imageHeight);
+                imageParametersList.add(imageParameters);
+            }
 
             savePhotoRunnable = new SavePhotoRunnable(uri, file, photoFolder, imageUriList, context);
             executor.execute(savePhotoRunnable);
@@ -82,14 +93,22 @@ public class PostManager {
         Log.d(TAG, "saveContent2DB: " + photoPathList);
 
         Post post = new Post(phoneNumber, editTextContent, photoPathList, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
+        post.setImageParameters(imageParametersList);
+        for (ImageParameters imageParameters : imageParametersList) {
+            imageParameters.setPost(post);
+            imageParameters.save();
+        }
+
         for (Recordings recordings : record) {
             recordings.setPost(post);
             recordings.save();
         }
         post.save();
+        post.setLike(0);
+        post.update(post.getId());
         if (post.getIsPublic() != 0) {
             HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
-            adapter.addData(post,imageUriList);
+            adapter.addData(post, imageUriList);
             EventBus.getDefault().post(new ScrollToTopEvent());
         }
         executor.shutdown();

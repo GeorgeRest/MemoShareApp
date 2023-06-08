@@ -4,28 +4,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/refreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
-    <com.scwang.smart.refresh.header.ClassicsHeader
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <LinearLayout
+    android:layout_height="match_parent">
+<com.scwang.smart.refresh.header.MaterialHeader
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="#f9fbff">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/whole_recycler"
+            android:id="@+id/recycleViewStagged"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:paddingBottom="16dp"
-            android:scrollbarStyle="outsideOverlay" />
+            android:layout_height="match_parent"
+            android:divider="@null"
 
-    </LinearLayout>
+            android:dividerHeight="0dp" />
+    </RelativeLayout>
 
     <com.scwang.smart.refresh.footer.ClassicsFooter
+        android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
 </com.scwang.smart.refresh.layout.SmartRefreshLayout>
