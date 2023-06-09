@@ -268,10 +268,11 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         User user = LitePal.select("id, phoneNumber, password")
                 .where("phoneNumber = ?", phoneNumber)
                 .findFirst(User.class);
+        Post newPost = LitePal.where("id = ?", String.valueOf(post.getId())).findFirst(Post.class);
         System.out.println("====================" + post);
         switch (v.getId()) {
             case R.id.like:
-                long likeCount = post.getLike();
+                long likeCount = newPost.getLike();
                 long id = post.getId();
                 isLike = sp.getBoolean(post.getId() + ":" + phoneNumber, false);
                 isLike = !isLike;

@@ -104,6 +104,8 @@ public class PostManager {
             recordings.save();
         }
         post.save();
+        post.setLike(0);
+        post.update(post.getId());
         if (post.getIsPublic() != 0) {
             HomeWholeRecyclerViewAdapter adapter = HomeWholeRecyclerViewAdapter.getInstance();
             adapter.addData(post, imageUriList);

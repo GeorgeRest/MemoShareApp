@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <com.george.memoshareapp.view.NiceImageView
+        android:id="@+id/niv_photo"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@mipmap/head_portrait"
+        android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/tv_friend_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:layout_toRightOf="@+id/niv_photo"
+        android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/tv_signature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="个性签名"
+        android:layout_toRightOf="@+id/niv_photo"
+        android:layout_below="@+id/tv_friend_name"
+        android:layout_marginLeft="5dp"/>
+
+    <Button
+        android:id="@+id/btn_follow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="关注"
+        android:layout_alignParentRight="true"/>
+        <!--text具体由代码控制，设置选中背景-->
+
+
+</RelativeLayout>
