@@ -43,6 +43,7 @@ import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
 
+
     private int like_number;
     private ImageView userIcon;
     private TextView userName;
@@ -73,8 +74,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private LinearLayout bottomLinear;        //底部分享、评论等线性布局
     private LinearLayout commentLinear;        //评论输入框线性布局
 
+    private int position;				    //记录回复评论的索引
+    private int commentPosition;             //记录回复子评论属于的评论索引
+    private int replyPosition;                //记录回复子评论的索引
+    private int submit_case = 0;			//评论，回复评论，回复子评论
     private int count;                        //记录评论ID
-    private int position;                    //记录回复评论的索引
     private boolean isReply;                //是否是回复
     private String text = "";            //记录对话框中的内容
     private CommentAdapter commentAdapter;
@@ -88,6 +92,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private String phoneNumber;
     private ScrollView scrollView;
     private User user;
+    private DisplayManager manager;
 
 
     @Override
@@ -97,10 +102,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         init();
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
+        phoneNumber = sharedPreferences1.getString("phoneNumber", "");
         editor1 = sharedPreferences1.edit();
         Post post = LitePal.where("id = ?", String.valueOf(this.post.getId())).findFirst(Post.class);
         likesCount = post.getLike();
-        phoneNumber = sharedPreferences1.getString("phoneNumber", "");
+
         user = LitePal.select("id")
                 .where("phoneNumber = ?", phoneNumber)
                 .findFirst(User.class);
@@ -169,7 +175,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         submitComment.setOnClickListener(this);
         intent = getIntent();
         post = (Post) intent.getSerializableExtra("post");
-        commentAdapter = new CommentAdapter(this, getCommentData(), R.layout.comment_item, handler);
+        manager = new DisplayManager();
+        commentAdapter = new CommentAdapter(this,manager.getCommentData(post),R.layout.item_comment,handler);
         commentList.setAdapter(commentAdapter);
 
         boolean shouldCheckComments = getIntent().getBooleanExtra("shouldCheckComments", false);
@@ -205,7 +212,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.detail_iv_comment:        //底部评论按钮
-                isReply = false;
+                submit_case = 0;
                 commentLinear.setVisibility(View.VISIBLE);
                 bottomLinear.setVisibility(View.GONE);
                 onFocusChange(true);
@@ -213,10 +220,16 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
             case R.id.submitComment:    //发表评论按钮
                 if (isEditEmply()) {        //判断用户是否输入内容
-                    if (isReply) {
-                        replyComment();
-                    } else {
-                        publishComment();
+                    switch (submit_case){
+                        case 0:
+                            publishComment();
+                            break;
+                        case 10:
+                            replyComment();
+                            break;
+                        case 1:
+                            replySubComment();
+                            break;
                     }
                     bottomLinear.setVisibility(View.VISIBLE);
                     commentLinear.setVisibility(View.GONE);
@@ -335,13 +348,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         return list;
     }
 
-    /**
-     * 获取回复列表数据
-     */
-    private List<ReplyBean> getReplyData() {
-        List<ReplyBean> replyList = new ArrayList<ReplyBean>();
-        return replyList;
-    }
 
 
     /**
@@ -382,7 +388,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      */
     private void publishComment() {
         CommentBean bean = new CommentBean();
-        bean.setCommentUserPhoto(R.mipmap.photo_10);
+        bean.setCommentUserPhoto(R.mipmap.touxiangceshi);
         bean.setCommentUserName("seven");
         bean.setCommentTime(null);
         bean.setCommentUserPhoneNumber("12345");
@@ -403,8 +409,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      */
     private void replyComment() {
         ReplyBean bean = new ReplyBean();
-        bean.setReplyUserPhoto(R.mipmap.photo_10);
-        bean.setReplyNickname("seven");
+        bean.setReplyUserPhoto(R.mipmap.touxiangceshi);
+        bean.setReplyNickname("Aven");
         bean.setReplyTime(null);
         bean.setCommentNickname(list.get(position).getCommentUserName());
         bean.setReplyContent(text);
@@ -417,6 +423,24 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         commentAdapter.notifyDataSetChanged();
 
     }
+    /**
+     * 回复子评论
+     */
+    private void replySubComment() {
+        List<ReplyBean> rList = list.get(commentPosition).getReplyList();
+        ReplyBean bean = new ReplyBean();
+        bean.setReplyUserPhoto(R.mipmap.touxiangceshi);
+        bean.setReplyNickname("Seven");
+        bean.setReplyTime(null);
+        bean.setCommentNickname(rList.get(replyPosition).getReplyNickname());
+        bean.setReplyContent(text);
+        bean.save();
+        SQLiteDatabase db = LitePal.getDatabase();
+        String sql = "UPDATE ReplyBean SET commentbean_id = ? WHERE id = ?";
+        db.execSQL(sql, new Object[] {list.get(commentPosition).getId(), bean.getId()});
+        rList.add(rList.size(), bean);
+        commentAdapter.notifyDataSetChanged();
+    }
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -424,9 +448,15 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 10) {
-                isReply = true;
+                submit_case = 10;
                 position = (Integer) msg.obj;
-                System.out.println("=================postion" + position);
+                commentLinear.setVisibility(View.VISIBLE);
+                bottomLinear.setVisibility(View.GONE);
+                onFocusChange(true);
+            } else if (msg.what ==1) {
+                submit_case = 1;
+                replyPosition = msg.arg1;
+                commentPosition = msg.arg2;
                 commentLinear.setVisibility(View.VISIBLE);
                 bottomLinear.setVisibility(View.GONE);
                 onFocusChange(true);

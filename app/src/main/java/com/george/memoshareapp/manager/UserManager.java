@@ -1,5 +1,6 @@
 package com.george.memoshareapp.manager;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -8,9 +9,6 @@ import com.george.memoshareapp.beans.Relationship;
 import com.george.memoshareapp.beans.User;
 
 import org.litepal.LitePal;
-import org.litepal.crud.LitePalSupport;
-
-import java.io.Serializable;
 
 import es.dmoral.toasty.Toasty;
 
@@ -106,23 +104,89 @@ public class UserManager {
         }
         return true;
     }
+    // 检查initiator是否关注了target
+    public boolean isFollowing(User initiator, User target) {
+        long count = LitePal.where("initiator = ? and target = ? and (relationshipStatus = ? or relationshipStatus = ?)",
+                        String.valueOf(initiator.getId()),
+                        String.valueOf(target.getId()),
+                        String.valueOf(Relationship.ATTENTION_STATUS),
+                        String.valueOf(Relationship.FRIEND_STATUS))
+                .count(Relationship.class);
 
-
-    public void followUser(User user, User target) {
-        // 创建Relationship记录
+        return count > 0;
+    }
+    // 当前用户关注其他用户
+    public void followUser(User initiator, User target) {
         Relationship relationship = new Relationship();
-        relationship.setUserId(user.getId());
-        relationship.setFollowingId(target.getId());
-
-        // 将结果保存到数据库
+        relationship.setInitiator(initiator);
+        relationship.setTarget(target);
+        relationship.setRelationshipStatus(Relationship.ATTENTION_STATUS);
         relationship.save();
+
+        // 检查是否已经满足成为朋友的条件
+        if (isMutualFollow(initiator, target)) {
+            becomeFriends(initiator, target);
+        }
     }
 
-    // 取消关注一个用户
-    public void unfollowUser(User user, User target) {
-        // 删除Relationship记录
-        LitePal.deleteAll(Relationship.class, "userId = ? and followingId = ?", String.valueOf(user.getId()), String.valueOf(target.getId()));
+    // 当前用户取消关注
+    public void unfollowUser(User initiator, User target) {
+        LitePal.deleteAll(Relationship.class, "initiator = ? and target = ? and relationshipStatus = ?", String.valueOf(initiator.getId()), String.valueOf(target.getId()), String.valueOf(Relationship.ATTENTION_STATUS));
+
+        // 检查是否需要解除朋友关系
+        if (!isMutualFollow(initiator, target)) {
+            endFriendship(initiator, target);
+        }
     }
 
+    // 检查是否满足互相关注的条件
+    private boolean isMutualFollow(User initiator, User target) {
+        long count1 = LitePal.where("initiator = ? and target = ? and relationshipStatus = ?", String.valueOf(initiator.getId()), String.valueOf(target.getId()), String.valueOf(Relationship.ATTENTION_STATUS)).count(Relationship.class);
+        long count2 = LitePal.where("initiator = ? and target = ? and relationshipStatus = ?", String.valueOf(target.getId()), String.valueOf(initiator.getId()), String.valueOf(Relationship.ATTENTION_STATUS)).count(Relationship.class);
 
+        return count1 > 0 && count2 > 0;
+    }
+
+    // 两个用户互相关注，成为朋友
+    private void becomeFriends(User initiator, User target) {
+        // 需要将之前的关注状态更新为朋友状态
+        ContentValues values = new ContentValues();
+        values.put("relationshipStatus", Relationship.FRIEND_STATUS);
+        LitePal.updateAll(Relationship.class, values, "initiator = ? and target = ?", String.valueOf(initiator.getId()), String.valueOf(target.getId()));
+        LitePal.updateAll(Relationship.class, values, "initiator = ? and target = ?", String.valueOf(target.getId()), String.valueOf(initiator.getId()));
+    }
+
+    // 解除朋友关系
+    private void endFriendship(User initiator, User target) {
+        // 只要有一方取消关注，就解除朋友关系
+        ContentValues values = new ContentValues();
+        values.put("relationshipStatus", Relationship.ATTENTION_STATUS);
+        LitePal.updateAll(Relationship.class, values, "initiator = ? and target = ?", String.valueOf(initiator.getId()), String.valueOf(target.getId()));
+        LitePal.updateAll(Relationship.class, values, "initiator = ? and target = ?", String.valueOf(target.getId()), String.valueOf(initiator.getId()));
+    }
+    // 查询用户关注的人数
+    public long countFollowing(User user) {
+        return LitePal.where("initiator = ? and (relationshipStatus = ? or relationshipStatus = ?)",
+                        String.valueOf(user.getId()),
+                        String.valueOf(Relationship.ATTENTION_STATUS),
+                        String.valueOf(Relationship.FRIEND_STATUS))
+                .count(Relationship.class);
+    }
+
+    // 查询用户的粉丝数
+    public long countFans(User user) {
+        return LitePal.where("target = ? and (relationshipStatus = ? or relationshipStatus = ?)",
+                        String.valueOf(user.getId()),
+                        String.valueOf(Relationship.FANS_STATUS),
+                        String.valueOf(Relationship.FRIEND_STATUS))
+                .count(Relationship.class);
+    }
+
+    // 查询用户的朋友数
+    public long countFriends(User user) {
+        return LitePal.where("initiator = ? and relationshipStatus = ?",
+                        String.valueOf(user.getId()),
+                        String.valueOf(Relationship.FRIEND_STATUS))
+                .count(Relationship.class);
+    }
 }

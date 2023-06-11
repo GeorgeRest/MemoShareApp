@@ -1,6 +1,7 @@
 package com.george.memoshareapp.activities;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,13 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
+    public static final String EXTRA_EDITED_GENDER = "edited_gender";
+    public static final String EXTRA_EDITED_BIRTHDAY = "edited_birthday";
+    public static final String EXTRA_EDITED_REGION = "edited_region";
+    public static final String EXTRA_EDITED_SIGNATURE = "edited_signature";
+    public static final String EXTRA_EDITED_NAME = "edited_name";
+
+
 
     private static int EDIT_GENDER = 0;
     private RelativeLayout rl_name;
@@ -40,6 +48,10 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     private TimePickerView pvCustomLunar;
     private TimePickerView pvCustomTime;
     private String time;
+    private TextView tv_edit_signature;
+    private TextView tv_edit_name;
+    private TextView tv_edit_region;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,13 +67,18 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         rl_gender = (RelativeLayout) findViewById(R.id.rl_gender);
         rl_birthday = (RelativeLayout) findViewById(R.id.rl_birthday);
         rl_region = (RelativeLayout) findViewById(R.id.rl_region);
-        tv_edit_gender = (TextView) findViewById(R.id.tv_edit_gender);
-        tv_edit_birthday = (TextView) findViewById(R.id.tv_edit_birthday);
+
         rl_name.setOnClickListener(this);
         rl_signature.setOnClickListener(this);
         rl_gender.setOnClickListener(this);
         rl_birthday.setOnClickListener(this);
         rl_region.setOnClickListener(this);
+
+        tv_edit_signature = (TextView) findViewById(R.id.tv_edit_signature);
+        tv_edit_name = (TextView) findViewById(R.id.tv_edit_name);
+        tv_edit_gender = (TextView) findViewById(R.id.tv_edit_gender);
+        tv_edit_birthday = (TextView) findViewById(R.id.tv_edit_birthday);
+        tv_edit_region = (TextView) findViewById(R.id.tv_edit_region);
     }
 
     @Override
@@ -281,8 +298,30 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         return format.format(date);
     }
 
+    @Override
+    protected void onDestroy() {
+        saveAndFinish();
+        super.onDestroy();
+    }
 
+    @Override
+    public void onBackPressed() {
+        saveAndFinish();
+        super.onBackPressed();
+    }
 
+    private void saveAndFinish() {
+        Intent data = new Intent();
+
+        data.putExtra(EXTRA_EDITED_BIRTHDAY, tv_edit_birthday.getText().toString());
+        data.putExtra(EXTRA_EDITED_SIGNATURE, tv_edit_signature.getText().toString());
+        data.putExtra(EXTRA_EDITED_NAME, tv_edit_name.getText().toString());
+        data.putExtra(EXTRA_EDITED_GENDER, tv_edit_gender.getText().toString());
+        data.putExtra(EXTRA_EDITED_REGION, tv_edit_region.getText().toString());
+
+        setResult(RESULT_OK, data);
+        finish();
+    }
 
 
 }

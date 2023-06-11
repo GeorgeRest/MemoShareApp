@@ -15,8 +15,36 @@ import java.io.Serializable;
  */
 public class Relationship extends LitePalSupport implements Serializable {
     private long id;
-    private long userId;
-    private long followingId;
+    private User initiator;
+    private User target;
+    private int relationshipStatus;
+    public static final int ATTENTION_STATUS = 1;
+    public static final int FANS_STATUS = 2;
+    public static final int FRIEND_STATUS = 3;
+
+    public User getInitiator() {
+        return initiator;
+    }
+
+    public void setInitiator(User initiator) {
+        this.initiator = initiator;
+    }
+
+    public User getTarget() {
+        return target;
+    }
+
+    public void setTarget(User target) {
+        this.target = target;
+    }
+
+    public int getRelationshipStatus() {
+        return relationshipStatus;
+    }
+
+    public void setRelationshipStatus(int relationshipStatus) {
+        this.relationshipStatus = relationshipStatus;
+    }
 
     public Relationship() {
     }
@@ -29,19 +57,5 @@ public class Relationship extends LitePalSupport implements Serializable {
         this.id = id;
     }
 
-    public long getUserId() {
-        return userId;
-    }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public long getFollowingId() {
-        return followingId;
-    }
-
-    public void setFollowingId(long followingId) {
-        this.followingId = followingId;
-    }
 }

@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.Fragment.AudioPlayerFragment;
+import com.george.memoshareapp.Fragment.NewPersonPageFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.activities.HomePageActivity;
@@ -302,6 +303,13 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 intent.putExtra("post", post);
                 mContext.startActivity(intent);
                 break;
+            case R.id.iv_head_image_1:
+                Intent intent1 = new Intent(mContext, NewPersonPageFragment.class);
+                intent1.putExtra("user", user);
+                intent1.putExtra("newpost", newPost);
+
+                mContext.startActivity(intent1);
+
         }
         if (holder.recordings != null && !holder.recordings.isEmpty()) {
             switch (v.getId()) {
@@ -382,7 +390,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
 //            ll_head = itemView.findViewById(R.id.ll_head);
 
-            iv_head_image_1 = (ImageView) itemView.findViewById(R.id.iv_head_image_1);
+            iv_head_image_1 = (ImageView) itemView.findViewById(R.id.iv_head_image_1);//头像
             iv_head_image_2 = (ImageView) itemView.findViewById(R.id.iv_head_image_2);
             iv_head_image_3 = (ImageView) itemView.findViewById(R.id.iv_head_image_3);
             tv_head_out_number = (TextView) itemView.findViewById(R.id.tv_head_out_number);
