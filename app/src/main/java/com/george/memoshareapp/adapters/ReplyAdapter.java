@@ -1,6 +1,7 @@
 package com.george.memoshareapp.adapters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Handler;
 import android.text.SpannableString;
@@ -18,8 +19,12 @@ import android.widget.TextView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.ReplyBean;
 
+import org.litepal.LitePal;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ReplyAdapter extends BaseAdapter {
 
@@ -29,13 +34,19 @@ public class ReplyAdapter extends BaseAdapter {
     private SpannableString ss;
     private Context context;
     private Handler handler;
+    private ReplyBean bean;
+    private int replayId;
+    private int commentbeanId;
+    private int position;
 
-    public ReplyAdapter(Context context, List<ReplyBean> list, int resourceId,Handler handler){
+    public ReplyAdapter(Context context, List<ReplyBean> list, int resourceId, Handler handler,int position) {
         this.list = list;
         this.context = context;
         this.resourceId = resourceId;
         this.handler = handler;
+        this.position = position;
         inflater = LayoutInflater.from(context);
+
     }
 
     @Override
@@ -55,19 +66,22 @@ public class ReplyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ReplyBean bean = list.get(position);
-        ViewHolder holder = null ;
-        if(convertView == null){
+        bean = list.get(position);
+        replayId = bean.getId();
+
+
+        ViewHolder holder = null;
+        if (convertView == null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(resourceId, null);
-            holder.replyPhoto= (ImageView) convertView.findViewById(R.id.iv_reply_photo);
-            holder.replyName= (TextView)convertView.findViewById(R.id.tv_reply_name);
+            holder.replyPhoto = (ImageView) convertView.findViewById(R.id.iv_reply_photo);
+            holder.replyName = (TextView) convertView.findViewById(R.id.tv_reply_name);
 //            holder.replyTime= (TextView)convertView.findViewById(R.id.tv_replyTime);
-            holder.replyTextAndTime= (TextView)convertView.findViewById(R.id.replyContentAndTime);
+            holder.replyTextAndTime = (TextView) convertView.findViewById(R.id.replyContentAndTime);
             convertView.setTag(holder);
-        }else{
+        } else {
             holder = (ViewHolder) convertView.getTag();
-    }
+        }
         holder.replyPhoto.setImageResource(bean.getReplyUserPhoto());
         holder.replyName.setText(bean.getReplyNickname());
 //        holder.replyTime.setText(getTimeFormatText(bean.getReplyTime()));
@@ -76,13 +90,13 @@ public class ReplyAdapter extends BaseAdapter {
         String time = getTimeFormatText(bean.getReplyTime());
         SpannableString spannableString = new SpannableString(content + "   " + time);
         String commentNickName = bean.getCommentNickname();
-        ss = new SpannableString("回复"+commentNickName
-                +"："+spannableString);
-        ss.setSpan(new ForegroundColorSpan(Color.parseColor("#80202025")),2,
-                commentNickName.length()+2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss = new SpannableString("回复" + commentNickName
+                + "：" + spannableString);
+        ss.setSpan(new ForegroundColorSpan(Color.parseColor("#80202025")), 2,
+                commentNickName.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         // 设置评论时间的字体大小和颜色
-        ss.setSpan(new RelativeSizeSpan(0.75f), commentNickName.length()+2+content.length() + 3, commentNickName.length()+3+content.length() + 3 + time.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE); // 75% of original size
-        ss.setSpan(new ForegroundColorSpan(Color.parseColor("#66202025")), commentNickName.length()+2+content.length() + 3, commentNickName.length()+3+content.length() + 3 + time.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE); // set color
+        ss.setSpan(new RelativeSizeSpan(0.75f), commentNickName.length() + 2 + content.length() + 3, commentNickName.length() + 3 + content.length() + 3 + time.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE); // 75% of original size
+        ss.setSpan(new ForegroundColorSpan(Color.parseColor("#66202025")), commentNickName.length() + 2 + content.length() + 3, commentNickName.length() + 3 + content.length() + 3 + time.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE); // set color
         holder.replyTextAndTime.setText(ss);
         //添加点击事件时，必须设置
         holder.replyTextAndTime.setMovementMethod(LinkMovementMethod.getInstance());
@@ -92,7 +106,7 @@ public class ReplyAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private final class ViewHolder{
+    private final class ViewHolder {
         public ImageView replyPhoto;
         public TextView replyName;
         public TextView replyTextAndTime;
@@ -102,30 +116,49 @@ public class ReplyAdapter extends BaseAdapter {
     /**
      * 事件点击监听器
      */
-    private final class TextviewClickListener implements View.OnClickListener {
-        private int position;
-        public TextviewClickListener(int position){
-            this.position = position;
+    private class TextviewClickListener implements View.OnClickListener {
+        private int replyPosition;
+
+        public TextviewClickListener(int position) {
+            this.replyPosition = position;
+
         }
+
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.replyContentAndTime:
-                    handler.sendMessage(handler.obtainMessage(10, position));
+                    Cursor cursor = LitePal.findBySQL("select commentbean_id from replybean where id=?", String.valueOf(replayId));
+                    if (cursor != null && cursor.moveToFirst()) {
+                        int columnIndex = cursor.getColumnIndex("commentbean_id");
+                        commentbeanId = cursor.getInt(columnIndex);
+                        cursor.close();
+                    }
+                    handler.sendMessage(handler.obtainMessage(1, replyPosition,position));
                     break;
             }
         }
     }
+
     /**
      * 时间差
-     *
      */
-    public  String getTimeFormatText(Date date) {
+    public String getTimeFormatText(Date date) {
         long minute = 60 * 1000;// 1分钟
         long hour = 60 * minute;// 1小时
         long day = 24 * hour;// 1天
         long month = 31 * day;// 月
         long year = 12 * month;// 年
+
+        // 创建一个新的SimpleDateFormat实例，指定所需的格式
+        SimpleDateFormat formatter1 = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        SimpleDateFormat formatter2 = new SimpleDateFormat("MM-dd", Locale.getDefault());
+        SimpleDateFormat formatter3 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+        // 使用formatter.format(currentDate)方法将日期对象转换为字符串
+        String dateString1 = formatter1.format(date);
+        String dateString2 = formatter2.format(date);
+        String dateString3 = formatter3.format(date);
 
         if (date == null) {
             return null;
@@ -133,16 +166,16 @@ public class ReplyAdapter extends BaseAdapter {
         long diff = new Date().getTime() - date.getTime();
         long r = 0;
         if (diff > year) {
-            r = (diff / year);
-            return r + "年前";
+            return dateString3;
         }
-        if (diff > month) {
-            r = (diff / month);
-            return r + "个月前";
-        }
+
         if (diff > day) {
             r = (diff / day);
-            return r + "天前";
+            if (r == 1) {
+                return "昨天" + dateString1;
+            } else {
+                return dateString2;
+            }
         }
         if (diff > hour) {
             r = (diff / hour);

@@ -19,8 +19,10 @@ import com.george.memoshareapp.beans.CommentBean;
 import com.george.memoshareapp.beans.ReplyBean;
 import com.george.memoshareapp.view.NoScrollListView;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class CommentAdapter extends BaseAdapter {
 
@@ -89,7 +91,8 @@ public class CommentAdapter extends BaseAdapter {
         holder.commentItemContentAndTime.setText(spannableString);
 
 
-        ReplyAdapter adapter = new ReplyAdapter(context, bean.getReplyList(), R.layout.reply_item,handler);
+        ReplyAdapter adapter = new ReplyAdapter(context, bean.getReplyList(), R.layout.item_reply,handler,position);
+
         holder.replyList.setAdapter(adapter);
 
         TextviewClickListener tcl = new TextviewClickListener(position);
@@ -100,8 +103,7 @@ public class CommentAdapter extends BaseAdapter {
     private final class ViewHolder{
         public ImageView commentItemImg;			//评论人图片
         public TextView commentNickname;			//评论人昵称
-//        public TextView commentItemTime;			//评论时间
-        public TextView commentItemContentAndTime;	//评论内容
+        public TextView commentItemContentAndTime;	//评论内容和时间
         public NoScrollListView replyList;			//评论回复列表
     }
 
@@ -134,13 +136,22 @@ public class CommentAdapter extends BaseAdapter {
      * 时间差
      *
      */
-
-    public String getTimeFormatText(Date date) {
+    public  String getTimeFormatText(Date date) {
         long minute = 60 * 1000;// 1分钟
         long hour = 60 * minute;// 1小时
         long day = 24 * hour;// 1天
         long month = 31 * day;// 月
         long year = 12 * month;// 年
+
+        // 创建一个新的SimpleDateFormat实例，指定所需的格式
+        SimpleDateFormat formatter1 = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        SimpleDateFormat formatter2 = new SimpleDateFormat("MM-dd", Locale.getDefault());
+        SimpleDateFormat formatter3 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+        // 使用formatter.format(currentDate)方法将日期对象转换为字符串
+        String dateString1 = formatter1.format(date);
+        String dateString2 = formatter2.format(date);
+        String dateString3 = formatter3.format(date);
 
         if (date == null) {
             return null;
@@ -148,16 +159,16 @@ public class CommentAdapter extends BaseAdapter {
         long diff = new Date().getTime() - date.getTime();
         long r = 0;
         if (diff > year) {
-            r = (diff / year);
-            return r + "年前";
+            return dateString3;
         }
-        if (diff > month) {
-            r = (diff / month);
-            return r + "个月前";
-        }
+
         if (diff > day) {
             r = (diff / day);
-            return r + "天前";
+            if(r == 1) {
+                return "昨天" +dateString1;
+            }else{
+                return dateString2 ;
+            }
         }
         if (diff > hour) {
             r = (diff / hour);
@@ -169,5 +180,4 @@ public class CommentAdapter extends BaseAdapter {
         }
         return "刚刚";
     }
-
 }
