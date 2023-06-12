@@ -1,14 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.net.Uri;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,10 +11,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,30 +21,13 @@ import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.utils.GlideEngine;
-import com.luck.picture.lib.basic.PictureSelector;
-import com.luck.picture.lib.config.PictureMimeType;
-import com.luck.picture.lib.config.SelectMimeType;
-import com.luck.picture.lib.engine.CropFileEngine;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.interfaces.OnResultCallbackListener;
-import com.yalantis.ucrop.UCrop;
-import com.yalantis.ucrop.UCropImageEngine;
-
-
-import java.util.ArrayList;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_EDITED_GENDER = "edited_gender";
@@ -84,6 +56,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     private TextView tv_edit_signature;
     private TextView tv_edit_name;
     private TextView tv_edit_region;
+    private ImageView back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +86,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         tv_edit_gender = (TextView) findViewById(R.id.tv_edit_gender);
         tv_edit_birthday = (TextView) findViewById(R.id.tv_edit_birthday);
         tv_edit_region = (TextView) findViewById(R.id.tv_edit_region);
+        back = (ImageView) findViewById(R.id.edit_iv_back);
         camera.setOnClickListener(this);
     }
 
@@ -121,51 +95,51 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
         switch (v.getId()) {
             case R.id.camera:
-                PictureSelector.create(this)
-                        .openGallery(SelectMimeType.ofImage())
-                        .setImageEngine(GlideEngine.createGlideEngine())
-                        .setMaxSelectNum(1)
-                        .isEmptyResultReturn(true)
-                        .isMaxSelectEnabledMask(true)
-
-                        .setCropEngine(new CropFileEngine() {
-                            @Override
-                            public void onStartCrop(Fragment fragment, Uri srcUri, Uri destinationUri, ArrayList<String> dataSource, int requestCode) {
-                                UCrop uCrop = UCrop.of(srcUri, destinationUri, dataSource);
-                                destPath = destinationUri+"";
-                                System.out.println("-------------" + srcUri+"-----"+destinationUri+"-----"+dataSource+"-----"+requestCode);
-                                uCrop.setImageEngine(new UCropImageEngine() {
-                                    @Override
-                                    public void loadImage(Context context, String url, ImageView imageView) {
-                                    }
-
-                                    @Override
-                                    public void loadImage(Context context, Uri url, int maxWidth, int maxHeight, OnCallbackListener<Bitmap> call) {
-                                    }
-                                });
-
-                                UCrop.Options options = new UCrop.Options();
-                                options.setCircleDimmedLayer(true);
-                                options.setShowCropFrame(false);
-                                options.setShowCropGrid(false);
-                                uCrop.withOptions(options);
-                                uCrop.start(fragment.getActivity(), fragment, requestCode);
-                            }
-
-                        })
-                        .forResult(new OnResultCallbackListener<LocalMedia>() {
-                            @Override
-                            public void onResult(ArrayList<LocalMedia> result) {
-                                System.out.println("-------------" + result.get(0).getRealPath());
-
-                                Glide.with(EditProfileActivity.this).load(destPath).into(camera);
-
-                            }
-
-                            @Override
-                            public void onCancel() {
-                            }
-                        });
+//                PictureSelector.create(this)
+//                        .openGallery(SelectMimeType.ofImage())
+//                        .setImageEngine(GlideEngine.createGlideEngine())
+//                        .setMaxSelectNum(1)
+//                        .isEmptyResultReturn(true)
+//                        .isMaxSelectEnabledMask(true)
+//
+//                        .setCropEngine(new CropFileEngine() {
+//                            @Override
+//                            public void onStartCrop(Fragment fragment, Uri srcUri, Uri destinationUri, ArrayList<String> dataSource, int requestCode) {
+//                                UCrop uCrop = UCrop.of(srcUri, destinationUri, dataSource);
+//                                destPath = destinationUri+"";
+//                                System.out.println("-------------" + srcUri+"-----"+destinationUri+"-----"+dataSource+"-----"+requestCode);
+//                                uCrop.setImageEngine(new UCropImageEngine() {
+//                                    @Override
+//                                    public void loadImage(Context context, String url, ImageView imageView) {
+//                                    }
+//
+//                                    @Override
+//                                    public void loadImage(Context context, Uri url, int maxWidth, int maxHeight, OnCallbackListener<Bitmap> call) {
+//                                    }
+//                                });
+//
+//                                UCrop.Options options = new UCrop.Options();
+//                                options.setCircleDimmedLayer(true);
+//                                options.setShowCropFrame(false);
+//                                options.setShowCropGrid(false);
+//                                uCrop.withOptions(options);
+//                                uCrop.start(fragment.getActivity(), fragment, requestCode);
+//                            }
+//
+//                        })
+//                        .forResult(new OnResultCallbackListener<LocalMedia>() {
+//                            @Override
+//                            public void onResult(ArrayList<LocalMedia> result) {
+//                                System.out.println("-------------" + result.get(0).getRealPath());
+//
+//                                Glide.with(EditProfileActivity.this).load(destPath).into(camera);
+//
+//                            }
+//
+//                            @Override
+//                            public void onCancel() {
+//                            }
+//                        });
 
                 break;
             case R.id.rl_name:
@@ -179,6 +153,9 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 pvCustomLunar.show();
                 break;
             case R.id.rl_region:
+                break;
+            case R.id.edit_iv_back:
+                finish();
                 break;
         }
     }
@@ -383,24 +360,26 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     protected void onDestroy() {
-        saveAndFinish();
         super.onDestroy();
+        saveAndFinish();
+
     }
 
     @Override
     public void onBackPressed() {
-        saveAndFinish();
         super.onBackPressed();
+        saveAndFinish();
+
     }
 
     private void saveAndFinish() {
         Intent data = new Intent();
 
         data.putExtra(EXTRA_EDITED_BIRTHDAY, tv_edit_birthday.getText().toString());
-        data.putExtra(EXTRA_EDITED_SIGNATURE, tv_edit_signature.getText().toString());
-        data.putExtra(EXTRA_EDITED_NAME, tv_edit_name.getText().toString());
+//        data.putExtra(EXTRA_EDITED_SIGNATURE, tv_edit_signature.getText().toString());
+//        data.putExtra(EXTRA_EDITED_NAME, tv_edit_name.getText().toString());
         data.putExtra(EXTRA_EDITED_GENDER, tv_edit_gender.getText().toString());
-        data.putExtra(EXTRA_EDITED_REGION, tv_edit_region.getText().toString());
+//        data.putExtra(EXTRA_EDITED_REGION, tv_edit_region.getText().toString());
 
         setResult(RESULT_OK, data);
         finish();

@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -41,6 +42,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MemoShareApp"
         tools:targetApi="31">
+        <activity android:name=".activities.NewPersonPageActivity"
+            android:exported="true"/>
         <activity
             android:name=".activities.EditProfileActivity"
             android:exported="true" >
@@ -123,6 +126,7 @@
         <activity
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true" />
+
     </application>
 
 </manifest>

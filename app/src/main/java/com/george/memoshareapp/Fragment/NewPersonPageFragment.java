@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,6 +71,9 @@ public class NewPersonPageFragment extends Fragment {
     private Post newpost;
     private long countFriends;
     private boolean isfollowingOrFriend1=false;
+    private long countFollowings;
+    private long countFans;
+    private String phoneNumber;
 
 
     @Override
@@ -78,52 +82,81 @@ public class NewPersonPageFragment extends Fragment {
 
     }
 
-    public static NewPersonPageFragment newInstance(User user) {
-        NewPersonPageFragment newFragment = new NewPersonPageFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user", user);
-        newFragment.setArguments(bundle);
-        return newFragment;
+
+    public  NewPersonPageFragment newInstance(User user, Post newPost) {
+        NewPersonPageFragment newPersonPageFragment = new NewPersonPageFragment();
+
+        Bundle args = new Bundle();
+
+        args.putSerializable("user", user);
+        args.putSerializable("newpost", newPost);
+        newPersonPageFragment.setArguments(args);
+//         this.user= user;
+//        this.newpost=newPost;
+//        newPersonPageFragment.setArguments(args);
+
+        return newPersonPageFragment;
     }
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // 从Intent中获取数据
-        intent = getActivity().getIntent();
-        if(intent != null) {
-            user = (User) intent.getSerializableExtra("user");
-            newpost = (Post) intent.getSerializableExtra("newpost");
 
+        sharedPreferences1 = getActivity().getSharedPreferences("User", MODE_PRIVATE);
+        userPhoneNumber = sharedPreferences1.getString("phoneNumber", "");//我
+        userManager = new UserManager(getContext());
+        Bundle args = getArguments();
+        System.out.println("===========args:" + args);
+        if (args != null) {
+           user = (User) args.getSerializable("user");
+            newpost = (Post) args.getSerializable("newpost");
             if (user != null) {
-                String phoneNumber = user.getPhoneNumber();//从首页点进来的用户
-                sharedPreferences1 = getActivity().getSharedPreferences("User", MODE_PRIVATE);
-                userPhoneNumber = sharedPreferences1.getString("phoneNumber", "");//我
+                //从首页点进来的用户
+                phoneNumber = newpost.getPhoneNumber();
                 // 当前设备正在登录的账号
 
-                if(phoneNumber.equals(userPhoneNumber)){
+                if (phoneNumber.equals(userPhoneNumber)) {
                     rootView = inflater.inflate(R.layout.fragment_personal_page, container, false);
-                    isFromIntent = true;
+
                 } else {
                     rootView = inflater.inflate(R.layout.fragment_personal_page_other, container, false);
-                    isFromIntent = false;
-                }
-                userManager = new UserManager(getContext());
-                isfollowingOrFriend1 = userManager.isFollowing( user,findUserByPhoneNumber(newpost.getPhoneNumber()));
 
-                if (isfollowingOrFriend1) {
-                    editablesource.setImageResource(R.drawable.already_attention);
-                } else {
-                    editablesource.setImageResource(R.drawable.attention);
+                    editablesource = rootView.findViewById(R.id.person_fragment_iv_attention);
+                    isfollowingOrFriend1 = userManager.isFollowing(this.user, findUserByPhoneNumber(newpost.getPhoneNumber()));
+                    if (isfollowingOrFriend1) {
+                        editablesource.setImageResource(R.drawable.already_attention);
+                    } else {
+                        editablesource.setImageResource(R.drawable.attention);
+                    }
+
+
+
                 }
+            }
+
+            User postUser = null;  // 创建一个新的变量来保存从 newpost.getPhoneNumber() 获取的用户
+            if (newpost != null) {
+                postUser = findUserByPhoneNumber(newpost.getPhoneNumber());
             } else {
-                // 处理用户为空的情况
-                rootView = inflater.inflate(R.layout.fragment_personal_page, container, false);
-                isFromIntent = false;
+                Toast.makeText(getContext(), "newpost为空", Toast.LENGTH_SHORT).show();
+            }
+            if (postUser != null) {
+                // 如果从 newpost.getPhoneNumber() 获取的用户不为空，使用这个用户
+                this.user = postUser;
+            } else if (this.user == null) {
+                Toast.makeText(getContext(), "没有这个用户", Toast.LENGTH_SHORT).show();
             }
 
 
+            isFromIntent = true;
         } else {
-            // 处理Intent为空的情况
+            user = findUserByPhoneNumber(userPhoneNumber);
+            countFans = userManager.countFans(user);
+            countFollowings = userManager.countFollowing(user);
+            countFriends = userManager.countFriends(user);
+
             rootView = inflater.inflate(R.layout.fragment_personal_page, container, false);
             isFromIntent = false;
         }
@@ -131,20 +164,11 @@ public class NewPersonPageFragment extends Fragment {
         initData();
         initView(rootView);
 
-
-        long countFollowings = userManager.countFollowing(user);
-        long countFans = userManager.countFans(user);
-        countFriends = userManager.countFriends(user);
-        attentionNumber.setText(String.valueOf(countFollowings));
-        fensiNumber.setText(String.valueOf(countFans));
-
-
-
         return rootView;
 
     }
     public User findUserByPhoneNumber(String phoneNumber) {
-        List<User> users = LitePal.where("phoneNumber = ?", phoneNumber).find(User.class);
+        List<User> users = LitePal.select("phoneNumber = ?", phoneNumber).find(User.class);
         if (!users.isEmpty()) {
             return users.get(0);
         } else {
@@ -165,11 +189,14 @@ public class NewPersonPageFragment extends Fragment {
         mingyan = (TextView) rootView.findViewById(R.id.person_fragment_tv_mingyan);
         attentionNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_guanzhu_number);
         fensiNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_fensi_number);
-        if (!isFromIntent){
+        if (userPhoneNumber.equals(phoneNumber)){
             friend = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend);
             friendNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend_number);
             friendNumber.setText(String.valueOf(countFriends));
         }
+        attentionNumber.setText(String.valueOf(countFollowings));
+        fensiNumber.setText(String.valueOf(countFans));
+
 
 
         mTabLayout = rootView.findViewById(R.id.tab_layout);
@@ -207,20 +234,22 @@ public class NewPersonPageFragment extends Fragment {
         editablesource.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-                startActivityForResult(intent,EDITABLEACTIVITY_BACK);
-                if (isFromIntent){
-                    if (isfollowingOrFriend1){
-                        isfollowingOrFriend1 = false;
-                        editablesource.setImageResource(R.drawable.attention);
-                        userManager.unfollowUser( user,findUserByPhoneNumber(newpost.getPhoneNumber()));
-                    } else {
-                        isfollowingOrFriend1 = true;
-                        editablesource.setImageResource(R.drawable.already_attention);
-                        userManager.followUser( user,findUserByPhoneNumber(newpost.getPhoneNumber()));
-                    }
-                }
+                if (phoneNumber.equals(userPhoneNumber)){
+                    Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+                    startActivityForResult(intent,EDITABLEACTIVITY_BACK);
+                }else {
+                        if (isfollowingOrFriend1){
+                            isfollowingOrFriend1 = false;
+                            editablesource.setImageResource(R.drawable.attention);
+                            userManager.unfollowUser( user,findUserByPhoneNumber(newpost.getPhoneNumber()));
 
+                        } else {
+                            isfollowingOrFriend1 = true;
+                            editablesource.setImageResource(R.drawable.already_attention);
+                            userManager.followUser( user,findUserByPhoneNumber(newpost.getPhoneNumber()));
+                        }
+
+                }
 
             }
         });
@@ -238,20 +267,43 @@ public class NewPersonPageFragment extends Fragment {
             if (data != null) {
                 String editedGender = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_GENDER);
                 String editedBirthday = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_BIRTHDAY);
-                String editedLocation = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_REGION);
-                String editedSignature = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_SIGNATURE);
-                String editedName = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_NAME);
-                name.setText(editedName);
-                signature.setText(editedSignature);
-                gender.setText(editedGender);
-                birthday.setText(editedBirthday);
-                region.setText(editedLocation);
+//                String editedLocation = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_REGION);
+//                String editedSignature = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_SIGNATURE);
+//                String editedName = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_NAME);
+                if (editedGender!=null){
+                    gender.setText(editedGender);
+                }else {
+                    gender.setText("未知");
+                }
+//                if (editedName!=null){
+//                    name.setText(editedName);
+//                }else {
+//                    name.setText("YIXIANG");
+//                }
+//
+//                if (editedSignature!=null) {
+//                    signature.setText(editedSignature);
+//                }else {
+//                    signature.setText("这个人很懒，什么都没有留下");
+//                }
+
+                if (editedBirthday!=null){
+                    birthday.setText(editedBirthday);
+                }else {
+                    birthday.setText("未知");
+                }
+//
+//                if (editedLocation!=null) {
+//                    region.setText(editedLocation);
+//                }else {
+//                    region.setText("未知");
+//                }
 
                 user.setGender(editedGender);
                 user.setBirthday(editedBirthday);
-                user.setRegion(editedLocation);
-                user.setSignature(editedSignature);
-                user.setName(editedName);
+//                user.setRegion(editedLocation);
+//                user.setSignature(editedSignature);
+//                user.setName(editedName);
 
                 user.update(user.getId());
 

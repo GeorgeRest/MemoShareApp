@@ -26,10 +26,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.Fragment.AudioPlayerFragment;
-import com.george.memoshareapp.Fragment.NewPersonPageFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.activities.HomePageActivity;
+import com.george.memoshareapp.activities.NewPersonPageActivity;
 import com.george.memoshareapp.beans.ContactInfo;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
@@ -100,6 +100,8 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.record_three.setTag(holder);
         holder.like.setTag(holder);
         holder.chat.setTag(holder);
+        holder.head.setTag(holder);
+
         Post post = mData.get(position);
         holder.bind(post);
         String phoneNumber_name = post.getPhoneNumber();
@@ -303,12 +305,14 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 intent.putExtra("post", post);
                 mContext.startActivity(intent);
                 break;
+
             case R.id.iv_head_image_1:
-                Intent intent1 = new Intent(mContext, NewPersonPageFragment.class);
+                Intent intent1 = new Intent(mContext, NewPersonPageActivity.class);
                 intent1.putExtra("user", user);
                 intent1.putExtra("newpost", newPost);
-
                 mContext.startActivity(intent1);
+                break;
+
 
         }
         if (holder.recordings != null && !holder.recordings.isEmpty()) {
@@ -336,6 +340,8 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView head;
         ImageView chat;
         ImageView like;
         TextView tv_username;
@@ -382,11 +388,16 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             record_three = itemView.findViewById(R.id.record_three);
             like = itemView.findViewById(R.id.like);
             chat = itemView.findViewById(R.id.chat);
+            head = (ImageView) itemView.findViewById(R.id.iv_head_image_1);
             chat.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             like.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
+            head.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
+
             record_one.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_two.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_three.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
+
+
 
 //            ll_head = itemView.findViewById(R.id.ll_head);
 
@@ -397,6 +408,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             rl_head_images = (RelativeLayout) itemView.findViewById(R.id.rl_head_images);
             rl_layout = (RelativeLayout) itemView.findViewById(R.id.rl_layout);
             ll_head_images = (LinearLayout) itemView.findViewById(R.id.ll_head_images);
+            ll_head_images.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
         }
 
         void bind(Post post) {
