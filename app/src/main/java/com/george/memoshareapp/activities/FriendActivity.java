@@ -125,30 +125,26 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
         tv_fans.setOnClickListener(this);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.iv_back:
                 finish();
                 break;
+            case R.id.tv_following:
+
             case R.id.tv_myfollowing:
                 vp_friend.setCurrentItem(0);
-
                 break;
+            case R.id.tv_fans:
+
             case R.id.tv_myfans:
                 vp_friend.setCurrentItem(1);
-
                 break;
             case R.id.tv_myfriend:
                 vp_friend.setCurrentItem(2);
-
                 break;
-            case R.id.tv_following:
-                vp_friend.setCurrentItem(0);
-
-                break;
-            case R.id.tv_fans:
-                vp_friend.setCurrentItem(1);
         }
 
     }
