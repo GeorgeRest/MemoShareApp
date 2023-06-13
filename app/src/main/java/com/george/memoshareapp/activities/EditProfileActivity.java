@@ -22,6 +22,7 @@ import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,11 +58,13 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     private TextView tv_edit_name;
     private TextView tv_edit_region;
     private ImageView back;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+        user = (User) getIntent().getSerializableExtra("user");
         initView();
         initTimePicker();
         initLunarPicker();
@@ -88,6 +91,36 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         tv_edit_region = (TextView) findViewById(R.id.tv_edit_region);
         back = (ImageView) findViewById(R.id.edit_iv_back);
         camera.setOnClickListener(this);
+        getParamsFromUser();
+
+
+    }
+
+    private void getParamsFromUser() {
+
+        String gender = user.getGender();
+        if (gender!=null){
+            tv_edit_gender.setText(gender);
+        }
+        String birthday = user.getBirthday();
+        if (birthday!=null){
+            tv_edit_birthday.setText(birthday);
+        }
+        String name = user.getName();
+        if (name==null){
+            long id = user.getId();
+            tv_edit_name.setText(user.generateDefaultName(id));
+        }else {
+            tv_edit_name.setText(name);
+        }
+        String signature = user.getSignature();
+        if (signature!=null){
+            tv_edit_signature.setText(signature);
+        }
+        String region = user.getRegion();
+        if (region!=null){
+            tv_edit_region.setText(region);
+        }
     }
 
     @Override
@@ -189,6 +222,14 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             public void onClick(View view) {
                 tv_edit_gender.setText("女");
                 EDIT_GENDER = 0;
+                dialog.dismiss();
+            }
+        });
+        dialog.findViewById(R.id.tv_edit_gender).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tv_edit_gender.setText("未知");
+                EDIT_GENDER = 1;
                 dialog.dismiss();
             }
         });
@@ -360,19 +401,22 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         saveAndFinish();
+        super.onDestroy();
+
 
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         saveAndFinish();
+        super.onBackPressed();
+
 
     }
 
     private void saveAndFinish() {
+
         Intent data = new Intent();
 
         data.putExtra(EXTRA_EDITED_BIRTHDAY, tv_edit_birthday.getText().toString());

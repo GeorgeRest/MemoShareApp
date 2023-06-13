@@ -105,6 +105,7 @@
                     android:textColor="@color/white"
                     android:textSize="9dp"
                     android:textStyle="bold" />
+
                 <ImageView
                     android:id="@+id/sex"
                     android:layout_width="10dp"
@@ -234,7 +235,11 @@
                 android:layout_marginTop="220dp"
                 app:tabIndicatorColor="#685C97"
                 app:tabGravity="fill"
-                style="@style/TabLayoutTextStyle" />
+                app:tabIndicatorFullWidth="false"
+                style="@style/TabLayoutTextStyle"
+
+
+            />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
 

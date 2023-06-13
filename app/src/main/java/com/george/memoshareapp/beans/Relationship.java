@@ -15,27 +15,27 @@ import java.io.Serializable;
  */
 public class Relationship extends LitePalSupport implements Serializable {
     private long id;
-    private long initiatorID;
-    private long targetID;
+    private String initiatorNumber;
+    private String targetNumber;
     private int relationshipStatus;
     public static final int ATTENTION_STATUS = 1;
     public static final int FANS_STATUS = 2;
     public static final int FRIEND_STATUS = 3;
 
-    public long getInitiatorID() {
-        return initiatorID;
+    public String getInitiatorNumber() {
+        return initiatorNumber;
     }
 
-    public void setInitiatorID(long initiatorID) {
-        this.initiatorID = initiatorID;
+    public void setInitiatorNumber(String initiatorNumber) {
+        this.initiatorNumber = initiatorNumber;
     }
 
-    public long getTargetID() {
-        return targetID;
+    public String getTargetNumber() {
+        return targetNumber;
     }
 
-    public void setTargetID(long targetID) {
-        this.targetID = targetID;
+    public void setTargetNumber(String targetNumber) {
+        this.targetNumber = targetNumber;
     }
 
     public int getRelationshipStatus() {
