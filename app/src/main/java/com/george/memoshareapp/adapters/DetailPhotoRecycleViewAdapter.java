@@ -39,16 +39,16 @@ public class DetailPhotoRecycleViewAdapter extends RecyclerView.Adapter<DetailPh
         int size = mData.size();
         ViewGroup.LayoutParams layoutParams = holder.imageView.getLayoutParams();
         if (size == 1) {
-            layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_detail);
-            layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_detail);
+            layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_large);
+            layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_large);
         }
         if (size == 2 || size == 4) {
-            layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_medium);
-            layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_medium);
-        }
-        if(size == 3 || size == 5 || size == 6 || size == 7 || size == 8 || size == 9) {
             layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_small);
             layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_small);
+        }
+        if(size == 3 || size == 5 || size == 6 || size == 7 || size == 8 || size == 9) {
+            layoutParams.width = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_small1);
+            layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_small1);
         }
         holder.imageView.setLayoutParams(layoutParams);
         String url = mData.get(position);

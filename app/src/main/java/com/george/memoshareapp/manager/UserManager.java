@@ -174,8 +174,8 @@ public class UserManager {
         LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?", String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()));
         LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?", String.valueOf(target.getPhoneNumber()), String.valueOf(initiator.getPhoneNumber()));
     }
-    //  查询用户的粉丝数
-    public long countFans(User user) {
+
+    public long countFollowing(User user) {
         return LitePal.where("initiatorNumber = ? and (relationshipStatus = ? or relationshipStatus = ?)",
                         String.valueOf(user.getPhoneNumber()),
                         String.valueOf(Relationship.ATTENTION_STATUS),
@@ -183,16 +183,16 @@ public class UserManager {
                 .count(Relationship.class);
     }
 
-    //查询用户关注的人数
-    public long countFollowing(User user) {
-        return LitePal.where("initiatorNumber = ? and (relationshipStatus = ? or relationshipStatus = ?)",
+
+    public long countFans (User user) {
+        return LitePal.where("targetNumber = ? and (relationshipStatus = ? or relationshipStatus = ?)",
                         String.valueOf(user.getPhoneNumber()),
-                        String.valueOf(Relationship.FANS_STATUS),
+                        String.valueOf(Relationship.ATTENTION_STATUS),
                         String.valueOf(Relationship.FRIEND_STATUS))
                 .count(Relationship.class);
     }
 
-    // 查询用户的朋友数
+
     public long countFriends(User user) {
         return LitePal.where("initiatorNumber = ? and relationshipStatus = ?",
                         String.valueOf(user.getPhoneNumber()),
