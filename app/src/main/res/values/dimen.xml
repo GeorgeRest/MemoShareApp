@@ -2,6 +2,8 @@
 <resources>
     <dimen name="grid_expected_size">1dp</dimen>
     <dimen name="image_size_large">280dp</dimen>
+    <dimen name="image_size_large1">300dp</dimen>
+
     <dimen name="image_size_detail">300dp</dimen>
     <dimen name="image_size_medium">210dp</dimen>
     <dimen name="image_size_small">140dp</dimen>

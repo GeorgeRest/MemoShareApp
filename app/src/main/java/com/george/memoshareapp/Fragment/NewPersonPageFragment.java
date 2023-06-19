@@ -81,6 +81,7 @@ public class NewPersonPageFragment extends Fragment {
     private Boolean ismyslef=false;
     private ImageView iv_sex;
     private User otheruser;
+    private Bundle args;
 
 
     @Override
@@ -101,7 +102,7 @@ public class NewPersonPageFragment extends Fragment {
         userPhoneNumber = sharedPreferences1.getString("phoneNumber", "");//我
         userManager = new UserManager(getContext());
         userMe = findUserByPhoneNumber(userPhoneNumber);//根据登录的时候的手机号找到的用户
-        Bundle args = getArguments();
+        args = getArguments();
         if (args != null) {
             newpost = (Post) args.getSerializable("newpost");
             phoneNumber = newpost.getPhoneNumber();
@@ -317,6 +318,10 @@ public class NewPersonPageFragment extends Fragment {
                 intent.putExtra("userPhoneNumber",userPhoneNumber);
                 intent.putExtra("isFriend",0);
                 intent.putExtra("ismyself",ismyslef);
+                if (args!=null){
+                    phoneNumber = newpost.getPhoneNumber();
+                    intent.putExtra("postPhoneNumber", phoneNumber);
+                }
                 startActivity(intent);
             }
         });
@@ -327,6 +332,10 @@ public class NewPersonPageFragment extends Fragment {
                 intent.putExtra("userPhoneNumber",userPhoneNumber);
                 intent.putExtra("isFriend",1);
                 intent.putExtra("ismyself",ismyslef);
+                if (args!=null){
+                    phoneNumber = newpost.getPhoneNumber();
+                    intent.putExtra("postPhoneNumber", phoneNumber);
+                }
                 startActivity(intent);
             }
         });
