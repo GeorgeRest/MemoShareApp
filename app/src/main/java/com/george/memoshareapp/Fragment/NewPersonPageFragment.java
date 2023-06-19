@@ -316,7 +316,10 @@ public class NewPersonPageFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), FriendActivity.class);
-                    intent.putExtra("userPhoneNumber", userPhoneNumber);
+                    if (args != null) {
+                        phoneNumber = newpost.getPhoneNumber();
+                        intent.putExtra("postPhoneNumber", phoneNumber);
+                    }
                     intent.putExtra("isFriend", 2);
                     intent.putExtra("ismyself", ismyslef);
                     startActivity(intent);
@@ -328,7 +331,7 @@ public class NewPersonPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendActivity.class);
-                intent.putExtra("userPhoneNumber", userPhoneNumber);
+
                 intent.putExtra("isFriend", 0);
                 intent.putExtra("ismyself", ismyslef);
                 if (args != null) {
@@ -342,7 +345,7 @@ public class NewPersonPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendActivity.class);
-                intent.putExtra("userPhoneNumber", userPhoneNumber);
+
                 intent.putExtra("isFriend", 1);
                 intent.putExtra("ismyself", ismyslef);
                 if (args != null) {
