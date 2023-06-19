@@ -39,7 +39,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
 
 
-    private static int EDIT_GENDER = 0;
+
     private RelativeLayout rl_name;
     private RelativeLayout rl_signature;
     private RelativeLayout rl_gender;
@@ -212,7 +212,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(View view) {
                 tv_edit_gender.setText("男");
-                EDIT_GENDER = 1;
                 dialog.dismiss();
             }
         });
@@ -221,7 +220,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(View view) {
                 tv_edit_gender.setText("女");
-                EDIT_GENDER = 0;
                 dialog.dismiss();
             }
         });
@@ -229,7 +227,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(View view) {
                 tv_edit_gender.setText("未知");
-                EDIT_GENDER = 1;
                 dialog.dismiss();
             }
         });

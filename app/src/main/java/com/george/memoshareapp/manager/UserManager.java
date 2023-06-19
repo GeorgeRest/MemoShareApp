@@ -139,7 +139,7 @@ public class UserManager {
         }
     }
     public User findUserByPhoneNumber(String phoneNumber) {
-        User users = LitePal.select(" phoneNumber")
+        User users = LitePal
                 .where("phoneNumber = ?", phoneNumber)
                 .findFirst(User.class);
         if (users != null) {

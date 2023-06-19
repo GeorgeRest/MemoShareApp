@@ -151,6 +151,11 @@ public class NewPersonPageFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("=========================onResume=========================");
+    }
 
     private void getParams2View(User u1) {
         person_fragment_tv_name = (TextView) rootView.findViewById(R.id.person_fragment_tv_name);
@@ -169,7 +174,7 @@ public class NewPersonPageFragment extends Fragment {
         }
 
         if (gender==null){
-            iv_sex.setImageResource(R.mipmap.sex_man);
+            iv_sex.setImageResource(R.mipmap.sex_open);
         }else {
             iv_sex.setVisibility(View.VISIBLE);
             if (gender.equals("男")){
@@ -195,7 +200,7 @@ public class NewPersonPageFragment extends Fragment {
     }
 
     public User findUserByPhoneNumber(String phoneNumber) {
-        User users = LitePal.select(" phoneNumber")
+        User users = LitePal
                 .where("phoneNumber = ?", phoneNumber)
                 .findFirst(User.class);
         if (users != null) {
@@ -345,7 +350,6 @@ public class NewPersonPageFragment extends Fragment {
         mData.add("发布");
         mData.add("点赞");
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
