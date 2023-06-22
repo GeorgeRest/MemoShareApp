@@ -27,7 +27,10 @@ public class User extends LitePalSupport implements Serializable {
     private String birthday;
     private String region; //中国
     private String BackGroundPath; //默认背景
+
     private List<Post> likePosts = new ArrayList<>();
+    private List<UserRelationship> user1 = new ArrayList<>();
+    private List<UserRelationship> user2 = new ArrayList<>();
 
     public User() {
     }

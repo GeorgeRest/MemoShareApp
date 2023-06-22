@@ -15,21 +15,24 @@ import androidx.recyclerview.widget.RecyclerView;
  * @version: 1.0
  */
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-    private int space;
+    private int leftSpace;
+    private int topSpace;
+    private int rightSpace;
+    private int bottomSpace;
 
-    public SpacesItemDecoration(int space) {
-        this.space = space;
+    public SpacesItemDecoration(int leftSpace, int topSpace, int rightSpace, int bottomSpace) {
+        this.leftSpace = leftSpace;
+        this.topSpace = topSpace;
+        this.rightSpace = rightSpace;
+        this.bottomSpace = bottomSpace;
     }
-
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        outRect.left = space;
-        outRect.right = space;
-        outRect.bottom = space;
-
-        // Add top margin only for the first item to avoid double space between items
+        outRect.left = leftSpace;
+        outRect.right = rightSpace;
+        outRect.bottom = bottomSpace;
         if (parent.getChildLayoutPosition(view) == 0) {
-            outRect.top = space;
+            outRect.top = topSpace;
         } else {
             outRect.top = 0;
         }

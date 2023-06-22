@@ -10,6 +10,8 @@ package com.george.memoshareapp.events;
  * @version: 1.0
  */
 public class ScrollToTopEvent {
+
     public ScrollToTopEvent() {
     }
+
 }

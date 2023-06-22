@@ -115,7 +115,6 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     // 处理子项点击事件的逻辑
-                    System.out.println("---------" + post);
 //                    页面传值，更改键值对即可
                     SharedPreferences sharedPreferences = context.getSharedPreferences("User", Context.MODE_PRIVATE);
                     Intent intent = new Intent(context, DetailActivity.class);

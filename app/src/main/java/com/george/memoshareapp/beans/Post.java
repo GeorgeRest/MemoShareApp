@@ -226,5 +226,6 @@ public class Post extends LitePalSupport implements Serializable {
     public int hashCode() {
         return Objects.hash(id, phoneNumber, publishedText, photoCachePath, recordings, contacts, location, longitude, latitude, isPublic, publishedTime, memoryTime, like, share, commentBeans, user);
     }
+
 }
 

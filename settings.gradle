@@ -12,6 +12,9 @@ dependencyResolutionManagement {
         mavenCentral()
         jcenter()
         maven { url 'https://jitpack.io' }
+        maven { allowInsecureProtocol(true)
+            url "https://mvn.mob.com/android"
+        }
     }
 }
 rootProject.name = "Memosahre"

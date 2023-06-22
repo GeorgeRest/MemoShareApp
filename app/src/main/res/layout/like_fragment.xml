@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.scwang.smart.refresh.layout.SmartRefreshLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/refreshLayout"
@@ -21,10 +21,10 @@
             android:dividerHeight="0dp" />
     </RelativeLayout>
 
-    <com.scwang.smart.refresh.footer.ClassicsFooter
-        android:id="@+id/footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
-</com.scwang.smart.refresh.layout.SmartRefreshLayout>
+<!--    <com.scwang.smart.refresh.footer.ClassicsFooter-->
+<!--        android:id="@+id/footer"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true" />-->
+</LinearLayout>
 

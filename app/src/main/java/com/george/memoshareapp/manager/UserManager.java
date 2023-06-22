@@ -108,21 +108,4 @@ public class UserManager {
     }
 
 
-    public void followUser(User user, User target) {
-        // 创建Relationship记录
-        Relationship relationship = new Relationship();
-        relationship.setUserId(user.getId());
-        relationship.setFollowingId(target.getId());
-
-        // 将结果保存到数据库
-        relationship.save();
-    }
-
-    // 取消关注一个用户
-    public void unfollowUser(User user, User target) {
-        // 删除Relationship记录
-        LitePal.deleteAll(Relationship.class, "userId = ? and followingId = ?", String.valueOf(user.getId()), String.valueOf(target.getId()));
-    }
-
-
 }
