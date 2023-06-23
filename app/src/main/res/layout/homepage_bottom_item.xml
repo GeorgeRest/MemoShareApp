@@ -8,31 +8,27 @@
     android:layout_marginRight="3dp"
     android:layout_marginBottom="8dp"
    >
-
-
-
     <ImageView
         android:id="@+id/bottom_image_view"
         android:layout_width="80dp"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:scaleType="fitXY"
-        android:src="@mipmap/img" />
+        android:src="@mipmap/head_portrait" />
 
     <ImageView
         android:id="@+id/bottom_image_view1"
         android:layout_width="80dp"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/vector_drawable" />
+        android:src="@drawable/bg_bottom_photo" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circle_image"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="2dp"
-        android:src="@mipmap/img" />
+        android:src="@drawable/horizental_photo" />
 
     <TextView
         android:id="@+id/bottom_time"

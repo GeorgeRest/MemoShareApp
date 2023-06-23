@@ -7,18 +7,21 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.george.memoshareapp.Fragment.FriendFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.FriendListPagerAdapter;
+import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.manager.UserManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,15 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
     private List<Fragment> fragmentList;
     private SearchView sv_search;
     private FriendListPagerAdapter pagerAdapter;
-    private boolean isMine = false;
+    private boolean isMe = false;
+    private int choice = 1;
+    private String phoneNumber;
+    private FriendFragment fragment1;
+    private FriendFragment fragment2;
+    private FriendFragment fragment3;
+    private FragmentManager manager;
+    private FragmentTransaction transaction;
+    private UserManager userManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +55,10 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_friend);
         initView();
         initData();
-
-        pagerAdapter = new FriendListPagerAdapter(getSupportFragmentManager(),fragmentList);
+        pagerAdapter = new FriendListPagerAdapter(manager,fragmentList);
         vp_friend.setAdapter(pagerAdapter);
+        onViewPagerSelected(choice);
+        vp_friend.setCurrentItem(choice);
         vp_friend.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -54,8 +66,6 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onPageSelected(int position) {
-                Toast.makeText(FriendActivity.this, "1", Toast.LENGTH_SHORT).show();
-
                 onViewPagerSelected(position);
             }
 
@@ -86,12 +96,49 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
 
     private void initData() {
         fragmentList = new ArrayList<>();
+        manager = getSupportFragmentManager();
+        transaction = manager.beginTransaction();
+        Intent intent = getIntent();
+        // 获取传递的参数
+        phoneNumber = intent.getStringExtra("postPhoneNumber");
+        choice = intent.getIntExtra("isFriend", 0);
+        isMe = intent.getBooleanExtra("ismyself", false);
 
-        FriendFragment fragment1 = FriendFragment.newInstance("关注","");
-        FriendFragment fragment2 = FriendFragment.newInstance("粉丝","");
-        FriendFragment fragment3 = FriendFragment.newInstance("好友","");
+        userManager = new UserManager(this);
+        List<User> followedUserList = userManager.getFollowedUser(phoneNumber);
+        List<User> fansUserList = userManager.getFansUser(phoneNumber);
+        List<User> friendUserList = userManager.getFriendUser(phoneNumber);
 
-        if (isMine == true) {
+        Bundle bundle1 = new Bundle();
+        bundle1.putSerializable("userList", (Serializable) followedUserList);
+        bundle1.putInt("choice",0);
+        bundle1.putString("phoneNumber",phoneNumber);
+        bundle1.putBoolean("isMe",isMe);
+
+        Bundle bundle2 = new Bundle();
+        bundle2.putSerializable("userList", (Serializable) fansUserList);
+        bundle2.putInt("choice",1);
+        bundle2.putString("phoneNumber",phoneNumber);
+        bundle2.putBoolean("isMe",isMe);
+
+        Bundle bundle3 = new Bundle();
+        bundle3.putSerializable("userList", (Serializable) friendUserList);
+        bundle3.putInt("choice",2);
+        bundle3.putString("phoneNumber",phoneNumber);
+        bundle3.putBoolean("isMe",isMe);
+
+
+        fragment1 = FriendFragment.newInstance(null,null);
+        fragment1.setArguments(bundle1);
+
+        fragment2 = FriendFragment.newInstance(null,null);
+        fragment2.setArguments(bundle2);
+
+        fragment3 = FriendFragment.newInstance(null,null);
+        fragment3.setArguments(bundle3);
+
+
+        if (isMe == true) {
             ll_mine.setVisibility(View.VISIBLE);
             ll_friend.setVisibility(View.GONE);
             fragmentList.add(fragment1);
