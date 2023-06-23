@@ -285,6 +285,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 dialog.dismiss();
             }
         });
+        ///gyfhg
 
         dialog.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
