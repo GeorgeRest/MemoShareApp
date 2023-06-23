@@ -281,32 +281,40 @@ public class NewPersonPageFragment extends Fragment {
         editablesource.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (phoneNumber.equals(userPhoneNumber)) {//newpost和sp的电话号
+
+                if(phoneNumber!=null){
+                    if (phoneNumber.equals(userPhoneNumber)) {//newpost和sp的电话号
+                        Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+                        intent.putExtra("user", userMe);
+                        startActivityForResult(intent, EDITABLEACTIVITY_BACK);
+                    } else {
+                        if (isfollowingOrFriend1) {
+                            isfollowingOrFriend1 = false;
+                            editablesource.setImageResource(R.drawable.attention);
+                            userManager.unfollowUser(userMe, otheruser);
+                        } else {
+                            isfollowingOrFriend1 = true;
+                            editablesource.setImageResource(R.drawable.already_attention);
+                            userManager.followUser(userMe, otheruser);
+                        }
+                        if (userPhoneNumber.equals(phoneNumber)) {
+                            attentionNumber.setText(userManager.countFollowing(otheruser) + "");
+                            fensiNumber.setText(userManager.countFans(otheruser) + "");
+                            friendNumber.setText(userManager.countFriends(otheruser) + "");
+                        } else {
+                            attentionNumber.setText(userManager.countFollowing(otheruser) + "");
+                            fensiNumber.setText(userManager.countFans(otheruser) + "");
+                        }
+                    }
+
+                }else {
                     Intent intent = new Intent(getActivity(), EditProfileActivity.class);
                     intent.putExtra("user", userMe);
                     startActivityForResult(intent, EDITABLEACTIVITY_BACK);
-                } else {
-                    if (isfollowingOrFriend1) {
-                        isfollowingOrFriend1 = false;
-                        editablesource.setImageResource(R.drawable.attention);
-                        userManager.unfollowUser(userMe, otheruser);
-                    } else {
-                        isfollowingOrFriend1 = true;
-                        editablesource.setImageResource(R.drawable.already_attention);
-                        userManager.followUser(userMe, otheruser);
-
-                    }
                 }
 
 
-                if (userPhoneNumber.equals(phoneNumber)) {
-                    attentionNumber.setText(userManager.countFollowing(otheruser) + "");
-                    fensiNumber.setText(userManager.countFans(otheruser) + "");
-                    friendNumber.setText(userManager.countFriends(otheruser) + "");
-                } else {
-                    attentionNumber.setText(userManager.countFollowing(otheruser) + "");
-                    fensiNumber.setText(userManager.countFans(otheruser) + "");
-                }
+
 
             }
         });

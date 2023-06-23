@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.EditSignatureActivity"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="13dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/back_register_contact" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="个性签名"
+            android:textSize="20dp"
+            android:textColor="#202025"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/tv_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="完成"
+            android:textSize="17dp"
+            android:textColor="#80997AE7"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#5B9F9D9D"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp" />
+
+    <EditText
+        android:id="@+id/et_edit_sign"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@null"/>
+
+</LinearLayout>
