@@ -312,9 +312,6 @@ public class NewPersonPageFragment extends Fragment {
                     startActivityForResult(intent, EDITABLEACTIVITY_BACK);
                 }
 
-
-
-
             }
         });
         if (ismyslef) {
@@ -326,7 +323,10 @@ public class NewPersonPageFragment extends Fragment {
                     if (args != null) {
                         phoneNumber = newpost.getPhoneNumber();
                         intent.putExtra("postPhoneNumber", phoneNumber);
+                    }else {
+                        intent.putExtra("postPhoneNumber",userPhoneNumber);
                     }
+
                     intent.putExtra("isFriend", 2);
                     intent.putExtra("ismyself", ismyslef);
                     startActivity(intent);
@@ -344,7 +344,10 @@ public class NewPersonPageFragment extends Fragment {
                 if (args != null) {
                     phoneNumber = newpost.getPhoneNumber();
                     intent.putExtra("postPhoneNumber", phoneNumber);
+                }else {
+                    intent.putExtra("postPhoneNumber",userPhoneNumber);
                 }
+
                 startActivity(intent);
             }
         });
@@ -358,7 +361,10 @@ public class NewPersonPageFragment extends Fragment {
                 if (args != null) {
                     phoneNumber = newpost.getPhoneNumber();
                     intent.putExtra("postPhoneNumber", phoneNumber);
+                }else {
+                    intent.putExtra("postPhoneNumber",userPhoneNumber);
                 }
+
                 startActivity(intent);
             }
         });

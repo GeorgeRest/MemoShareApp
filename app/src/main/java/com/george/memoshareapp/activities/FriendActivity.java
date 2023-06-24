@@ -101,10 +101,12 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = getIntent();
         // 获取传递的参数
         phoneNumber = intent.getStringExtra("postPhoneNumber");
+        System.out.println("-------------phone:"+phoneNumber);
         choice = intent.getIntExtra("isFriend", 0);
         isMe = intent.getBooleanExtra("ismyself", false);
 
         userManager = new UserManager(this);
+        System.out.println("---------------phone"+phoneNumber);
         List<User> followedUserList = userManager.getFollowedUser(phoneNumber);
         List<User> fansUserList = userManager.getFansUser(phoneNumber);
         List<User> friendUserList = userManager.getFriendUser(phoneNumber);
