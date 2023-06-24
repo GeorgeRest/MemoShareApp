@@ -29,6 +29,7 @@ import com.george.memoshareapp.Fragment.AudioPlayerFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.activities.HomePageActivity;
+import com.george.memoshareapp.activities.NewPersonPageActivity;
 import com.george.memoshareapp.beans.ContactInfo;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
@@ -39,7 +40,6 @@ import com.george.memoshareapp.utils.DateFormat;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,6 +143,12 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 intent.putExtra("shouldCheckComments", true);
                 intent.putExtra("post", post);
                 mContext.startActivity(intent);
+                break;
+            case R.id.iv_head_image_1:
+                Intent intent1 = new Intent(mContext, NewPersonPageActivity.class);
+                intent1.putExtra("user", user);
+                intent1.putExtra("newpost", newPost);
+                mContext.startActivity(intent1);
                 break;
         }
         if (holder.recordings != null && !holder.recordings.isEmpty()) {

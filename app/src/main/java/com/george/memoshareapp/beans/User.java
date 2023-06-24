@@ -4,7 +4,6 @@ import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,11 +31,15 @@ public class User extends LitePalSupport implements Serializable {
     private List<UserRelationship> user1 = new ArrayList<>();
     private List<UserRelationship> user2 = new ArrayList<>();
 
+
+
+
     public User() {
     }
 
-    public void generateDefaultName(int userIndex) {
+    public String generateDefaultName(long userIndex) {
         name = "忆享用户" + userIndex;
+        return name;
     }
 
     public String getHeadPortraitPath() {
@@ -132,5 +135,20 @@ public class User extends LitePalSupport implements Serializable {
         this.region = region;
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", headPortraitPath='" + headPortraitPath + '\'' +
+                ", signature='" + signature + '\'' +
+                ", gender='" + gender + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", region='" + region + '\'' +
+                ", BackGroundPath='" + BackGroundPath + '\'' +
+                ", likePosts=" + likePosts +
+                '}';
+    }
 }

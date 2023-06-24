@@ -43,16 +43,9 @@
         android:theme="@style/Theme.MemoShareApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity android:name=".activities.NewPersonPageActivity"
+            android:exported="true"/>
 
-        <activity
-            android:name=".activities.FriendActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".activities.EditProfileActivity"
             android:exported="true">
@@ -62,6 +55,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.FriendActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".activities.FullScreenImageActivity"
             android:exported="false" />
@@ -136,6 +140,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".activities.EditSignatureActivity"
+            android:exported="true"/>
+        <activity android:name=".activities.EditNameActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

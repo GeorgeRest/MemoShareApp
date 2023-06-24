@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dp">
+    android:layout_height="wrap_content"
+    android:padding="5dp">
 
     <com.george.memoshareapp.view.NiceImageView
         android:id="@+id/niv_photo"
@@ -16,24 +16,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="name"
+        android:textColor="#202025"
+        android:textSize="15dp"
         android:layout_toRightOf="@+id/niv_photo"
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="10dp"/>
 
     <TextView
         android:id="@+id/tv_signature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="个性签名"
+        android:textSize="11dp"
+        android:textColor="#80202025"
         android:layout_toRightOf="@+id/niv_photo"
         android:layout_below="@+id/tv_friend_name"
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="2dp"/>
 
     <Button
         android:id="@+id/btn_follow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="关注"
-        android:layout_alignParentRight="true"/>
+        android:layout_width="63dp"
+        android:layout_height="25dp"
+        android:textSize="14dp"
+        android:textColor="#80202025"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/rounded_btn_follow"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"/>
         <!--text具体由代码控制，设置选中背景-->
 
 
