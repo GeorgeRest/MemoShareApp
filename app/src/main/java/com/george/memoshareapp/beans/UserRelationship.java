@@ -1,19 +1,22 @@
 package com.george.memoshareapp.beans;
 
-public class UserRelationship {
+import org.litepal.annotation.Column;
+import org.litepal.crud.LitePalSupport;
+
+public class UserRelationship extends LitePalSupport {
     private long id;
-    private User user;//当前用户
-    private User targetUser;//目标用户
-    private int relationshipType;//关系类型，如关注、粉丝、朋友等
+    private User initiator;
+    private User target;
+    private int relationshipStatus;
+    @Column(ignore = true)
+    public static final int ATTENTION_STATUS = 1;
+    @Column(ignore = true)
+    public static final int FANS_STATUS = 2;
+    @Column(ignore = true)
+    public static final int FRIEND_STATUS = 3;
 
     public UserRelationship() {
-    }
 
-    public UserRelationship(long id, User user, User targetUser, int relationshipType) {
-        this.id = id;
-        this.user = user;
-        this.targetUser = targetUser;
-        this.relationshipType = relationshipType;
     }
 
     public long getId() {
@@ -24,27 +27,27 @@ public class UserRelationship {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public User getInitiator() {
+        return initiator;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setInitiator(User initiator) {
+        this.initiator = initiator;
     }
 
-    public User getTargetUser() {
-        return targetUser;
+    public User getTarget() {
+        return target;
     }
 
-    public void setTargetUser(User targetUser) {
-        this.targetUser = targetUser;
+    public void setTarget(User target) {
+        this.target = target;
     }
 
-    public int getRelationshipType() {
-        return relationshipType;
+    public int getRelationshipStatus() {
+        return relationshipStatus;
     }
 
-    public void setRelationshipType(int relationshipType) {
-        this.relationshipType = relationshipType;
+    public void setRelationshipStatus(int relationshipStatus) {
+        this.relationshipStatus = relationshipStatus;
     }
 }

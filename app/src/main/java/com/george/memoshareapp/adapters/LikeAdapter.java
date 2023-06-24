@@ -60,7 +60,7 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ViewHolder viewHolder, int i, @Nullable Post post) {
+    protected void onBindViewHolder(@NonNull LikeAdapter.ViewHolder viewHolder, int i, @Nullable Post post) {
         if (post == null) {
             return;
         }
@@ -95,7 +95,7 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
 
     @NonNull
     @Override
-    protected ViewHolder onCreateViewHolder(@NonNull Context context, @NonNull ViewGroup viewGroup, int i) {
+    protected LikeAdapter.ViewHolder onCreateViewHolder(@NonNull Context context, @NonNull ViewGroup viewGroup, int i) {
         View view = View.inflate(context, R.layout.item_cardview_like, null);
         return new ViewHolder(view);
     }

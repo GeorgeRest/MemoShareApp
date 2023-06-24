@@ -116,6 +116,7 @@ public class UserManager {
                         String.valueOf(Relationship.FRIEND_STATUS))
                 .count(Relationship.class);
 
+
         return count > 0;
     }
     // 当前用户关注其他用户
