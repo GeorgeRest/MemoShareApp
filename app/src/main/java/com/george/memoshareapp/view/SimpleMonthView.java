@@ -4,12 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
 import com.george.memoshareapp.R;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.MonthView;
-import com.orhanobut.logger.Logger;
 
 /**
  * 高仿魅族日历布局
@@ -20,7 +20,10 @@ public class SimpleMonthView extends MonthView {
 
     private int mRadius;
     private Paint mTodayTextPaint;
-    private Drawable mCustomDrawable;
+    private Drawable mPurpleCircleDrawable;
+    private Drawable mRedDrawable;
+    private Drawable mRedPurpleDrawable;
+    private Paint mOtherDayTextPaint;
 
     public SimpleMonthView(Context context) {
         super(context);
@@ -33,11 +36,23 @@ public class SimpleMonthView extends MonthView {
         mTodayTextPaint = new Paint();
         mTodayTextPaint.setAntiAlias(true);
         mTodayTextPaint.setTextAlign(Paint.Align.CENTER);
-        mTodayTextPaint.setColor(Color.RED);
-        mTodayTextPaint.setTextSize(mCurDayTextPaint.getTextSize());
+        mTodayTextPaint.setColor(Color.BLACK); // 设置颜色为黑色
+        mTodayTextPaint.setTextSize(mCurDayTextPaint.getTextSize() * 1.2f); // 字体大一些
+        mTodayTextPaint.setTypeface(Typeface.DEFAULT_BOLD); // 字体加粗
+
+
+        mOtherDayTextPaint = new Paint();
+        mOtherDayTextPaint.setAntiAlias(true);
+        mOtherDayTextPaint.setTextAlign(Paint.Align.CENTER);
+        mOtherDayTextPaint.setColor(Color.parseColor("#685c97")); // 设置为你指定的颜色
+        mOtherDayTextPaint.setTextSize(mCurDayTextPaint.getTextSize());
+        mOtherDayTextPaint.setTypeface(Typeface.DEFAULT);
+
 
         // Load your custom drawable here
-        mCustomDrawable = getResources().getDrawable(R.drawable.purple_circle);
+        mPurpleCircleDrawable = getResources().getDrawable(R.drawable.purple_circle);
+        mRedDrawable = getResources().getDrawable(R.drawable.red_circle);
+        mRedPurpleDrawable = getResources().getDrawable(R.drawable.red_purple_circle);
     }
 
     @Override
@@ -51,27 +66,30 @@ public class SimpleMonthView extends MonthView {
         int cy = y + mItemHeight / 2;
         canvas.drawCircle(cx, cy, mRadius, mSelectedPaint);
         if (hasScheme) {
-            int left = cx - mCustomDrawable.getIntrinsicWidth() / 4;
-            int top = y + mItemHeight - mRadius - mCustomDrawable.getIntrinsicHeight() / 2 + 70; // 使这行代码与onDrawScheme方法中的相同
-            int right = left + mCustomDrawable.getIntrinsicWidth() / 2;
-            int bottom = top + mCustomDrawable.getIntrinsicHeight() / 2;
-            mCustomDrawable.setBounds(left, top, right, bottom);
-            mCustomDrawable.draw(canvas);
+            int schemeColor = calendar.getSchemeColor();
+            Drawable drawable = getSchemeColor(schemeColor);
+            int left = cx - drawable.getIntrinsicWidth() / 4;
+            int top = y + mItemHeight - mRadius - drawable.getIntrinsicHeight() / 2 + 70;
+            int right = left + drawable.getIntrinsicWidth() / 2;
+            int bottom = top + drawable.getIntrinsicHeight() / 2;
+            drawable.setBounds(left, top, right, bottom);
+            drawable.draw(canvas);
         }
         return false;
     }
 
     @Override
     protected void onDrawScheme(Canvas canvas, Calendar calendar, int x, int y) {
-        // 计算图片的位置
-        int left = x + mItemWidth / 2 - mCustomDrawable.getIntrinsicWidth() / 4;
-        int top = y + mItemHeight - mRadius - mCustomDrawable.getIntrinsicHeight() / 2 + 70;
+        int schemeColor = calendar.getSchemeColor();
+        Drawable drawable = getSchemeColor(schemeColor);
+        int left = x + mItemWidth / 2 - drawable.getIntrinsicWidth() / 4;
+        int top = y + mItemHeight - mRadius - drawable.getIntrinsicHeight() / 2 + 70;
 
         // 设置图片的边界
-        mCustomDrawable.setBounds(left, top, left + mCustomDrawable.getIntrinsicWidth() / 2, top + mCustomDrawable.getIntrinsicHeight() / 2);
+        drawable.setBounds(left, top, left + drawable.getIntrinsicWidth() / 2, top + drawable.getIntrinsicHeight() / 2);
 
         // 绘制自定义图片
-        mCustomDrawable.draw(canvas);
+        drawable.draw(canvas);
     }
 
     @Override
@@ -81,21 +99,28 @@ public class SimpleMonthView extends MonthView {
 
         if (calendar.isCurrentDay()) {
             canvas.drawText(String.valueOf(calendar.getDay()), cx, baselineY, mTodayTextPaint);
-//            if (mCustomDrawable != null) {
-//                int drawableWidth = mCustomDrawable.getIntrinsicWidth();
-//                int drawableHeight = mCustomDrawable.getIntrinsicHeight();
-//                int left = cx - drawableWidth / 4;
-//                int top = (int) (baselineY + mTodayTextPaint.descent()) - drawableHeight / 2;
-//                int right = left + drawableWidth / 2;
-//                int bottom = top + drawableHeight / 2;
-//                mCustomDrawable.setBounds(left, top, right, bottom);
-//                mCustomDrawable.draw(canvas);
-//            }
         } else if (isSelected) {
             canvas.drawText(String.valueOf(calendar.getDay()), cx, baselineY, mSelectTextPaint);
         } else {
             canvas.drawText(String.valueOf(calendar.getDay()), cx, baselineY,
-                    calendar.isCurrentMonth() ? mCurMonthTextPaint : mOtherMonthTextPaint);
+                    calendar.isCurrentMonth() ? mSelectTextPaint : mOtherMonthTextPaint);
+        }
+    }
+
+
+    private Drawable getSchemeColor(int color) {
+        switch (color) {
+            case Color.RED:
+                return mRedDrawable;
+
+            case Color.GREEN:
+                return mPurpleCircleDrawable;
+
+            case Color.GRAY:
+                return mRedPurpleDrawable;
+
+            default:
+                return mRedDrawable;
         }
     }
 }

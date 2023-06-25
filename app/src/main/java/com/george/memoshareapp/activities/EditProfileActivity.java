@@ -26,8 +26,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
@@ -44,7 +42,6 @@ import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.engine.CropFileEngine;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.interfaces.OnResultCallbackListener;
-import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropImageEngine;
@@ -317,7 +314,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void customLayout(final View v) {
                         final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
-                        ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_cancel);
+                        ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_calender_cancel);
                         tvSubmit.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -418,7 +415,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void customLayout(View v) {
                         final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
-                        ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_cancel);
+                        ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_calender_cancel);
                         tvSubmit.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
