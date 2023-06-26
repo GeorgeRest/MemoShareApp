@@ -5,14 +5,21 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.adapters.FriendBaseQuickAdapter;
+import com.george.memoshareapp.beans.User;
+
+import java.util.List;
 
 public class FriendFragment extends Fragment {
 
@@ -21,7 +28,11 @@ public class FriendFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
-    private TextView tv_content;
+    private RecyclerView rv_friend;
+    private List<User> userList = null;
+    private int choice;
+    private String initiator_phoneNumber;
+    private boolean isMe;
 
     public FriendFragment() {
     }
@@ -52,11 +63,26 @@ public class FriendFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        tv_content = (TextView) view.findViewById(R.id.tv_content);
 
-        if(!TextUtils.isEmpty(mParam1)){
-            tv_content.setText(mParam1);
+        super.onViewCreated(view, savedInstanceState);
+
+        // 从Arguments中获取Bundle
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            // 从Bundle中提取自定义类型的List
+            userList = (List<User>) bundle.getSerializable("userList");
+            choice = bundle.getInt("choice");
+            initiator_phoneNumber = bundle.getString("phoneNumber", "0");
+            isMe = bundle.getBoolean("isMe");
         }
+        System.out.println("-----------user"+userList+"//choice"+ choice + "//ph" +initiator_phoneNumber);
+
+        rv_friend = (RecyclerView) view.findViewById(R.id.rv_friend);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        rv_friend.setLayoutManager(manager);
+        FriendBaseQuickAdapter adapter = new FriendBaseQuickAdapter(getContext(),choice,initiator_phoneNumber,isMe);
+        adapter.submitList(userList);
+        rv_friend.setAdapter(adapter);
+
     }
 }

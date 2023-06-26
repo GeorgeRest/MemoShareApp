@@ -56,5 +56,10 @@
         <item name="colorControlActivated">#349F9D9D</item>
     </style>
 
+    <style name="MyEditText" parent="Theme.AppCompat.DayNight">
+        <item name="colorControlNormal">#349F9D9D</item>
+        <item name="colorControlActivated">#349F9D9D</item>
+    </style>
+
 </resources>
 

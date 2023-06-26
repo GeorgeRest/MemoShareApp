@@ -10,6 +10,9 @@ import com.george.memoshareapp.beans.User;
 
 import org.litepal.LitePal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import es.dmoral.toasty.Toasty;
 
 /**
@@ -199,4 +202,69 @@ public class UserManager {
                         String.valueOf(Relationship.FRIEND_STATUS))
                 .count(Relationship.class);
     }
+
+
+    //获取关注列表用户
+    public List<User> getFollowedUser(String userPhoneNumber){
+        List<User> followedUserList  = new ArrayList<>();
+        LitePal.getDatabase();
+        List<Relationship> list = LitePal
+                .where("initiatorNumber = ? in (relationshipStatus =? or relationshipStatus =?)", userPhoneNumber, "1", "3")
+                .find(Relationship.class);
+
+        for (Relationship relationship: list){
+            String targetNumber = relationship.getTargetNumber();
+            User user = LitePal
+                    .where("phoneNumber = ?", targetNumber)
+                    .findFirst(User.class);
+            followedUserList.add(user);
+        }
+        return followedUserList;
+    }
+
+    //获取粉丝列表用户
+    public List<User> getFansUser(String userPhoneNumber){
+        List<User> fansUserList  = new ArrayList<>();
+        LitePal.getDatabase();
+        List<Relationship> list = LitePal
+                .where("targetNumber = ? in(relationshipStatus =? or relationshipStatus =?)", userPhoneNumber, "1", "3")
+                .find(Relationship.class);
+
+        for (Relationship relationship: list){
+            String targetNumber = relationship.getInitiatorNumber();
+            User user = LitePal
+                    .where("phoneNumber = ?", targetNumber)
+                    .findFirst(User.class);
+            fansUserList.add(user);
+        }
+        return fansUserList;
+    }
+
+    //获取好友列表用户
+    public List<User> getFriendUser(String userPhoneNumber){
+        List<User> friendUserList  = new ArrayList<>();
+        LitePal.getDatabase();
+        List<Relationship> list = LitePal
+                .where("initiatorNumber = ? and relationshipStatus =? ", userPhoneNumber, "3")
+                .find(Relationship.class);
+        for (Relationship relationship: list){
+            String targetNumber = relationship.getTargetNumber();
+            User user = LitePal
+                    .where("phoneNumber = ?", targetNumber)
+                    .findFirst(User.class);
+            friendUserList.add(user);
+        }
+        return friendUserList;
+    }
+
+    //判断两人关系
+    public int getStatus(String targetPhoneNumber,String initPhoneNumber){
+        int relationship = 0;
+        Relationship relationship1 = LitePal.where("initiatorNumber = ? and targetNumber = ?", initPhoneNumber, targetPhoneNumber).findFirst(Relationship.class);
+        relationship = relationship1.getRelationshipStatus();
+
+        return relationship;
+    }
+
+
 }

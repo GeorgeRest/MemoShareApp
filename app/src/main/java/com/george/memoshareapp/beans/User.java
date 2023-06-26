@@ -26,7 +26,13 @@ public class User extends LitePalSupport implements Serializable {
     private String birthday;
     private String region; //中国
     private String BackGroundPath; //默认背景
+
     private List<Post> likePosts = new ArrayList<>();
+    private List<UserRelationship> user1 = new ArrayList<>();
+    private List<UserRelationship> user2 = new ArrayList<>();
+
+
+
 
 
 
@@ -132,5 +138,20 @@ public class User extends LitePalSupport implements Serializable {
         this.region = region;
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", headPortraitPath='" + headPortraitPath + '\'' +
+                ", signature='" + signature + '\'' +
+                ", gender='" + gender + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", region='" + region + '\'' +
+                ", BackGroundPath='" + BackGroundPath + '\'' +
+                ", likePosts=" + likePosts +
+                '}';
+    }
 }

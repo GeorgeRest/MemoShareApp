@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         fragmentManager = getSupportFragmentManager();
         setDefaultSelection(0);
         PermissionUtils.permissionsGranted(this);
+
     }
 
     private void initView() {

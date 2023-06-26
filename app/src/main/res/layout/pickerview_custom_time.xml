@@ -15,7 +15,7 @@
             android:background="#aaa" />
 
         <ImageView
-            android:id="@+id/iv_cancel"
+            android:id="@+id/iv_calender_cancel"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_centerVertical="true"

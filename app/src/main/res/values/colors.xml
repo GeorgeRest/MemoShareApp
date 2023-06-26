@@ -18,6 +18,7 @@
     <color name="new_text_color">#FE832A</color>
     <color name="friend_normal">#4D0E0E10</color>
     <color name="collapsingToolbarLayout">#FBE1FF</color>
+    <color name="follow_btn">#EE813CB6</color>
     <color name="complete_normal">#80997AE7</color>
     <color name="complete">#997AE7</color>
 </resources>

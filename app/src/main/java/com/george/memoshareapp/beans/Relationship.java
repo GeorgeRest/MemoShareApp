@@ -17,10 +17,18 @@ public class Relationship extends LitePalSupport implements Serializable {
     private long id;
     private String initiatorNumber;
     private String targetNumber;
-    private int relationshipStatus;
+    private int relationshipStatus;     //关系类型，如关注、粉丝、朋友等
     public static final int ATTENTION_STATUS = 1;
     public static final int FANS_STATUS = 2;
     public static final int FRIEND_STATUS = 3;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getInitiatorNumber() {
         return initiatorNumber;
@@ -45,17 +53,4 @@ public class Relationship extends LitePalSupport implements Serializable {
     public void setRelationshipStatus(int relationshipStatus) {
         this.relationshipStatus = relationshipStatus;
     }
-
-    public Relationship() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-
 }

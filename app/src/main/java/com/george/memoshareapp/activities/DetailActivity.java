@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,6 +127,34 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         detail_tv_comment_number.setText(commentNumber + "");
         set_comments_number.setText("共" + commentNumber + "条评论");
 
+        //设置文本监听
+        submitComment.setEnabled(false);
+        submitComment.setImageResource(R.drawable.button_send_click);
+
+        commentEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // When the text in the EditText changes, check if it's empty or not
+                if(s.toString().trim().length()==0){
+                    submitComment.setEnabled(false);
+                    submitComment.setImageResource(R.drawable.button_send_click);
+                } else {
+                    submitComment.setEnabled(true);
+                    submitComment.setImageResource(R.drawable.button_send);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+        });
+
     }
 
     private void putParameter2View() {
@@ -219,8 +249,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.submitComment:    //发表评论按钮
-                if (isEditEmply()) {        //判断用户是否输入内容
-                    switch (submit_case){
+                if(isEditEmply()) {
+                    switch (submit_case) {
                         case 0:
                             publishComment();
                             break;

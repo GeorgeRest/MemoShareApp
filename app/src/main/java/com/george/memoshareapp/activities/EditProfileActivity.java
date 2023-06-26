@@ -1,9 +1,14 @@
 package com.george.memoshareapp.activities;
 
 import android.app.Dialog;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +35,7 @@ import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.bumptech.glide.Glide;
+
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.utils.GlideEngine;
@@ -38,6 +44,7 @@ import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.engine.CropFileEngine;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.interfaces.OnResultCallbackListener;
+import com.orhanobut.logger.Logger;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropImageEngine;
 
@@ -168,12 +175,11 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         switch (v.getId()) {
             case R.id.camera:
                 PictureSelector.create(this)
-                        .openGallery(SelectMimeType.ofImage())
+                        .openGallery(SelectMimeType.ofAll())
                         .setImageEngine(GlideEngine.createGlideEngine())
                         .setMaxSelectNum(1)
                         .isEmptyResultReturn(true)
                         .isMaxSelectEnabledMask(true)
-
                         .setCropEngine(new CropFileEngine() {
                             @Override
                             public void onStartCrop(Fragment fragment, Uri srcUri, Uri destinationUri, ArrayList<String> dataSource, int requestCode) {
@@ -183,13 +189,13 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                                 uCrop.setImageEngine(new UCropImageEngine() {
                                     @Override
                                     public void loadImage(Context context, String url, ImageView imageView) {
+
                                     }
 
                                     @Override
                                     public void loadImage(Context context, Uri url, int maxWidth, int maxHeight, OnCallbackListener<Bitmap> call) {
                                     }
                                 });
-
                                 UCrop.Options options = new UCrop.Options();
                                 options.setCircleDimmedLayer(true);
                                 options.setShowCropFrame(false);
@@ -202,6 +208,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                         .forResult(new OnResultCallbackListener<LocalMedia>() {
                             @Override
                             public void onResult(ArrayList<LocalMedia> result) {
+                                Logger.d(result.get(0).getRealPath());
                                 System.out.println("-------------" + result.get(0).getRealPath());
 
                                 Glide.with(EditProfileActivity.this).load(destPath).into(camera);
@@ -309,7 +316,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void customLayout(final View v) {
                         final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
-                        ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_cancel);
+                        ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_calender_cancel);
                         tvSubmit.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -410,7 +417,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void customLayout(View v) {
                         final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
-                        ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_cancel);
+                        ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_calender_cancel);
                         tvSubmit.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

@@ -281,7 +281,6 @@ public class NewPersonPageFragment extends Fragment {
         editablesource.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(phoneNumber!=null){
                     if (phoneNumber.equals(userPhoneNumber)) {//newpost和sp的电话号
                         Intent intent = new Intent(getActivity(), EditProfileActivity.class);
@@ -313,9 +312,6 @@ public class NewPersonPageFragment extends Fragment {
                     startActivityForResult(intent, EDITABLEACTIVITY_BACK);
                 }
 
-
-
-
             }
         });
         if (ismyslef) {
@@ -327,7 +323,10 @@ public class NewPersonPageFragment extends Fragment {
                     if (args != null) {
                         phoneNumber = newpost.getPhoneNumber();
                         intent.putExtra("postPhoneNumber", phoneNumber);
+                    }else {
+                        intent.putExtra("postPhoneNumber",userPhoneNumber);
                     }
+
                     intent.putExtra("isFriend", 2);
                     intent.putExtra("ismyself", ismyslef);
                     startActivity(intent);
@@ -345,7 +344,10 @@ public class NewPersonPageFragment extends Fragment {
                 if (args != null) {
                     phoneNumber = newpost.getPhoneNumber();
                     intent.putExtra("postPhoneNumber", phoneNumber);
+                }else {
+                    intent.putExtra("postPhoneNumber",userPhoneNumber);
                 }
+
                 startActivity(intent);
             }
         });
@@ -359,7 +361,10 @@ public class NewPersonPageFragment extends Fragment {
                 if (args != null) {
                     phoneNumber = newpost.getPhoneNumber();
                     intent.putExtra("postPhoneNumber", phoneNumber);
+                }else {
+                    intent.putExtra("postPhoneNumber",userPhoneNumber);
                 }
+
                 startActivity(intent);
             }
         });
