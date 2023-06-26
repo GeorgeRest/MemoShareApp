@@ -144,7 +144,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 intent.putExtra("post", post);
                 mContext.startActivity(intent);
                 break;
-            case R.id.iv_head_image_1:
+            case R.id.homewhole_iv_head_image_1:
                 Intent intent1 = new Intent(mContext, NewPersonPageActivity.class);
                 intent1.putExtra("user", user);
                 intent1.putExtra("newpost", newPost);
@@ -220,6 +220,8 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.record_three.setTag(holder);
         holder.like.setTag(holder);
         holder.chat.setTag(holder);
+        holder.iv_head_image_1.setTag(holder);
+
         holder.bind(post);
     }
 
@@ -383,6 +385,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         TextView image_view1;
         ScrollView sv_bottom;
         CardView cv_layout;
+        CardView card_view_head;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -403,17 +406,20 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             chat = itemView.findViewById(R.id.chat);
             chat.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             like.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
+
             record_one.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_two.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_three.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
 
-            iv_head_image_1 = (ImageView) itemView.findViewById(R.id.iv_head_image_1);
+             card_view_head = (CardView) itemView.findViewById(R.id.card_view_head);
+            iv_head_image_1 = (ImageView) itemView.findViewById(R.id.homewhole_iv_head_image_1);
             iv_head_image_2 = (ImageView) itemView.findViewById(R.id.iv_head_image_2);
             iv_head_image_3 = (ImageView) itemView.findViewById(R.id.iv_head_image_3);
             tv_head_out_number = (TextView) itemView.findViewById(R.id.tv_head_out_number);
             rl_head_images = (RelativeLayout) itemView.findViewById(R.id.rl_head_images);
             rl_layout = (RelativeLayout) itemView.findViewById(R.id.rl_layout);
             ll_head_images = (LinearLayout) itemView.findViewById(R.id.ll_head_images);
+            iv_head_image_1.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
         }
 
         void bind(Post post) {

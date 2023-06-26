@@ -1,4 +1,3 @@
-
 package com.george.memoshareapp.activities;
 
 import android.app.Activity;

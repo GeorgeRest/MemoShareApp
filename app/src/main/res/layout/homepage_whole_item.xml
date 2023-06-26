@@ -32,12 +32,13 @@
                 android:padding="2dp">
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/card_view_head"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp">
                     <ImageView
-                        android:id="@+id/iv_head_image_1"
+                        android:id="@+id/homewhole_iv_head_image_1"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@mipmap/default_image"

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -72,7 +71,7 @@ public class TestFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void customLayout(View v) {
                         final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
-                        ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_cancel);
+//                        ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_cancel);
                         tvSubmit.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -80,12 +79,12 @@ public class TestFragment extends Fragment implements View.OnClickListener {
                                 /*pvTime.dismiss();*/
                             }
                         });
-                        ivCancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                /*pvTime.dismiss();*/
-                            }
-                        });
+//                        ivCancel.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                /*pvTime.dismiss();*/
+//                            }
+//                        });
                     }
                 })
                 .setType(new boolean[]{true, true, true, false, false, false})

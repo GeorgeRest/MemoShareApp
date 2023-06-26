@@ -48,7 +48,7 @@ public class RecordAdapter extends BaseMultiItemAdapter<Recordings>implements Dr
         addItemType(RECORD, new OnMultiItemAdapterListener<Recordings, RecyclerView.ViewHolder>() {
             @NonNull
             @Override
-            public RecordViewHolder onCreate(@NonNull Context context, @NonNull ViewGroup viewGroup, int i) {
+            public RecordAdapter.RecordViewHolder onCreate(@NonNull Context context, @NonNull ViewGroup viewGroup, int i) {
                 View view = View.inflate(context, R.layout.item_voice_recorder, null);
                 return new RecordViewHolder(view);
             }
@@ -67,7 +67,7 @@ public class RecordAdapter extends BaseMultiItemAdapter<Recordings>implements Dr
         addItemType(NEW_RECORD, new OnMultiItemAdapterListener<Recordings, RecyclerView.ViewHolder>() {
             @NonNull
             @Override
-            public NewRecordViewHolder onCreate(@NonNull Context context, @NonNull ViewGroup viewGroup, int i) {
+            public RecordAdapter.NewRecordViewHolder onCreate(@NonNull Context context, @NonNull ViewGroup viewGroup, int i) {
                 View view = View.inflate(context, R.layout.item_new_recording, null);
                 return new NewRecordViewHolder(view);
 
