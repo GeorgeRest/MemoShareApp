@@ -5,16 +5,6 @@ plugins {
 android {
     compileSdk 33
 
-    // 添加签名配置
-    signingConfigs {
-        release {
-            storeFile file("D:\\android_keystore\\keystore.jks")
-            storePassword "Gj.020211"
-            keyAlias "mykeyalias"
-            keyPassword "Gj.020211"
-        }
-    }
-
     defaultConfig {
         applicationId "com.george.memoshareapp"
         minSdk 21
@@ -33,8 +23,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            // 把签名配置应用到 release 构建类型
-            signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -42,6 +30,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
+
+
 apply plugin: 'com.mob.sdk'
 MobSDK {
     appKey "38257e1b40165"
@@ -115,7 +105,7 @@ dependencies {
     // Json 解析框架：https://github.com/google/gson
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    //RecyclerAdapter框架
-    implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper:4.0.0-beta14"
+    implementation 'com.github.angcyo:CalendarView:3.7.1.37'
+    implementation 'com.github.liangjingkanji:StateLayout:1.4.1'
 
 }

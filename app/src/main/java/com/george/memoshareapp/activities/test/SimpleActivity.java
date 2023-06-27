@@ -1,65 +1,40 @@
-package com.george.memoshareapp.Fragment;
+package com.george.memoshareapp.activities.test;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
 
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
-import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.activities.EditProfileActivity;
-import com.george.memoshareapp.activities.test.SimpleActivity;
-import com.george.memoshareapp.utils.GlideEngine;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
-import com.luck.picture.lib.basic.PictureSelector;
-import com.luck.picture.lib.config.SelectMimeType;
-import com.luck.picture.lib.engine.CropFileEngine;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.interfaces.OnResultCallbackListener;
-import com.orhanobut.logger.Logger;
-import com.yalantis.ucrop.UCrop;
-import com.yalantis.ucrop.UCropImageEngine;
+
 
 import java.time.Month;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * @projectName: Memosahre
- * @package: com.george.memoshareapp.Fragment
- * @className: CalendarTripFragment
- * @author: George
- * @description: TODO
- * @date: 2023/5/8 21:24
- * @version: 1.0
- */
-public class CalendarTripFragment extends Fragment implements
+
+public class SimpleActivity extends BaseActivity implements
         CalendarView.OnCalendarSelectListener,
-        CalendarView.OnYearChangeListener, View.OnClickListener {
+        CalendarView.OnYearChangeListener,
+        View.OnClickListener {
+
     TextView mTextMonthDay;
 
     TextView mTextYear;
@@ -72,30 +47,24 @@ public class CalendarTripFragment extends Fragment implements
     private int mYear;
     CalendarLayout mCalendarLayout;
     private TimePickerView pvCustomTime;
-    private View view;
-    private ImageView add_blue;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_calendar_trip_page, container, false);
-        initView();
-        initData();
-        return view;
+    protected int getLayoutId() {
+        return R.layout.fragment_calendar_trip_page;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void initView() {
-//        setStatusBarDarkMode();
-        mTextMonthDay = view.findViewById(R.id.tv_month_day);
-        mTextYear = view.findViewById(R.id.tv_year);
-        mRelativeTool = view.findViewById(R.id.rl_tool);
-        mCalendarView = view.findViewById(R.id.calendarView);
-        add_blue = view.findViewById(R.id.add_blue);
-        add_blue.setOnClickListener(this);
-
+    @SuppressLint("SetTextI18n")
+    @Override
+    protected void initView() {
+        setStatusBarDarkMode();
+        mTextMonthDay = findViewById(R.id.tv_month_day);
+        mTextYear = findViewById(R.id.tv_year);
+        mRelativeTool = findViewById(R.id.rl_tool);
+        mCalendarView = findViewById(R.id.calendarView);
         mTextMonthDay.setOnClickListener(new View.OnClickListener() {
+
             private TimePickerView pvTime;
 
             @Override
@@ -115,7 +84,7 @@ public class CalendarTripFragment extends Fragment implements
                 java.util.Calendar endDate = java.util.Calendar.getInstance();
                 endDate.set(2030, 11, 28);
                 //时间选择器 ，自定义布局
-                pvCustomTime = new TimePickerBuilder(getActivity(), new OnTimeSelectListener() {
+                pvCustomTime = new TimePickerBuilder(SimpleActivity.this, new OnTimeSelectListener() {
                     @Override
                     public void onTimeSelect(Date date, View v) {//选中事件回调
                         java.util.Calendar calendar = java.util.Calendar.getInstance();
@@ -179,16 +148,18 @@ public class CalendarTripFragment extends Fragment implements
             }
         });
 
-        mCalendarLayout = view.findViewById(R.id.calendarLayout);
+        mCalendarLayout = findViewById(R.id.calendarLayout);
         mCalendarView.setOnYearChangeListener(this);
         mCalendarView.setOnCalendarSelectListener(this);
         mTextYear.setText(String.valueOf(mCalendarView.getCurYear()));
         mYear = mCalendarView.getCurYear();
         mTextMonthDay.setText(getEnglishMonthName(mCalendarView.getCurMonth()));
         mCalendarView.setFixMode();
+
     }
 
 
+    @Override
     protected void initData() {
 
         int year = mCalendarView.getCurYear();
@@ -207,6 +178,7 @@ public class CalendarTripFragment extends Fragment implements
 
         mCalendarView.setSchemeDate(map);
     }
+
 
     private Calendar getSchemeCalendar(int year, int month, int day, int color) {
         Calendar calendar = new Calendar();
@@ -237,7 +209,6 @@ public class CalendarTripFragment extends Fragment implements
         mTextMonthDay.setText(String.valueOf(year));
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String getEnglishMonthName(int monthNumber) {
         // Java的Month类将月份从1（一月）计数到12（十二月）
@@ -248,33 +219,6 @@ public class CalendarTripFragment extends Fragment implements
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.add_blue:
-                PictureSelector.create(this)
-                        .openGallery(SelectMimeType.ofAll())
-                        .setImageEngine(GlideEngine.createGlideEngine())
-                        .setMaxSelectNum(9)
-                        .isEmptyResultReturn(true)
-                        .isMaxSelectEnabledMask(true)
-                        .forResult(new OnResultCallbackListener<LocalMedia>() {
-                            @Override
-                            public void onResult(ArrayList<LocalMedia> result) {
-                                Logger.d(result.get(0).getRealPath());
-                                System.out.println("-------------" + result.get(0).getRealPath());
 
-                            }
-
-                            @Override
-                            public void onCancel() {
-                            }
-                        });
-
-                break;
-            case R.id.add_red:
-
-
-                break;
-
-        }
     }
 }

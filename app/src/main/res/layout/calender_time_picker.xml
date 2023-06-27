@@ -1,69 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/edit_region_top_round"
     android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#EEEEEE">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#aaa" />
-
-        <ImageView
-            android:id="@+id/iv_calender_cancel"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="17dp"
-            android:padding="8dp"
-            android:src="@mipmap/to_down" />
-
-        <TextView
-            android:id="@+id/tv_finish"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="17dp"
-            android:padding="8dp"
-            android:text="完成"
-            android:textColor="#24AD9D"
-            android:textSize="18sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#aaa" />
-    </RelativeLayout>
-
-
     <!--此部分需要完整复制过去，删减或者更改ID会导致初始化找不到内容而报空-->
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="0dp"
+        >
+
     <LinearLayout
         android:id="@+id/timepicker"
-        android:minHeight="150dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:gravity="center"
+        android:minHeight="150dp"
         android:orientation="horizontal">
 
         <com.contrarywind.view.WheelView
             android:id="@+id/year"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1.5" />
 
         <com.contrarywind.view.WheelView
 
             android:id="@+id/month"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.1" />
+            android:layout_weight="1.5" />
 
         <com.contrarywind.view.WheelView
             android:id="@+id/day"
@@ -88,6 +59,34 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1.1" />
+    </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/white">
+
+
+        <ImageView
+            android:id="@+id/iv_calender_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:padding="5dp"
+
+            android:src="@drawable/calender_timer_cancel" />
+
+        <ImageView
+            android:id="@+id/iv_calender_confirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:src="@drawable/calender_timer_confirm" />
+
+
     </LinearLayout>
 
 

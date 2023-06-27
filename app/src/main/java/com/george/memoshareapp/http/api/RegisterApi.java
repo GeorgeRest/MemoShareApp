@@ -3,6 +3,8 @@ package com.george.memoshareapp.http.api;
 import androidx.annotation.NonNull;
 
 import com.hjq.http.config.IRequestApi;
+import com.hjq.http.config.IRequestServer;
+import com.hjq.http.model.BodyType;
 
 /**
  * @projectName: Memosahre
@@ -32,4 +34,5 @@ public class RegisterApi implements IRequestApi {
         this.password = password;
         return this;
     }
+
 }

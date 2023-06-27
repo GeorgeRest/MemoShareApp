@@ -131,6 +131,16 @@
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true" />
 
+        <activity
+            android:name=".activities.test.SimpleActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".activities.EditSignatureActivity"
             android:exported="true"/>
         <activity android:name=".activities.EditNameActivity"

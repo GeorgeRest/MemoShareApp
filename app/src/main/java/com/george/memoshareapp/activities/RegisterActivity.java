@@ -84,6 +84,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+
                                 EasyHttp.post(RegisterActivity.this)
                                         .api(new RegisterApi()
                                                 .setPhoneNumber(phone)
@@ -100,6 +101,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                                                     Logger.d("注册失败");
                                                 }
                                             }
+
                                         });
 
                                 Toasty.success(RegisterActivity.this, "验证码输入正确", Toast.LENGTH_SHORT, true).show();
@@ -180,7 +182,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
                     VerificationCountDownTimer timer = new VerificationCountDownTimer(tv_getCode, COUNTDOWN_TIME, 1000);
                     timer.start();
+
                     SMSSDK.getVerificationCode("86", phone);
+
                 } else {
                     Toasty.warning(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT, true).show();
                 }
@@ -195,6 +199,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     return;
                 }
                 SMSSDK.submitVerificationCode("86", phone, vcCode);
+
 
                 break;
             case R.id.iv_back_rg:
