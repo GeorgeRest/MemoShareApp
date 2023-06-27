@@ -1,12 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="fragment_calendar_trip"
-        android:textSize="30dp"
-        android:layout_centerInParent="true"/>
+    android:layout_height="match_parent"
+    android:background="#AC2222"
+    android:fitsSystemWindows="true"
+    tools:ignore="RtlHardcoded,HardcodedText,RtlSymmetry,SmallSp">
+
+
+    <LinearLayout
+        android:id="@+id/rl_tool"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#f8f4fa"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:text="2003"
+            android:textColor="#2a2342"
+            android:layout_marginLeft="18dp"
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/tv_month_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:text="MARCH"
+            android:textColor="#2a2342"
+            android:textSize="30dp"
+            android:layout_marginLeft="18dp"
+            tools:ignore="RtlSymmetry" />
+
+
+    </LinearLayout>
+
+    <com.haibin.calendarview.CalendarLayout
+        android:id="@+id/calendarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_tool"
+        android:background="#f8f4fa"
+        android:orientation="vertical"
+        app:calendar_content_view_id="@+id/recyclerView">
+
+        <com.haibin.calendarview.CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#f8f4fa"
+            app:calendar_height="46dp"
+            app:calendar_padding="10dp"
+            app:current_day_text_color="#2a2342"
+            app:current_month_text_color="#333333"
+            app:max_year="2030"
+            app:min_year="2000"
+            app:month_view="com.george.memoshareapp.view.SimpleMonthView"
+            app:other_month_text_color="#c3bcd6"
+            app:scheme_text="假"
+            app:scheme_text_color="#685c97"
+            app:selected_text_color="#685c97"
+            app:selected_theme_color="#b8a7e2"
+            app:week_background="#f8f4fa"
+            app:week_bar_view="com.george.memoshareapp.view.EnglishWeekBar"
+            app:week_text_color="#a9a9a9"
+            app:week_view="com.george.memoshareapp.view.SimpleWeekView"
+            app:year_view_day_text_color="#333333"
+            app:year_view_day_text_size="9sp"
+            app:year_view_month_text_color="#ff0000"
+            app:year_view_month_text_size="20sp"
+            app:year_view_scheme_color="#f17706" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_calendar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp" />
+
+
+    </com.haibin.calendarview.CalendarLayout>
+
+    <ImageView
+        android:id="@+id/add_blue"
+        android:layout_width="40dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/blue_add"
+        android:layout_marginTop="500dp"/>
+
+    <ImageView
+        android:id="@+id/add_red"
+        android:layout_width="40dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/red_add"
+        android:layout_marginTop="500dp"
+        android:layout_alignParentRight="true"/>
+
+
 </RelativeLayout>

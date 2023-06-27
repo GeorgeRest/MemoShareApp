@@ -6,4 +6,7 @@
     <dimen name="image_size_medium">210dp</dimen>
     <dimen name="image_size_small">140dp</dimen>
     <dimen name="spacing">3dp</dimen>
+    <dimen name="release_twoLines_margin">235dp</dimen>
+    <dimen name="release_oneLine_margin">120dp</dimen>
+    <dimen name="release_threeLines_margin">350dp</dimen>
 </resources>

@@ -98,10 +98,11 @@ public class PostManager {
             imageParameters.setPost(post);
             imageParameters.save();
         }
-
-        for (Recordings recordings : record) {
-            recordings.setPost(post);
-            recordings.save();
+    if(record.size()!=0 ){
+            for (Recordings recordings : record) {
+                recordings.setPost(post);
+                recordings.save();
+            }
         }
         post.save();
         post.setLike(0);

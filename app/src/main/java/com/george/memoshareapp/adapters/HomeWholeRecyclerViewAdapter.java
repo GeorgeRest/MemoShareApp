@@ -29,25 +29,22 @@ import com.george.memoshareapp.Fragment.AudioPlayerFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.activities.HomePageActivity;
+import com.george.memoshareapp.activities.NewPersonPageActivity;
 import com.george.memoshareapp.beans.ContactInfo;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
-import com.george.memoshareapp.beans.UserLikePost;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
 
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWholeRecyclerViewAdapter.ViewHolder> implements View.OnClickListener {
-    private static final String TAG = "HomeWholeRecyclerViewAd";
-
     private Context mContext;
     private List<Post> mData;
     private List<Uri> photoUri;
@@ -63,197 +60,44 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     private Map<String, Integer> nameToPictureMap = new HashMap<>();
     private List<String> contactName = new ArrayList<>();
     private Post post;
+    private List<Post> treePosition;
 
     public HomeWholeRecyclerViewAdapter() {
 
     }
 
-    private List<Post> treePosition;
-
     public HomeWholeRecyclerViewAdapter(Context context, List<Post> data) {
         this.mContext = context;
         this.mData = data;
         instance = this;
+        sp = mContext.getSharedPreferences("User", Context.MODE_PRIVATE);
+        phoneNumber = sp.getString("phoneNumber", "");
+        editor = sp.edit();
+        initDate();
     }
 
     public static HomeWholeRecyclerViewAdapter getInstance() {
-        return instance;  // 创建一个静态方法来获取当前实例
+        return instance;
     }
-
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.homepage_whole_item, parent, false);
-        sp = mContext.getSharedPreferences("User", Context.MODE_PRIVATE);
-        phoneNumber = sp.getString("phoneNumber", "");
-        editor = sp.edit();
-        initDate();
         return new   ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.record_one.setTag(holder);
-        holder.record_two.setTag(holder);
-        holder.record_three.setTag(holder);
-        holder.like.setTag(holder);
-        holder.chat.setTag(holder);
-        Post post = mData.get(position);
-        holder.bind(post);
-        String phoneNumber_name = post.getPhoneNumber();
-        String name = phoneNumber_name.substring(0, 5);
-        String publishedTime = post.getPublishedTime();
-        String location = post.getLocation();
-        String publishedText = post.getPublishedText();
-        holder.recordings = post.getRecordings();
+        post = mData.get(position);
 
-        List<String> photoCachePath = post.getPhotoCachePath();
+        setUpHolderFields(holder, post);
+        setUpHolderRecyclerView(holder, post, position);
+        setUpRecordings(holder);
+        setUpContactNameAndPicture(holder, post);
+        adjustLayout(holder, position);
+        nameTimeLocationContent(holder, post);
 
-        if (photoCachePath == null || photoCachePath.size() == 0) {
-            holder.innerRecyclerView.setVisibility(View.GONE);
-        } else {
-            holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
-        }
-        HomePhotoRecyclerViewAdapter innerAdapter = null;
-        if (photoUri != null) {
-            innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext, photoUri, position);
-        } else {
-            innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext, position);
-        }
-        holder.innerRecyclerView.setAdapter(innerAdapter);
-        holder.tv_username.setText(name);
-        holder.tv_time.setText(DateFormat.getMessageDate(publishedTime));
-        holder.tv_location.setText(location);
-        holder.tv_content.setText(publishedText);
-        if (holder.recordings != null && !holder.recordings.isEmpty()) {
-            holder.record_one.setVisibility(View.GONE);
-            holder.record_two.setVisibility(View.GONE);
-            holder.record_three.setVisibility(View.GONE);
-            switch (holder.recordings.size()) {
-                case 3:
-                    holder.record_three.setVisibility(View.VISIBLE);
-
-                case 2:
-                    holder.record_two.setVisibility(View.VISIBLE);
-
-                case 1:
-                    holder.record_one.setVisibility(View.VISIBLE);
-            }
-        } else {
-            holder.record_one.setVisibility(View.GONE);
-            holder.record_two.setVisibility(View.GONE);
-            holder.record_three.setVisibility(View.GONE);
-        }
-        holder.innerRecyclerView.setAdapter(innerAdapter);
-
-////        设置头像，需要contact（@人名所对应的图片，相关adapter未完成）
-//        holder.rv_head_image.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-//        HomePageHeadImageAdapter headImageAdapter = new HomePageHeadImageAdapter(mContext, contactPicture, contactName);
-//        holder.rv_head_image.setAdapter(headImageAdapter);
-        contactName = post.getContacts();
-        for (ContactInfo info : contactPicture) {
-            nameToPictureMap.put(info.getName(), info.getPicture());
-        }
-//        holder.iv_head_image_1.setVisibility(View.GONE);
-        holder.iv_head_image_2.setVisibility(View.GONE);
-        holder.iv_head_image_3.setVisibility(View.GONE);
-        holder.tv_head_out_number.setVisibility(View.GONE);
-//        holder.ll_head_images.bringToFront();
-//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.rl_layout.getLayoutParams();
-//        params.addRule(RelativeLayout.BELOW, R.id.ll_head_images);
-//        holder.rl_layout.setLayoutParams(params);
-
-        if (contactName != null && contactName.size() > 0) {
-            switch (contactName.size()) {
-                default:
-                    holder.tv_head_out_number.setVisibility(View.VISIBLE);
-                    holder.tv_head_out_number.setText("+" + (contactName.size() - 2));
-                case 2:
-                    if (contactName.get(1) != null) {
-                        holder.iv_head_image_3.setVisibility(View.VISIBLE);
-                        holder.iv_head_image_3.setImageResource(nameToPictureMap.get(contactName.get(1)));
-                    }
-                case 1:
-                    if (contactName.get(0) != null) {
-                        holder.iv_head_image_2.setVisibility(View.VISIBLE);
-                        holder.iv_head_image_2.setImageResource(nameToPictureMap.get(contactName.get(0)));
-                    }
-//                case 1:
-//                    if (contactName.get(0) != null){
-//                        holder.iv_head_image_1.setVisibility(View.VISIBLE);
-//                        holder.iv_head_image_1.setImageResource(nameToPictureMap.get(contactName.get(0)));
-//                    }
-//                    break;
-            }
-        } else {
-//            holder.iv_head_image_1.setVisibility(View.GONE);
-            holder.iv_head_image_2.setVisibility(View.GONE);
-            holder.iv_head_image_3.setVisibility(View.GONE);
-        }
-
-
-        treePosition = new DisplayManager(mContext).showMemoryTree(post.getLatitude(), post.getLongitude());
-        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) holder.cv_layout.getLayoutParams();
-        layoutParams.bottomMargin = 0;
-        holder.cv_layout.setLayoutParams(layoutParams);
-
-        if (treePosition != null && treePosition.size() > 0) {
-
-            if (post.getPhoneNumber().equals(phoneNumber)) {
-                layoutParams.bottomMargin = 0;
-                holder.cv_layout.setLayoutParams(layoutParams);
-                holder.rl_layout.setBackgroundResource(R.drawable.cardview_bg);
-//            holder.rv_myself_image.setLayoutManager(new GridLayoutManager(mContext, 10));
-                holder.rv_myself_image.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-                HomePageBottomAdapter homePageBottomAdapter = new HomePageBottomAdapter(mContext, treePosition);
-                holder.rv_myself_image.setAdapter(homePageBottomAdapter);
-                holder.image_view1.setVisibility(View.VISIBLE);
-//                holder.rv_myself_image.setVisibility(View.VISIBLE);
-                holder.image_view1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (holder.rv_myself_image.getVisibility() == View.GONE) {
-                            holder.rv_myself_image.setVisibility(View.VISIBLE);
-                            holder.image_view1.setText("收起");
-                        } else {
-                            holder.rv_myself_image.setVisibility(View.GONE);
-                            holder.image_view1.setText("那时那刻");
-                        }
-                    }
-                });
-            } else {
-                holder.rl_layout.setBackgroundColor(Color.WHITE);
-                holder.image_view1.setVisibility(View.GONE);
-                holder.rv_myself_image.setVisibility(View.GONE);
-//                holder.sv_bottom.setVisibility(View.GONE);
-                layoutParams.bottomMargin = 5;
-                holder.cv_layout.setLayoutParams(layoutParams);
-            }
-
-        } else {
-            holder.rl_layout.setBackgroundColor(Color.WHITE);
-//            holder.sv_bottom.setVisibility(View.GONE);
-            holder.image_view1.setVisibility(View.GONE);
-            holder.rv_myself_image.setVisibility(View.GONE);
-            layoutParams.bottomMargin = 5;
-            holder.cv_layout.setLayoutParams(layoutParams);
-        }
-
-
-//        holder.ll_head.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(mContext, "点击", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-        holder.rl_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, "点击", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -300,6 +144,12 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 intent.putExtra("post", post);
                 mContext.startActivity(intent);
                 break;
+            case R.id.iv_head_image_1:
+                Intent intent1 = new Intent(mContext, NewPersonPageActivity.class);
+                intent1.putExtra("user", user);
+                intent1.putExtra("newpost", newPost);
+                mContext.startActivity(intent1);
+                break;
         }
         if (holder.recordings != null && !holder.recordings.isEmpty()) {
             switch (v.getId()) {
@@ -322,6 +172,186 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                     }
                     break;
             }
+        }
+    }
+
+    private void nameTimeLocationContent(ViewHolder holder, Post post) {
+        String phoneNumber_name = post.getPhoneNumber();
+        String name = phoneNumber_name.substring(0, 5);
+        String publishedTime = post.getPublishedTime();
+        String location = post.getLocation();
+        String publishedText = post.getPublishedText();
+
+        holder.tv_username.setText(name);
+        holder.tv_time.setText(DateFormat.getMessageDate(publishedTime));
+        holder.tv_location.setText(location);
+        holder.tv_content.setText(publishedText);
+    }
+
+    private void handleClick(String recordPath, ImageView iv) {
+        if (currentPlayingImageView != null && currentPlayingImageView != iv) {
+            currentPlayingImageView.setImageResource(R.drawable.record_homepage);
+        }
+        if (fragment == null) {
+            currentPlayingImageView = iv;
+            addFragment(recordPath, iv);
+        } else {
+            AudioPlayerFragment bt_fragment = (AudioPlayerFragment) buttonFragmentMap.get(iv);
+            if (fragment != bt_fragment) {
+                fragment.stopPlayback();
+                FragmentTransaction fragmentTransaction = ((HomePageActivity) this.mContext).getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.remove(fragment);
+                fragmentTransaction.commit();
+                fragment = null;
+                currentPlayingImageView = iv;
+                addFragment(recordPath, iv);
+            } else {
+                fragment.togglePlayback();
+            }
+        }
+    }
+
+
+
+    private void setUpHolderFields(ViewHolder holder, Post post) {
+        holder.bind(post);
+        holder.record_one.setTag(holder);
+        holder.record_two.setTag(holder);
+        holder.record_three.setTag(holder);
+        holder.like.setTag(holder);
+        holder.chat.setTag(holder);
+        holder.bind(post);
+    }
+
+    private void setUpHolderRecyclerView(ViewHolder holder, Post post, int position) {
+        List<String> photoCachePath = post.getPhotoCachePath();
+
+        if (photoCachePath == null || photoCachePath.size() == 0) {
+            holder.innerRecyclerView.setVisibility(View.GONE);
+        } else {
+            holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
+        }
+
+        HomePhotoRecyclerViewAdapter innerAdapter;
+        if (photoUri != null) {
+            innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext, photoUri, position);
+        } else {
+            innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext, position);
+        }
+
+        holder.innerRecyclerView.setAdapter(innerAdapter);
+    }
+
+    private void setUpRecordings(ViewHolder holder) {
+        holder.bind(post);
+        holder.recordings = post.getRecordings();
+        if (holder.recordings != null && !holder.recordings.isEmpty()) {
+            holder.record_one.setVisibility(View.GONE);
+            holder.record_two.setVisibility(View.GONE);
+            holder.record_three.setVisibility(View.GONE);
+            switch (holder.recordings.size()) {
+                case 3:
+                    holder.record_three.setVisibility(View.VISIBLE);
+                case 2:
+                    holder.record_two.setVisibility(View.VISIBLE);
+                case 1:
+                    holder.record_one.setVisibility(View.VISIBLE);
+            }
+        } else {
+            holder.record_one.setVisibility(View.GONE);
+            holder.record_two.setVisibility(View.GONE);
+            holder.record_three.setVisibility(View.GONE);
+        }
+    }
+    private void setUpContactNameAndPicture(ViewHolder holder, Post post) {
+        holder.bind(post);
+        contactName = post.getContacts();
+        for (ContactInfo info : contactPicture) {
+            nameToPictureMap.put(info.getName(), info.getPicture());
+        }
+        handleContacts(holder);
+    }
+
+    private void handleContacts(ViewHolder holder) {
+        holder.bind(post);
+        holder.iv_head_image_2.setVisibility(View.GONE);
+        holder.iv_head_image_3.setVisibility(View.GONE);
+        holder.tv_head_out_number.setVisibility(View.GONE);
+        if (contactName != null && contactName.size() > 0) {
+            switch (contactName.size()) {
+                default:
+                    holder.tv_head_out_number.setVisibility(View.VISIBLE);
+                    holder.tv_head_out_number.setText("+" + (contactName.size() - 2));
+                case 2:
+                    if (contactName.get(1) != null) {
+                        holder.iv_head_image_3.setVisibility(View.VISIBLE);
+                        holder.iv_head_image_3.setImageResource(nameToPictureMap.get(contactName.get(1)));
+                    }
+                case 1:
+                    if (contactName.get(0) != null) {
+                        holder.iv_head_image_2.setVisibility(View.VISIBLE);
+                        holder.iv_head_image_2.setImageResource(nameToPictureMap.get(contactName.get(0)));
+                    }
+            }
+        } else {
+            holder.iv_head_image_2.setVisibility(View.GONE);
+            holder.iv_head_image_3.setVisibility(View.GONE);
+        }
+    }
+
+    private void adjustLayout(ViewHolder holder, int position) {
+        holder.bind(post);
+        treePosition = new DisplayManager(mContext).showMemoryTree(post.getLatitude(), post.getLongitude());
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) holder.cv_layout.getLayoutParams();
+        layoutParams.bottomMargin = 0;
+        holder.cv_layout.setLayoutParams(layoutParams);
+
+        if (treePosition != null && treePosition.size() > 0) {
+            setUpMemoryTree(holder, position, layoutParams);
+        } else {
+            holder.rl_layout.setBackgroundColor(Color.WHITE);
+            holder.image_view1.setVisibility(View.GONE);
+            holder.rv_myself_image.setVisibility(View.GONE);
+            layoutParams.bottomMargin = 5;
+            holder.cv_layout.setLayoutParams(layoutParams);
+        }
+
+        holder.rl_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "点击", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setUpMemoryTree(ViewHolder holder, int position, ViewGroup.MarginLayoutParams layoutParams) {
+        holder.bind(post);
+        if (post.getPhoneNumber().equals(phoneNumber)) {
+            layoutParams.bottomMargin = 0;
+            holder.cv_layout.setLayoutParams(layoutParams);
+            holder.rl_layout.setBackgroundResource(R.drawable.cardview_bg);
+            holder.rv_myself_image.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+            HomePageBottomAdapter homePageBottomAdapter = new HomePageBottomAdapter(mContext, treePosition);
+            holder.rv_myself_image.setAdapter(homePageBottomAdapter);
+            holder.image_view1.setVisibility(View.VISIBLE);
+            holder.image_view1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (holder.rv_myself_image.getVisibility() == View.GONE) {
+                        holder.rv_myself_image.setVisibility(View.VISIBLE);
+                        holder.image_view1.setText("收起");
+                    } else {
+                        holder.rv_myself_image.setVisibility(View.GONE);
+                        holder.image_view1.setText("那时那刻");
+                    }
+                }
+            });
+        } else {
+            holder.rl_layout.setBackgroundColor(Color.WHITE);
+            holder.image_view1.setVisibility(View.GONE);
+            holder.rv_myself_image.setVisibility(View.GONE);
+            layoutParams.bottomMargin = 5;
+            holder.cv_layout.setLayoutParams(layoutParams);
         }
     }
 
@@ -357,7 +387,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         ViewHolder(View itemView) {
             super(itemView);
             innerRecyclerView = itemView.findViewById(R.id.rv_images);
-//            rv_head_image = itemView.findViewById(R.id.rv_head_image);
             rv_myself_image = itemView.findViewById(R.id.image_recycler_view);
             cv_layout = itemView.findViewById(R.id.cv_layout);
             sv_bottom = itemView.findViewById(R.id.sv_bottom);
@@ -378,8 +407,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             record_two.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
             record_three.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
 
-//            ll_head = itemView.findViewById(R.id.ll_head);
-
             iv_head_image_1 = (ImageView) itemView.findViewById(R.id.iv_head_image_1);
             iv_head_image_2 = (ImageView) itemView.findViewById(R.id.iv_head_image_2);
             iv_head_image_3 = (ImageView) itemView.findViewById(R.id.iv_head_image_3);
@@ -399,30 +426,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         }
     }
 
-
-    private void handleClick(String recordPath, ImageView iv) {
-        if (currentPlayingImageView != null && currentPlayingImageView != iv) {
-            currentPlayingImageView.setImageResource(R.drawable.record_homepage);
-        }
-        if (fragment == null) {
-            currentPlayingImageView = iv;
-            addFragment(recordPath, iv);
-        } else {
-            AudioPlayerFragment bt_fragment = (AudioPlayerFragment) buttonFragmentMap.get(iv);
-            if (fragment != bt_fragment) {
-                fragment.stopPlayback();
-                FragmentTransaction fragmentTransaction = ((HomePageActivity) this.mContext).getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.remove(fragment);
-                fragmentTransaction.commit();
-                fragment = null;
-                currentPlayingImageView = iv;
-                addFragment(recordPath, iv);
-            } else {
-                fragment.togglePlayback();
-            }
-        }
-    }
-
     private void addFragment(String recordPath, ImageView iv) {
         AudioPlayerFragment.AUDIO_FILE_PATH = recordPath;
         fragment = new AudioPlayerFragment();
@@ -437,9 +440,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         this.mData.add(0, newData);  // 添加新的数据到列表的最前面
         this.photoUri = photoUri;
         notifyItemInserted(0);
-
         // 通知 adapter 在位置 0 插入了一条数据
-
     }
 
     private int calculateSpanCount(int itemCount) {

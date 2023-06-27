@@ -77,12 +77,12 @@ public class HomePageFragment extends Fragment {//内部
         View rootView = null;
         switch (mParam1) {
             case "好友":
+
                 rootView = inflater.inflate(R.layout.fragment_home_friend, container, false);
                 outerRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_recycler);
                 smartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
                 displayManager = new DisplayManager(getActivity());
                 postList = displayManager.getPostList();
-
                 if (postList != null) {
                     outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), postList);
                     outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -91,6 +91,9 @@ public class HomePageFragment extends Fragment {//内部
                 }
                 smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
                 smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
+                smartRefreshLayout.setEnableAutoLoadMore(true);
+                smartRefreshLayout.autoRefresh();//自动刷新
+                smartRefreshLayout.autoLoadMore();//自动加载
                 smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
                     @Override
                     public void onLoadMore(RefreshLayout refreshlayout) {

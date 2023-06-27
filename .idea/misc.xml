@@ -32,6 +32,7 @@
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/button_shape_register.xml" value="0.2125" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/cardview_bg.xml" value="0.2455" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/circle.xml" value="0.2" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/edit_region_top_round.xml" value="0.1955" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/gray_overlay.xml" value="0.1985" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/group.xml" value="0.259" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2125" />
@@ -40,6 +41,7 @@
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/my_checkbox_click_change.xml" value="0.205" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/my_custom_tab_layout.xml" value="0.259" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/myself_item_backgroud.xml" value="0.2455" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/personhomepage_vector_drawable.xml" value="0.2015" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/radiobutton.xml" value="0.2125" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/radiobutton_click.xml" value="0.2125" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/drawable/radionbutton_click_change.xml" value="0.2" />
@@ -53,24 +55,27 @@
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_contact_list.xml" value="0.28468468468468466" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_detail.xml" value="0.33" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_detail_share.xml" value="0.23885350318471338" />
-        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_edit_profile.xml" value="0.5127055306427504" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_edit_profile.xml" value="0.33" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_friend.xml" value="0.28873873873873873" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_full_screen_image.xml" value="0.14" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_home_page.xml" value="0.23648648648648649" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_main.xml" value="0.3338541666666667" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_regist.xml" value="0.3338541666666667" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_register.xml" value="0.25" />
-        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_release.xml" value="0.33" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_release.xml" value="0.25956284153005466" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_release_1.xml" value="0.5" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_retrieve_password.xml" value="0.3338541666666667" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_test.xml" value="0.2791666666666667" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_test_record.xml" value="0.3338541666666667" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/add_location.xml" value="0.26927083333333335" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/calender_time_picker.xml" value="0.28783783783783784" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/comment_item.xml" value="0.2734375" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/contact_list_item.xml" value="0.26927083333333335" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/crop_view.xml" value="0.28783783783783784" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/dialog_loading.xml" value="0.26927083333333335" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_calendar_trip.xml" value="0.24609375" />
-        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_calendar_trip_page.xml" value="0.26927083333333335" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_calendar_trip_page.xml" value="0.25" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_code_login.xml" value="0.17864583333333334" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_home.xml" value="0.3338541666666667" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_home_activity.xml" value="0.2557291666666667" />
@@ -83,19 +88,29 @@
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_personal_page.xml" value="0.32916666666666666" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_pw_login.xml" value="0.17864583333333334" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_record_audio.xml" value="0.33" />
-        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/homepage_bottom_item.xml" value="1.0" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/homepage_bottom_item.xml" value="1.25" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/homepage_head_image_item.xml" value="0.26756756756756755" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/homepage_photo_item.xml" value="0.26927083333333335" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/homepage_top_navigation_bar.xml" value="0.328125" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/homepage_whole_item.xml" value="0.37067395264116576" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_add_information.xml" value="0.28783783783783784" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_cardview_like.xml" value="0.33" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_comment.xml" value="0.28873873873873873" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_contact_list.xml" value="0.18873873873873873" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_friend_list.xml" value="0.18873873873873873" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_nearby_place.xml" value="0.2703125" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_new_recording.xml" value="0.67" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_reply.xml" value="0.28873873873873873" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/item_voice_recorder.xml" value="0.9" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/like_fragment.xml" value="0.28873873873873873" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/myelf_item_image.xml" value="0.2855855855855856" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/myself_photo_item.xml" value="0.2855855855855856" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/pager_item.xml" value="0.2855855855855856" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/personalpage_pagefragment_dainzan.xml" value="0.22612612612612612" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/personalpage_pagefragment_release.xml" value="0.2328828828828829" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/pickerview_custom_lunar.xml" value="0.28873873873873873" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/pickerview_custom_options.xml" value="0.28873873873873873" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/pickerview_custom_time.xml" value="0.28873873873873873" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/release.xml" value="0.28370786516853935" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/release_permission.xml" value="0.26666666666666666" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/release_photo_button.xml" value="0.26927083333333335" />
@@ -114,7 +129,7 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

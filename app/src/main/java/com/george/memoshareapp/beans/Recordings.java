@@ -1,5 +1,6 @@
 package com.george.memoshareapp.beans;
 
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 
 import org.litepal.annotation.Column;
@@ -24,14 +25,37 @@ public class Recordings extends LitePalSupport implements Serializable {
     private CountDownTimer countDownTimer;
     @Column(ignore = true)
     private long initialRecordTime;
+    @Column(ignore = true)
+    private MediaPlayer mediaPlayer;
+    @Column(ignore = true)
+    private long originalDuration;
+    @Column(ignore = true)
+    private long currentDuration;
+
     public Recordings() {
     }
 
-    public Recordings( String recordCachePath, long recordTime, CountDownTimer countDownTimer, long initialRecordTime) {
+    public Recordings(String recordCachePath, long recordTime, CountDownTimer countDownTimer, long initialRecordTime) {
         this.recordCachePath = recordCachePath;
         this.recordTime = recordTime;
         this.countDownTimer = countDownTimer;
         this.initialRecordTime = initialRecordTime;
+    }
+
+    public long getOriginalDuration() {
+        return originalDuration;
+    }
+
+    public long getCurrentDuration() {
+        return currentDuration;
+    }
+
+    public void setCurrentDuration(long currentDuration) {
+        this.currentDuration = currentDuration;
+    }
+
+    public void setOriginalDuration(long originalDuration) {
+        this.originalDuration = originalDuration;
     }
 
     public Post getPost() {
@@ -72,6 +96,27 @@ public class Recordings extends LitePalSupport implements Serializable {
 
     public void setInitialRecordTime(long initialRecordTime) {
         this.initialRecordTime = initialRecordTime;
+    }
+
+
+
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
+    public void setMediaPlayer(MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
+    }
+
+    @Override
+    public String toString() {
+        return "Recordings{" +
+                "post=" + post +
+                ", recordCachePath='" + recordCachePath + '\'' +
+                ", recordTime=" + recordTime +
+                ", countDownTimer=" + countDownTimer +
+                ", initialRecordTime=" + initialRecordTime +
+                '}';
     }
 }
 
