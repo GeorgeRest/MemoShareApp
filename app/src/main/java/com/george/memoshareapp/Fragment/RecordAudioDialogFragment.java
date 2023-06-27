@@ -2,30 +2,18 @@ package com.george.memoshareapp.Fragment;
 
 import static android.text.format.DateUtils.formatElapsedTime;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.graphics.Typeface;
 import android.media.AudioFormat;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,10 +24,10 @@ import androidx.fragment.app.DialogFragment;
 
 import com.george.memoshareapp.BuildConfig;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.beans.TextViewAndButton;
-import com.george.memoshareapp.interfaces.RecordingDataListener;
 import com.george.memoshareapp.application.MyApplication;
 import com.george.memoshareapp.beans.Recordings;
+import com.george.memoshareapp.beans.TextViewAndButton;
+import com.george.memoshareapp.interfaces.RecordingDataListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.zlw.main.recorderlib.RecordManager;
 import com.zlw.main.recorderlib.recorder.RecordConfig;
@@ -48,7 +36,6 @@ import com.zlw.main.recorderlib.recorder.listener.RecordResultListener;
 import com.zlw.main.recorderlib.recorder.listener.RecordStateListener;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

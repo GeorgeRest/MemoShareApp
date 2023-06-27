@@ -18,6 +18,7 @@ import com.george.memoshareapp.runnable.SavePhotoRunnable;
 import com.george.memoshareapp.utils.ImageUtil;
 
 import org.greenrobot.eventbus.EventBus;
+import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -43,6 +44,14 @@ public class PostManager {
 
     public PostManager(Context context) {
         this.context = context;
+    }
+    public Post findUser(String id) {
+        Post post = LitePal.where("id = ?", id).findFirst(Post.class);
+        if (post != null) {
+            return post;
+        } else {
+            return null;
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

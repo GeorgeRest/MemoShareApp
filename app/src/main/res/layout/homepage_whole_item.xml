@@ -41,8 +41,8 @@
                         android:id="@+id/homewhole_iv_head_image_1"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@mipmap/default_image"
-                        />
+                        android:src="@mipmap/default_image" />
+
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView

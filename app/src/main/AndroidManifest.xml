@@ -29,7 +29,6 @@
             <action android:name="android.media.action.VIDEO_CAPTURE" />
         </intent>
     </queries>
-
     <application
         android:name=".application.MyApplication"
         android:allowBackup="true"
@@ -46,6 +45,7 @@
         <activity android:name=".activities.NewPersonPageActivity"
             android:exported="true"/>
 
+
         <activity
             android:name=".activities.EditProfileActivity"
             android:exported="true">
@@ -57,7 +57,7 @@
         </activity>
         <activity
             android:name=".activities.FriendActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -118,11 +118,7 @@
         <activity
             android:name=".activities.ReleaseActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activities.LoginActivity"
@@ -130,6 +126,7 @@
         <activity
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true" />
+
 
         <activity
             android:name=".activities.test.SimpleActivity"

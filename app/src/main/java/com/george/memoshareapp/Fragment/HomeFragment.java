@@ -1,12 +1,10 @@
 package com.george.memoshareapp.Fragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -59,6 +57,7 @@ public class HomeFragment extends Fragment {//外部
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 tab.setText(mData.get(position));
+
             }
         }).attach();
 

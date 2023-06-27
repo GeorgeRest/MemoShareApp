@@ -34,6 +34,9 @@ public class User extends LitePalSupport implements Serializable {
 
 
 
+
+
+
     public User() {
     }
 

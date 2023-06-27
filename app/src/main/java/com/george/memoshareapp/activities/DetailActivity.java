@@ -34,6 +34,8 @@ import com.george.memoshareapp.beans.ReplyBean;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.events.LastClickedPositionEvent;
 import com.george.memoshareapp.manager.DisplayManager;
+import com.george.memoshareapp.manager.PostManager;
+import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.DateFormat;
 import com.george.memoshareapp.view.NoScrollListView;
 
@@ -44,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
+
 
     private int like_number;
     private ImageView userIcon;
@@ -103,13 +106,17 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         init();
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
-        editor1 = sharedPreferences1.edit();
-        Post post = LitePal.where("id = ?", String.valueOf(this.post.getId())).findFirst(Post.class);
-        likesCount = post.getLike();
         phoneNumber = sharedPreferences1.getString("phoneNumber", "");
-        user = LitePal.select("id")
-                .where("phoneNumber = ?", phoneNumber)
-                .findFirst(User.class);
+        editor1 = sharedPreferences1.edit();
+//        Post post =LitePal.where("id = ?", String.valueOf(this.post.getId())).findFirst(Post.class);
+        PostManager postManager = new PostManager(this);
+        Post post = postManager.findUser(String.valueOf(this.post.getId()));
+
+        UserManager userManager = new UserManager(this);
+        user = userManager.findUserByPhoneNumber(phoneNumber);
+
+        likesCount = post.getLike();
+
         has_like = sharedPreferences1.getBoolean(this.post.getId() + ":" + phoneNumber, false);
         detail_tv_like_number.setText(String.valueOf(likesCount));
         if (has_like) {
@@ -157,8 +164,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     private void putParameter2View() {
 
+
+        UserManager userManager = new UserManager(this);
+        User user = userManager.findUserByPhoneNumber(post.getPhoneNumber());
+        userName.setText(user.getName());
         userIcon.setImageResource(R.mipmap.touxiangceshi);
-        userName.setText(post.getPhoneNumber().substring(0, 5));
         publishTime.setText(DateFormat.getCurrentDateTime(post.getPublishedTime()));
 
         location.setText(post.getLocation());
@@ -234,6 +244,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.detail_iv_user_icon:
                 //进入个人主页
+                Intent intent1 = new Intent(this, NewPersonPageActivity.class);
+
+                UserManager userManager = new UserManager(this);
+                User user1 = userManager.findUserByPhoneNumber(post.getPhoneNumber());
+                intent1.putExtra("user", user1);
+                startActivity(intent1);
                 break;
             case R.id.detail_iv_share:
                 showBottomDialog();

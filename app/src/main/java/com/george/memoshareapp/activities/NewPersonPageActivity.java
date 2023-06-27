@@ -23,7 +23,15 @@ public class NewPersonPageActivity extends AppCompatActivity {
 
 // 创建 Fragment
         NewPersonPageFragment newPersonPageFragment = new NewPersonPageFragment();
-        newPersonPageFragment = newPersonPageFragment.newInstance(user, newPost);  // 注意这里的变化
+        if(newPost!=null){
+            newPersonPageFragment = newPersonPageFragment.newInstance(user, newPost.getPhoneNumber());
+        }else {
+            newPersonPageFragment = newPersonPageFragment.newInstance(user);
+        }
+
+
+
+        // 注意这里的变化
 
         // 托管 Fragment
         getSupportFragmentManager()

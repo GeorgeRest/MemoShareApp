@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -166,7 +165,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     public ViewHolder(@NonNull View itemView) {
         super(itemView);
 
-        ivHeadImage1 = (ImageView) itemView.findViewById(R.id.iv_head_image_1);
+        ivHeadImage1 = (ImageView) itemView.findViewById(R.id.homewhole_iv_head_image_1);
         ivHeadImage2 = (ImageView) itemView.findViewById(R.id.iv_head_image_2);
         ivHeadImage3 = (ImageView) itemView.findViewById(R.id.iv_head_image_3);
         tvMoreCount = (TextView) itemView.findViewById(R.id.tv_more_count);

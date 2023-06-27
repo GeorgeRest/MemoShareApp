@@ -416,6 +416,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             record_three.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
 
             card_view_head = (CardView) itemView.findViewById(R.id.card_view_head);
+
             iv_head_image_1 = (ImageView) itemView.findViewById(R.id.homewhole_iv_head_image_1);
             iv_head_image_2 = (ImageView) itemView.findViewById(R.id.iv_head_image_2);
             iv_head_image_3 = (ImageView) itemView.findViewById(R.id.iv_head_image_3);
