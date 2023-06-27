@@ -1,19 +1,15 @@
 package com.george.memoshareapp.Fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.FriendBaseQuickAdapter;
@@ -33,6 +29,7 @@ public class FriendFragment extends Fragment {
     private int choice;
     private String initiator_phoneNumber;
     private boolean isMe;
+    private FriendBaseQuickAdapter adapter;
 
     public FriendFragment() {
     }
@@ -80,9 +77,17 @@ public class FriendFragment extends Fragment {
         rv_friend = (RecyclerView) view.findViewById(R.id.rv_friend);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rv_friend.setLayoutManager(manager);
-        FriendBaseQuickAdapter adapter = new FriendBaseQuickAdapter(getContext(),choice,initiator_phoneNumber,isMe);
+        adapter = new FriendBaseQuickAdapter(getContext(),choice,initiator_phoneNumber,isMe);
         adapter.submitList(userList);
         rv_friend.setAdapter(adapter);
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
+
+    }
+
 }

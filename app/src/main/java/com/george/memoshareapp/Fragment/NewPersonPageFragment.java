@@ -32,8 +32,6 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import org.litepal.LitePal;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +81,7 @@ public class NewPersonPageFragment extends Fragment {
     private ImageView iv_sex;
     private User otheruser;
     private Bundle args;
+    private String newpostPhoneNumber;
 
 
     @Override
@@ -90,11 +89,18 @@ public class NewPersonPageFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public NewPersonPageFragment newInstance(User user, Post newPost) {
+    public NewPersonPageFragment newInstance(User user, String newPostNumber) {
         NewPersonPageFragment newPersonPageFragment = new NewPersonPageFragment();
         Bundle args = new Bundle();
         args.putSerializable("user", user);
-        args.putSerializable("newpost", newPost);
+        args.putSerializable("newpost", newPostNumber);
+        newPersonPageFragment.setArguments(args);
+        return newPersonPageFragment;
+    }
+    public NewPersonPageFragment newInstance(User user) {
+        NewPersonPageFragment newPersonPageFragment = new NewPersonPageFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("user", user);
         newPersonPageFragment.setArguments(args);
         return newPersonPageFragment;
     }
@@ -104,11 +110,14 @@ public class NewPersonPageFragment extends Fragment {
         sharedPreferences1 = getActivity().getSharedPreferences("User", MODE_PRIVATE);
         userPhoneNumber = sharedPreferences1.getString("phoneNumber", "");//我
         userManager = new UserManager(getContext());
-        userMe = findUserByPhoneNumber(userPhoneNumber);//根据登录的时候的手机号找到的用户
+        userMe = userManager.findUserByPhoneNumber(userPhoneNumber);//根据登录的时候的手机号找到的用户
         args = getArguments();
         if (args != null) {
-            newpost = (Post) args.getSerializable("newpost");
-            phoneNumber = newpost.getPhoneNumber();
+//            newpost = (Post) args.getSerializable("newpost");
+//            phoneNumber = newpost.getPhoneNumber();
+            User user = (User) args.getSerializable("user");
+            newpostPhoneNumber=user.getPhoneNumber();
+                    phoneNumber= newpostPhoneNumber;
             otheruser = userManager.findUserByPhoneNumber(phoneNumber);
             if (otheruser != null) {
                 //从首页点进来的用户
@@ -207,16 +216,6 @@ public class NewPersonPageFragment extends Fragment {
         }
     }
 
-    public User findUserByPhoneNumber(String phoneNumber) {
-        User users = LitePal
-                .where("phoneNumber = ?", phoneNumber)
-                .findFirst(User.class);
-        if (users != null) {
-            return users;
-        } else {
-            return null;
-        }
-    }
 
 
     private void initView(View rootView) {
@@ -321,7 +320,7 @@ public class NewPersonPageFragment extends Fragment {
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), FriendActivity.class);
                     if (args != null) {
-                        phoneNumber = newpost.getPhoneNumber();
+                        phoneNumber = newpostPhoneNumber;
                         intent.putExtra("postPhoneNumber", phoneNumber);
                     }else {
                         intent.putExtra("postPhoneNumber",userPhoneNumber);
@@ -342,7 +341,7 @@ public class NewPersonPageFragment extends Fragment {
                 intent.putExtra("isFriend", 0);
                 intent.putExtra("ismyself", ismyslef);
                 if (args != null) {
-                    phoneNumber = newpost.getPhoneNumber();
+                    phoneNumber = newpostPhoneNumber;
                     intent.putExtra("postPhoneNumber", phoneNumber);
                 }else {
                     intent.putExtra("postPhoneNumber",userPhoneNumber);
@@ -359,7 +358,7 @@ public class NewPersonPageFragment extends Fragment {
                 intent.putExtra("isFriend", 1);
                 intent.putExtra("ismyself", ismyslef);
                 if (args != null) {
-                    phoneNumber = newpost.getPhoneNumber();
+                    phoneNumber = newpostPhoneNumber;
                     intent.putExtra("postPhoneNumber", phoneNumber);
                 }else {
                     intent.putExtra("postPhoneNumber",userPhoneNumber);
@@ -373,6 +372,16 @@ public class NewPersonPageFragment extends Fragment {
     private void initData() {
         mData.add("发布");
         mData.add("点赞");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (userPhoneNumber.equals(phoneNumber)) {
+            attentionNumber.setText(userManager.countFollowing(otheruser) + "");
+            fensiNumber.setText(userManager.countFans(otheruser) + "");
+            friendNumber.setText(userManager.countFriends(otheruser) + "");
+        }
     }
 
     @Override

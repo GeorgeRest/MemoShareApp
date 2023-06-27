@@ -20,15 +20,21 @@ import com.george.memoshareapp.Fragment.CodeLoginFragment;
 import com.george.memoshareapp.Fragment.PWLoginFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.http.api.LoginApi;
+import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.view.MyCheckBox;
+import com.hjq.http.EasyHttp;
+import com.hjq.http.listener.HttpCallbackProxy;
+import com.hjq.http.listener.OnHttpListener;
+import com.orhanobut.logger.Logger;
 
 import org.litepal.LitePal;
 
 import es.dmoral.toasty.Toasty;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, OnHttpListener {
 
     private TextView tv_pw_login;
     private TextView tv_code_login;
@@ -67,6 +73,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         user2.setPhoneNumber("19818961591");
         user2.setPassword("123456");
         user2.save();
+
+
+
     }
 
     private void initView() {
@@ -172,6 +181,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
             if (agreement.isChecked()) {
+//                performLogin(phoneNumber, pwNumber);
                 UserManager userManager = new UserManager(this);
                 if (phoneNumber.matches(phoneRegex)) {
                     if (userManager.queryUserInfo(phoneNumber, pwNumber)) {
@@ -226,6 +236,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
         }
+    }
+    private void performLogin(String phoneNumber, String password) {
+
+
+        EasyHttp.post(this)
+                .api(new LoginApi()
+                        .setPhoneNumber(phoneNumber)
+                        .setPassword(password))
+                .request(new HttpCallbackProxy<HttpData<User>>(LoginActivity.this) {
+                    @Override
+                    public void onHttpSuccess(HttpData<User> data) {
+                        if (data.getCode() == 200) {
+                            Toasty.success(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT, true).show();
+                            Logger.d("登录成功");
+                            // 登录成功后的操作
+                        } else {
+                            Toasty.error(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT, true).show();
+                            Logger.d("登录失败");
+                        }
+                    }
+
+                });
+    }
+
+    @Override
+    public void onHttpSuccess(Object result) {
+
+    }
+
+    @Override
+    public void onHttpFail(Exception e) {
+
     }
 }
 

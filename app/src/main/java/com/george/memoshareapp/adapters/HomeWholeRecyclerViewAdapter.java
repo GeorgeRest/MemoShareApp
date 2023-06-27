@@ -35,6 +35,7 @@ import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.manager.DisplayManager;
+import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.DateFormat;
 
 import org.litepal.LitePal;
@@ -146,8 +147,11 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 break;
             case R.id.homewhole_iv_head_image_1:
                 Intent intent1 = new Intent(mContext, NewPersonPageActivity.class);
-                intent1.putExtra("user", user);
-                intent1.putExtra("newpost", newPost);
+//                intent1.putExtra("user", user);
+
+                UserManager userManager = new UserManager(mContext);
+                User user2 = userManager.findUserByPhoneNumber(newPost.getPhoneNumber());
+                intent1.putExtra("user", user2);
                 mContext.startActivity(intent1);
                 break;
         }
@@ -420,6 +424,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             rl_layout = (RelativeLayout) itemView.findViewById(R.id.rl_layout);
             ll_head_images = (LinearLayout) itemView.findViewById(R.id.ll_head_images);
             iv_head_image_1.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
+
         }
 
         void bind(Post post) {
