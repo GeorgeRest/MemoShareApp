@@ -152,6 +152,7 @@
             </intent-filter>
         </activity>
 
+
         <activity android:name=".activities.EditSignatureActivity"
             android:exported="true"/>
         <activity android:name=".activities.EditNameActivity"

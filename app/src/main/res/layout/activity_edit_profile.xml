@@ -236,9 +236,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/right_arrow5"
-            android:text="xxxxx"
+            android:text="请选择地区"
             android:textColor="#3f3f3f"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
 
         <ImageView
             android:id="@+id/right_arrow5"
