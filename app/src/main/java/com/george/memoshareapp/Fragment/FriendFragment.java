@@ -18,6 +18,9 @@ import android.widget.TextView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.FriendBaseQuickAdapter;
 import com.george.memoshareapp.beans.User;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.util.List;
 
@@ -33,6 +36,7 @@ public class FriendFragment extends Fragment {
     private int choice;
     private String initiator_phoneNumber;
     private boolean isMe;
+    private SmartRefreshLayout refreshLayout;
 
     public FriendFragment() {
     }
@@ -78,11 +82,21 @@ public class FriendFragment extends Fragment {
         System.out.println("-----------user"+userList+"//choice"+ choice + "//ph" +initiator_phoneNumber);
 
         rv_friend = (RecyclerView) view.findViewById(R.id.rv_friend);
+        refreshLayout = (SmartRefreshLayout) view.findViewById(R.id.refreshLayout);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rv_friend.setLayoutManager(manager);
         FriendBaseQuickAdapter adapter = new FriendBaseQuickAdapter(getContext(),choice,initiator_phoneNumber,isMe);
         adapter.submitList(userList);
         rv_friend.setAdapter(adapter);
+
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                refreshlayout.setNoMoreData(false);
+                adapter.notifyDataSetChanged();
+                refreshlayout.finishRefresh();
+            }
+        });
 
     }
 }

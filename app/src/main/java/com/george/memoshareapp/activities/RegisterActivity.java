@@ -27,6 +27,8 @@ import com.hjq.http.EasyHttp;
 import com.hjq.http.listener.HttpCallbackProxy;
 import com.orhanobut.logger.Logger;
 
+import org.litepal.LitePal;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -59,6 +61,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         initView();
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(BuildConfig.APPLICATION_ID, PackageManager.GET_SIGNATURES);
+            String signValidString = getSignValidString(packageInfo.signatures[0].toByteArray());
+            Log.e("获取应用签名", BuildConfig.APPLICATION_ID + "__" + signValidString);
+        } catch (Exception e) {
+            Log.e("获取应用签名", "异常__" + e);
+        }
 
         eventHandler = new EventHandler() {
             @Override
@@ -108,6 +117,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                             if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
 
                                 Toasty.error(RegisterActivity.this, "验证码发送失败，原因：" + throwable.getMessage(), Toast.LENGTH_SHORT, true).show();
+                                Logger.d( throwable.getMessage());
                             } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
                                 Toasty.error(RegisterActivity.this, "验证码输入错误，原因：" + throwable.getMessage(), Toast.LENGTH_SHORT, true).show();
                                 return;
@@ -134,6 +144,28 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         back.setOnClickListener(this);
         bt_register.setOnClickListener(this);
         tv_getCode.setOnClickListener(this);
+    }
+
+    private String getSignValidString( byte[] paramArrayOfByte) throws NoSuchAlgorithmException {
+        MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
+        localMessageDigest.update(paramArrayOfByte);
+        return toHexString(localMessageDigest.digest());
+    }
+    public String toHexString(byte[] paramArrayOfByte) {
+        if (paramArrayOfByte == null) {
+            return null;
+        }
+        StringBuilder localStringBuilder = new StringBuilder(2 * paramArrayOfByte.length);
+        for (int i = 0; ; i++) {
+            if (i >= paramArrayOfByte.length) {
+                return localStringBuilder.toString();
+            }
+            String str = Integer.toString(0xFF & paramArrayOfByte[i], 16);
+            if (str.length() == 1) {
+                str = "0" + str;
+            }
+            localStringBuilder.append(str);
+        }
     }
 
     @Override
