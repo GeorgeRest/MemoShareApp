@@ -70,7 +70,7 @@ public class HomePageBottomAdapter extends RecyclerView.Adapter<HomePageBottomAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView bottomTime;
+        TextView bottomTime;
         CircleImageView circleImageView;
         ImageView imageView;
 

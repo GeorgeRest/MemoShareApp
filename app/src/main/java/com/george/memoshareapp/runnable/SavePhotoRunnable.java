@@ -47,8 +47,8 @@ public class SavePhotoRunnable implements Runnable {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    showLoading();
-                    loadingDialog.startAnim();
+//                    showLoading();
+//                    loadingDialog.startAnim();
                 }
             });
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uri);
@@ -63,8 +63,8 @@ public class SavePhotoRunnable implements Runnable {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    loadingDialog.endAnim();
-                    clearLoading();
+//                    loadingDialog.endAnim();
+//                    clearLoading();
                 }
             });
         }

@@ -7,6 +7,11 @@ import android.widget.Toast;
 
 import com.george.memoshareapp.beans.Relationship;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.http.api.UserApiService;
+import com.george.memoshareapp.http.response.HttpData;
+import com.george.memoshareapp.properties.AppProperties;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.litepal.LitePal;
 
@@ -14,6 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @projectName: MemoShare
@@ -26,6 +35,7 @@ import es.dmoral.toasty.Toasty;
  */
 public class UserManager {
     private Context context;
+    private UserApiService apiService;
 
     public UserManager(Context context) {
         this.context = context;
@@ -107,6 +117,7 @@ public class UserManager {
         }
         return true;
     }
+
     // 检查initiator是否关注了target
     public boolean isFollowing(User initiator, User target) {
         long count = LitePal.where("initiatorNumber = ? and targetNumber = ? and (relationshipStatus = ? or relationshipStatus = ?)",
@@ -119,6 +130,7 @@ public class UserManager {
 
         return count > 0;
     }
+
     // 当前用户关注其他用户
     public void followUser(User initiator, User target) {
         Relationship relationship = new Relationship();
@@ -142,6 +154,7 @@ public class UserManager {
             endFriendship(initiator, target);
         }
     }
+
     public User findUserByPhoneNumber(String phoneNumber) {
         User users = LitePal
                 .where("phoneNumber = ?", phoneNumber)
@@ -188,7 +201,7 @@ public class UserManager {
     }
 
 
-    public long countFans (User user) {
+    public long countFans(User user) {
         return LitePal.where("targetNumber = ? and (relationshipStatus = ? or relationshipStatus = ?)",
                         String.valueOf(user.getPhoneNumber()),
                         String.valueOf(Relationship.ATTENTION_STATUS),
@@ -206,14 +219,14 @@ public class UserManager {
 
 
     //获取关注列表用户
-    public List<User> getFollowedUser(String userPhoneNumber){
-        List<User> followedUserList  = new ArrayList<>();
+    public List<User> getFollowedUser(String userPhoneNumber) {
+        List<User> followedUserList = new ArrayList<>();
         LitePal.getDatabase();
         List<Relationship> list = LitePal
                 .where("initiatorNumber = ? in (relationshipStatus =? or relationshipStatus =?)", userPhoneNumber, "1", "3")
                 .find(Relationship.class);
 
-        for (Relationship relationship: list){
+        for (Relationship relationship : list) {
             String targetNumber = relationship.getTargetNumber();
             User user = LitePal
                     .where("phoneNumber = ?", targetNumber)
@@ -224,14 +237,14 @@ public class UserManager {
     }
 
     //获取粉丝列表用户
-    public List<User> getFansUser(String userPhoneNumber){
-        List<User> fansUserList  = new ArrayList<>();
+    public List<User> getFansUser(String userPhoneNumber) {
+        List<User> fansUserList = new ArrayList<>();
         LitePal.getDatabase();
         List<Relationship> list = LitePal
                 .where("targetNumber = ? in(relationshipStatus =? or relationshipStatus =?)", userPhoneNumber, "1", "3")
                 .find(Relationship.class);
 
-        for (Relationship relationship: list){
+        for (Relationship relationship : list) {
             String targetNumber = relationship.getInitiatorNumber();
             User user = LitePal
                     .where("phoneNumber = ?", targetNumber)
@@ -242,13 +255,13 @@ public class UserManager {
     }
 
     //获取好友列表用户
-    public List<User> getFriendUser(String userPhoneNumber){
-        List<User> friendUserList  = new ArrayList<>();
+    public List<User> getFriendUser(String userPhoneNumber) {
+        List<User> friendUserList = new ArrayList<>();
         LitePal.getDatabase();
         List<Relationship> list = LitePal
                 .where("initiatorNumber = ? and relationshipStatus =? ", userPhoneNumber, "3")
                 .find(Relationship.class);
-        for (Relationship relationship: list){
+        for (Relationship relationship : list) {
             String targetNumber = relationship.getTargetNumber();
             User user = LitePal
                     .where("phoneNumber = ?", targetNumber)
@@ -259,12 +272,28 @@ public class UserManager {
     }
 
     //判断两人关系
-    public int getStatus(String targetPhoneNumber,String initPhoneNumber){
+    public int getStatus(String targetPhoneNumber, String initPhoneNumber) {
         int relationship = 0;
         Relationship relationship1 = LitePal.where("initiatorNumber = ? and targetNumber = ?", initPhoneNumber, targetPhoneNumber).findFirst(Relationship.class);
         relationship = relationship1.getRelationshipStatus();
 
         return relationship;
+    }
+
+    public void uploadUser(String phone, String pw, Callback<HttpData<User>> callback) {
+
+        Gson gson = new GsonBuilder().create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(AppProperties.LOCAL_SERVER_GEORGE)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        apiService = retrofit.create(UserApiService.class);
+
+        User user = new User(phone, pw);
+        Call<HttpData<User>> call = apiService.uploadUser(user);
+        call.enqueue(callback);
+
     }
 
 

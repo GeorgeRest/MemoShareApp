@@ -17,14 +17,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.george.memoshareapp.BuildConfig;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
-import com.george.memoshareapp.http.api.RegisterApi;
+import com.george.memoshareapp.dialog.LoadingDialog;
+import com.george.memoshareapp.http.api.UserApiService;
 import com.george.memoshareapp.http.response.HttpData;
-import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.utils.CodeSender;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.george.memoshareapp.view.MyCheckBox;
-import com.hjq.http.EasyHttp;
-import com.hjq.http.listener.HttpCallbackProxy;
+
 import com.orhanobut.logger.Logger;
 
 import java.security.MessageDigest;
@@ -33,8 +33,11 @@ import java.security.NoSuchAlgorithmException;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import es.dmoral.toasty.Toasty;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class RegisterActivity extends BaseActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText et_phone;
     private EditText et_pw;
@@ -60,6 +63,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         setContentView(R.layout.activity_register);
         initView();
 
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(BuildConfig.APPLICATION_ID, PackageManager.GET_SIGNATURES);
+            String signValidString = getSignValidString(packageInfo.signatures[0].toByteArray());
+            Log.e("获取应用签名", BuildConfig.APPLICATION_ID + "__" + signValidString);
+        } catch (Exception e) {
+            Log.e("获取应用签名", "异常__" + e);
+        }
         eventHandler = new EventHandler() {
             @Override
             public void afterEvent(int event, int result, Object data) {
@@ -75,25 +85,36 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                LoadingDialog loadingDialog = new LoadingDialog(RegisterActivity.this);
+                                loadingDialog.show();
 
-                                EasyHttp.post(RegisterActivity.this)
-                                        .api(new RegisterApi()
-                                                .setPhoneNumber(phone)
-                                                .setPassword(pw))
-                                        .request(new HttpCallbackProxy<HttpData<User>>(RegisterActivity.this) {
-                                            @Override
-                                            public void onHttpSuccess(HttpData<User> data) {
-                                                if (data.getCode()==200) {
-                                                    Toasty.success(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT, true).show();
-                                                    Logger.d("注册成功");
-//                                                    finish();
-                                                } else if (data.getCode()==201){
-                                                    Toasty.error(RegisterActivity.this, "该用户已注册请登录", Toast.LENGTH_SHORT, true).show();
-                                                    Logger.d("注册失败");
-                                                }
+                                UserApiService apiService = RetrofitManager.getInstance().create(UserApiService.class);
+                                User user = new User(phone, pw);
+                                Call<HttpData<User>> call = apiService.uploadUser(user);
+                                call.enqueue(new Callback<HttpData<User>>() {
+                                    @Override
+                                    public void onResponse(Call<HttpData<User>> call, Response<HttpData<User>> response) {
+                                        loadingDialog.endAnim(); // 请求成功，结束加载框的动画
+                                        loadingDialog.dismiss(); // 隐藏加载框
+                                        if (response.isSuccessful()) {
+                                            HttpData<User> apiResponse = response.body();
+                                            Logger.d(apiResponse.getData());
+                                            if (apiResponse != null && apiResponse.getCode() == 200) {
+                                                Toasty.success(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT, true).show();
+                                                finish();
+                                            } else if (apiResponse != null && apiResponse.getCode() == 201) {
+                                                Toasty.info(RegisterActivity.this, "该用户已注册，请登录", Toast.LENGTH_SHORT, true).show();
                                             }
+                                            }
+                                        }
 
-                                        });
+                                    @Override
+                                    public void onFailure(Call<HttpData<User>> call, Throwable t) {
+                                        loadingDialog.endAnim(); // 请求成功，结束加载框的动画
+                                        loadingDialog.dismiss(); // 隐藏加载框
+                                        Logger.d(t.getMessage());
+                                    }
+                                });
 
                                 Toasty.success(RegisterActivity.this, "验证码输入正确", Toast.LENGTH_SHORT, true).show();
 
@@ -166,6 +187,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     Toasty.warning(this, "请阅读并同意《用户协议》", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
+
                 SMSSDK.submitVerificationCode("86", phone, vcCode);
 
 
@@ -180,6 +202,32 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private boolean isPhoneNumberValid(String phoneNumber) {
         String phoneRegex = "^1[3-9]\\d{9}$";
         return phoneNumber.matches(phoneRegex);
+    }
+
+
+    private String getSignValidString(byte[] paramArrayOfByte) throws NoSuchAlgorithmException {
+        MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
+        localMessageDigest.update(paramArrayOfByte);
+        return toHexString(localMessageDigest.digest());
+    }
+
+    public String toHexString(byte[] paramArrayOfByte) {
+        if (paramArrayOfByte == null) {
+            return null;
+        }
+        StringBuilder localStringBuilder = new StringBuilder(2 * paramArrayOfByte.length);
+        for (int i = 0; ; i++) {
+            if (i >= paramArrayOfByte.length) {
+                return localStringBuilder.toString();
+            }
+            String str = Integer.toString(0xFF & paramArrayOfByte[i], 16);
+            if (str.length() == 1) {
+                str = "0" + str;
+            }
+            localStringBuilder.append(str);
+
+        }
+
     }
 
     @Override
