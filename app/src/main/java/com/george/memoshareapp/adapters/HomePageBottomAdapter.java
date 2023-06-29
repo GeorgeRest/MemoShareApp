@@ -18,10 +18,10 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.utils.DateFormat;
+import com.scwang.smart.refresh.header.material.CircleImageView;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomePageBottomAdapter extends RecyclerView.Adapter<HomePageBottomAdapter.ViewHolder> {
     private List<Post> posts;
@@ -70,7 +70,7 @@ public class HomePageBottomAdapter extends RecyclerView.Adapter<HomePageBottomAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView bottomTime;
+        TextView bottomTime;
         CircleImageView circleImageView;
         ImageView imageView;
 

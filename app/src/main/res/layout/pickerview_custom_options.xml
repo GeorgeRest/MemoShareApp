@@ -13,33 +13,33 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="15dp"
         app:cardElevation="0dp">
-        <LinearLayout
-            android:id="@+id/optionspicker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="#FFFFFF"
-            android:orientation="horizontal"
-            android:paddingTop="10dp">
+    <LinearLayout
+        android:id="@+id/optionspicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
-            <com.contrarywind.view.WheelView
-                android:id="@+id/options1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+        <com.contrarywind.view.WheelView
+            android:id="@+id/options1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
-            <com.contrarywind.view.WheelView
-                android:id="@+id/options2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+        <com.contrarywind.view.WheelView
+            android:id="@+id/options2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
-            <com.contrarywind.view.WheelView
-                android:id="@+id/options3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-        </LinearLayout>
+        <com.contrarywind.view.WheelView
+            android:id="@+id/options3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
@@ -50,19 +50,19 @@
         android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp">
 
-<!--        <ImageView-->
-<!--            android:id="@+id/iv_cancel"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginLeft="65dp"-->
-<!--            android:src="@mipmap/edit_region_cancel"/>-->
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="65dp"
+            android:src="@mipmap/edit_region_cancel"/>
 
-<!--        <ImageView-->
-<!--            android:id="@+id/im_ensure"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginLeft="50dp"-->
-<!--            android:src="@mipmap/edit_region_ensure"/>-->
+        <ImageView
+            android:id="@+id/im_ensure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:src="@mipmap/edit_region_ensure"/>
 
     </LinearLayout>
 

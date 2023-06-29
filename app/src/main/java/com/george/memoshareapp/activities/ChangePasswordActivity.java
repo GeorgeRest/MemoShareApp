@@ -1,7 +1,12 @@
 package com.george.memoshareapp.activities;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,13 +21,26 @@ import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.manager.RetrofitManager;
+import com.george.memoshareapp.BuildConfig;
+import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.dialog.LoadingDialog;
+import com.george.memoshareapp.http.api.UserApiService;
+import com.george.memoshareapp.http.response.HttpData;
+import com.george.memoshareapp.manager.RetrofitManager;
+import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.utils.CodeSender;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.orhanobut.logger.Logger;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import es.dmoral.toasty.Toasty;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -167,6 +185,31 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
             String phoneRegex = "^1[3-9]\\d{9}$";
             return phoneNumber.matches(phoneRegex);
         }
+
+    private String getSignValidString(byte[] paramArrayOfByte) throws NoSuchAlgorithmException {
+        MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
+        localMessageDigest.update(paramArrayOfByte);
+        return toHexString(localMessageDigest.digest());
+    }
+
+    public String toHexString(byte[] paramArrayOfByte) {
+        if (paramArrayOfByte == null) {
+            return null;
+        }
+        StringBuilder localStringBuilder = new StringBuilder(2 * paramArrayOfByte.length);
+        for (int i = 0; ; i++) {
+            if (i >= paramArrayOfByte.length) {
+                return localStringBuilder.toString();
+            }
+            String str = Integer.toString(0xFF & paramArrayOfByte[i], 16);
+            if (str.length() == 1) {
+                str = "0" + str;
+            }
+            localStringBuilder.append(str);
+
+        }
+
+    }
 
     @Override
     protected void onDestroy() {

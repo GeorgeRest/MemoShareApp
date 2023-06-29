@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp">
+    <RelativeLayout
+        android:id="@+id/rl_user_publish_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/rl_user_publish_time"
+            android:layout_width="51dp"
+            android:layout_height="47dp"
+            android:background="@drawable/user_date_line">
+
+            <TextView
+                android:id="@+id/tv_user_publish_date"
+                android:layout_width="29dp"
+                android:layout_height="27dp"
+                android:textSize="22sp"
+                android:textColor="#4E4856"
+                android:text="30"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tv_user_publish_month"
+                android:layout_width="26dp"
+                android:layout_height="19dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="16sp"
+                android:textColor="#B34E4856"
+                android:text="09月"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tv_user_publish_twoWord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#4E4856"
+                android:textSize="22sp"
+                android:text="今天"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="52dp"
+            android:layout_height="27dp"
+            android:layout_below="@id/rl_user_publish_time">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_user_publish_recorder_count"
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                app:cardCornerRadius="16dp"
+                android:layout_alignParentRight="true">
+                <TextView
+                    android:id="@+id/tv_user_publish_recorder_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="7sp"
+                    android:gravity="center"
+                    android:text="1"
+                    android:background="#FF8A35"
+                    android:textColor="@color/white"/>
+            </androidx.cardview.widget.CardView>
+        <ImageView
+            android:id="@+id/iv_user_publish_recorder"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:src="@mipmap/record_homepage" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/rl_user_publish_time">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_user_publish_image_count"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:cardCornerRadius="16dp"
+                android:layout_alignParentRight="true">
+                <TextView
+                    android:id="@+id/tv_user_publish_image_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:text="1"
+                    android:background="#A693D6"
+                    android:textColor="@color/white"/>
+            </androidx.cardview.widget.CardView>
+
+            <ImageView
+                android:id="@+id/iv_user_publish_image"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_centerInParent="true"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/comment" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/rl_user_publish_head"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp">
+        <TextView
+            android:id="@+id/tv_user_publish_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#202025"
+            android:text="64946549465116465161356494616111616"
+            android:maxLines="3"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/tv_user_publish_location"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:textSize="10sp"
+            android:textColor="#99202025"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="1234657979646497"
+            android:layout_marginBottom="7dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

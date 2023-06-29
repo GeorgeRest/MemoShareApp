@@ -198,7 +198,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         tv_forget_pw.setOnClickListener(this);
         sp = getSharedPreferences("User", Context.MODE_PRIVATE);
         editor = sp.edit();
-
     }
 
 
@@ -485,7 +484,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 }
-
 
 
 

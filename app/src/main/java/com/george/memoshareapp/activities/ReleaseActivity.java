@@ -141,10 +141,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         release_button.setOnClickListener(this);
         release_back.setOnClickListener(this);
 
-
-
-
-
     }
 
     private void initView() {
@@ -170,7 +166,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         ll_move_add = (LinearLayout) findViewById(R.id.ll_move_add);
         rl_record = (RecyclerView) findViewById(R.id.rl_record);
         rv_image = (RecyclerView) findViewById(R.id.rv_image);
-        postManager = new PostManager(this);
+        postManager = new PostManager(this,ReleaseActivity.this);
         rl_permission.setOnClickListener(this);
         rl_time.setOnClickListener(this);
         addat.setOnClickListener(this);
@@ -369,6 +365,9 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private void getPhotoFromAlbum(Intent data) {
         if (data != null){
             List<LocalMedia> selectList = PictureSelector.obtainSelectorList(data);
+            for (LocalMedia localMedia:selectList) {
+                Logger.d(localMedia.getPath());
+            }
             if (selectList != null ) {
                 int count = selectList.size();
                 for (int i = 0; i < count; i++) {
@@ -456,7 +455,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(this, "请添加图片", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 getSystemTime();
 
                 if (location == null) {
@@ -467,7 +465,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 content = removeAtNames(content);
                 recordingsList.removeAll(Collections.singleton(null));
                 postManager.getDBParameter(getImageUriList(), phoneNumber, content, recordingsList, addedNames, location, longitude, latitude, PUBLIC_PERMISSION, getSystemTime(), memoryTime());
-                finish();
                 break;
             case R.id.release_back:
                 finish();
@@ -478,7 +475,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.rl_addat:
                 startActivityForResult(new Intent(this, ContactListActivity.class), RESULT_CODE_CONTACT);
                 break;
-
         }
     }
 
