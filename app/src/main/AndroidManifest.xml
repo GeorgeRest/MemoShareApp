@@ -45,6 +45,8 @@
         tools:targetApi="31">
         <activity android:name=".activities.NewPersonPageActivity"
             android:exported="true"/>
+        <activity android:name=".activities.ChangePasswordActivity"
+            android:exported="true"/>
 
         <activity
             android:name=".activities.EditProfileActivity"
@@ -95,9 +97,6 @@
             android:name=".activities.HomePageActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.RetrievePasswordActivity"
-            android:exported="true" />
-        <activity
             android:name=".activities.SplashActivity"
             android:exported="true"
             android:theme="@style/Splash">
@@ -142,15 +141,7 @@
         </activity>
 
 
-        <activity
-            android:name=".activities.test.SimpleActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
 
         <activity android:name=".activities.EditSignatureActivity"
