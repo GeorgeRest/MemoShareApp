@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
+import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -66,6 +67,14 @@ public class PostManager {
     public PostManager(Context context, LifecycleOwner lifecycleOwner) {
         this.context = context;
         this.lifecycleOwner = lifecycleOwner;
+    }
+    public Post findUser(String id) {
+        Post post = LitePal.where("id = ?", id).findFirst(Post.class);
+        if (post != null) {
+            return post;
+        } else {
+            return null;
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

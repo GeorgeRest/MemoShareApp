@@ -46,7 +46,6 @@ public class MyApplication extends Application {
             }
         });
 
-        Logger.addLogAdapter(new AndroidLogAdapter());
 
 
     }

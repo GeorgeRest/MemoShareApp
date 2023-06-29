@@ -19,9 +19,15 @@ import androidx.fragment.app.FragmentTransaction;
 import com.george.memoshareapp.Fragment.CodeLoginFragment;
 import com.george.memoshareapp.Fragment.PWLoginFragment;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.view.MyCheckBox;
+
+import com.orhanobut.logger.Logger;
+
+import org.litepal.LitePal;
 
 import es.dmoral.toasty.Toasty;
 
@@ -156,6 +162,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
             if (agreement.isChecked()) {
+//                performLogin(phoneNumber, pwNumber);
                 UserManager userManager = new UserManager(this);
                 if (phoneNumber.matches(phoneRegex)) {
                     if (userManager.queryUserInfo(phoneNumber, pwNumber)) {
