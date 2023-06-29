@@ -60,7 +60,7 @@ public class FriendFragment extends Fragment {
     public void getPosition(int position){
         this.position = position;
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -89,6 +89,8 @@ public class FriendFragment extends Fragment {
         adapter = new FriendBaseQuickAdapter(getContext(),choice,initiator_phoneNumber,isMe);
         adapter.submitList(userList);
         rv_friend.setAdapter(adapter);
+
+    }
 
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override

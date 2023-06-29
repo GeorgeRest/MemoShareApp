@@ -3,9 +3,12 @@ package com.george.memoshareapp.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -16,12 +19,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.george.memoshareapp.BuildConfig;
 import com.george.memoshareapp.Fragment.CodeLoginFragment;
 import com.george.memoshareapp.Fragment.PWLoginFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.dialog.LoadingDialog;
+import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
-import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.view.MyCheckBox;
 
@@ -29,10 +35,18 @@ import com.orhanobut.logger.Logger;
 
 import org.litepal.LitePal;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
 import es.dmoral.toasty.Toasty;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener , CodeLoginFragment.OnCodeReceivedListener {
+    private EventHandler eventHandler;
     private TextView tv_pw_login;
     private TextView tv_code_login;
     private TextView forgetPW;
@@ -47,6 +61,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView tv_forget_pw;
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
+    private boolean isSuccessLogin;
+    private LoadingDialog loadingDialog;
+    private  String VcCode;
+    private String phoneNumber;
 
 
     @Override
@@ -57,6 +75,110 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         fragmentManager = getSupportFragmentManager();
         setDefaultSelection(0);
         PermissionUtils.permissionsGranted(this);
+
+        LitePal.getDatabase();
+        User user1 = new User();
+        user1.setName("zxp");
+        user1.setPhoneNumber("15242089476");
+        user1.setPassword("123456");
+        user1.save();
+        LitePal.getDatabase();
+        User user2 = new User();
+        user2.setName("tyf");
+        user2.setPhoneNumber("19818961591");
+        user2.setPassword("123456");
+        user2.save();
+
+
+
+        eventHandler = new EventHandler() {
+            @Override
+            public void afterEvent(int event, int result, Object data) {//走完第三方验证就走这个
+
+                if (result == SMSSDK.RESULT_COMPLETE) {
+                    if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toasty.success(LoginActivity.this, "验证码发送成功", Toast.LENGTH_SHORT, true).show();
+                            }
+                        });
+                    } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                User user = new User(phoneNumber);
+
+                                UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
+                                Call<HttpData<User>> call = userServiceApi.loginVcCode(user);
+                                call.enqueue(new Callback<HttpData<User>>() {
+                                    @Override
+                                    public void onResponse(Call<HttpData<User>> call, Response<HttpData<User>> response) {
+                                        loadingDialog.endAnim();
+                                        loadingDialog.dismiss();
+                                        if (response.isSuccessful()) {
+                                            HttpData<User> data = response.body();
+                                            // 处理成功的情况
+                                            if (data.getCode() == 200) {
+                                                Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                                                editor.putString("phoneNumber", phoneNumber);
+                                                editor.putBoolean("isLogin", true);
+                                                editor.apply();
+                                                startActivity(intent);
+                                                Toasty.success(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                                                Logger.d("登录成功");
+                                                finish();
+                                            } else if (data.getCode() == 401) {
+                                                Toasty.error(LoginActivity.this, "该用户未注册", Toast.LENGTH_SHORT, true).show();
+                                                isSuccessLogin = false;
+                                            }
+                                        } else {
+                                            loadingDialog.endAnim();
+                                            loadingDialog.dismiss();
+                                            Toasty.warning(LoginActivity.this, "未响应成功", Toast.LENGTH_SHORT,true).show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<HttpData<User>> call, Throwable t) {
+                                        // 处理网络错误等情况
+                                        loadingDialog.endAnim();
+                                        loadingDialog.dismiss();
+                                        Logger.d(t.getMessage());
+                                    }
+                                });
+
+                            }
+                        });
+                    }
+                } else {
+                    final Throwable throwable = (Throwable) data;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+                                Toasty.error(LoginActivity.this, "验证码发送失败，原因：" + throwable.getMessage(), Toast.LENGTH_SHORT, true).show();
+                            } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                                Toasty.error(LoginActivity.this, "验证码输入错误，原因：" + throwable.getMessage(), Toast.LENGTH_SHORT, true).show();
+                                loadingDialog.endAnim();
+                                loadingDialog.dismiss();
+                            }
+                        }
+                    });
+                }
+            }
+        };
+
+
+        SMSSDK.registerEventHandler(eventHandler);//注册这个短信
+
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(BuildConfig.APPLICATION_ID, PackageManager.GET_SIGNATURES);
+            String signValidString = getSignValidString(packageInfo.signatures[0].toByteArray());
+            Log.e("获取应用签名", BuildConfig.APPLICATION_ID + "__" + signValidString);
+        } catch (Exception e) {
+            Log.e("获取应用签名", "异常__" + e);
+        }
+
 
     }
 
@@ -128,7 +250,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(intent1);
                 break;
             case R.id.ib_yx_lg_login:
+                loadingDialog = new LoadingDialog(this);
+                loadingDialog.show();
+                loadingDialog.startAnim();
                 handleLogin();
+
+
                 break;
             default:
                 break;
@@ -153,69 +280,206 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void handleLogin() {
         if (PwFragment != null && PwFragment.isVisible()) {
-            String phoneNumber = PwFragment.getPhoneNumber();
+            phoneNumber = PwFragment.getPhoneNumber();
             String pwNumber = PwFragment.getPwNumber();
-
             if (TextUtils.isEmpty(phoneNumber) || TextUtils.isEmpty(pwNumber)) {
                 Toasty.error(this, "请将信息填写完整", Toast.LENGTH_SHORT).show();
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
+
                 return;
             }
-
             if (agreement.isChecked()) {
-//                performLogin(phoneNumber, pwNumber);
-                UserManager userManager = new UserManager(this);
-                if (phoneNumber.matches(phoneRegex)) {
-                    if (userManager.queryUserInfo(phoneNumber, pwNumber)) {
-                        Intent intent = new Intent(this, HomePageActivity.class);
-//                        intent.putExtra("phoneNumber", phoneNumber);
-                        editor.putString("phoneNumber", phoneNumber);
-                        editor.putBoolean("isLogin",true);
-                        editor.apply();
-                        startActivity(intent);
-                        Toasty.success(this, "登录成功", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                } else {
-                    Toasty.warning(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT).show();
-                }
+                performLogin(phoneNumber, pwNumber);
             } else {
                 Toasty.info(this, "请勾选同意协议", Toast.LENGTH_SHORT).show();
             }
-
-
         } else if (CodeFragment != null && CodeFragment.isVisible()) {
-            String phoneNumber = CodeFragment.getPhoneNumber();
+            phoneNumber = CodeFragment.getPhoneNumber();
             String et_code = CodeFragment.getEtCode();
-
             if (TextUtils.isEmpty(phoneNumber) || TextUtils.isEmpty(et_code)) {
                 Toasty.info(this, "请将信息填写完整", Toast.LENGTH_SHORT).show();
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
                 return;
             }
             if (agreement.isChecked()) {
-                UserManager userManager = new UserManager(this);
-                if (phoneNumber.matches(phoneRegex)) {
-                    if (userManager.queryUser(phoneNumber)) {
-                        if (et_code.equals(CodeFragment.codeReal)) {
-                            Intent intent = new Intent(this, HomePageActivity.class);
-                            intent.putExtra("phoneNumber", phoneNumber);
-                            editor.putString("phoneNumber", phoneNumber);
-                            editor.putBoolean("isLogin",true);
-                            editor.apply();
-                            startActivity(intent);
-                            Toasty.success(this, "登录成功", Toast.LENGTH_SHORT).show();
-                            finish();
-                        } else {
-                            Toasty.error(this, "验证码错误", Toast.LENGTH_SHORT).show();
-                        }
+                SMSSDK.submitVerificationCode("86", phoneNumber, et_code);//第三方服务器验证，手机号和验证码
 
-                    }
-                } else {
-                    Toasty.info(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT).show();
-                }
+//                performLoginVcCode(phoneNumber, et_code);
+
             } else {
                 Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT).show();
             }
 
         }
+
     }
+
+    private Boolean performLogin(String phoneNumber, String password) {
+        isSuccessLogin = false;
+        User user = new User(phoneNumber, password);
+        UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
+        Call<HttpData<User>> call = userServiceApi.loginUser(user);
+        call.enqueue(new Callback<HttpData<User>>() {
+            @Override
+            public void onResponse(Call<HttpData<User>> call, Response<HttpData<User>> response) {
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
+                if (response.isSuccessful()) {
+                    HttpData<User> data = response.body();
+                    // 处理成功的情况
+                    if (data.getCode() == 200) {
+                        Toasty.success(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT, true).show();
+                        isSuccessLogin = true;
+
+                        Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                        editor.putString("phoneNumber", phoneNumber);
+                        editor.putBoolean("isLogin", true);
+                        editor.apply();
+                        startActivity(intent);
+                        Toasty.success(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                        Logger.d("登录成功");
+                        finish();
+                    } else if (data.getCode() == 401) {
+                        Toasty.error(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT, true).show();
+                        isSuccessLogin = false;
+                        Logger.d("登录失败");
+                    }
+
+                } else {
+                    loadingDialog.endAnim();
+                    loadingDialog.dismiss();
+                    Toasty.error(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT, true).show();
+                    isSuccessLogin = false;
+                    Logger.d("登录失败");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<HttpData<User>> call, Throwable t) {
+                // 处理网络错误等情况
+                Logger.d(t.getMessage());
+            }
+        });
+        return isSuccessLogin;
+    }
+
+
+    private void performLoginVcCode(String phoneNumber, String vcCode) {
+        System.out.println("====66==========");
+        eventHandler = new EventHandler() {
+            @Override
+            public void afterEvent(int event, int result, Object data) {//走完第三方验证就走这个
+                System.out.println(data+"====77=========="+result);
+                if (result == SMSSDK.RESULT_COMPLETE) {
+                    if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toasty.success(LoginActivity.this, "验证码发送成功", Toast.LENGTH_SHORT, true).show();
+                            }
+                        });
+                    } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                User user = new User(phoneNumber);
+                                UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
+                                Call<HttpData<User>> call = userServiceApi.loginVcCode(user);
+                                call.enqueue(new Callback<HttpData<User>>() {
+                                    @Override
+                                    public void onResponse(Call<HttpData<User>> call, Response<HttpData<User>> response) {
+                                        loadingDialog.endAnim();
+                                        loadingDialog.dismiss();
+                                        if (response.isSuccessful()) {
+                                            HttpData<User> data = response.body();
+                                            // 处理成功的情况
+                                            if (data.getCode() == 200) {
+                                                Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                                                editor.putString("phoneNumber", phoneNumber);
+                                                editor.putBoolean("isLogin", true);
+                                                editor.apply();
+                                                startActivity(intent);
+                                                Toasty.success(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                                                Logger.d("登录成功");
+                                                finish();
+                                            } else if (data.getCode() == 401) {
+                                                Toasty.error(LoginActivity.this, "该用户未注册", Toast.LENGTH_SHORT, true).show();
+                                                isSuccessLogin = false;
+                                            }
+                                        } else {
+                                            loadingDialog.endAnim();
+                                            loadingDialog.dismiss();
+                                            Toasty.warning(LoginActivity.this, "未响应成功", Toast.LENGTH_SHORT,true).show();
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<HttpData<User>> call, Throwable t) {
+                                        // 处理网络错误等情况
+                                        Logger.d(t.getMessage());
+                                    }
+                                });
+
+                            }
+                        });
+                    }
+                } else {
+                    final Throwable throwable = (Throwable) data;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+                                Toasty.error(LoginActivity.this, "验证码发送失败，原因：" + throwable.getMessage(), Toast.LENGTH_SHORT, true).show();
+                            } else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                                Toasty.error(LoginActivity.this, "验证码输入错误，原因：" + throwable.getMessage(), Toast.LENGTH_SHORT, true).show();
+                            }
+                        }
+                    });
+                }
+            }
+        };
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SMSSDK.unregisterEventHandler(eventHandler);
+    }
+    public  String getVcCode(String vcCode){
+        this.VcCode=vcCode;
+        return VcCode;
+    }
+    @Override
+    public void onCodeReceived(String code) {
+        getVcCode(code);
+    }
+    private String getSignValidString( byte[] paramArrayOfByte) throws NoSuchAlgorithmException {
+        MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
+        localMessageDigest.update(paramArrayOfByte);
+        return toHexString(localMessageDigest.digest());
+    }
+    public String toHexString(byte[] paramArrayOfByte) {
+        if (paramArrayOfByte == null) {
+            return null;
+        }
+        StringBuilder localStringBuilder = new StringBuilder(2 * paramArrayOfByte.length);
+        for (int i = 0; ; i++) {
+            if (i >= paramArrayOfByte.length) {
+                return localStringBuilder.toString();
+            }
+            String str = Integer.toString(0xFF & paramArrayOfByte[i], 16);
+            if (str.length() == 1) {
+                str = "0" + str;
+            }
+            localStringBuilder.append(str);
+        }
+    }
+
 }
+
+
+
+
+
