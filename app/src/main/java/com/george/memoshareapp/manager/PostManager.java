@@ -1,36 +1,66 @@
 package com.george.memoshareapp.manager;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.george.memoshareapp.activities.ReleaseActivity;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
+import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.events.ScrollToTopEvent;
+import com.george.memoshareapp.http.api.PostApiService;
 import com.george.memoshareapp.runnable.SavePhotoRunnable;
 import com.george.memoshareapp.utils.ImageUtil;
+import com.george.memoshareapp.utils.SaveContent2DB;
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 
+import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import es.dmoral.toasty.Toasty;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PostManager {
     private static final String TAG = "PostManager";
     private Context context;
+    private Uri uri;
     private List<Uri> imageUriList;
+    private String uriStringPath;
+    private String photoAbsolutePath;
+    private File file;
+    private SavePhotoRunnable savePhotoRunnable;
+    private ImageParameters imageParameters;
+
     private List<String> photoPathList = new ArrayList<>();
     private List<ImageParameters> imageParametersList = new ArrayList<>();
 
@@ -40,6 +70,10 @@ public class PostManager {
     public PostManager(Context context, LifecycleOwner lifecycleOwner) {
         this.context = context;
         this.lifecycleOwner = lifecycleOwner;
+    }
+    public PostManager(Context context) {
+        this.context = context;
+
     }
     public Post findUser(String id) {
         Post post = LitePal.where("id = ?", id).findFirst(Post.class);

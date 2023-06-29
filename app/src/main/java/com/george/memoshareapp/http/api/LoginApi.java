@@ -1,20 +1,12 @@
 package com.george.memoshareapp.http.api;
 
-import androidx.annotation.NonNull;
-
-import com.hjq.http.config.IRequestApi;
-
-public class LoginApi implements IRequestApi {
+public class LoginApi {
 
     private String phoneNumber;
     private String password;
     private String vcCode;
 
-    @NonNull
-    @Override
-    public String getApi() {
-        return "user/login";
-    }
+
 
     public LoginApi setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;

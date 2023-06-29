@@ -288,7 +288,7 @@ public class UserManager {
         Gson gson = new GsonBuilder().create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppProperties.LOCAL_SERVER_GEORGE)
+                .baseUrl(AppProperties.LOCAL_SERVER_SUNNY)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         apiService = retrofit.create(UserApiService.class);

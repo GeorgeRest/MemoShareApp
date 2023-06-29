@@ -30,7 +30,7 @@ import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.view.MyCheckBox;
-import com.hjq.http.listener.OnHttpListener;
+
 import com.orhanobut.logger.Logger;
 
 import org.litepal.LitePal;
@@ -45,7 +45,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, OnHttpListener , CodeLoginFragment.OnCodeReceivedListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener , CodeLoginFragment.OnCodeReceivedListener {
     private EventHandler eventHandler;
     private TextView tv_pw_login;
     private TextView tv_code_login;
@@ -442,12 +442,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         };
     }
 
-    @Override
-    public void onHttpSuccess(Object result) {
-    }
-    @Override
-    public void onHttpFail(Exception e) {
-    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
