@@ -12,4 +12,6 @@ public interface UserServiceApi {
     Call<HttpData<User>> loginUser(@Body User user);
     @POST("user/loginVcCode")
     Call<HttpData<User>> loginVcCode(@Body User user);
+    @POST("user/updatePassword")
+    Call<HttpData<User>> changePassword(@Body User user);
 }

@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         eventHandler = new EventHandler() {
             @Override
             public void afterEvent(int event, int result, Object data) {//走完第三方验证就走这个
-                System.out.println(data+"====77=========="+result);
+
                 if (result == SMSSDK.RESULT_COMPLETE) {
                     if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                         runOnUiThread(new Runnable() {
@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             @Override
                             public void run() {
                                 User user = new User(phoneNumber);
-                                System.out.println("====77====pn======"+phoneNumber);
+
                                 UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
                                 Call<HttpData<User>> call = userServiceApi.loginVcCode(user);
                                 call.enqueue(new Callback<HttpData<User>>() {
@@ -243,7 +243,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 setDefaultSelection(1);
                 break;
             case R.id.tv_forget_pw:
-                Intent intent = new Intent(this, RetrievePasswordActivity.class);
+                Intent intent = new Intent(this, ChangePasswordActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_yx_lg_regist:
@@ -285,6 +285,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String pwNumber = PwFragment.getPwNumber();
             if (TextUtils.isEmpty(phoneNumber) || TextUtils.isEmpty(pwNumber)) {
                 Toasty.error(this, "请将信息填写完整", Toast.LENGTH_SHORT).show();
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
+
                 return;
             }
             if (agreement.isChecked()) {
@@ -297,6 +300,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String et_code = CodeFragment.getEtCode();
             if (TextUtils.isEmpty(phoneNumber) || TextUtils.isEmpty(et_code)) {
                 Toasty.info(this, "请将信息填写完整", Toast.LENGTH_SHORT).show();
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
                 return;
             }
             if (agreement.isChecked()) {
