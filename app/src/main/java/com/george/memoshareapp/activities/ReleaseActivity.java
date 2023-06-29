@@ -166,7 +166,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         ll_move_add = (LinearLayout) findViewById(R.id.ll_move_add);
         rl_record = (RecyclerView) findViewById(R.id.rl_record);
         rv_image = (RecyclerView) findViewById(R.id.rv_image);
-        postManager = new PostManager(this,ReleaseActivity.this);
+        postManager = new PostManager(this);
         rl_permission.setOnClickListener(this);
         rl_time.setOnClickListener(this);
         addat.setOnClickListener(this);

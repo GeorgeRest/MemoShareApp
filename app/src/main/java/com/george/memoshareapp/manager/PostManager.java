@@ -64,7 +64,7 @@ public class PostManager {
     private LifecycleOwner lifecycleOwner;
     private List<File> recordFileList = new ArrayList<>();
     private List<File> MediaFileList = new ArrayList<>();
-    public PostManager(Context context, LifecycleOwner lifecycleOwner) {
+    public PostManager(Context context) {
         this.context = context;
         this.lifecycleOwner = lifecycleOwner;
     }

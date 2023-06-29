@@ -25,9 +25,5 @@ public interface PostApiService {
             @PartMap Map<String, RequestBody> fields
     );
 
-    @GET("api/getPosts")
-    Call<PageInfo<Post>> getPosts(
-            @Query("pageNum") int pageNum,
-            @Query("pageSize") int pageSize
-    );
+
 }
