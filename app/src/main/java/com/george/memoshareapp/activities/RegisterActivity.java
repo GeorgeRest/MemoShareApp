@@ -140,6 +140,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         };
+
         SMSSDK.registerEventHandler(eventHandler);
 
     }
