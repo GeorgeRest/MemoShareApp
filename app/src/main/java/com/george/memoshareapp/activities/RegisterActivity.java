@@ -14,15 +14,9 @@ import android.widget.Toast;
 
 import com.george.memoshareapp.BuildConfig;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.beans.User;
-import com.george.memoshareapp.http.api.RegisterApi;
-import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.utils.CodeSender;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.george.memoshareapp.view.MyCheckBox;
-import com.hjq.http.EasyHttp;
-import com.hjq.http.listener.HttpCallbackProxy;
-import com.orhanobut.logger.Logger;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -59,7 +53,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         eventHandler = new EventHandler() {
             @Override
-            public void afterEvent(int event, int result, Object data) {
+            public void afterEvent(int event, int result, Object data) {//走完第三方验证就走这个
                 if (result == SMSSDK.RESULT_COMPLETE) {
                     if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                         runOnUiThread(new Runnable() {
@@ -73,24 +67,24 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                             @Override
                             public void run() {
 
-                                EasyHttp.post(RegisterActivity.this)
-                                        .api(new RegisterApi()
-                                                .setPhoneNumber(phone)
-                                                .setPassword(pw))
-                                        .request(new HttpCallbackProxy<HttpData<User>>(RegisterActivity.this) {
-                                            @Override
-                                            public void onHttpSuccess(HttpData<User> data) {
-                                                if (data.getCode()==200) {
-                                                    Toasty.success(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT, true).show();
-                                                    Logger.d("注册成功");
-//                                                    finish();
-                                                } else if (data.getCode()==201){
-                                                    Toasty.error(RegisterActivity.this, "该用户已注册请登录", Toast.LENGTH_SHORT, true).show();
-                                                    Logger.d("注册失败");
-                                                }
-                                            }
-
-                                        });
+//                                EasyHttp.post(RegisterActivity.this)
+//                                        .api(new RegisterApi()
+//                                                .setPhoneNumber(phone)
+//                                                .setPassword(pw))
+//                                        .request(new HttpCallbackProxy<HttpData<User>>(RegisterActivity.this) {
+//                                            @Override
+//                                            public void onHttpSuccess(HttpData<User> data) {
+//                                                if (data.getCode()==200) {
+//                                                    Toasty.success(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT, true).show();
+//                                                    Logger.d("注册成功");
+////                                                    finish();
+//                                                } else if (data.getCode()==201){
+//                                                    Toasty.error(RegisterActivity.this, "该用户已注册请登录", Toast.LENGTH_SHORT, true).show();
+//                                                    Logger.d("注册失败");
+//                                                }
+//                                            }
+//
+//                                        });
 
                                 Toasty.success(RegisterActivity.this, "验证码输入正确", Toast.LENGTH_SHORT, true).show();
 
@@ -127,7 +121,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
 
 
-        SMSSDK.registerEventHandler(eventHandler);
+        SMSSDK.registerEventHandler(eventHandler);//注册这个短信
 
     }
 
@@ -182,7 +176,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     VerificationCountDownTimer timer = new VerificationCountDownTimer(tv_getCode, COUNTDOWN_TIME, 1000);
                     timer.start();
 
-                    SMSSDK.getVerificationCode("86", phone);
+                    SMSSDK.getVerificationCode("86", phone);//给手机发验证码
 
                 } else {
                     Toasty.warning(this, "请输入正确格式的手机号", Toast.LENGTH_SHORT, true).show();
@@ -193,11 +187,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     Toasty.warning(this, "两次密码输入不一致", Toast.LENGTH_SHORT, true).show();
                     return;
                 }
-                if (!rb_agree.isChecked()) {
-                    Toasty.warning(this, "请阅读并同意《用户协议》", Toast.LENGTH_SHORT, true).show();
-                    return;
-                }
-                SMSSDK.submitVerificationCode("86", phone, vcCode);
+//                if (!rb_agree.isChecked()) {
+//                    Toasty.warning(this, "请阅读并同意《用户协议》", Toast.LENGTH_SHORT, true).show();
+//                    return;
+//                }
+                SMSSDK.submitVerificationCode("86", phone, vcCode);//第三方服务器验证，手机号和验证码
 
 
                 break;

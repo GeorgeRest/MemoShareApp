@@ -20,7 +20,7 @@ public class RequestServer implements IRequestServer {
     @Override
     public String getHost() {
 //        return "http://82.156.138.114:6027/";
-        return "http://192.168.1.7:6028/";
+        return "http://192.168.43.204:6028/";
     }
 
     @NonNull

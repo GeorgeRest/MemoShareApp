@@ -83,11 +83,5 @@ public class FriendFragment extends Fragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        adapter.notifyDataSetChanged();
-
-    }
 
 }
