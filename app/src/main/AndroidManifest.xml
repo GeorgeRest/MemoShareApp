@@ -95,7 +95,7 @@
             android:name=".activities.HomePageActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.RetrievePasswordActivity"
+            android:name=".activities.ChangePasswordActivity"
             android:exported="true" />
         <activity
             android:name=".activities.SplashActivity"

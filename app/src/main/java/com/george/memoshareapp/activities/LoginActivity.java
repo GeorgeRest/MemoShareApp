@@ -64,13 +64,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         LitePal.getDatabase();
         User user1 = new User();
         user1.setName("zxp");
-        user1.setPhoneNumber("15242089476");
+        user1.setPhoneNumber("15541871133");
         user1.setPassword("123456");
         user1.save();
         LitePal.getDatabase();
         User user2 = new User();
         user2.setName("tyf");
-        user2.setPhoneNumber("19818961591");
+        user2.setPhoneNumber("13358811018");
         user2.setPassword("123456");
         user2.save();
 
@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 setDefaultSelection(1);
                 break;
             case R.id.tv_forget_pw:
-                Intent intent = new Intent(this, RetrievePasswordActivity.class);
+                Intent intent = new Intent(this, ChangePasswordActivity.class);
                 startActivity(intent);
                 break;
             case R.id.tv_yx_lg_regist:

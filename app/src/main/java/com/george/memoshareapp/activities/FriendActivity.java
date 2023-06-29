@@ -67,6 +67,8 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onPageSelected(int position) {
                 onViewPagerSelected(position);
+                FriendFragment fragment = (FriendFragment) pagerAdapter.getItem(position);
+                fragment.getPosition(position);
             }
 
             @Override

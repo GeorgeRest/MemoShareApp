@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.FriendBaseQuickAdapter;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.manager.UserManager;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -34,6 +35,7 @@ public class FriendFragment extends Fragment {
     private boolean isMe;
     private SmartRefreshLayout refreshLayout;
     private FriendBaseQuickAdapter adapter;
+    private int position;
 
     public FriendFragment() {
     }
@@ -55,7 +57,10 @@ public class FriendFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    public void getPosition(int position){
+        this.position = position;
+    }
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,7 +81,6 @@ public class FriendFragment extends Fragment {
             initiator_phoneNumber = bundle.getString("phoneNumber", "0");
             isMe = bundle.getBoolean("isMe");
         }
-        System.out.println("-----------user"+userList+"//choice"+ choice + "//ph" +initiator_phoneNumber);
 
         rv_friend = (RecyclerView) view.findViewById(R.id.rv_friend);
         refreshLayout = (SmartRefreshLayout) view.findViewById(R.id.refreshLayout);
@@ -90,6 +94,17 @@ public class FriendFragment extends Fragment {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 refreshlayout.setNoMoreData(false);
+                userList.clear();  // 清空likePost列表
+                UserManager userManager = new UserManager(getContext());
+                List<User> newUserList = null;
+                if(position == 0){
+                    newUserList = userManager.getFollowedUser(initiator_phoneNumber);
+                } else if (position == 1) {
+                    newUserList = userManager.getFansUser(initiator_phoneNumber);
+                } else if (position == 2) {
+                    newUserList = userManager.getFriendUser(initiator_phoneNumber);
+                }
+                userList.addAll(newUserList);
                 adapter.notifyDataSetChanged();
                 refreshlayout.finishRefresh();
             }
@@ -97,11 +112,7 @@ public class FriendFragment extends Fragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        adapter.notifyDataSetChanged();
 
-    }
+
 
 }

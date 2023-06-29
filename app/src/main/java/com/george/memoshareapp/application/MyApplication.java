@@ -4,18 +4,13 @@ import android.app.Application;
 
 import com.amap.api.maps2d.model.LatLng;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.george.memoshareapp.http.RequestHandler;
-import com.george.memoshareapp.http.server.RequestServer;
 import com.george.memoshareapp.utils.LocationUtil;
-import com.hjq.http.EasyConfig;
-import com.mob.MobSDK;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
 import org.litepal.LitePal;
 
 import es.dmoral.toasty.Toasty;
-import okhttp3.OkHttpClient;
 
 
 /**
@@ -51,19 +46,8 @@ public class MyApplication extends Application {
         });
 
         Logger.addLogAdapter(new AndroidLogAdapter());
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .build();
-        RequestServer server = new RequestServer();
-        EasyConfig.with(okHttpClient)
-                // 是否打印日志
-                // 设置服务器配置（必须设置）
-                .setServer(server)
-                // 设置请求处理策略（必须设置）
-                .setHandler(new RequestHandler(this))
-                // 设置请求重试次数
-                .setRetryCount(2)
-                .into();
-        MobSDK.submitPolicyGrantResult(true);
+
+
 
     }
     public static MyApplication getInstance() {

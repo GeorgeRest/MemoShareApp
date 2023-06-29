@@ -8,6 +8,7 @@ public class LoginApi implements IRequestApi {
 
     private String phoneNumber;
     private String password;
+    private String vcCode;
 
     @NonNull
     @Override
@@ -22,6 +23,9 @@ public class LoginApi implements IRequestApi {
 
     public LoginApi setPassword(String password) {
         this.password = password;
+        return this;
+    }public LoginApi setVcCode(String vcCode) {
+        this.vcCode = vcCode;
         return this;
     }
 }
