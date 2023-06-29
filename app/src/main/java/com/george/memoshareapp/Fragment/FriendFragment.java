@@ -90,8 +90,6 @@ public class FriendFragment extends Fragment {
         adapter.submitList(userList);
         rv_friend.setAdapter(adapter);
 
-    }
-
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
