@@ -193,26 +193,6 @@ public class Post extends LitePalSupport implements Serializable {
         this.user = user;
     }
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", publishedText='" + publishedText + '\'' +
-                ", photoCachePath=" + photoCachePath +
-                ", recordings=" + recordings +
-                ", contacts=" + contacts +
-                ", location='" + location + '\'' +
-                ", longitude=" + longitude +
-                ", latitude=" + latitude +
-                ", isPublic=" + isPublic +
-                ", publishedTime='" + publishedTime + '\'' +
-                ", memoryTime='" + memoryTime + '\'' +
-                ", like=" + like +
-                ", share=" + share +
-                ", commentBeans=" + commentBeans +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {

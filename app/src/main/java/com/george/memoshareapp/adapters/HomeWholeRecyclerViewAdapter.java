@@ -34,9 +34,11 @@ import com.george.memoshareapp.beans.ContactInfo;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.events.PostLikeUpdateEvent;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.DateFormat;
 
+import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
@@ -113,7 +115,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 .where("phoneNumber = ?", phoneNumber)
                 .findFirst(User.class);
         Post newPost = LitePal.where("id = ?", String.valueOf(post.getId())).findFirst(Post.class);
-        System.out.println("====================" + post);
         switch (v.getId()) {
             case R.id.like:
                 long likeCount = newPost.getLike();
@@ -128,12 +129,16 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                     values.put("user_id", user.getId());
                     values.put("post_id", post.getId());
                     LitePal.getDatabase().insert("post_user", null, values);
+                    PostLikeUpdateEvent event = new PostLikeUpdateEvent(post, isLike);
+                    EventBus.getDefault().post(event);
                 } else {
                     holder.like.setImageResource(R.drawable.like);
                     post.setLike(--likeCount);
                     post.update(id);
                     LitePal.getDatabase().delete("post_user", "user_id = ? and post_id = ?",
                             new String[]{String.valueOf(user.getId()), String.valueOf(post.getId())});
+                    PostLikeUpdateEvent event = new PostLikeUpdateEvent(post, isLike);
+                    EventBus.getDefault().post(event);
                 }
                 editor.putBoolean(post.getId() + ":" + phoneNumber, isLike);
                 editor.apply();

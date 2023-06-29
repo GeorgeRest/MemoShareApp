@@ -26,7 +26,6 @@ import com.bigkoo.pickerview.view.TimePickerView;
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.EditProfileActivity;
-import com.george.memoshareapp.activities.test.SimpleActivity;
 import com.george.memoshareapp.utils.GlideEngine;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
