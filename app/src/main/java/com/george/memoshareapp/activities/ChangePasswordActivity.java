@@ -79,23 +79,23 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                                     public void onResponse(Call<HttpData<User>> call, Response<HttpData<User>> response) {
                                         loadingDialog.endAnim(); // 请求成功，结束加载框的动画
                                         loadingDialog.dismiss(); // 隐藏加载框
-//                                        if (response.isSuccessful()) {
-//                                            Toasty.success(ChangePasswordActivity.this, "修改密码成功，请登录", Toast.LENGTH_SHORT).show();
-//                                        } else {
-//                                            Toasty.error(ChangePasswordActivity.this, "修改失败，请重试", Toast.LENGTH_SHORT,true).show();
-//                                        }
                                         if (response.isSuccessful()) {
-                                            HttpData<User> apiResponse = response.body();
-                                            Logger.d(apiResponse.getData());
-                                            if (apiResponse != null && apiResponse.getCode() == 201) {
-                                                Toasty.success(ChangePasswordActivity.this, "修改密码成功，请登录", Toast.LENGTH_SHORT).show();
-                                                finish();
-                                            } else if (apiResponse != null && apiResponse.getCode() == 200) {
-                                                Toasty.info(ChangePasswordActivity.this, "该手机号未注册，请先注册", Toast.LENGTH_SHORT, true).show();
-                                            }
-                                        }else {
+                                            Toasty.success(ChangePasswordActivity.this, "修改密码成功，请登录", Toast.LENGTH_SHORT).show();
+                                        } else {
                                             Toasty.error(ChangePasswordActivity.this, "修改失败，请重试", Toast.LENGTH_SHORT,true).show();
                                         }
+//                                        if (response.isSuccessful()) {
+//                                            HttpData<User> apiResponse = response.body();
+//                                            Logger.d(apiResponse.getData());
+//                                            if (apiResponse != null && apiResponse.getCode() == 201) {
+//                                                Toasty.success(ChangePasswordActivity.this, "修改密码成功，请登录", Toast.LENGTH_SHORT).show();
+//                                                finish();
+//                                            } else if (apiResponse != null && apiResponse.getCode() == 200) {
+//                                                Toasty.info(ChangePasswordActivity.this, "该手机号未注册，请先注册", Toast.LENGTH_SHORT, true).show();
+//                                            }
+//                                        }else {
+//                                            Toasty.error(ChangePasswordActivity.this, "修改失败，请重试", Toast.LENGTH_SHORT,true).show();
+//                                        }
                                     }
 
 //                                    @Override
@@ -110,7 +110,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                                     }
                                 });
 
-                                Toasty.success(ChangePasswordActivity.this, "验证码输入正确", Toast.LENGTH_SHORT, true).show();
+//                                Toasty.success(ChangePasswordActivity.this, "验证码输入正确", Toast.LENGTH_SHORT, true).show();
 
                             }
                         });
