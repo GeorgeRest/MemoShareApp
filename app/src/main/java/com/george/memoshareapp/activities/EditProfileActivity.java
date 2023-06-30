@@ -1,16 +1,12 @@
 package com.george.memoshareapp.activities;
 
 import android.app.Dialog;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,6 +22,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -35,10 +32,10 @@ import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.bumptech.glide.Glide;
-
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.utils.GlideEngine;
+import com.haibin.calendarview.CalendarView;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.engine.CropFileEngine;
@@ -49,13 +46,17 @@ import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropImageEngine;
 
 import java.text.SimpleDateFormat;
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditProfileActivity extends AppCompatActivity implements  CalendarView.OnCalendarSelectListener,
+        CalendarView.OnYearChangeListener, View.OnClickListener {
     public static final String EXTRA_EDITED_GENDER = "edited_gender";
     public static final String EXTRA_EDITED_BIRTHDAY = "edited_birthday";
     public static final String EXTRA_EDITED_REGION = "edited_region";
@@ -235,7 +236,11 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 showBottomDialog();
                 break;
             case R.id.rl_birthday:
-                pvCustomLunar.show();
+//                pvCustomLunar.show();
+
+                birthdayScrollWheel();
+
+
                 break;
             case R.id.rl_region:
                 break;
@@ -244,6 +249,88 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 break;
         }
     }
+
+    private void birthdayScrollWheel() {
+        /**
+         * @description
+         *
+         * 注意事项：
+         * 1.自定义布局中，id为 optionspicker 或者 timepicker 的布局以及其子控件必须要有，否则会报空指针.
+         * 具体可参考demo 里面的两个自定义layout布局。
+         * 2.因为系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
+         * setRangDate方法控制起始终止时间(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
+         */
+        Calendar selectedDate = Calendar.getInstance();//系统当前时间
+        Calendar startDate = Calendar.getInstance();
+        startDate.set(2000, 0, 23);
+        Calendar endDate = Calendar.getInstance();
+        endDate.set(2030, 11, 28);
+        //时间选择器 ，自定义布局
+        pvCustomTime = new TimePickerBuilder(this, new OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {//选中事件回调
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH) + 1;
+                int day = calendar.get(Calendar.DAY_OF_MONTH) ;
+                getTime2view(year,month,day);
+//                                mCalendarView.scrollToCalendar(year, month, 1);
+            }
+        })
+                /*.setType(TimePickerView.Type.ALL)//default is all
+                .setCancelText("Cancel")
+                .setSubmitText("Sure")
+                .setContentTextSize(18)
+                .setTitleSize(20)
+                .setTitleText("Title")
+                .setTitleColor(Color.BLACK)
+               /*.setDividerColor(Color.WHITE)//设置分割线的颜色
+                .setTextColorCenter(Color.LTGRAY)//设置选中项的颜色
+                .setLineSpacingMultiplier(1.6f)//设置两横线之间的间隔倍数
+                .setTitleBgColor(Color.DKGRAY)//标题背景颜色 Night mode
+//                       .setBgColor(Color.BLACK)//滚轮背景颜色 Night mode
+                .setSubmitColor(Color.WHITE)
+                .setCancelColor(Color.WHITE)*/
+                /*.animGravity(Gravity.RIGHT)// default is center*/
+                .setContentTextSize(18)
+                .setDividerColor(Color.parseColor("#FFBB86FC"))
+                .setTextColorCenter(Color.BLACK)
+                .setLineSpacingMultiplier(10f)
+                .setDate(selectedDate)
+                .setRangDate(startDate, endDate)
+                .setLayoutRes(R.layout.calender_time_picker, new CustomListener() {
+
+                    @Override
+                    public void customLayout(View v) {
+                        ImageView tvSubmit = (ImageView) v.findViewById(R.id.iv_calender_confirm);
+                        ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_calender_cancel);
+                        tvSubmit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                pvCustomTime.returnData();
+                                pvCustomTime.dismiss();
+                            }
+                        });
+                        ivCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                pvCustomTime.dismiss();
+                            }
+                        });
+                    }
+                })
+                .setContentTextSize(18)
+                .setItemVisibleCount(5)
+                .setType(new boolean[]{true, true, true, false, false, false})
+                .setLabel("", "", "", "", "", "")
+                .setLineSpacingMultiplier(2.5f)
+                .setTextXOffset(0, 0, 0, 40, 0, -40)
+                .setDividerColor(0xFF24AD9D)
+                .build();
+        pvCustomTime.show();
+    }
+
     private void showBottomDialog() {
         //1、使用Dialog、设置style
         final Dialog dialog = new Dialog(this, R.style.DialogTheme);
@@ -479,4 +566,28 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
 
+    @Override
+    public void onCalendarOutOfRange(com.haibin.calendarview.Calendar calendar) {
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onCalendarSelect(com.haibin.calendarview.Calendar calendar, boolean isClick) {
+
+        tv_edit_birthday.setText(getEnglishMonthName(calendar.getMonth()));
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String getEnglishMonthName(int monthNumber) {
+        // Java的Month类将月份从1（一月）计数到12（十二月）
+        Month month = Month.of(monthNumber);
+        String englishMonthName = month.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+        return englishMonthName.toUpperCase();
+    }
+
+    @Override
+    public void onYearChange(int year) {
+
+    }
 }
