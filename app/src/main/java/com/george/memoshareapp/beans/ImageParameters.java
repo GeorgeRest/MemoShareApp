@@ -22,6 +22,7 @@ public class ImageParameters extends LitePalSupport implements Serializable {
     private int height;
     private Post post;
     public ImageParameters() {
+
     }
 
     public ImageParameters(String photoCachePath, int width, int height) {

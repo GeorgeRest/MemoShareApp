@@ -1,6 +1,7 @@
 package com.george.memoshareapp.http.api;
 
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.http.response.HttpListData;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ public interface PostApiService {
             @Part List<MultipartBody.Part> files,
             @PartMap Map<String, RequestBody> fields
     );
-
+    @GET("/getPosts")
+    Call<HttpListData<Post>> getPosts(@Query("pageNum") int pageNum, @Query("pageSize") int pageSize);
 
 }

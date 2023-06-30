@@ -57,6 +57,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         fragmentManager = getSupportFragmentManager();
         setDefaultSelection(0);
         PermissionUtils.permissionsGranted(this);
+        User user = new User("13478468771","12345678");
+        user.save();
 
     }
 

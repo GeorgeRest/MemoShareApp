@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.BuildConfig;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.ImageParameters;
+import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.http.api.UserApiService;
@@ -29,6 +31,8 @@ import com.orhanobut.logger.Logger;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
@@ -63,13 +67,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_register);
         initView();
 
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo(BuildConfig.APPLICATION_ID, PackageManager.GET_SIGNATURES);
-            String signValidString = getSignValidString(packageInfo.signatures[0].toByteArray());
-            Log.e("获取应用签名", BuildConfig.APPLICATION_ID + "__" + signValidString);
-        } catch (Exception e) {
-            Log.e("获取应用签名", "异常__" + e);
-        }
+
         eventHandler = new EventHandler() {
             @Override
             public void afterEvent(int event, int result, Object data) {
@@ -140,8 +138,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         };
-
         SMSSDK.registerEventHandler(eventHandler);
+
 
     }
 
@@ -205,31 +203,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         return phoneNumber.matches(phoneRegex);
     }
 
-
-    private String getSignValidString(byte[] paramArrayOfByte) throws NoSuchAlgorithmException {
-        MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
-        localMessageDigest.update(paramArrayOfByte);
-        return toHexString(localMessageDigest.digest());
-    }
-
-    public String toHexString(byte[] paramArrayOfByte) {
-        if (paramArrayOfByte == null) {
-            return null;
-        }
-        StringBuilder localStringBuilder = new StringBuilder(2 * paramArrayOfByte.length);
-        for (int i = 0; ; i++) {
-            if (i >= paramArrayOfByte.length) {
-                return localStringBuilder.toString();
-            }
-            String str = Integer.toString(0xFF & paramArrayOfByte[i], 16);
-            if (str.length() == 1) {
-                str = "0" + str;
-            }
-            localStringBuilder.append(str);
-
-        }
-
-    }
 
     @Override
     protected void onDestroy() {
