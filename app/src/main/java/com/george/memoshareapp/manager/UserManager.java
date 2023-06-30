@@ -154,6 +154,9 @@ public class UserManager {
         }
     }
 
+
+
+
     public User findUserByPhoneNumber(String phoneNumber) {
         User users = LitePal
                 .where("phoneNumber = ?", phoneNumber)
@@ -181,15 +184,6 @@ public class UserManager {
         LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?", String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()));
         LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?", String.valueOf(target.getPhoneNumber()), String.valueOf(initiator.getPhoneNumber()));
     }
-
-//    // 解除朋友关系
-//    private void endFriendship(User initiator, User target) {
-//        // 只要有一方取消关注，就解除朋友关系
-//        ContentValues values = new ContentValues();
-//        values.put("relationshipStatus", Relationship.ATTENTION_STATUS);
-//        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?", String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()));
-//        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?", String.valueOf(target.getPhoneNumber()), String.valueOf(initiator.getPhoneNumber()));
-//    }
 
     // 解除朋友关系
     private void endFriendship(User initiator, User target) {
@@ -294,7 +288,7 @@ public class UserManager {
         Gson gson = new GsonBuilder().create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppProperties.LOCAL_SERVER_GEORGE)
+                .baseUrl(AppProperties.LOCAL_SERVER_SUNNY)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         apiService = retrofit.create(UserApiService.class);

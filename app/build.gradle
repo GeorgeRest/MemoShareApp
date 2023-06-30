@@ -104,7 +104,7 @@ dependencies {
     // noinspection GradleDependency
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
 
-    // define any required OkHttp artifacts without version
+// define any required OkHttp artifacts without version
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
     implementation 'com.tencent:mmkv:1.3.0'
@@ -114,10 +114,11 @@ dependencies {
 
     implementation 'com.github.angcyo:CalendarView:3.7.1.37'
     implementation 'com.github.liangjingkanji:StateLayout:1.4.1'
+
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.0.2'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
-    //string转换器
+//string转换器
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
     implementation 'com.github.liangjingkanji:StateLayout:1.4.1'
 }

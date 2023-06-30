@@ -103,8 +103,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                             } else if (apiResponse != null && apiResponse.getCode() == 201) {
                                                 Toasty.info(RegisterActivity.this, "该用户已注册，请登录", Toast.LENGTH_SHORT, true).show();
                                             }
-                                            }
                                         }
+                                    }
 
                                     @Override
                                     public void onFailure(Call<HttpData<User>> call, Throwable t) {
