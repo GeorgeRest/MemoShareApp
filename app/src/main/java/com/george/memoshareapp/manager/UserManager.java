@@ -120,7 +120,8 @@ public class UserManager {
 
     // 检查initiator是否关注了target
     public boolean isFollowing(User initiator, User target) {
-        long count = LitePal.where("initiatorNumber = ? and targetNumber = ? and (relationshipStatus = ? or relationshipStatus = ?)",
+        long count = LitePal.where("initiatorNumber = ? and targetNumber = ? " +
+                                "and (relationshipStatus = ? or relationshipStatus = ?)",
                         String.valueOf(initiator.getPhoneNumber()),
                         String.valueOf(target.getPhoneNumber()),
                         String.valueOf(Relationship.ATTENTION_STATUS),
@@ -146,7 +147,9 @@ public class UserManager {
 
     // 当前用户取消关注
     public void unfollowUser(User initiator, User target) {
-        LitePal.deleteAll(Relationship.class, "initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?", String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()), String.valueOf(Relationship.ATTENTION_STATUS));
+        LitePal.deleteAll(Relationship.class, "initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?",
+                String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()),
+                String.valueOf(Relationship.ATTENTION_STATUS));
 
         // 检查是否需要解除朋友关系
         if (!isMutualFollow(initiator, target)) {
@@ -170,8 +173,12 @@ public class UserManager {
 
     // 检查是否满足互相关注的条件
     private boolean isMutualFollow(User initiator, User target) {
-        long count1 = LitePal.where("initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?", String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()), String.valueOf(Relationship.ATTENTION_STATUS)).count(Relationship.class);
-        long count2 = LitePal.where("initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?", String.valueOf(target.getPhoneNumber()), String.valueOf(initiator.getPhoneNumber()), String.valueOf(Relationship.ATTENTION_STATUS)).count(Relationship.class);
+        long count1 = LitePal.where("initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?",
+                String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()),
+                String.valueOf(Relationship.ATTENTION_STATUS)).count(Relationship.class);
+        long count2 = LitePal.where("initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?",
+                String.valueOf(target.getPhoneNumber()), String.valueOf(initiator.getPhoneNumber()),
+                String.valueOf(Relationship.ATTENTION_STATUS)).count(Relationship.class);
 
         return count1 > 0 && count2 > 0;
     }
@@ -181,8 +188,10 @@ public class UserManager {
         // 需要将之前的关注状态更新为朋友状态
         ContentValues values = new ContentValues();
         values.put("relationshipStatus", Relationship.FRIEND_STATUS);
-        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?", String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()));
-        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?", String.valueOf(target.getPhoneNumber()), String.valueOf(initiator.getPhoneNumber()));
+        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?",
+                String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()));
+        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?",
+                String.valueOf(target.getPhoneNumber()), String.valueOf(initiator.getPhoneNumber()));
     }
 
     // 解除朋友关系
@@ -190,8 +199,11 @@ public class UserManager {
         // 只要有一方取消关注，就解除朋友关系
         ContentValues values = new ContentValues();
         values.put("relationshipStatus", Relationship.ATTENTION_STATUS);
-        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?",String.valueOf(target.getPhoneNumber()) , String.valueOf(initiator.getPhoneNumber()));
-        LitePal.deleteAll(Relationship.class, "initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?", String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()), String.valueOf(Relationship.FRIEND_STATUS));
+        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?",
+                String.valueOf(target.getPhoneNumber()) , String.valueOf(initiator.getPhoneNumber()));
+        LitePal.deleteAll(Relationship.class, "initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?",
+                String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()),
+                String.valueOf(Relationship.FRIEND_STATUS));
 
     }
 

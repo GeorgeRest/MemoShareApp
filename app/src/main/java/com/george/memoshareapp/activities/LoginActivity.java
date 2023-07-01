@@ -27,6 +27,7 @@ import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
+import com.george.memoshareapp.interfaces.OnCodeReceiverListener;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.view.MyCheckBox;
@@ -45,7 +46,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener , CodeLoginFragment.OnCodeReceivedListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener , OnCodeReceiverListener {
     private EventHandler eventHandler;
     private TextView tv_pw_login;
     private TextView tv_code_login;
@@ -451,10 +452,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         this.VcCode=vcCode;
         return VcCode;
     }
-    @Override
-    public void onCodeReceived(String code) {
-        getVcCode(code);
-    }
+
     private String getSignValidString( byte[] paramArrayOfByte) throws NoSuchAlgorithmException {
         MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
         localMessageDigest.update(paramArrayOfByte);
@@ -477,6 +475,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    @Override
+    public void onCodeReceived(String code) {
+            getVcCode(code);
+    }
 }
 
 

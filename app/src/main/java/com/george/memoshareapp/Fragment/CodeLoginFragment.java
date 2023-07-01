@@ -54,9 +54,9 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
         return view;
 
     }
-    public interface OnCodeReceivedListener {
-        void onCodeReceived(String code);
-    }
+//    public interface OnCodeReceivedListener {
+//        void onCodeReceived(String code);
+//    }
 
     private void initView() {
         phone = (EditText) view.findViewById(R.id.et_phone);

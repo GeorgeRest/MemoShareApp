@@ -23,7 +23,6 @@ import com.george.memoshareapp.events.ScrollToTopEvent;
 import com.george.memoshareapp.http.api.PostApiService;
 import com.george.memoshareapp.runnable.SavePhotoRunnable;
 import com.george.memoshareapp.utils.ImageUtil;
-import com.george.memoshareapp.utils.SaveContent2DB;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 
@@ -84,7 +83,8 @@ public class PostManager {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void getDBParameter(List<Uri> imageUriList, String phoneNumber, String editTextContent, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime) {
         this.imageUriList = imageUriList;
-        SaveContent2DB.saveContent2DB(imageParametersList,photoPathList,imageUriList,context,phoneNumber, editTextContent, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
+
+       saveContent2DB(phoneNumber, editTextContent, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
