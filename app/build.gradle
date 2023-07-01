@@ -96,14 +96,16 @@ dependencies {
     // 自定义相机 (按需引入)
     implementation 'io.github.lucksiege:camerax:v3.11.1'
     implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper:4.0.0-beta14"
-    implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper:4.0.0-beta14"
     implementation 'com.orhanobut:logger:2.2.0'
 
-    // 网络请求框架：https://github.com/getActivity/EasyHttp
-    implementation 'com.github.getActivity:EasyHttp:12.0'
+
     // OkHttp 框架：https://github.com/square/okhttp
     // noinspection GradleDependency
-    implementation 'com.squareup.okhttp3:okhttp:3.12.13'
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
+
+// define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
     implementation 'com.tencent:mmkv:1.3.0'
     implementation 'com.github.getActivity:GsonFactory:6.5'
     // Json 解析框架：https://github.com/google/gson
@@ -115,13 +117,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.0.2'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
-    //string转换器
+//string转换器
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
-
-    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
-
-    // define any required OkHttp artifacts without version
-    implementation("com.squareup.okhttp3:okhttp")
-    implementation("com.squareup.okhttp3:logging-interceptor")
-
+    implementation 'com.github.liangjingkanji:StateLayout:1.4.1'
 }

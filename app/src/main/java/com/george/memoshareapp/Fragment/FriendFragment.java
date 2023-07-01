@@ -60,7 +60,7 @@ public class FriendFragment extends Fragment {
     public void getPosition(int position){
         this.position = position;
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

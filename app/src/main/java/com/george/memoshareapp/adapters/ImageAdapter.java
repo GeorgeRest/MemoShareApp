@@ -159,7 +159,7 @@ public class ImageAdapter extends BaseMultiItemAdapter<Uri> implements DragAndSw
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image_view);
-            deleteButton = itemView.findViewById(R.id.delete_button);
+//            deleteButton = itemView.findViewById(R.id.delete_button);
 //            deleteButton.setOnClickListener(this);
         }
 

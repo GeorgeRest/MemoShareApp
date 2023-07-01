@@ -2,12 +2,6 @@ package com.george.memoshareapp.http.response;
 
 import java.util.List;
 
-/**
- *    author : Android 轮子哥
- *    github : https://github.com/getActivity/EasyHttp
- *    time   : 2020/10/07
- *    desc   : 统一接口列表数据结构
- */
 public class HttpListData<T> extends HttpData<HttpListData.ListBean<T>> {
 
     public static class ListBean<T> {

@@ -63,7 +63,6 @@ public class LoadingDialog extends Dialog {
         objectAnimator.start();
     }
 
-
     /**
      * 结束动画
      */
@@ -82,6 +81,4 @@ public class LoadingDialog extends Dialog {
         }
         circle = null;
     }
-
-
 }

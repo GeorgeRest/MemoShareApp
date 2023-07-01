@@ -87,6 +87,10 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                                         }
                                     }
 
+                                    //                                    @Override
+//                                    public void onFailure(Call<HttpData<User>> call, Throwable t) {
+//                                        Toasty.error(ChangePasswordActivity.this, "网络错误，请重试", Toast.LENGTH_SHORT,true).show();
+//                                    }
                                     @Override
                                     public void onFailure(Call<HttpData<User>> call, Throwable t) {
                                         loadingDialog.endAnim(); // 请求成功，结束加载框的动画
@@ -164,11 +168,11 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
 
         }
     }
-        private boolean isPhoneNumberValid(String phoneNumber) {
-            // 手机号正则表达式
-            String phoneRegex = "^1[3-9]\\d{9}$";
-            return phoneNumber.matches(phoneRegex);
-        }
+    private boolean isPhoneNumberValid(String phoneNumber) {
+        // 手机号正则表达式
+        String phoneRegex = "^1[3-9]\\d{9}$";
+        return phoneNumber.matches(phoneRegex);
+    }
 
     @Override
     protected void onDestroy() {

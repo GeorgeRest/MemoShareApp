@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.drake.statelayout.StateLayout;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.beans.Post;
@@ -78,23 +79,27 @@ public class HomePageFragment extends Fragment {//内部
         View rootView = null;
         switch (mParam1) {
             case "好友":
-
                 rootView = inflater.inflate(R.layout.fragment_home_friend, container, false);
+                StateLayout state = (StateLayout) rootView.findViewById(R.id.state);
+                state.setEmptyLayout(R.layout.layout_empty);
+                state.setErrorLayout(R.layout.layout_error);
+                state.setLoadingLayout(R.layout.layout_loading);
+                state.showLoading(null, false, false);
+
                 outerRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_recycler);
                 smartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
                 displayManager = new DisplayManager(getActivity());
                 postList = displayManager.getPostList();
+                state.showContent(null);
                 if (postList != null) {
                     outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), postList);
                     outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                     outerRecyclerView.setAdapter(outerAdapter);
-
                 }
                 smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
                 smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
                 smartRefreshLayout.setEnableAutoLoadMore(true);
-                smartRefreshLayout.autoRefresh();//自动刷新
-                smartRefreshLayout.autoLoadMore();//自动加载
+//                smartRefreshLayout.autoLoadMore();//自动加载
                 smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
                     @Override
                     public void onLoadMore(RefreshLayout refreshlayout) {

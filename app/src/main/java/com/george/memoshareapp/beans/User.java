@@ -81,6 +81,9 @@ public class User extends LitePalSupport implements Serializable {
         this.phoneNumber = phoneNumber;
         this.password = password;
     }
+    public User(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getPhoneNumber() {
         return phoneNumber;
