@@ -31,10 +31,7 @@ import com.george.memoshareapp.interfaces.OnCodeReceiverListener;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.view.MyCheckBox;
-
 import com.orhanobut.logger.Logger;
-
-import org.litepal.LitePal;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -66,6 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private LoadingDialog loadingDialog;
     private  String VcCode;
     private String phoneNumber;
+    private String TAG="123";
 
 
     @Override
@@ -73,24 +71,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
+
+        User user = new User("15242089476", "123456");
+        user.save();
+        User user2 = new User("19818961591", "123456");
+        user2.save();
+
         fragmentManager = getSupportFragmentManager();
         setDefaultSelection(0);
         PermissionUtils.permissionsGranted(this);
-
-        LitePal.getDatabase();
-        User user1 = new User();
-        user1.setName("zxp");
-        user1.setPhoneNumber("15242089476");
-        user1.setPassword("123456");
-        user1.save();
-        LitePal.getDatabase();
-        User user2 = new User();
-        user2.setName("tyf");
-        user2.setPhoneNumber("19818961591");
-        user2.setPassword("123456");
-        user2.save();
-
-
 
         eventHandler = new EventHandler() {
             @Override
@@ -115,8 +104,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 call.enqueue(new Callback<HttpData<User>>() {
                                     @Override
                                     public void onResponse(Call<HttpData<User>> call, Response<HttpData<User>> response) {
-                                        loadingDialog.endAnim();
-                                        loadingDialog.dismiss();
+                                        if (loadingDialog != null) {
+                                            loadingDialog.endAnim();
+                                            loadingDialog.dismiss();
+                                        }
                                         if (response.isSuccessful()) {
                                             HttpData<User> data = response.body();
                                             // 处理成功的情况
@@ -134,16 +125,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                 isSuccessLogin = false;
                                             }
                                         } else {
-                                            loadingDialog.endAnim();
-                                            loadingDialog.dismiss();
+                                            if (loadingDialog != null) {
+                                                loadingDialog.endAnim();
+                                                loadingDialog.dismiss();
+                                            }
                                             Toasty.warning(LoginActivity.this, "未响应成功", Toast.LENGTH_SHORT,true).show();
                                         }
                                     }
                                     @Override
                                     public void onFailure(Call<HttpData<User>> call, Throwable t) {
                                         // 处理网络错误等情况
-                                        loadingDialog.endAnim();
-                                        loadingDialog.dismiss();
+                                        if (loadingDialog != null) {
+                                            loadingDialog.endAnim();
+                                            loadingDialog.dismiss();
+                                        }
                                         Logger.d(t.getMessage());
                                     }
                                 });
@@ -341,6 +336,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         startActivity(intent);
                         Toasty.success(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                         Logger.d("登录成功");
+
                         finish();
                     } else if (data.getCode() == 401) {
                         Toasty.error(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT, true).show();
@@ -452,7 +448,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         this.VcCode=vcCode;
         return VcCode;
     }
-
+    @Override
+    public void onCodeReceived(String code) {
+        getVcCode(code);
+    }
     private String getSignValidString( byte[] paramArrayOfByte) throws NoSuchAlgorithmException {
         MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
         localMessageDigest.update(paramArrayOfByte);
@@ -475,10 +474,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    @Override
-    public void onCodeReceived(String code) {
-            getVcCode(code);
-    }
 }
 
 

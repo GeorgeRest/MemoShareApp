@@ -54,9 +54,7 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
         return view;
 
     }
-//    public interface OnCodeReceivedListener {
-//        void onCodeReceived(String code);
-//    }
+
 
     private void initView() {
         phone = (EditText) view.findViewById(R.id.et_phone);
@@ -75,10 +73,12 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
         switch (v.getId()){
             case R.id.tv_getCode:
                 if (!TextUtils.isEmpty(phoneNumber) && isPhoneNumberValid(phoneNumber)) {
+                    if (userIsExit(phoneNumber)){
+                        VerificationCountDownTimer timer = new VerificationCountDownTimer(tv_getCode, COUNTDOWN_TIME, 1000);
+                        timer.start();
+                        SMSSDK.getVerificationCode("86", phoneNumber);//给手机发验证码
+                    }
 
-                    VerificationCountDownTimer timer = new VerificationCountDownTimer(tv_getCode, COUNTDOWN_TIME, 1000);
-                    timer.start();
-                    SMSSDK.getVerificationCode("86", phoneNumber);//给手机发验证码
 
                 } else {
                     Toasty.warning(getContext(), "请输入正确格式的手机号", Toast.LENGTH_SHORT, true).show();
@@ -117,7 +117,7 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
                     loadingDialog.endAnim();
                     loadingDialog.dismiss();
                     isSuccessLogin = false;
-                    Toasty.warning(getContext(), "该手机号未注册", Toast.LENGTH_SHORT,true).show();
+                    Toasty.warning(getContext(), "response isFail", Toast.LENGTH_SHORT,true).show();
                 }
             }
             @Override

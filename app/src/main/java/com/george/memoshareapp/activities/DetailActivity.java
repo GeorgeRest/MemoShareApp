@@ -26,9 +26,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.CommentAdapter;
 import com.george.memoshareapp.beans.CommentBean;
+import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.ReplyBean;
 import com.george.memoshareapp.beans.User;
@@ -60,7 +62,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private ImageView like;
     private Intent intent;
     private Post post;
-    private List<String> photoPath;
+    private List<ImageParameters> imageParameters;
     private RecyclerView recyclerView;
     private int commentNumber = 0;
     private DisplayManager displayManager;
@@ -95,7 +97,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private long likesCount;
     private String phoneNumber;
     private ScrollView scrollView;
-    private User user;
+
     private DisplayManager manager;
 
 
@@ -109,11 +111,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         phoneNumber = sharedPreferences1.getString("phoneNumber", "");
         editor1 = sharedPreferences1.edit();
 //        Post post =LitePal.where("id = ?", String.valueOf(this.post.getId())).findFirst(Post.class);
-        PostManager postManager = new PostManager(this);
-        Post post = postManager.findUser(String.valueOf(this.post.getId()));
+
 
         UserManager userManager = new UserManager(this);
-        user = userManager.findUserByPhoneNumber(phoneNumber);
+
 
         likesCount = post.getLike();
 
@@ -165,18 +166,21 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void putParameter2View() {
 
 
-        UserManager userManager = new UserManager(this);
-        User user = userManager.findUserByPhoneNumber(post.getPhoneNumber());
+        User user = post.getUser();
         userName.setText(user.getName());
-        userIcon.setImageResource(R.mipmap.touxiangceshi);
+        if(user.getHeadPortraitPath()!=null){
+            Glide.with(this).load(user.getHeadPortraitPath()).into(userIcon);
+        }else{
+            userIcon.setImageResource(R.mipmap.app_icon);
+        }
+
         publishTime.setText(DateFormat.getCurrentDateTime(post.getPublishedTime()));
 
         location.setText(post.getLocation());
         content.setText(post.getPublishedText());
-        photoPath = post.getPhotoCachePath();
+        imageParameters = post.getImageParameters();
 
-
-        displayManager.showPhoto(recyclerView, photoPath, DetailActivity.this);
+        displayManager.showPhoto(recyclerView, imageParameters, DetailActivity.this);
 
 
     }
@@ -184,7 +188,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     private void init() {
         displayManager = new DisplayManager();
-        photoPath = new ArrayList<>();
+        imageParameters = new ArrayList<>();
         scrollView = (ScrollView) findViewById(R.id.scroll_view);
         userName = (TextView) findViewById(R.id.detail_tv_username);
         publishTime = (TextView) findViewById(R.id.detail_tv_publish_time);
@@ -286,15 +290,15 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     like.setImageResource(R.mipmap.like);
                     likesCount--;
                     has_like = false;
-                    LitePal.getDatabase().delete("post_user", "user_id = ? and post_id = ?",
-                            new String[]{String.valueOf(user.getId()), String.valueOf(post.getId())});
+//                    LitePal.getDatabase().delete("post_user", "user_id = ? and post_id = ?",
+//                            new String[]{String.valueOf(user.getId()), String.valueOf(post.getId())});
 
                 } else {
                     like.setImageResource(R.mipmap.like_press);
                     likesCount++;
                     has_like = true;
                     ContentValues values = new ContentValues();
-                    values.put("user_id", user.getId());
+//                    values.put("user_id", user.getId());
                     values.put("post_id", post.getId());
                     LitePal.getDatabase().insert("post_user", null, values);
 

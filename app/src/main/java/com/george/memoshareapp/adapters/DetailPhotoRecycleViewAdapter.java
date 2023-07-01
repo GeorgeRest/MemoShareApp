@@ -13,17 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.FullScreenImageActivity;
+import com.george.memoshareapp.beans.ImageParameters;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DetailPhotoRecycleViewAdapter extends RecyclerView.Adapter<DetailPhotoRecycleViewAdapter.ViewHolder> {
 
     private final Context context;
-    private List<String> mData;
+    private List<ImageParameters> mData;
 
-    public DetailPhotoRecycleViewAdapter(Context context,List<String> photoPath) {
+    public DetailPhotoRecycleViewAdapter(Context context,List<ImageParameters> photoPath) {
         this.mData = photoPath;
         this.context = context;
     }
@@ -52,18 +52,21 @@ public class DetailPhotoRecycleViewAdapter extends RecyclerView.Adapter<DetailPh
             layoutParams.height = holder.imageView.getResources().getDimensionPixelSize(R.dimen.image_size_small1);
         }
         holder.imageView.setLayoutParams(layoutParams);
-        String url = mData.get(position);
+        String url = mData.get(position).getPhotoCachePath();
         if (url != null && !url.isEmpty()) {
-            Glide.with(holder.imageView.getContext()).load(new File(url)).into(holder.imageView);
-
+            Glide.with(holder.imageView.getContext()).load(url).into(holder.imageView);
         }
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
+                    ArrayList<String> list = new ArrayList<>();
                     Intent intent = new Intent(context, FullScreenImageActivity.class);
-                    intent.putStringArrayListExtra("photoPath", new ArrayList<>(mData));
+                    for (ImageParameters imageParameters:mData) {
+                        list.add(imageParameters.getPhotoCachePath());
+                    }
+                    intent.putStringArrayListExtra("photoPath", list);
                     intent.putExtra("position", position);
                     context.startActivity(intent);
                 }
