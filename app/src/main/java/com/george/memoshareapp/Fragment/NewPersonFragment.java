@@ -128,16 +128,11 @@ public class NewPersonFragment extends Fragment {
                 recycleViewStagged.setLayoutManager(layoutManager);
                 DisplayManager displayManager = new DisplayManager(getActivity());
                 likePost = displayManager.getLikePost(offset);
-                for (Post post : likePost) {
-                    System.out.println("likePost" + post.getId());
-                }
-
                 currentLatLng = ((MyApplication) getActivity().getApplication()).getCurrentLatLng();
                 System.out.println(offset + "offset1");
 
                 recyclerViewAdapter = new LikeAdapter(getActivity(), currentLatLng);
                 recyclerViewAdapter.submitList(likePost);
-
 
                 ((DefaultItemAnimator) recycleViewStagged.getItemAnimator()).setSupportsChangeAnimations(false);
                 ((SimpleItemAnimator) recycleViewStagged.getItemAnimator()).setSupportsChangeAnimations(false);
@@ -215,13 +210,10 @@ public class NewPersonFragment extends Fragment {
         if (recyclerViewAdapter == null) {
             return;
         }
-
         System.out.println("--------------------" + event.getPost().getId() + "-------------------");
         likePost = new DisplayManager(getActivity()).getLikePost(0);
         recyclerViewAdapter.submitList(likePost);
         layoutManager.invalidateSpanAssignments();
-
-
 
     }
 

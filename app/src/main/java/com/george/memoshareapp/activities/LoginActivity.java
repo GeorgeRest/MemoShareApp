@@ -33,6 +33,8 @@ import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.view.MyCheckBox;
 import com.orhanobut.logger.Logger;
 
+import org.litepal.LitePal;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -65,17 +67,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String phoneNumber;
     private String TAG="123";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
 
-        User user = new User("15242089476", "123456");
-        user.save();
-        User user2 = new User("19818961591", "123456");
+        LitePal.getDatabase();
+        User user1 = new User();
+        user1.setName("zxp");
+        user1.setPhoneNumber("15242089476");
+        user1.setPassword("123456");
+        user1.save();
+        LitePal.getDatabase();
+        User user2 = new User();
+        user2.setName("tyf");
+        user2.setPhoneNumber("19818961591");
+        user2.setPassword("123456");
         user2.save();
+
 
         fragmentManager = getSupportFragmentManager();
         setDefaultSelection(0);

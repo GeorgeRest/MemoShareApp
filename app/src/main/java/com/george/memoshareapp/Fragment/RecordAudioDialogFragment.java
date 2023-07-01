@@ -26,7 +26,6 @@ import com.george.memoshareapp.BuildConfig;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.application.MyApplication;
 import com.george.memoshareapp.beans.Recordings;
-import com.george.memoshareapp.beans.TextViewAndButton;
 import com.george.memoshareapp.interfaces.RecordingDataListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.zlw.main.recorderlib.RecordManager;
@@ -70,7 +69,6 @@ public class RecordAudioDialogFragment extends DialogFragment {
     private RecordingDataListener recordingDataListener;
     private HashMap<TextView, CountDownTimer> timerMap = new HashMap<>();
     private static Map<ImageView, TextView> deleteMap = new HashMap<>();
-    private static List<TextViewAndButton> textViewList = new ArrayList<>();
     private FloatingActionButton record_stop;
     private boolean isClosed = false;
 

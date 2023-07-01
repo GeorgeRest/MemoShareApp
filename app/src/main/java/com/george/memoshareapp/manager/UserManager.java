@@ -3,11 +3,13 @@ package com.george.memoshareapp.manager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.george.memoshareapp.beans.Relationship;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.http.api.UserApiService;
+import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.properties.AppProperties;
 import com.google.gson.Gson;
@@ -21,6 +23,7 @@ import java.util.List;
 import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -35,7 +38,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class UserManager {
     private Context context;
-    private UserApiService apiService;
+    private UserServiceApi apiService;
 
     public UserManager(Context context) {
         this.context = context;
@@ -173,12 +176,8 @@ public class UserManager {
 
     // 检查是否满足互相关注的条件
     private boolean isMutualFollow(User initiator, User target) {
-        long count1 = LitePal.where("initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?",
-                String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()),
-                String.valueOf(Relationship.ATTENTION_STATUS)).count(Relationship.class);
-        long count2 = LitePal.where("initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?",
-                String.valueOf(target.getPhoneNumber()), String.valueOf(initiator.getPhoneNumber()),
-                String.valueOf(Relationship.ATTENTION_STATUS)).count(Relationship.class);
+        long count1 = LitePal.where("initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?", String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()), String.valueOf(Relationship.ATTENTION_STATUS)).count(Relationship.class);
+        long count2 = LitePal.where("initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?", String.valueOf(target.getPhoneNumber()), String.valueOf(initiator.getPhoneNumber()), String.valueOf(Relationship.ATTENTION_STATUS)).count(Relationship.class);
 
         return count1 > 0 && count2 > 0;
     }
@@ -188,10 +187,8 @@ public class UserManager {
         // 需要将之前的关注状态更新为朋友状态
         ContentValues values = new ContentValues();
         values.put("relationshipStatus", Relationship.FRIEND_STATUS);
-        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?",
-                String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()));
-        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?",
-                String.valueOf(target.getPhoneNumber()), String.valueOf(initiator.getPhoneNumber()));
+        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?", String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()));
+        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?", String.valueOf(target.getPhoneNumber()), String.valueOf(initiator.getPhoneNumber()));
     }
 
     // 解除朋友关系
@@ -199,11 +196,8 @@ public class UserManager {
         // 只要有一方取消关注，就解除朋友关系
         ContentValues values = new ContentValues();
         values.put("relationshipStatus", Relationship.ATTENTION_STATUS);
-        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?",
-                String.valueOf(target.getPhoneNumber()) , String.valueOf(initiator.getPhoneNumber()));
-        LitePal.deleteAll(Relationship.class, "initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?",
-                String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()),
-                String.valueOf(Relationship.FRIEND_STATUS));
+        LitePal.updateAll(Relationship.class, values, "initiatorNumber = ? and targetNumber = ?",String.valueOf(target.getPhoneNumber()) , String.valueOf(initiator.getPhoneNumber()));
+        LitePal.deleteAll(Relationship.class, "initiatorNumber = ? and targetNumber = ? and relationshipStatus = ?", String.valueOf(initiator.getPhoneNumber()), String.valueOf(target.getPhoneNumber()), String.valueOf(Relationship.FRIEND_STATUS));
 
     }
 
@@ -295,20 +289,27 @@ public class UserManager {
         return relationship;
     }
 
-    public void uploadUser(String phone, String pw, Callback<HttpData<User>> callback) {
+    public void saveUserToLocal(String phoneNumber) {
+        UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
+        Call<HttpData<User>> call = userServiceApi.getUserByPhoneNumber(phoneNumber);
+        call.enqueue(new Callback<HttpData<User>>() {
+            @Override
+            public void onResponse(Call<HttpData<User>> call, Response<HttpData<User>> response) {
+                if (response.code() == 200) {
+                    Log.d("saveUserToLocal", "onResponse: " + response.code());
+                    User user = response.body().getData();
+                    user.saveOrUpdate("phoneNumber = ?", user.getPhoneNumber());
+                }
+                else{
+                    Log.d("saveUserToLocal", "onResponse: " + response.code());
+                }
+            }
 
-        Gson gson = new GsonBuilder().create();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppProperties.SERVER)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        apiService = retrofit.create(UserApiService.class);
-
-        User user = new User(phone, pw);
-        Call<HttpData<User>> call = apiService.uploadUser(user);
-        call.enqueue(callback);
-
+            @Override
+            public void onFailure(Call<HttpData<User>> call, Throwable t) {
+                Log.d("saveUserToLocal", "onFailure: " + t.getMessage());
+            }
+        });
     }
 
 

@@ -10,8 +10,7 @@ import retrofit2.http.POST;
 
 public interface UserApiService {
 
-    @POST("user/register")
-    Call<HttpData<User>> uploadUser(@Body User user);
+
 
     @POST("user/updatePassword")
     Call<HttpData<User>> changePassword(@Body User user);

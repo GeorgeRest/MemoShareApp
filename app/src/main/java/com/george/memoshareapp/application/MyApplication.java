@@ -8,6 +8,8 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.george.memoshareapp.utils.LocationUtil;
 import com.mob.MobSDK;
 import com.mob.OperationCallback;
+import com.mob.MobSDK;
+import com.mob.OperationCallback;
 
 import org.litepal.LitePal;
 
@@ -45,19 +47,21 @@ public class MyApplication extends Application {
                 System.out.println("currentLatLng = " + currentLatLng);
             }
         });
+
+
         MobSDK.submitPolicyGrantResult(true, new OperationCallback<Void>() {
-            @Override
-            public void onComplete(Void unused) {
-                Log.e("TAG","隐私协议授权结果提交：成功"+unused);
+                    @Override
+                    public void onComplete(Void data) {
+                        Log.e("TAG","隐私协议授权结果提交: 成功 " + data);
+                    }
 
-            }
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        Log.e("TAG","隐私协议授权结果提交: 失败 " + throwable.getMessage());
+                    }
+                }
+        );
 
-            @Override
-            public void onFailure(Throwable throwable) {
-                Log.e("TAG","隐私协议授权结果提交：失败"+throwable.getMessage());
-
-            }
-        });
 
 
     }
