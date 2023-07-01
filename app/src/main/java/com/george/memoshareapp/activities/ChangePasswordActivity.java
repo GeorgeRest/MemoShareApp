@@ -85,24 +85,8 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                                         } else {
                                             Toasty.error(ChangePasswordActivity.this, "修改失败，请重试", Toast.LENGTH_SHORT,true).show();
                                         }
-//                                        if (response.isSuccessful()) {
-//                                            HttpData<User> apiResponse = response.body();
-//                                            Logger.d(apiResponse.getData());
-//                                            if (apiResponse != null && apiResponse.getCode() == 201) {
-//                                                Toasty.success(ChangePasswordActivity.this, "修改密码成功，请登录", Toast.LENGTH_SHORT).show();
-//                                                finish();
-//                                            } else if (apiResponse != null && apiResponse.getCode() == 200) {
-//                                                Toasty.info(ChangePasswordActivity.this, "该手机号未注册，请先注册", Toast.LENGTH_SHORT, true).show();
-//                                            }
-//                                        }else {
-//                                            Toasty.error(ChangePasswordActivity.this, "修改失败，请重试", Toast.LENGTH_SHORT,true).show();
-//                                        }
                                     }
 
-//                                    @Override
-//                                    public void onFailure(Call<HttpData<User>> call, Throwable t) {
-//                                        Toasty.error(ChangePasswordActivity.this, "网络错误，请重试", Toast.LENGTH_SHORT,true).show();
-//                                    }
                                     @Override
                                     public void onFailure(Call<HttpData<User>> call, Throwable t) {
                                         loadingDialog.endAnim(); // 请求成功，结束加载框的动画
@@ -174,7 +158,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                 SMSSDK.submitVerificationCode("86", phone, vcCode);
                 break;
 
-            case R.id.iv_back_rg:
+            case R.id.iv_back:
                 finish();
                 break;
 
