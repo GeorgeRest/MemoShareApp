@@ -24,7 +24,7 @@ public class RetrofitManager {
 
     private RetrofitManager() {
         mRetrofit = new Retrofit.Builder()
-                .baseUrl(AppProperties.LOCAL_SERVER_GEORGE)
+                .baseUrl(AppProperties.SERVER)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(getOkhttpClient())

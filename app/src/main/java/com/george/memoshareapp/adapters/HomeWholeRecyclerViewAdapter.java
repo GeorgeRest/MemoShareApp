@@ -25,12 +25,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.george.memoshareapp.Fragment.AudioPlayerFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.activities.NewPersonPageActivity;
 import com.george.memoshareapp.beans.ContactInfo;
+import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
@@ -64,6 +66,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     private List<String> contactName = new ArrayList<>();
     private Post post;
     private List<Post> treePosition;
+    private User postUser;
 
     public HomeWholeRecyclerViewAdapter() {
 
@@ -154,9 +157,10 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 Intent intent1 = new Intent(mContext, NewPersonPageActivity.class);
 //                intent1.putExtra("user", user);
 
-                UserManager userManager = new UserManager(mContext);
-                User user2 = userManager.findUserByPhoneNumber(newPost.getPhoneNumber());
-                intent1.putExtra("user", user2);
+
+//                UserManager userManager = new UserManager(mContext);
+//                User user2 = userManager.findUserByPhoneNumber(newPost.getPhoneNumber());
+                intent1.putExtra("user", post.getUser());
                 mContext.startActivity(intent1);
                 break;
         }
@@ -185,12 +189,16 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     }
 
     private void nameTimeLocationContent(ViewHolder holder, Post post) {
-        String phoneNumber_name = post.getPhoneNumber();
-        String name = phoneNumber_name.substring(0, 5);
+        postUser = post.getUser();
+        if(postUser.getHeadPortraitPath()!=null){
+            Glide.with(mContext).load(postUser.getHeadPortraitPath()).into(holder.iv_head_image_1);
+        }else{
+            holder.iv_head_image_1.setImageResource(R.mipmap.app_icon);
+        }
+        String name = postUser.getName();
         String publishedTime = post.getPublishedTime();
         String location = post.getLocation();
         String publishedText = post.getPublishedText();
-
         holder.tv_username.setText(name);
         holder.tv_time.setText(DateFormat.getMessageDate(publishedTime));
         holder.tv_location.setText(location);
@@ -221,7 +229,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     }
 
 
-
     private void setUpHolderFields(ViewHolder holder, Post post) {
         holder.bind(post);
         holder.record_one.setTag(holder);
@@ -235,19 +242,18 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     }
 
     private void setUpHolderRecyclerView(ViewHolder holder, Post post, int position) {
-        List<String> photoCachePath = post.getPhotoCachePath();
-
-        if (photoCachePath == null || photoCachePath.size() == 0) {
+        List<ImageParameters> imageParameters = post.getImageParameters();
+        if (imageParameters == null || imageParameters.size() == 0) {
             holder.innerRecyclerView.setVisibility(View.GONE);
         } else {
-            holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(photoCachePath.size())));
+            holder.innerRecyclerView.setLayoutManager(new GridLayoutManager(mContext, calculateSpanCount(imageParameters.size())));
         }
 
         HomePhotoRecyclerViewAdapter innerAdapter;
         if (photoUri != null) {
-            innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext, photoUri, position);
+            innerAdapter = new HomePhotoRecyclerViewAdapter(imageParameters, post, mContext, photoUri, position);
         } else {
-            innerAdapter = new HomePhotoRecyclerViewAdapter(photoCachePath, post, mContext, position);
+            innerAdapter = new HomePhotoRecyclerViewAdapter(imageParameters, post, mContext, position);
         }
 
         holder.innerRecyclerView.setAdapter(innerAdapter);
@@ -274,6 +280,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             holder.record_three.setVisibility(View.GONE);
         }
     }
+
     private void setUpContactNameAndPicture(ViewHolder holder, Post post) {
         holder.bind(post);
         contactName = post.getContacts();
@@ -421,7 +428,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             record_three.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
 
             card_view_head = (CardView) itemView.findViewById(R.id.card_view_head);
-
             iv_head_image_1 = (ImageView) itemView.findViewById(R.id.homewhole_iv_head_image_1);
             iv_head_image_2 = (ImageView) itemView.findViewById(R.id.iv_head_image_2);
             iv_head_image_3 = (ImageView) itemView.findViewById(R.id.iv_head_image_3);

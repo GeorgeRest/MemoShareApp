@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
+import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 
 import java.io.File;
@@ -24,19 +25,19 @@ import java.util.List;
 
 public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhotoRecyclerViewAdapter.ViewHolder> {
 
-    private List<String> mData;
+    private List<ImageParameters> mData;
     private Post post;
     Context context;
     private List<Uri> photoPathList;
     private int outerAdapterPosition;
-    public HomePhotoRecyclerViewAdapter(List<String> data, Post post, Context context,int outerAdapterPosition) {
+    public HomePhotoRecyclerViewAdapter(List<ImageParameters> data, Post post, Context context, int outerAdapterPosition) {
         this.mData = data;
         this.post = post;
         this.context = context;
         this.outerAdapterPosition=outerAdapterPosition;
     }
 
-    public HomePhotoRecyclerViewAdapter(List<String> data, Post post, Context context, List<Uri> photoPathList,int outerAdapterPosition) {
+    public HomePhotoRecyclerViewAdapter(List<ImageParameters> data, Post post, Context context, List<Uri> photoPathList,int outerAdapterPosition) {
         this.mData = data;
         this.post = post;
         this.context = context;
@@ -70,7 +71,7 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
             }
         }
         holder.imageView.setLayoutParams(layoutParams);
-        String url = mData.get(position);
+        String url = mData.get(position).getPhotoCachePath();
         if (outerAdapterPosition==0&&photoPathList != null) {
             Uri uri = photoPathList.get(position);
             Glide.with(holder.imageView.getContext())
@@ -79,7 +80,7 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
             Log.d("TAG", "onBindViewHolder: "+uri.toString());
         } else if (url != null && !url.isEmpty()) {
             Glide.with(holder.imageView.getContext())
-                    .load(new File(url))
+                    .load(url)
                     .into(holder.imageView);
             Log.d("TAG", "onBindViewHolder: "+url);
         }

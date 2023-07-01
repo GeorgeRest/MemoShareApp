@@ -33,10 +33,9 @@ public class Post extends LitePalSupport implements Serializable {
     private long like=-1;
     private long share;
     private List<CommentBean> commentBeans;
-    private List<User> user=new ArrayList<>();
+    private List<User> userList =new ArrayList<>();
     private List<ImageParameters> imageParameters;
-
-
+    private User user;
     public Post() {
         commentBeans = new ArrayList<>();
     }
@@ -54,8 +53,31 @@ public class Post extends LitePalSupport implements Serializable {
         this.isPublic = isPublic;
         this.publishedTime = publishedTime;
         this.memoryTime = memoryTime;
+
+    }
+    public Post(String phoneNumber, String publishedText, List<String> photoCachePath, List<Recordings> recordings, List<String> contacts, String location, double longitude, double latitude, int isPublic, String publishedTime, String memoryTime,User user) {
+        this.phoneNumber = phoneNumber;
+        this.publishedText = publishedText;
+        this.photoCachePath = photoCachePath;
+        this.recordings = recordings;
+        this.contacts = contacts;
+        this.location = location;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.isPublic = isPublic;
+        this.publishedTime = publishedTime;
+        this.memoryTime = memoryTime;
+        this.user=user;
+
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public long getId() {
         return id;
@@ -185,12 +207,12 @@ public class Post extends LitePalSupport implements Serializable {
         this.commentBeans = commentBeans;
     }
 
-    public List<User> getUser() {
-        return user;
+    public List<User> getUserList() {
+        return userList;
     }
 
-    public void setUser(List<User> user) {
-        this.user = user;
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
     }
 
 
@@ -199,13 +221,14 @@ public class Post extends LitePalSupport implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
-        return id == post.id && Double.compare(post.longitude, longitude) == 0 && Double.compare(post.latitude, latitude) == 0 && isPublic == post.isPublic && like == post.like && share == post.share && Objects.equals(phoneNumber, post.phoneNumber) && Objects.equals(publishedText, post.publishedText) && Objects.equals(photoCachePath, post.photoCachePath) && Objects.equals(recordings, post.recordings) && Objects.equals(contacts, post.contacts) && Objects.equals(location, post.location) && Objects.equals(publishedTime, post.publishedTime) && Objects.equals(memoryTime, post.memoryTime) && Objects.equals(commentBeans, post.commentBeans) && Objects.equals(user, post.user) && Objects.equals(imageParameters, post.imageParameters);
+        return id == post.id && Double.compare(post.longitude, longitude) == 0 && Double.compare(post.latitude, latitude) == 0 && isPublic == post.isPublic && like == post.like && share == post.share && Objects.equals(phoneNumber, post.phoneNumber) && Objects.equals(publishedText, post.publishedText) && Objects.equals(photoCachePath, post.photoCachePath) && Objects.equals(recordings, post.recordings) && Objects.equals(contacts, post.contacts) && Objects.equals(location, post.location) && Objects.equals(publishedTime, post.publishedTime) && Objects.equals(memoryTime, post.memoryTime) && Objects.equals(commentBeans, post.commentBeans) && Objects.equals(userList, post.userList) && Objects.equals(imageParameters, post.imageParameters);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, phoneNumber, publishedText, photoCachePath, recordings, contacts, location, longitude, latitude, isPublic, publishedTime, memoryTime, like, share, commentBeans, user);
+        return Objects.hash(id, phoneNumber, publishedText, photoCachePath, recordings, contacts, location, longitude, latitude, isPublic, publishedTime, memoryTime, like, share, commentBeans, userList);
     }
+
 
 }
 

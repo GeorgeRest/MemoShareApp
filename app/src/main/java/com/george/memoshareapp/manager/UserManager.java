@@ -155,6 +155,8 @@ public class UserManager {
     }
 
 
+
+
     public User findUserByPhoneNumber(String phoneNumber) {
         User users = LitePal
                 .where("phoneNumber = ?", phoneNumber)
@@ -286,7 +288,7 @@ public class UserManager {
         Gson gson = new GsonBuilder().create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppProperties.LOCAL_SERVER_SUNNY)
+                .baseUrl(AppProperties.SERVER)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         apiService = retrofit.create(UserApiService.class);
