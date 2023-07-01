@@ -48,7 +48,7 @@ public class FriendBaseQuickAdapter extends BaseQuickAdapter<User, FriendBaseQui
         viewHolder.tv_friend_name.setText(otherUser.getName());
         viewHolder.tv_signature.setText(otherUser.getSignature());
 
-        userMe = findUserByPhoneNumber(target_number);
+        userMe = manager.findUserByPhoneNumber(target_number);
         //头像点击事件
         viewHolder.niv_photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,14 +147,4 @@ public class FriendBaseQuickAdapter extends BaseQuickAdapter<User, FriendBaseQui
         }
     }
 
-    public User findUserByPhoneNumber(String phoneNumber) {
-        User users = LitePal
-                .where("phoneNumber = ?", phoneNumber)
-                .findFirst(User.class);
-        if (users != null) {
-            return users;
-        } else {
-            return null;
-        }
-    }
 }

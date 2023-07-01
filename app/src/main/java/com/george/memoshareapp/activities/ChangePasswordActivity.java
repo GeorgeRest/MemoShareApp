@@ -99,7 +99,6 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                                     }
                                 });
 
-                                //Toasty.success(ChangePasswordActivity.this, "验证码输入正确", Toast.LENGTH_SHORT, true).show();
 
                             }
                         });

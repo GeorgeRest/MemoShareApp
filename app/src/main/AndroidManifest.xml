@@ -63,9 +63,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.NewPersonPageActivity"
-            android:exported="true" />
-        <activity
             android:name=".activities.EditProfileActivity"
             android:exported="true">
             <intent-filter>
@@ -113,9 +110,6 @@
         <activity
             android:name=".activities.HomePageActivity"
             android:exported="false" />
-        <activity
-            android:name=".activities.ChangePasswordActivity"
-            android:exported="true" />
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true"

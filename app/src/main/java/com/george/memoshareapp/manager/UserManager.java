@@ -155,8 +155,6 @@ public class UserManager {
     }
 
 
-
-
     public User findUserByPhoneNumber(String phoneNumber) {
         User users = LitePal
                 .where("phoneNumber = ?", phoneNumber)
