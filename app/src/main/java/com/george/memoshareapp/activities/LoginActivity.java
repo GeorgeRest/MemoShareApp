@@ -28,9 +28,12 @@ import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.manager.RetrofitManager;
+import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.view.MyCheckBox;
 
+import com.mob.MobSDK;
+import com.mob.OperationCallback;
 import com.orhanobut.logger.Logger;
 
 import org.litepal.LitePal;
@@ -65,33 +68,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private LoadingDialog loadingDialog;
     private  String VcCode;
     private String phoneNumber;
-
+    private String TAG="123";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
+
         fragmentManager = getSupportFragmentManager();
         setDefaultSelection(0);
         PermissionUtils.permissionsGranted(this);
-        User user = new User("13478468771","12345678");
-        user.save();
-
-        LitePal.getDatabase();
-        User user1 = new User();
-        user1.setName("zxp");
-        user1.setPhoneNumber("15242089476");
-        user1.setPassword("123456");
-        user1.save();
-        LitePal.getDatabase();
-        User user2 = new User();
-        user2.setName("tyf");
-        user2.setPhoneNumber("19818961591");
-        user2.setPassword("123456");
-        user2.save();
-
-
 
         eventHandler = new EventHandler() {
             @Override
@@ -116,8 +103,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 call.enqueue(new Callback<HttpData<User>>() {
                                     @Override
                                     public void onResponse(Call<HttpData<User>> call, Response<HttpData<User>> response) {
-                                        loadingDialog.endAnim();
-                                        loadingDialog.dismiss();
+                                        if (loadingDialog != null) {
+                                            loadingDialog.endAnim();
+                                            loadingDialog.dismiss();
+                                        }
                                         if (response.isSuccessful()) {
                                             HttpData<User> data = response.body();
                                             // 处理成功的情况
@@ -135,16 +124,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                                 isSuccessLogin = false;
                                             }
                                         } else {
-                                            loadingDialog.endAnim();
-                                            loadingDialog.dismiss();
+                                            if (loadingDialog != null) {
+                                                loadingDialog.endAnim();
+                                                loadingDialog.dismiss();
+                                            }
                                             Toasty.warning(LoginActivity.this, "未响应成功", Toast.LENGTH_SHORT,true).show();
                                         }
                                     }
                                     @Override
                                     public void onFailure(Call<HttpData<User>> call, Throwable t) {
                                         // 处理网络错误等情况
-                                        loadingDialog.endAnim();
-                                        loadingDialog.dismiss();
+                                        if (loadingDialog != null) {
+                                            loadingDialog.endAnim();
+                                            loadingDialog.dismiss();
+                                        }
                                         Logger.d(t.getMessage());
                                     }
                                 });
@@ -342,6 +335,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         startActivity(intent);
                         Toasty.success(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                         Logger.d("登录成功");
+
                         finish();
                     } else if (data.getCode() == 401) {
                         Toasty.error(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT, true).show();

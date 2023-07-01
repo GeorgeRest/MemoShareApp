@@ -5,14 +5,23 @@ import com.george.memoshareapp.utils.PinyinFirstLetter;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 
-public class ContactInfo {
+import org.litepal.annotation.Column;
+import org.litepal.crud.LitePalSupport;
+
+public class ContactInfo extends LitePalSupport {
     private String name;
+    private String phoneNumber;
+    @Column(ignore = true)
     private int picture;
+    @Column(ignore = true)
     private String pinyin;
+    @Column(ignore = true)
     private String firstLetter;
 
 
+
     public ContactInfo(){
+
     }
     public ContactInfo(String name, int picture){
         this.name = name;
@@ -46,4 +55,11 @@ public class ContactInfo {
         return firstLetter;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 }

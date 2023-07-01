@@ -1,11 +1,14 @@
 package com.george.memoshareapp.application;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.amap.api.maps2d.model.LatLng;
 import com.drake.statelayout.StateConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.george.memoshareapp.utils.LocationUtil;
+import com.mob.MobSDK;
+import com.mob.OperationCallback;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
@@ -45,6 +48,20 @@ public class MyApplication extends Application {
                 System.out.println("currentLatLng = " + currentLatLng);
             }
         });
+
+
+        MobSDK.submitPolicyGrantResult(true, new OperationCallback<Void>() {
+                    @Override
+                    public void onComplete(Void data) {
+                        Log.e("TAG","隐私协议授权结果提交: 成功 " + data);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        Log.e("TAG","隐私协议授权结果提交: 失败 " + throwable.getMessage());
+                    }
+                }
+        );
 
 
 

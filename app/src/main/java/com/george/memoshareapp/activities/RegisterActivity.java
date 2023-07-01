@@ -21,12 +21,15 @@ import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.http.api.UserApiService;
+import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.utils.CodeSender;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.george.memoshareapp.view.MyCheckBox;
 
+import com.mob.MobSDK;
+import com.mob.OperationCallback;
 import com.orhanobut.logger.Logger;
 
 import java.security.MessageDigest;
@@ -86,34 +89,38 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 LoadingDialog loadingDialog = new LoadingDialog(RegisterActivity.this);
                                 loadingDialog.show();
 
-                                UserApiService apiService = RetrofitManager.getInstance().create(UserApiService.class);
+                                UserServiceApi apiService = RetrofitManager.getInstance().create(UserServiceApi.class);
                                 User user = new User(phone, pw);
                                 Call<HttpData<User>> call = apiService.uploadUser(user);
                                 call.enqueue(new Callback<HttpData<User>>() {
                                     @Override
                                     public void onResponse(Call<HttpData<User>> call, Response<HttpData<User>> response) {
-                                        loadingDialog.endAnim(); // 请求成功，结束加载框的动画
-                                        loadingDialog.dismiss(); // 隐藏加载框
+                                        if (loadingDialog != null) {
+                                            loadingDialog.endAnim(); // 请求成功，结束加载框的动画
+                                            loadingDialog.dismiss();
+                                        } // 隐藏加载框
                                         if (response.isSuccessful()) {
                                             HttpData<User> apiResponse = response.body();
                                             Logger.d(apiResponse.getData());
                                             if (apiResponse != null && apiResponse.getCode() == 200) {
                                                 Toasty.success(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT, true).show();
-                                                finish();
+
                                             } else if (apiResponse != null && apiResponse.getCode() == 201) {
                                                 Toasty.info(RegisterActivity.this, "该用户已注册，请登录", Toast.LENGTH_SHORT, true).show();
                                             }
                                         }
+                                        finish();
                                     }
 
                                     @Override
                                     public void onFailure(Call<HttpData<User>> call, Throwable t) {
-                                        loadingDialog.endAnim(); // 请求成功，结束加载框的动画
-                                        loadingDialog.dismiss(); // 隐藏加载框
+                                        if (loadingDialog != null) {
+                                            loadingDialog.endAnim(); // 请求成功，结束加载框的动画
+                                            loadingDialog.dismiss();
+                                        }// 隐藏加载框
                                         Logger.d(t.getMessage());
                                     }
                                 });
-
                                 Toasty.success(RegisterActivity.this, "验证码输入正确", Toast.LENGTH_SHORT, true).show();
 
                             }

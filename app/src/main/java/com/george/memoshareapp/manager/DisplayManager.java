@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,8 +18,13 @@ import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.CommentBean;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.beans.ReplyBean;
+import com.george.memoshareapp.http.api.PostServiceApi;
+import com.george.memoshareapp.http.response.HttpListData;
+import com.george.memoshareapp.interfaces.PostDataListener;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.CustomItemDecoration;
 
 import org.litepal.LitePal;
@@ -26,6 +32,10 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * @projectName: Memosahre
@@ -55,10 +65,10 @@ public class DisplayManager {
     }
 
 
-    public void showPhoto(RecyclerView recyclerView, List<String> photoPath, Context context) {
+    public void showPhoto(RecyclerView recyclerView, List<ImageParameters> imageParameters, Context context) {
 
 
-        switch (photoPath.size()) {
+        switch (imageParameters.size()) {
             case 1:
                 recyclerView.setLayoutManager(new GridLayoutManager(context, 1));
                 break;
@@ -70,8 +80,10 @@ public class DisplayManager {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, 3));
                 break;
         }
+
         recyclerView.setHasFixedSize(true);
-        detailPhotoRecycleViewAdapter = new DetailPhotoRecycleViewAdapter(context, photoPath);
+
+        detailPhotoRecycleViewAdapter = new DetailPhotoRecycleViewAdapter(context, imageParameters);
         recyclerView.setAdapter(detailPhotoRecycleViewAdapter);
         int spacingInPixels = context.getResources().getDimensionPixelSize(R.dimen.grid_expected_size);
         recyclerView.addItemDecoration(new CustomItemDecoration(spacingInPixels));
@@ -137,6 +149,48 @@ public class DisplayManager {
         }
         return treePostList;
     }
+
+    public void getPostListByPage(int pageNum, int pageSize,  PostDataListener<List<Post>> listener) {
+
+        PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
+        Call<HttpListData<Post>> call = postServiceApi.getPosts(pageNum, pageSize);
+        call.enqueue(new Callback<HttpListData<Post>>() {
+            @Override
+            public void onResponse(Call<HttpListData<Post>> call, Response<HttpListData<Post>> response) {
+                if (response.isSuccessful()) {
+                    HttpListData<Post> postListData = response.body();
+                    Log.d("lastPage", String.valueOf(postListData.isLastPage()));
+                    List<Post> postList = postListData.getItems();
+                    for (Post post : postList) {
+                        List<ImageParameters> imageParametersList = post.getImageParameters();
+                        List<Recordings> recordingsList = post.getRecordings();
+                        for (ImageParameters imageParameters : imageParametersList) {
+                            String photoCachePath = imageParameters.getPhotoCachePath();
+                            String path = AppProperties.SERVER_MEDIA_URL + photoCachePath;
+                            imageParameters.setPhotoCachePath(path);
+                        }
+                        for (Recordings Recordings:recordingsList) {
+                            String recordCachePath = Recordings.getRecordCachePath();
+                            String path = AppProperties.SERVER_RECORD_URL + recordCachePath;
+                            Recordings.setRecordCachePath(path);
+                        }
+                    }
+                    postListData.setItems(postList);
+                    listener.onSuccess(postListData);
+                } else {
+                    listener.onError("Request failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpListData<Post>> call, Throwable t) {
+                listener.onError(t.getMessage());
+            }
+        });
+    }
+
+
+
 }
 
 

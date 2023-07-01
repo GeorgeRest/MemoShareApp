@@ -9,19 +9,18 @@ public class HttpListData<T>  {
     private int pageSize;
     /** 总数量 */
     private int totalNumber;
+    private Boolean lastPage;
     /** 数据 */
     private List<T> items;
-    /** 是否为最后一页 */
-    private boolean isLastPage;
+    /** 是否最后一页 */
 
     public boolean isLastPage() {
-        return isLastPage;
+        return lastPage;
     }
 
     public void setLastPage(boolean lastPage) {
-        isLastPage = lastPage;
+        lastPage = lastPage;
     }
-
 
     public int getTotalNumber() {
         return totalNumber;

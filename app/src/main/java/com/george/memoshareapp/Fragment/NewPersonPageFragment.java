@@ -115,10 +115,10 @@ public class NewPersonPageFragment extends Fragment {
         if (args != null) {
 //            newpost = (Post) args.getSerializable("newpost");
 //            phoneNumber = newpost.getPhoneNumber();
-            User user = (User) args.getSerializable("user");
-            newpostPhoneNumber=user.getPhoneNumber();
-                    phoneNumber= newpostPhoneNumber;
-            otheruser = userManager.findUserByPhoneNumber(phoneNumber);
+            otheruser = (User) args.getSerializable("user");
+            phoneNumber= otheruser.getPhoneNumber();
+//            phoneNumber=user.getPhoneNumber();
+//            otheruser = userManager.findUserByPhoneNumber(phoneNumber);
             if (otheruser != null) {
                 //从首页点进来的用户
 //                String headPortraitPath = userFromHomePageFragment.getHeadPortraitPath();
