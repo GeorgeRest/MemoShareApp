@@ -22,6 +22,7 @@ import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.beans.ReplyBean;
 import com.george.memoshareapp.http.api.PostServiceApi;
+import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.http.response.HttpListData;
 import com.george.memoshareapp.interfaces.PostDataListener;
 import com.george.memoshareapp.properties.AppProperties;
@@ -189,7 +190,22 @@ public class DisplayManager {
         });
     }
 
+    public void updateLikeCount(int postId, String phoneNumber,boolean isLike){
+        PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
+        Call<Void> call = postServiceApi.updateLikeCount(phoneNumber,postId, isLike);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("updateLikeCount", "onResponse: " + response.code());
+            }
 
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("updateLikeCount", "onFailure: " + t.getMessage());
+            }
+        });
+
+    }
 
 }
 

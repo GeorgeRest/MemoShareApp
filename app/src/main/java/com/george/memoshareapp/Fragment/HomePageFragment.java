@@ -179,9 +179,9 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
     public void onSuccess(HttpListData<Post> postData) {
         System.out.println("-----------");
         state.showContent(null);
+
         System.out.println(postData.isLastPage() + "===========-------------");
         posts = postData.getItems();
-        System.out.println("----------" + posts.get(0).getImageParameters().get(0).getPhotoCachePath());
 
         if (posts == null) {
             state.showEmpty(null);
@@ -226,10 +226,8 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
         }
     }
 
-
     @Override
     public void onError(String errorMessage) {
         System.out.println(errorMessage);
-
     }
 }

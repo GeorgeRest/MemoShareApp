@@ -113,18 +113,12 @@ public class NewPersonPageFragment extends Fragment {
         userMe = userManager.findUserByPhoneNumber(userPhoneNumber);//根据登录的时候的手机号找到的用户
         args = getArguments();
         if (args != null) {
-//            newpost = (Post) args.getSerializable("newpost");
-//            phoneNumber = newpost.getPhoneNumber();
+
             otheruser = (User) args.getSerializable("user");
             phoneNumber= otheruser.getPhoneNumber();
-//            phoneNumber=user.getPhoneNumber();
-//            otheruser = userManager.findUserByPhoneNumber(phoneNumber);
-            if (otheruser != null) {
-                //从首页点进来的用户
-//                String headPortraitPath = userFromHomePageFragment.getHeadPortraitPath();
-//                Glide.with(this).load(headPortraitPath).into(head);
 
-                // 当前设备正在登录的账号
+            if (otheruser != null) {
+
                 if (phoneNumber.equals(userPhoneNumber)) {
                     rootView = inflater.inflate(R.layout.fragment_personal_page, container, false);
                     ismyslef = true;
