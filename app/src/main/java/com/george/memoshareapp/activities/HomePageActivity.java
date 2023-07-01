@@ -16,6 +16,7 @@ import com.george.memoshareapp.Fragment.MessageFragment;
 
 import com.george.memoshareapp.Fragment.NewPersonPageFragment;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.manager.UserManager;
 
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -50,7 +51,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         initViews();
         fragmentManager = getSupportFragmentManager();
         setTabSelection(0);
-
+        SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
+        String phoneNumber = sp.getString("phoneNumber", "");
+        new UserManager(this).saveUserToLocal(phoneNumber);
     }
 
     private void initViews() {

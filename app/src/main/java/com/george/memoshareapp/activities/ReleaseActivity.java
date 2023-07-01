@@ -460,7 +460,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 if (location == null) {
                     location = "";
                 }
-
                 content = release_edit.getText().toString();
                 content = removeAtNames(content);
                 recordingsList.removeAll(Collections.singleton(null));

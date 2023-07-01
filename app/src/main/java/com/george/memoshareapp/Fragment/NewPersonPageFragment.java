@@ -113,12 +113,6 @@ public class NewPersonPageFragment extends Fragment {
         userMe = userManager.findUserByPhoneNumber(userPhoneNumber);//根据登录的时候的手机号找到的用户
         args = getArguments();
         if (args != null) {
-//            newpost = (Post) args.getSerializable("newpost");
-//            phoneNumber = newpost.getPhoneNumber();
-//            User user = (User) args.getSerializable("user");
-//            newpostPhoneNumber=user.getPhoneNumber();
-//                    phoneNumber= newpostPhoneNumber;
-//            otheruser = userManager.findUserByPhoneNumber(phoneNumber);
             otheruser = (User)args.getSerializable("user");
             phoneNumber = otheruser.getPhoneNumber();
             if (otheruser != null) {

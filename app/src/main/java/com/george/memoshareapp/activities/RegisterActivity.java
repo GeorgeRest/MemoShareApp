@@ -16,19 +16,26 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.BuildConfig;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.ImageParameters;
+import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.http.api.UserApiService;
+import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.utils.CodeSender;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.george.memoshareapp.view.MyCheckBox;
 
+import com.mob.MobSDK;
+import com.mob.OperationCallback;
 import com.orhanobut.logger.Logger;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
@@ -63,13 +70,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_register);
         initView();
 
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo(BuildConfig.APPLICATION_ID, PackageManager.GET_SIGNATURES);
-            String signValidString = getSignValidString(packageInfo.signatures[0].toByteArray());
-            Log.e("获取应用签名", BuildConfig.APPLICATION_ID + "__" + signValidString);
-        } catch (Exception e) {
-            Log.e("获取应用签名", "异常__" + e);
-        }
+
         eventHandler = new EventHandler() {
             @Override
             public void afterEvent(int event, int result, Object data) {
@@ -88,34 +89,38 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 LoadingDialog loadingDialog = new LoadingDialog(RegisterActivity.this);
                                 loadingDialog.show();
 
-                                UserApiService apiService = RetrofitManager.getInstance().create(UserApiService.class);
+                                UserServiceApi apiService = RetrofitManager.getInstance().create(UserServiceApi.class);
                                 User user = new User(phone, pw);
                                 Call<HttpData<User>> call = apiService.uploadUser(user);
                                 call.enqueue(new Callback<HttpData<User>>() {
                                     @Override
                                     public void onResponse(Call<HttpData<User>> call, Response<HttpData<User>> response) {
-                                        loadingDialog.endAnim(); // 请求成功，结束加载框的动画
-                                        loadingDialog.dismiss(); // 隐藏加载框
+                                        if (loadingDialog != null) {
+                                            loadingDialog.endAnim(); // 请求成功，结束加载框的动画
+                                            loadingDialog.dismiss();
+                                        } // 隐藏加载框
                                         if (response.isSuccessful()) {
                                             HttpData<User> apiResponse = response.body();
                                             Logger.d(apiResponse.getData());
                                             if (apiResponse != null && apiResponse.getCode() == 200) {
                                                 Toasty.success(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT, true).show();
-                                                finish();
+
                                             } else if (apiResponse != null && apiResponse.getCode() == 201) {
                                                 Toasty.info(RegisterActivity.this, "该用户已注册，请登录", Toast.LENGTH_SHORT, true).show();
                                             }
                                         }
+                                        finish();
                                     }
 
                                     @Override
                                     public void onFailure(Call<HttpData<User>> call, Throwable t) {
-                                        loadingDialog.endAnim(); // 请求成功，结束加载框的动画
-                                        loadingDialog.dismiss(); // 隐藏加载框
+                                        if (loadingDialog != null) {
+                                            loadingDialog.endAnim(); // 请求成功，结束加载框的动画
+                                            loadingDialog.dismiss();
+                                        }// 隐藏加载框
                                         Logger.d(t.getMessage());
                                     }
                                 });
-
                                 Toasty.success(RegisterActivity.this, "验证码输入正确", Toast.LENGTH_SHORT, true).show();
 
                             }
@@ -141,6 +146,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         };
         SMSSDK.registerEventHandler(eventHandler);
+
 
     }
 
@@ -204,31 +210,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         return phoneNumber.matches(phoneRegex);
     }
 
-
-    private String getSignValidString(byte[] paramArrayOfByte) throws NoSuchAlgorithmException {
-        MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
-        localMessageDigest.update(paramArrayOfByte);
-        return toHexString(localMessageDigest.digest());
-    }
-
-    public String toHexString(byte[] paramArrayOfByte) {
-        if (paramArrayOfByte == null) {
-            return null;
-        }
-        StringBuilder localStringBuilder = new StringBuilder(2 * paramArrayOfByte.length);
-        for (int i = 0; ; i++) {
-            if (i >= paramArrayOfByte.length) {
-                return localStringBuilder.toString();
-            }
-            String str = Integer.toString(0xFF & paramArrayOfByte[i], 16);
-            if (str.length() == 1) {
-                str = "0" + str;
-            }
-            localStringBuilder.append(str);
-
-        }
-
-    }
 
     @Override
     protected void onDestroy() {
