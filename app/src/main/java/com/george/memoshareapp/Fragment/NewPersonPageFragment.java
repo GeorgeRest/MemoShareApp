@@ -94,6 +94,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
     private User userfromIDE;
     private Relationship relationship;
     private UserManager userManager;
+    private boolean alreadyAttention=false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,8 +147,10 @@ public class NewPersonPageFragment extends Fragment  {//外部
                                 HttpData<Relationship> data = response.body();
                                 if (data.getCode()==200){
                                     editablesource.setImageResource(R.drawable.already_attention);
+                                    alreadyAttention=true;
                                 }else if(data.getCode()==401){
                                     editablesource.setImageResource(R.drawable.attention);
+                                    alreadyAttention=false;
                                 }
                             }else {
                                 Toasty.error(getContext(), "response isfail", Toast.LENGTH_SHORT, true).show();
@@ -351,40 +354,87 @@ public class NewPersonPageFragment extends Fragment  {//外部
 
                     } else {
                         relationship = new Relationship(userMe.getPhoneNumber(), otheruser.getPhoneNumber());
-                        relationshipServiceApi = RetrofitManager.getInstance().create(RelationshipServiceApi.class);
-                        Call<HttpData<Relationship>> call = relationshipServiceApi.isFollowing(relationship);
-                        call.enqueue(new Callback<HttpData<Relationship>>() {
-                            @Override
-                            public void onResponse(Call<HttpData<Relationship>> call, Response<HttpData<Relationship>> response) {
-                                if (response.isSuccessful()){
-                                    HttpData<Relationship> data = response.body();
-                                    if (data.getCode()==200){
-                                        isfollowingOrFriend1 = true;
-                                        editablesource.setImageResource(R.drawable.already_attention);
-                                        relationshipServiceApi.followUser(relationship);
-                                    }else if(data.getCode()==401){
-                                        isfollowingOrFriend1 = false;
-                                        editablesource.setImageResource(R.drawable.attention);
-                                        relationship = new Relationship(userMe.getPhoneNumber(), otheruser.getPhoneNumber());
-                                        relationshipServiceApi.unfollowUser(relationship);
+
+
+                        if(alreadyAttention){
+                            alreadyAttention = false;
+                            editablesource.setImageResource(R.drawable.attention);
+                            relationship = new Relationship(userMe.getPhoneNumber(), otheruser.getPhoneNumber());
+                            relationshipServiceApi.unfollowUser(relationship);
+
+// 取消关注操作
+                            relationshipServiceApi.unfollowUser(relationship).enqueue(new Callback<HttpData<Relationship>>() {
+                                @Override
+                                public void onResponse(Call<HttpData<Relationship>> call, Response<HttpData<Relationship>> response) {
+                                    if (response.isSuccessful()) {
+                                        // 取消关注成功，更新关注者和粉丝的数量
+
+                                        userManager.countFans(otheruser, new OnSaveUserListener() {
+                                            @Override
+                                            public void OnSaveUserListener(User user) {
+
+                                            }
+
+                                            @Override
+                                            public void OnCount(Long count) {
+                                                fensiNumber.setText(count+"");
+                                            }
+                                        });
+                                    } else {
+                                        // 处理错误情况
                                     }
-                                }else {
-                                    Toasty.error(getContext(), "response isfail", Toast.LENGTH_SHORT, true).show();
                                 }
+
+                                @Override
+                                public void onFailure(Call<HttpData<Relationship>> call, Throwable t) {
+                                    // 处理网络错误
+                                }
+                            });
+
+
+                        }else {
+                            alreadyAttention = true;
+                            editablesource.setImageResource(R.drawable.already_attention);
+                            relationshipServiceApi.followUser(relationship);
+                            // 关注操作
+                            relationshipServiceApi.followUser(relationship).enqueue(new Callback<HttpData<Relationship>>() {
+                                @Override
+                                public void onResponse(Call<HttpData<Relationship>> call, Response<HttpData<Relationship>> response) {
+                                    if (response.isSuccessful()) {
+                                        // 关注成功，更新关注者和粉丝的数量
+
+                                        userManager.countFans(otheruser, new OnSaveUserListener() {
+                                            @Override
+                                            public void OnSaveUserListener(User user) {
+
+                                            }
+
+                                            @Override
+                                            public void OnCount(Long count) {
+                                                fensiNumber.setText(count+"");
+                                            }
+                                        });
+                                    } else {
+                                        // 处理错误情况
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<HttpData<Relationship>> call, Throwable t) {
+                                    // 处理网络错误
+                                }
+                            });
+
+                        }
+                        userManager.countFans(otheruser, new OnSaveUserListener() {
+                            @Override
+                            public void OnSaveUserListener(User user) {
                             }
                             @Override
-                            public void onFailure(Call<HttpData<Relationship>> call, Throwable t) {
-                                Toasty.error(getContext(), "response onFailure", Toast.LENGTH_SHORT, true).show();
+                            public void OnCount(Long count) {
+                                fensiNumber.setText(count + "");
                             }
                         });
-                        if (userPhoneNumber.equals(phoneNumber)) {
-                            attentionNumber.setText(countFollowings + "");
-                            fensiNumber.setText(countFans + "");
-                            friendNumber.setText(countFriends + "");
-                        } else {
-                            attentionNumber.setText(countFollowings + "");
-                            fensiNumber.setText(countFans+ "");
-                        }
                     }
                 }else {
                     Intent intent = new Intent(getActivity(), EditProfileActivity.class);

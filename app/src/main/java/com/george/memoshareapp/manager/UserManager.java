@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.george.memoshareapp.beans.Relationship;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.http.api.RelationshipServiceApi;
 import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.interfaces.OnSaveUserListener;
@@ -327,26 +328,34 @@ public class UserManager {
         });
 
     }
-//    public void countFollowing(User user, OnSaveUserListener onSaveUserListener) {
-//        UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
-//        Call<HttpData<Long>> call = userServiceApi.countFollowing(user.getPhoneNumber());
-//        call.enqueue(new Callback<HttpData<Long>>() {
-//            @Override
-//            public void onResponse(Call<HttpData<Long>> call, Response<HttpData<Long>> response) {
-//                if (response.isSuccessful()){
-//                    long count = response.body().getData(); // 获取实际的关注者数量
-//                    onSaveUserListener.OnCount(Long.valueOf(count)); // 传递关注者数量
-//                } else {
-//                    onSaveUserListener.OnCount(Long.valueOf(123));
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<HttpData<Long>> call, Throwable t) {
-//                onSaveUserListener.OnCount(Long.valueOf(1234));
-//            }
-//        });
-//    }
+    public void isFollowing(Relationship relationship, OnSaveUserListener onSaveUserListener) {
+        RelationshipServiceApi relationshipServiceApi = RetrofitManager.getInstance().create(RelationshipServiceApi.class);
+        Call<HttpData<Relationship>> call = relationshipServiceApi.isFollowing(relationship);
+        call.enqueue(new Callback<HttpData<Relationship>>() {
+            @Override
+            public void onResponse(Call<HttpData<Relationship>> call, Response<HttpData<Relationship>> response) {
+                if (response.isSuccessful()){
+                    HttpData<Relationship> data = response.body();
+                    if (data.getCode()==200){
+                        onSaveUserListener.OnCount(Long.valueOf(data.getCode()));
+                        Log.d("isFollowing", "code: " + data.getCode());
+
+                    }else if(data.getCode()==401){
+                        onSaveUserListener.OnCount(Long.valueOf(data.getCode()));
+                        Log.d("isFollowing", "code: " + data.getCode());
+                    }
+                }else {
+                    Log.d("isFollowing", "onResponse: " + response.code());
+                }
+            }
+            @Override
+            public void onFailure(Call<HttpData<Relationship>> call, Throwable t) {
+                Log.d("isFollowing", "onResponse: " + t.getMessage());
+            }
+        });
+
+    }
+
 public void countFollowing(User user, OnSaveUserListener onSaveUserListener) {
     UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
     Call<Long> call = userServiceApi.countFollowing(user.getPhoneNumber());
