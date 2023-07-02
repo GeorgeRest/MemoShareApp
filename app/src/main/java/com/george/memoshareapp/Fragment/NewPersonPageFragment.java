@@ -360,7 +360,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
                             alreadyAttention = false;
                             editablesource.setImageResource(R.drawable.attention);
                             relationship = new Relationship(userMe.getPhoneNumber(), otheruser.getPhoneNumber());
-                            relationshipServiceApi.unfollowUser(relationship);
+
 
 // 取消关注操作
                             relationshipServiceApi.unfollowUser(relationship).enqueue(new Callback<HttpData<Relationship>>() {
@@ -395,7 +395,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
                         }else {
                             alreadyAttention = true;
                             editablesource.setImageResource(R.drawable.already_attention);
-                            relationshipServiceApi.followUser(relationship);
+
                             // 关注操作
                             relationshipServiceApi.followUser(relationship).enqueue(new Callback<HttpData<Relationship>>() {
                                 @Override
