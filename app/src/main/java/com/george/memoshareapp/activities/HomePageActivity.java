@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.george.memoshareapp.Fragment.CalendarTripFragment;
 import com.george.memoshareapp.Fragment.HomeFragment;
 import com.george.memoshareapp.Fragment.MessageFragment;
-
 import com.george.memoshareapp.Fragment.NewPersonPageFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.manager.UserManager;

@@ -1,7 +1,6 @@
 package com.george.memoshareapp.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.george.memoshareapp.events.ScrollToTopEvent;
 import com.george.memoshareapp.http.response.HttpListData;
 import com.george.memoshareapp.interfaces.PostDataListener;
 import com.george.memoshareapp.manager.DisplayManager;
-import com.orhanobut.logger.Logger;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
@@ -181,7 +179,6 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
         state.showContent(null);
         System.out.println(postData.isLastPage() + "===========-------------");
         posts = postData.getItems();
-        System.out.println("----------" + posts.get(0).getImageParameters().get(0).getPhotoCachePath());
 
         if (posts == null) {
             state.showEmpty(null);

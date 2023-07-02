@@ -7,7 +7,6 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 import retrofit2.http.Path;
 
 public interface UserServiceApi {
@@ -25,12 +24,18 @@ public interface UserServiceApi {
     @POST("user/updatePassword")
     Call<HttpData<User>> changePassword(@Body User user);
 
-    @GET("user/countFollowing")
-    Call<HttpData<Long>> countFollowing(@Query("user") User user);
-    @GET("user/countFans")
-    Call<HttpData<Long>> countFans(@Query("user") User user);
-    @GET("user/countFriends")
-    Call<HttpData<Long>> countFriends(@Query("user") User user);
+
+    @GET("user/countFollowing/{phoneNumber}")
+    Call<Long> countFollowing(@Path("phoneNumber") String phoneNumber);
+
+
+    @GET("user/countFans/{phoneNumber}")
+    Call<Long> countFans(@Path("phoneNumber") String phoneNumber);
+
+    @GET("user/countFriends/{phoneNumber}")
+    Call<Long> countFriends(@Path("phoneNumber") String phoneNumber);
+
+
 
 
     @GET("user/getUser/{phoneNumber}")

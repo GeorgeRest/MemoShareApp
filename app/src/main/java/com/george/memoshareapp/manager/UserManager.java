@@ -8,12 +8,9 @@ import android.widget.Toast;
 
 import com.george.memoshareapp.beans.Relationship;
 import com.george.memoshareapp.beans.User;
-import com.george.memoshareapp.http.api.UserApiService;
 import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
-import com.george.memoshareapp.properties.AppProperties;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.george.memoshareapp.interfaces.OnSaveUserListener;
 
 import org.litepal.LitePal;
 
@@ -24,8 +21,6 @@ import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @projectName: MemoShare
@@ -304,13 +299,115 @@ public class UserManager {
                     Log.d("saveUserToLocal", "onResponse: " + response.code());
                 }
             }
-
             @Override
             public void onFailure(Call<HttpData<User>> call, Throwable t) {
                 Log.d("saveUserToLocal", "onFailure: " + t.getMessage());
             }
         });
     }
+    public void saveUser(String phoneNumber, OnSaveUserListener onSaveUserListener) {
+        UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
+        Call<HttpData<User>> call = userServiceApi.getUserByPhoneNumber(phoneNumber);
+        call.enqueue(new Callback<HttpData<User>>() {
+            @Override
+            public void onResponse(Call<HttpData<User>> call, Response<HttpData<User>> response) {
+                if (response.code() == 200) {
+                    Log.d("saveUserToLocal", "onResponse: " + response.code());
+                    User user = response.body().getData();
+                    onSaveUserListener.OnSaveUserListener(user);
+                }
+                else{
+                    Log.d("saveUserToLocal", "onResponse: " + response.code());
+                }
+            }
+            @Override
+            public void onFailure(Call<HttpData<User>> call, Throwable t) {
+                Log.d("saveUserToLocal", "onFailure: " + t.getMessage());
+            }
+        });
+
+    }
+//    public void countFollowing(User user, OnSaveUserListener onSaveUserListener) {
+//        UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
+//        Call<HttpData<Long>> call = userServiceApi.countFollowing(user.getPhoneNumber());
+//        call.enqueue(new Callback<HttpData<Long>>() {
+//            @Override
+//            public void onResponse(Call<HttpData<Long>> call, Response<HttpData<Long>> response) {
+//                if (response.isSuccessful()){
+//                    long count = response.body().getData(); // 获取实际的关注者数量
+//                    onSaveUserListener.OnCount(Long.valueOf(count)); // 传递关注者数量
+//                } else {
+//                    onSaveUserListener.OnCount(Long.valueOf(123));
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<HttpData<Long>> call, Throwable t) {
+//                onSaveUserListener.OnCount(Long.valueOf(1234));
+//            }
+//        });
+//    }
+public void countFollowing(User user, OnSaveUserListener onSaveUserListener) {
+    UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
+    Call<Long> call = userServiceApi.countFollowing(user.getPhoneNumber());
+    call.enqueue(new Callback<Long>() {
+        @Override
+        public void onResponse(Call<Long> call, Response<Long> response) {
+            if (response.isSuccessful()){
+                long count = response.body(); // 获取实际的关注者数量
+                onSaveUserListener.OnCount(count); // 传递关注者数量
+            } else {
+                onSaveUserListener.OnCount(Long.valueOf(123));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<Long> call, Throwable t) {
+            onSaveUserListener.OnCount(Long.valueOf(1234));
+        }
+    });
+}
 
 
+    public void countFans(User user, OnSaveUserListener onSaveUserListener) {
+        UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
+        Call<Long> call = userServiceApi.countFans(user.getPhoneNumber());
+        call.enqueue(new Callback<Long>() {
+            @Override
+            public void onResponse(Call<Long> call, Response<Long> response) {
+                if (response.isSuccessful()){
+                    long count = response.body(); // 获取实际的关注者数量
+                    onSaveUserListener.OnCount(count); // 传递关注者数量
+                } else {
+                    onSaveUserListener.OnCount(Long.valueOf(123));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Long> call, Throwable t) {
+                onSaveUserListener.OnCount(Long.valueOf(1234));
+            }
+        });
+    }
+
+    public void countFriends(User  user, OnSaveUserListener onSaveUserListener) {
+        UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
+        Call<Long> call = userServiceApi.countFriends(user.getPhoneNumber());
+        call.enqueue(new Callback<Long>() {
+            @Override
+            public void onResponse(Call<Long> call, Response<Long> response) {
+                if (response.isSuccessful()){
+                    long count = response.body(); // 获取实际的关注者数量
+                    onSaveUserListener.OnCount(count); // 传递关注者数量
+                } else {
+                    onSaveUserListener.OnCount(Long.valueOf(123));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Long> call, Throwable t) {
+                onSaveUserListener.OnCount(Long.valueOf(1234));
+            }
+        });
+    }
 }

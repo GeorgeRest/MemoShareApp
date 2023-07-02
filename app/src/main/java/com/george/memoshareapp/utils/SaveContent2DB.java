@@ -19,7 +19,7 @@ import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.events.ScrollToTopEvent;
-import com.george.memoshareapp.http.api.PostApiService;
+import com.george.memoshareapp.http.api.PostServiceApi;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.runnable.SavePhotoRunnable;
 import com.google.gson.Gson;
@@ -148,8 +148,8 @@ public class SaveContent2DB {
         fields.put("imageParameters", toRequestBody(new Gson().toJson(imageParametersList)));
         fields.put("recordings", toRequestBody(new Gson().toJson(record)));
 
-        PostApiService postApiService = RetrofitManager.getInstance().create(PostApiService.class);
-        Call<ResponseBody> call = postApiService.publishData(files, fields);
+        PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
+        Call<ResponseBody> call = postServiceApi.publishData(files, fields);
         call.enqueue(new Callback<ResponseBody>() {
 
             private ReleaseActivity releaseActivity;

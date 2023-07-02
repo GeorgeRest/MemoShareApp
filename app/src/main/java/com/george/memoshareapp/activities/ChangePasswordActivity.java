@@ -1,7 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,16 +8,17 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.dialog.LoadingDialog;
-import com.george.memoshareapp.http.api.UserApiService;
+import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.orhanobut.logger.Logger;
-
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
@@ -72,7 +71,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                                 LoadingDialog loadingDialog = new LoadingDialog(ChangePasswordActivity.this);
                                 loadingDialog.show();
 
-                                UserApiService apiService = RetrofitManager.getInstance().create(UserApiService.class);
+                                UserServiceApi apiService = RetrofitManager.getInstance().create(UserServiceApi.class);
                                 User user = new User(phone, pw);
                                 Call<HttpData<User>> call = apiService.changePassword(user);
                                 call.enqueue(new Callback<HttpData<User>>() {
