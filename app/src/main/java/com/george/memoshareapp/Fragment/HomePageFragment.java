@@ -177,6 +177,7 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
     public void onSuccess(HttpListData<Post> postData) {
         System.out.println("-----------");
         state.showContent(null);
+
         System.out.println(postData.isLastPage() + "===========-------------");
         posts = postData.getItems();
 
@@ -223,10 +224,8 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
         }
     }
 
-
     @Override
     public void onError(String errorMessage) {
         System.out.println(errorMessage);
-
     }
 }

@@ -493,59 +493,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
         mData.add("发布");
         mData.add("点赞");
     }
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        if (userPhoneNumber.equals(phoneNumber)) {
-//            userManager.countFollowing(userMe, new OnSaveUserListener() {
-//                @Override
-//                public void OnSaveUserListener(User user) {
-//                }
-//                @Override
-//                public void OnCount(Long count) {
-//                    attentionNumber.setText(count + "");
-//                }
-//            });
-//            userManager.countFans(userMe, new OnSaveUserListener() {
-//                @Override
-//                public void OnSaveUserListener(User user) {
-//                }
-//                @Override
-//                public void OnCount(Long count) {
-//                    fensiNumber.setText(count + "");
-//                }
-//            });
-//            userManager.countFriends(userMe, new OnSaveUserListener() {
-//                @Override
-//                public void OnSaveUserListener(User user) {
-//                }
-//                @Override
-//                public void OnCount(Long count) {
-//                    friendNumber.setText(count+"");
-//                }
-//            });
-//        }else {
-//            userManager.countFollowing(otheruser, new OnSaveUserListener() {
-//                @Override
-//                public void OnSaveUserListener(User user) {
-//                }
-//                @Override
-//                public void OnCount(Long count) {
-//                    attentionNumber.setText(count + "");
-//                }
-//            });
-//            userManager.countFans(otheruser, new OnSaveUserListener() {
-//                @Override
-//                public void OnSaveUserListener(User user) {
-//                }
-//                @Override
-//                public void OnCount(Long count) {
-//                    fensiNumber.setText(count + "");
-//                }
-//            });
-//        }
-//    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
