@@ -71,20 +71,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
         initView();
 
-//        LitePal.getDatabase();
-//        User user1 = new User();
-//        user1.setName("zxp");
-//        user1.setPhoneNumber("15242089476");
-//        user1.setPassword("123456");
-//        user1.save();
-//        LitePal.getDatabase();
-//        User user2 = new User();
-//        user2.setName("tyf");
-//        user2.setPhoneNumber("19818961591");
-//        user2.setPassword("123456");
-//        user2.save();
-
-
         fragmentManager = getSupportFragmentManager();
         setDefaultSelection(0);
         PermissionUtils.permissionsGranted(this);

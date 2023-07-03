@@ -354,21 +354,16 @@ public class NewPersonPageFragment extends Fragment  {//外部
 
                     } else {
                         relationship = new Relationship(userMe.getPhoneNumber(), otheruser.getPhoneNumber());
-
-
                         if(alreadyAttention){
                             alreadyAttention = false;
                             editablesource.setImageResource(R.drawable.attention);
                             relationship = new Relationship(userMe.getPhoneNumber(), otheruser.getPhoneNumber());
-
-
 // 取消关注操作
                             relationshipServiceApi.unfollowUser(relationship).enqueue(new Callback<HttpData<Relationship>>() {
                                 @Override
                                 public void onResponse(Call<HttpData<Relationship>> call, Response<HttpData<Relationship>> response) {
                                     if (response.isSuccessful()) {
                                         // 取消关注成功，更新关注者和粉丝的数量
-
                                         userManager.countFans(otheruser, new OnSaveUserListener() {
                                             @Override
                                             public void OnSaveUserListener(User user) {
