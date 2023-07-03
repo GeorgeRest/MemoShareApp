@@ -50,6 +50,8 @@ public class HomePageBottomAdapter extends RecyclerView.Adapter<HomePageBottomAd
         if (photoPaths != null && !photoPaths.isEmpty()) {
             Glide.with(holder.imageView.getContext())
                     .load(photoPaths.get(0))
+                    .thumbnail(Glide.with(context).load(R.drawable.photo_loading))
+                    .error(R.drawable.ic_close)
                     .into(holder.imageView);
         }
         holder.imageView.setOnClickListener(new View.OnClickListener() {

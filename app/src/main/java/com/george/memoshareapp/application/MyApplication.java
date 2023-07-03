@@ -10,6 +10,7 @@ import com.mob.MobSDK;
 import com.mob.OperationCallback;
 import com.mob.MobSDK;
 import com.mob.OperationCallback;
+import com.tencent.mmkv.MMKV;
 
 import org.litepal.LitePal;
 
@@ -37,7 +38,7 @@ public class MyApplication extends Application {
                 .tintIcon(true)
                 .allowQueue(false)
                 .apply();
-
+        MMKV.initialize(this);
         LitePal.initialize(this);
         Fresco.initialize(this);
         new LocationUtil(this).getLocation(new LocationUtil.LocationCallback() {

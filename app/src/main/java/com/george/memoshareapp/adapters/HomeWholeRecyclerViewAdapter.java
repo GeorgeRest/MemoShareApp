@@ -1,6 +1,5 @@
 package com.george.memoshareapp.adapters;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,13 +35,9 @@ import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
-import com.george.memoshareapp.events.PostLikeUpdateEvent;
+import com.george.memoshareapp.interfaces.getLikeCountListener;
 import com.george.memoshareapp.manager.DisplayManager;
-import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.DateFormat;
-
-import org.greenrobot.eventbus.EventBus;
-import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -119,15 +114,26 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 isLike = !isLike;
                 if (isLike) {
                     holder.like.setImageResource(R.drawable.like_press);
-                    new DisplayManager().updateLikeCount(postId, phoneNumber, true);
-                    PostLikeUpdateEvent event = new PostLikeUpdateEvent(post, isLike);
-                    EventBus.getDefault().post(event);
+                    new DisplayManager().updateLikeCount(postId, phoneNumber, true, new getLikeCountListener() {
+                        @Override
+                        public void onSuccess(int likeCount) {
+                            post.setLike(likeCount);
+//
+                        }
+                    });
+//                    PostLikeUpdateEvent event = new PostLikeUpdateEvent(post, isLike);
+//                    EventBus.getDefault().post(event);
                 } else {
                     holder.like.setImageResource(R.drawable.like);
-                    new DisplayManager().updateLikeCount(postId, phoneNumber, false);
+                    new DisplayManager().updateLikeCount(postId, phoneNumber, false, new getLikeCountListener() {
+                        @Override
+                        public void onSuccess(int likeCount) {
+                            post.setLike(likeCount);
+                        }
+                    });
 
-                    PostLikeUpdateEvent event = new PostLikeUpdateEvent(post, isLike);
-                    EventBus.getDefault().post(event);
+//                    PostLikeUpdateEvent event = new PostLikeUpdateEvent(post, isLike);
+//                    EventBus.getDefault().post(event);
                 }
                 editor.putBoolean(post.getId() + ":" + phoneNumber, isLike);
                 editor.apply();

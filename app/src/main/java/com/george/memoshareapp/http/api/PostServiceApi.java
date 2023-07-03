@@ -28,9 +28,10 @@ public interface PostServiceApi {
             @PartMap Map<String, RequestBody> fields
     );
     @GET("api/getPosts")
-    Call<HttpListData<Post>> getPosts(@Query("pageNum") int pageNum, @Query("pageSize") int pageSize);
+    Call<HttpListData<Post>> getPosts(@Query("pageNum") int pageNum, @Query("pageSize") int pageSize, @Query("phoneNumber") String phoneNumber);
 
     @PUT("/api/{phoneNumber}/{postId}/like")
-    Call<Void> updateLikeCount(@Path("phoneNumber") String phoneNumber, @Path("postId") int postId, @Query("isLiked") boolean isLiked);
-
+    Call<Integer> updateLikeCount(@Path("phoneNumber") String phoneNumber, @Path("postId") int postId, @Query("isLiked") boolean isLiked);
+    @GET("/api/{postId}/like/count")
+    Call<Integer> getLikeCount(@Path("postId") int postId);
 }
