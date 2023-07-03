@@ -1,13 +1,17 @@
 package com.george.memoshareapp.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -17,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -26,16 +31,21 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.JsonBean;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.utils.GetJsonDataUtil;
 import com.george.memoshareapp.utils.GlideEngine;
-import com.haibin.calendarview.CalendarView;
+import com.google.gson.Gson;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.engine.CropFileEngine;
@@ -45,6 +55,8 @@ import com.orhanobut.logger.Logger;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropImageEngine;
 
+import org.json.JSONArray;
+
 import java.text.SimpleDateFormat;
 import java.time.Month;
 import java.time.format.TextStyle;
@@ -52,6 +64,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -62,9 +75,6 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
     public static final String EXTRA_EDITED_REGION = "edited_region";
     public static final String EXTRA_EDITED_SIGNATURE = "edited_signature";
     public static final String EXTRA_EDITED_NAME = "edited_name";
-
-
-
 
     private RelativeLayout rl_name;
     private RelativeLayout rl_signature;
@@ -88,6 +98,16 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
     ActivityResultLauncher<Intent> activityResultLauncher;
 
     private String returnString;
+    private List<JsonBean> options1Items = new ArrayList<>();
+    private ArrayList<ArrayList<String>> options2Items = new ArrayList<>();
+    private ArrayList<ArrayList<ArrayList<String>>> options3Items = new ArrayList<>();
+
+    private Thread thread;
+    private static final int MSG_LOAD_DATA = 0x0001;
+    private static final int MSG_LOAD_SUCCESS = 0x0002;
+    private static final int MSG_LOAD_FAILED = 0x0003;
+    private static boolean isLoaded = false;
+    private OptionsPickerView regionPicker;
 
 
     @Override
@@ -113,10 +133,43 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
                         }
                     }
                 });
+
+
         initTimePicker();
         initLunarPicker();
         initCustomTimePicker();
+        mHandler.sendEmptyMessage(MSG_LOAD_DATA);
     }
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_LOAD_DATA:
+                    if (thread == null) {
+
+//                        Toast.makeText(EditProfileActivity.this, "Begin Parse Data", Toast.LENGTH_SHORT).show();
+                        thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                initJsonData();
+                            }
+                        });
+                        thread.start();
+                    }
+                    break;
+
+                case MSG_LOAD_SUCCESS:
+                    Toast.makeText(EditProfileActivity.this, "Parse Succeed", Toast.LENGTH_SHORT).show();
+                    isLoaded = true;
+                    break;
+
+                case MSG_LOAD_FAILED:
+                    Toast.makeText(EditProfileActivity.this, "Parse Failed", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
     private void initView() {
         rl_name = (RelativeLayout) findViewById(R.id.rl_name);
         rl_signature = (RelativeLayout) findViewById(R.id.rl_signature);
@@ -245,6 +298,12 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
 
                 break;
             case R.id.rl_region:
+                if (isLoaded) {
+                    showPickerView();
+                } else {
+                    Toast.makeText(EditProfileActivity.this, "网络正忙，请稍后再试！", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
             case R.id.edit_iv_back:
                 finish();
@@ -541,6 +600,9 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
     protected void onDestroy() {
         saveAndFinish();
         super.onDestroy();
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
 
 
     }
@@ -565,6 +627,116 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
 
         setResult(RESULT_OK, data);
         finish();
+    }
+
+
+    private void showPickerView() {
+
+        regionPicker = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                String opt1tx = options1Items.size() > 0 ?
+                        options1Items.get(options1).getPickerViewText() : "";
+
+                String opt2tx = options2Items.size() > 0
+                        && options2Items.get(options1).size() > 0 ?
+                        options2Items.get(options1).get(options2) : "";
+
+                String opt3tx = options2Items.size() > 0
+                        && options3Items.get(options1).size() > 0
+                        && options3Items.get(options1).get(options2).size() > 0 ?
+                        options3Items.get(options1).get(options2).get(options3) : "";
+
+                String regionMessage = opt1tx + "/" + opt2tx + "/" + opt3tx;
+                tv_edit_region.setText(regionMessage);
+//                Toast.makeText(EditProfileActivity.this, regionMessage, Toast.LENGTH_SHORT).show();
+            }
+        })
+                .setLayoutRes(R.layout.pickerview_custom_options, new CustomListener() {
+                    @Override
+                    public void customLayout(View v) {
+                        final ImageView im_ensure = (ImageView) v.findViewById(R.id.im_ensure);
+                        ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_cancel);
+                        im_ensure.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                regionPicker.returnData();
+                                regionPicker.dismiss();
+                            }
+                        });
+
+                        ivCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                regionPicker.dismiss();
+                            }
+                        });
+                    }
+                })
+                .isDialog(false)
+                .setTitleText("城市选择")
+                .setDividerColor(Color.BLACK)
+                .setTextColorCenter(Color.BLACK)
+                .setContentTextSize(20)
+                .setOutSideCancelable(true)
+                .build();
+
+        /*pvOptions.setPicker(options1Items);//一级选择器
+        pvOptions.setPicker(options1Items, options2Items);//二级选择器*/
+        regionPicker.setPicker(options1Items, options2Items, options3Items);//三级选择器
+        regionPicker.show();
+    }
+
+    private void initJsonData() {
+
+        String JsonData = new GetJsonDataUtil().getJson(this, "province.json");
+
+        ArrayList<JsonBean> jsonBean = parseData(JsonData);
+
+        options1Items = jsonBean;
+
+        for (int i = 0; i < jsonBean.size(); i++) {
+            ArrayList<String> cityList = new ArrayList<>();//该省的城市列表（第二级）
+            ArrayList<ArrayList<String>> province_AreaList = new ArrayList<>();//该省的所有地区列表（第三极）
+
+            for (int c = 0; c < jsonBean.get(i).getCityList().size(); c++) {//遍历该省份的所有城市
+                String cityName = jsonBean.get(i).getCityList().get(c).getName();
+                cityList.add(cityName);
+                ArrayList<String> city_AreaList = new ArrayList<>();//该城市的所有地区列表
+
+                //如果无地区数据，建议添加空字符串，防止数据为null 导致三个选项长度不匹配造成崩溃
+                /*if (jsonBean.get(i).getCityList().get(c).getArea() == null
+                        || jsonBean.get(i).getCityList().get(c).getArea().size() == 0) {
+                    city_AreaList.add("");
+                } else {
+                    city_AreaList.addAll(jsonBean.get(i).getCityList().get(c).getArea());
+                }*/
+                city_AreaList.addAll(jsonBean.get(i).getCityList().get(c).getArea());
+                province_AreaList.add(city_AreaList);
+            }
+            options2Items.add(cityList);
+            options3Items.add(province_AreaList);
+        }
+
+        mHandler.sendEmptyMessage(MSG_LOAD_SUCCESS);
+
+    }
+
+
+    public ArrayList<JsonBean> parseData(String result) {
+        ArrayList<JsonBean> detail = new ArrayList<>();
+        try {
+            JSONArray data = new JSONArray(result);
+            Gson gson = new Gson();
+            for (int i = 0; i < data.length(); i++) {
+                JsonBean entity = gson.fromJson(data.optJSONObject(i).toString(), JsonBean.class);
+                detail.add(entity);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mHandler.sendEmptyMessage(MSG_LOAD_FAILED);
+        }
+        return detail;
     }
 
 

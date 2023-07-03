@@ -55,6 +55,9 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:layout_alignTop="@+id/ll_move_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="20dp"/>
 
 
