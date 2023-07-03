@@ -126,7 +126,6 @@ public class ImageAdapter extends BaseMultiItemAdapter<Uri> implements DragAndSw
                 .isEmptyResultReturn(true)
                 .isMaxSelectEnabledMask(true)
                 .isPreviewVideo(true)
-                .isWithSelectVideoImage(true)
                 .forResult(REQUEST_CODE_CHOOSE);
     }
 

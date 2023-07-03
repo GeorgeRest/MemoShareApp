@@ -26,10 +26,10 @@
         android:id="@+id/confirm_button"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="6dp"
         android:layout_alignTop="@id/search_text"
         android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="6dp"
         android:background="@mipmap/location_confirm"
         android:onClick="confirm" />
     <EditText
