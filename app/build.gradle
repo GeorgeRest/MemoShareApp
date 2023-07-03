@@ -4,7 +4,6 @@ plugins {
 
 android {
     compileSdk 33
-
     defaultConfig {
         applicationId "com.george.memoshareapp"
         minSdk 21

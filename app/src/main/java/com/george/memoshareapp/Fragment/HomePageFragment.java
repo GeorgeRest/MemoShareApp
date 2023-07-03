@@ -122,6 +122,7 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                         displayManager.getPostListByPage(pageNum, pageSize,outerAdapter.getItemCount(),phoneNumber, new PostDataListener<List<Post>>() {
                             @Override
                             public void onSuccess(HttpListData<Post> newPostData) {
+                                kv.clearAll();
                                 posts.clear(); // 清除原有数据
                                 List<Post> newPosts = newPostData.getItems();
                                 // 将新数据添加到列表中

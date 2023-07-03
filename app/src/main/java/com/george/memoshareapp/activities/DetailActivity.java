@@ -72,7 +72,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private TextView detail_tv_like_number;
     private TextView detail_tv_comment_number;
     private List<String> ceShiList;
-
     private EditText commentEdit;            //评论输入框
     private NoScrollListView commentList;   //评论数据列表
     private LinearLayout bottomLinear;        //底部分享、评论等线性布局
@@ -92,7 +91,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private boolean has_like;
     private SharedPreferences sharedPreferences1;
     private SharedPreferences.Editor editor1;
-    private long likesCount;
     private String phoneNumber;
     private ScrollView scrollView;
 
@@ -109,9 +107,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
         phoneNumber = sharedPreferences1.getString("phoneNumber", "");
         editor1 = sharedPreferences1.edit();
-
-//        likesCount = post.getLike();
-
         has_like = sharedPreferences1.getBoolean(this.post.getId() + ":" + phoneNumber, false);
         if (has_like) {
             like.setImageResource(R.mipmap.like_press);
@@ -121,7 +116,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         putParameter2View();//传参
         commentNumber = commentAdapter.getCount();
         detail_tv_share_number.setText(shareNumber + "");
-//        detail_tv_like_number.setText(likesCount + "");
         detail_tv_comment_number.setText(commentNumber + "");
         set_comments_number.setText("共" + commentNumber + "条评论");
         getLikeCount();
@@ -136,7 +130,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // When the text in the EditText changes, check if it's empty or not
                 if(s.toString().trim().length()==0){
                     submitComment.setEnabled(false);
                     submitComment.setImageResource(R.drawable.button_send_click);
@@ -160,7 +153,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onSuccess(int likeCount) {
                 System.out.println("likeCount:" + likeCount);
-                detail_tv_like_number.setText(String.valueOf(likesCount));
+                detail_tv_like_number.setText(String.valueOf(likeCount));
+                System.out.println("likeCount:" + likeCount);
             }
 
         });
@@ -370,13 +364,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         });
 
     }
-
-    private void updateHomepageLikeState() {
-
-    }
-
-
-
 
     /**
      * 获取评论列表数据
