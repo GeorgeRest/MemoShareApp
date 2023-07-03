@@ -28,7 +28,7 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
     private List<ImageParameters> mData;
     private Post post;
     Context context;
-    private List<Uri> photoPathList;
+    private List<Uri> photoPathList; //用户发布后的uri
     private int outerAdapterPosition;
     public HomePhotoRecyclerViewAdapter(List<ImageParameters> data, Post post, Context context, int outerAdapterPosition) {
         this.mData = data;

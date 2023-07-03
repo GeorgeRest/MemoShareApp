@@ -13,8 +13,10 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface PostServiceApi {
@@ -27,5 +29,8 @@ public interface PostServiceApi {
     );
     @GET("api/getPosts")
     Call<HttpListData<Post>> getPosts(@Query("pageNum") int pageNum, @Query("pageSize") int pageSize);
+
+    @PUT("/api/{phoneNumber}/{postId}/like")
+    Call<Void> updateLikeCount(@Path("phoneNumber") String phoneNumber, @Path("postId") int postId, @Query("isLiked") boolean isLiked);
 
 }
