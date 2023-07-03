@@ -1,4 +1,4 @@
-package com.george.memoshareapp.activities;
+package com.george.memoshareapp.activities.test;
 
 import android.os.Bundle;
 

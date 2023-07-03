@@ -250,24 +250,26 @@ public class CalendarTripFragment extends Fragment implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_blue:
-                PictureSelector.create(this)
-                        .openGallery(SelectMimeType.ofAll())
-                        .setImageEngine(GlideEngine.createGlideEngine())
-                        .setMaxSelectNum(9)
-                        .isEmptyResultReturn(true)
-                        .isMaxSelectEnabledMask(true)
-                        .forResult(new OnResultCallbackListener<LocalMedia>() {
-                            @Override
-                            public void onResult(ArrayList<LocalMedia> result) {
-                                Logger.d(result.get(0).getRealPath());
-                                System.out.println("-------------" + result.get(0).getRealPath());
+//                PictureSelector.create(this)
+//                        .openGallery(SelectMimeType.ofAll())
+//                        .setImageEngine(GlideEngine.createGlideEngine())
+//                        .setMaxSelectNum(9)
+//                        .isEmptyResultReturn(true)
+//                        .isMaxSelectEnabledMask(true)
+//                        .forResult(new OnResultCallbackListener<LocalMedia>() {
+//                            @Override
+//                            public void onResult(ArrayList<LocalMedia> result) {
+//                                Logger.d(result.get(0).getRealPath());
+//                                System.out.println("-------------" + result.get(0).getRealPath());
+//
+//                            }
+//
+//                            @Override
+//                            public void onCancel() {
+//                            }
+//                        });
 
-                            }
 
-                            @Override
-                            public void onCancel() {
-                            }
-                        });
 
                 break;
             case R.id.add_red:

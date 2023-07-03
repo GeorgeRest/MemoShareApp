@@ -90,13 +90,13 @@ public class NewPersonFragment extends Fragment {
                     @Override
                     public void onLoadMore(RefreshLayout refreshlayout) {
 
-                        List<Post> newPosts = publishDisplayManager.getPostList();
-                        if (newPosts.isEmpty() || newPosts.size() == 0) {
+                        List<Post> newPostList = publishDisplayManager.getPostList();
+                        if (newPostList.isEmpty() || newPostList.size() == 0) {
                             refreshlayout.setNoMoreData(true);
                         } else {
                             int initialSize = postList.size();
-                            postList.addAll(newPosts);
-                            userPublishRecyclerAdapter.notifyItemRangeInserted(initialSize, newPosts.size());
+                            postList.addAll(newPostList);
+                            userPublishRecyclerAdapter.notifyItemRangeInserted(initialSize, newPostList.size());
                             offset += 10;
                         }
                         refreshlayout.finishLoadMore();
@@ -107,11 +107,9 @@ public class NewPersonFragment extends Fragment {
                     @Override
                     public void onRefresh(RefreshLayout refreshlayout) {
                         refreshlayout.setNoMoreData(false);
-                        offset = 0;  // 重置offset
-                        postList.clear();  // 清空likePost列表
-                        postList.addAll(publishDisplayManager.getPostList());  // 重新获取数据
-                        userPublishRecyclerAdapter.notifyDataSetChanged();  // 通知适配器数据集变化
-                        offset += 10;  // 更新offset
+                        postList.clear();
+                        postList.addAll(publishDisplayManager.getPostList());
+                        userPublishRecyclerAdapter.notifyDataSetChanged();
                         refreshlayout.finishRefresh();
                     }
                 });

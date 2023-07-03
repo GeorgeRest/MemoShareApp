@@ -35,11 +35,26 @@
 
     </RelativeLayout>
 
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/search_layout"-->
+<!--        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="Search">-->
 
-    <android.widget.SearchView
-        android:id="@+id/sv_search"
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:id="@+id/sv_search"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
+    <FrameLayout
+        android:id="@+id/contact_search_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp">
+    </FrameLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"

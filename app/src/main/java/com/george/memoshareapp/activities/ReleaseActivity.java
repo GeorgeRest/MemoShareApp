@@ -705,6 +705,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -716,7 +717,9 @@ import android.text.style.ClickableSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -838,11 +841,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         rl_time.setOnClickListener(this);
         release_button.setOnClickListener(this);
         release_back.setOnClickListener(this);
-
-
-
-
-
     }
 
     private void initView() {
@@ -875,6 +873,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         release_button.setOnClickListener(this);
         addLocation.setOnClickListener(this);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
     public void showDatePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
         // 直接创建一个DatePickerDialog对话框实例，并将它显示出来
