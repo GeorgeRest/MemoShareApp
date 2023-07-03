@@ -56,6 +56,7 @@ import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropImageEngine;
 
 import org.json.JSONArray;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.time.Month;
@@ -68,8 +69,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EditProfileActivity extends AppCompatActivity implements  CalendarView.OnCalendarSelectListener,
-        CalendarView.OnYearChangeListener, View.OnClickListener {
+public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_EDITED_GENDER = "edited_gender";
     public static final String EXTRA_EDITED_BIRTHDAY = "edited_birthday";
     public static final String EXTRA_EDITED_REGION = "edited_region";
@@ -108,6 +108,7 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
     private static final int MSG_LOAD_FAILED = 0x0003;
     private static boolean isLoaded = false;
     private OptionsPickerView regionPicker;
+    private TextView tv_complete;
 
 
     @Override
@@ -133,7 +134,6 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
                         }
                     }
                 });
-
 
         initTimePicker();
         initLunarPicker();
@@ -177,13 +177,13 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
         rl_birthday = (RelativeLayout) findViewById(R.id.rl_birthday);
         rl_region = (RelativeLayout) findViewById(R.id.rl_region);
         camera = (CircleImageView) findViewById(R.id.camera);
-
+        tv_complete = (TextView) findViewById(R.id.edit_tv_complete);
         rl_name.setOnClickListener(this);
         rl_signature.setOnClickListener(this);
         rl_gender.setOnClickListener(this);
         rl_birthday.setOnClickListener(this);
         rl_region.setOnClickListener(this);
-
+        tv_complete.setOnClickListener(this);
         tv_edit_signature = (TextView) findViewById(R.id.tv_edit_signature);
         tv_edit_name = (TextView) findViewById(R.id.tv_edit_name);
         tv_edit_gender = (TextView) findViewById(R.id.tv_edit_gender);
@@ -262,7 +262,6 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
                         .forResult(new OnResultCallbackListener<LocalMedia>() {
                             @Override
                             public void onResult(ArrayList<LocalMedia> result) {
-                                Logger.d(result.get(0).getRealPath());
                                 System.out.println("-------------" + result.get(0).getRealPath());
 
                                 Glide.with(EditProfileActivity.this).load(destPath)
@@ -307,20 +306,18 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
                 break;
             case R.id.edit_iv_back:
                 finish();
+            case R.id.edit_tv_complete:
+                String name = tv_edit_name.getText().toString();
+                String signature = tv_edit_signature.getText().toString();
+                String region=tv_edit_region.getText().toString();
+                String gender=tv_edit_gender.getText().toString();
+                String birthday=tv_edit_birthday.getText().toString();
+
                 break;
         }
     }
 
     private void birthdayScrollWheel() {
-        /**
-         * @description
-         *
-         * 注意事项：
-         * 1.自定义布局中，id为 optionspicker 或者 timepicker 的布局以及其子控件必须要有，否则会报空指针.
-         * 具体可参考demo 里面的两个自定义layout布局。
-         * 2.因为系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
-         * setRangDate方法控制起始终止时间(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
-         */
         Calendar selectedDate = Calendar.getInstance();//系统当前时间
         Calendar startDate = Calendar.getInstance();
         startDate.set(2000, 0, 23);
@@ -336,24 +333,8 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
                 int month = calendar.get(Calendar.MONTH) + 1;
                 int day = calendar.get(Calendar.DAY_OF_MONTH) ;
                 getTime2view(year,month,day);
-//                                mCalendarView.scrollToCalendar(year, month, 1);
             }
         })
-                /*.setType(TimePickerView.Type.ALL)//default is all
-                .setCancelText("Cancel")
-                .setSubmitText("Sure")
-                .setContentTextSize(18)
-                .setTitleSize(20)
-                .setTitleText("Title")
-                .setTitleColor(Color.BLACK)
-               /*.setDividerColor(Color.WHITE)//设置分割线的颜色
-                .setTextColorCenter(Color.LTGRAY)//设置选中项的颜色
-                .setLineSpacingMultiplier(1.6f)//设置两横线之间的间隔倍数
-                .setTitleBgColor(Color.DKGRAY)//标题背景颜色 Night mode
-//                       .setBgColor(Color.BLACK)//滚轮背景颜色 Night mode
-                .setSubmitColor(Color.WHITE)
-                .setCancelColor(Color.WHITE)*/
-                /*.animGravity(Gravity.RIGHT)// default is center*/
                 .setContentTextSize(18)
                 .setDividerColor(Color.parseColor("#FFBB86FC"))
                 .setTextColorCenter(Color.BLACK)
@@ -740,28 +721,4 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
     }
 
 
-    @Override
-    public void onCalendarOutOfRange(com.haibin.calendarview.Calendar calendar) {
-
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public void onCalendarSelect(com.haibin.calendarview.Calendar calendar, boolean isClick) {
-
-        tv_edit_birthday.setText(getEnglishMonthName(calendar.getMonth()));
-
-    }
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public String getEnglishMonthName(int monthNumber) {
-        // Java的Month类将月份从1（一月）计数到12（十二月）
-        Month month = Month.of(monthNumber);
-        String englishMonthName = month.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-        return englishMonthName.toUpperCase();
-    }
-
-    @Override
-    public void onYearChange(int year) {
-
-    }
 }

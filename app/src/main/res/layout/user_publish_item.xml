@@ -68,11 +68,12 @@
                     android:background="#FF8A35"
                     android:textColor="@color/white"/>
             </androidx.cardview.widget.CardView>
-        <ImageView
-            android:id="@+id/iv_user_publish_recorder"
-            android:layout_width="50dp"
-            android:layout_height="25dp"
-            android:src="@mipmap/record_homepage" />
+
+            <ImageView
+                android:id="@+id/iv_user_publish_recorder"
+                android:layout_width="50dp"
+                android:layout_height="25dp"
+                android:src="@mipmap/record_homepage" />
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="72dp"
