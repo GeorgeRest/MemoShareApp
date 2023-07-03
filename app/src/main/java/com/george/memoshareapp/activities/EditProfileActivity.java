@@ -212,7 +212,9 @@ public class EditProfileActivity extends AppCompatActivity implements  CalendarV
                                 Logger.d(result.get(0).getRealPath());
                                 System.out.println("-------------" + result.get(0).getRealPath());
 
-                                Glide.with(EditProfileActivity.this).load(destPath).into(camera);
+                                Glide.with(EditProfileActivity.this).load(destPath)
+                                        .thumbnail(Glide.with(EditProfileActivity.this).load(R.drawable.photo_loading))
+                                        .error(R.drawable.ic_close).into(camera);
 
                             }
 

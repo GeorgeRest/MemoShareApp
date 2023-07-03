@@ -1,37 +1,67 @@
 package com.george.memoshareapp.utils;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.george.memoshareapp.activities.ReleaseActivity;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
+import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.events.ScrollToTopEvent;
+import com.george.memoshareapp.http.api.PostServiceApi;
+import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.runnable.SavePhotoRunnable;
+import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import es.dmoral.toasty.Toasty;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SaveContent2DB {
     private static String photoAbsolutePath1;
     private static final String TAG = "PostManager";
+    private static List<File> recordFileList;
+    private static List<File> mediaFileList;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public  static void saveContent2DB(List<ImageParameters> imageParametersList,List<String> photoPathList,List<Uri> imageUriList, Context context, String phoneNumber, String editTextContent, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime) {
+    public void saveContent2DB(List<ImageParameters> imageParametersList, List<String> photoPathList, List<Uri> imageUriList, Context context, String phoneNumber, String editTextContent, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime) {
+        recordFileList = new ArrayList<>();
+        mediaFileList = new ArrayList<>();
+        LoadingDialog loadingDialog = new LoadingDialog(context);
+        loadingDialog.show();
+
+
         ExecutorService executor = Executors.newFixedThreadPool(5);
         File photoFolder = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "photoCache");
         if (!photoFolder.exists()) {// 文件夹不存在，执行创建文件夹的操作
@@ -71,6 +101,88 @@ public class SaveContent2DB {
         }
         Log.d(TAG, "saveContent2DB: " + photoPathList);
 
+        for (ImageParameters imageParameters:imageParametersList) {
+            Log.d(TAG, "saveContent2DB: " + imageParameters);
+
+        }
+        recordFileList.clear();
+        mediaFileList.clear();
+        ////////////////////////////////////////////////
+        for (Uri imageUri:imageUriList) {
+            String realPath = getRealPathFromUri(context, imageUri);
+            File file = new File(realPath);
+            mediaFileList.add(file);
+        }
+
+        for (Recordings recordings : record) {
+            File recordFile = new File(recordings.getRecordCachePath());
+            recordFileList.add(recordFile);
+        }
+
+
+//===============================================
+
+        Map<String, RequestBody> fields = new HashMap<>();
+        List<MultipartBody.Part> files = new ArrayList<>();
+        for (File file : mediaFileList) {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("imageFiles", file.getName(), requestFile);
+            files.add(body);
+        }
+        for (File file : recordFileList) {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("audioFiles", file.getName(), requestFile);
+            files.add(body);
+        }
+        fields.put("phoneNumber", toRequestBody(phoneNumber));
+        fields.put("publishedText", toRequestBody(editTextContent));
+        fields.put("location", toRequestBody(location));
+        fields.put("longitude", toRequestBody(String.valueOf(longitude)));
+        fields.put("latitude", toRequestBody(String.valueOf(latitude)));
+        fields.put("isPublic", toRequestBody(String.valueOf(PUBLIC_PERMISSION)));
+        fields.put("publishedTime", toRequestBody(publishedTime));
+        fields.put("memoryTime", toRequestBody(memoireTime));
+        fields.put("like", toRequestBody(String.valueOf(0)));
+        fields.put("shareCount", toRequestBody(String.valueOf(0)));
+        fields.put("contacts", toRequestBody(new Gson().toJson(contacts)));
+        fields.put("imageParameters", toRequestBody(new Gson().toJson(imageParametersList)));
+        fields.put("recordings", toRequestBody(new Gson().toJson(record)));
+
+        PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
+        Call<ResponseBody> call = postServiceApi.publishData(files, fields);
+        call.enqueue(new Callback<ResponseBody>() {
+
+            private ReleaseActivity releaseActivity;
+
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
+
+                releaseActivity = (ReleaseActivity) context;
+                if(response.isSuccessful()){
+                    Logger.d("Upload upload success");
+                    Toasty.info(context, "发布成功", Toast.LENGTH_SHORT, true).show();
+
+                }else{
+                    Logger.d("Upload upload fail");
+                }
+                releaseActivity.finish();
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Logger.d("Upload upload fail"+t.getMessage());
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
+                releaseActivity.finish();
+            }
+        });
+
+
+
+
         Post post = new Post(phoneNumber, editTextContent, photoPathList, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
         post.setImageParameters(imageParametersList);
         for (ImageParameters imageParameters : imageParametersList) {
@@ -92,5 +204,22 @@ public class SaveContent2DB {
             EventBus.getDefault().post(new ScrollToTopEvent());
         }
         executor.shutdown();
+    }
+    private String getRealPathFromUri(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+    private RequestBody toRequestBody(String value) {
+        return RequestBody.create(MediaType.parse("text/plain"), value);
     }
 }

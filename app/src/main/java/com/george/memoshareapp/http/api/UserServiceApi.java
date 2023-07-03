@@ -22,9 +22,25 @@ public interface UserServiceApi {
 
     @POST("user/loginVcCode")
     Call<HttpData<User>> loginVcCode(@Body User user);
+    @POST("user/userIsExit")
+    Call<HttpData<User>> userIsExit(@Body User user);
 
     @POST("user/updatePassword")
     Call<HttpData<User>> changePassword(@Body User user);
+
+
+    @GET("user/countFollowing/{phoneNumber}")
+    Call<Long> countFollowing(@Path("phoneNumber") String phoneNumber);
+
+
+    @GET("user/countFans/{phoneNumber}")
+    Call<Long> countFans(@Path("phoneNumber") String phoneNumber);
+
+    @GET("user/countFriends/{phoneNumber}")
+    Call<Long> countFriends(@Path("phoneNumber") String phoneNumber);
+
+
+
 
     @GET("user/getUser/{phoneNumber}")
     Call<HttpData<User>> getUserByPhoneNumber(@Path("phoneNumber") String phoneNumber);

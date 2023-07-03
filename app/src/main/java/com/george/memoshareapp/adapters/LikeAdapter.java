@@ -89,7 +89,8 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
         viewHolder.  iv_photo.setHeightRatio(ratio);
         Glide.with(context)
                 .load(photoCachePath)
-                .placeholder(R.drawable.loading)
+                .thumbnail(Glide.with(context).load(R.drawable.photo_loading))
+                .error(R.drawable.ic_close)
                 .into(viewHolder.iv_photo);
     }
 

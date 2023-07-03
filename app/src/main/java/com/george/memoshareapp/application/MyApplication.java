@@ -4,13 +4,13 @@ import android.app.Application;
 import android.util.Log;
 
 import com.amap.api.maps2d.model.LatLng;
-import com.drake.statelayout.StateConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.george.memoshareapp.utils.LocationUtil;
 import com.mob.MobSDK;
 import com.mob.OperationCallback;
-import com.orhanobut.logger.AndroidLogAdapter;
-import com.orhanobut.logger.Logger;
+import com.mob.MobSDK;
+import com.mob.OperationCallback;
+import com.tencent.mmkv.MMKV;
 
 import org.litepal.LitePal;
 
@@ -38,7 +38,7 @@ public class MyApplication extends Application {
                 .tintIcon(true)
                 .allowQueue(false)
                 .apply();
-
+        MMKV.initialize(this);
         LitePal.initialize(this);
         Fresco.initialize(this);
         new LocationUtil(this).getLocation(new LocationUtil.LocationCallback() {

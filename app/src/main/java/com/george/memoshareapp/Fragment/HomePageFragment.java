@@ -1,7 +1,8 @@
 package com.george.memoshareapp.Fragment;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,23 +16,24 @@ import com.drake.statelayout.StateLayout;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.beans.Post;
-import com.george.memoshareapp.events.LastClickedPositionEvent;
+import com.george.memoshareapp.events.updateLikeState;
 import com.george.memoshareapp.events.ScrollToTopEvent;
 import com.george.memoshareapp.http.response.HttpListData;
 import com.george.memoshareapp.interfaces.PostDataListener;
 import com.george.memoshareapp.manager.DisplayManager;
-import com.orhanobut.logger.Logger;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
+import com.tencent.mmkv.MMKV;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,6 +62,9 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
     private int pageNum = 1;
     private int pageSize = 10;
     private List<Post> posts;
+    private int likePostId;
+    private String phoneNumber;
+    private MMKV kv;
 
     public HomePageFragment() {
 
@@ -79,7 +84,9 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
         }
+        phoneNumber = getContext().getSharedPreferences("User", MODE_PRIVATE).getString("phoneNumber", "");
         EventBus.getDefault().register(this);
+        kv = MMKV.defaultMMKV();
     }
 
 
@@ -95,9 +102,12 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                 state.setLoadingLayout(R.layout.layout_loading);
                 state.showLoading(null, false, false);
                 displayManager = new DisplayManager();
-                displayManager.getPostListByPage(pageNum, pageSize, this);
-
                 outerRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_recycler);
+                List<Post> emptyList = new ArrayList<>();
+                outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), emptyList);
+                displayManager.getPostListByPage(pageNum, pageSize, outerAdapter.getItemCount(),phoneNumber,this);
+
+
 
                 smartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
                 smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
@@ -108,7 +118,8 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                     @Override
                     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                         pageNum = 1;
-                        displayManager.getPostListByPage(pageNum, pageSize, new PostDataListener<List<Post>>() {
+
+                        displayManager.getPostListByPage(pageNum, pageSize,outerAdapter.getItemCount(),phoneNumber, new PostDataListener<List<Post>>() {
                             @Override
                             public void onSuccess(HttpListData<Post> newPostData) {
                                 posts.clear(); // 清除原有数据
@@ -159,10 +170,14 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLastClickedPositionEvent(LastClickedPositionEvent event) {
-        lastClickedPosition = event.getPosition();
-        if (lastClickedPosition != -1) {
-            outerAdapter.notifyItemChanged(lastClickedPosition);
+    public void updateLikeState(updateLikeState event) {
+        likePostId = event.getPostId();
+        String key = "post_position_" + likePostId;
+        int position = kv.decodeInt(key, -1);
+
+        if (position != -1) {
+            // 更新 Adapter 中对应位置的点赞状态
+            outerAdapter.notifyItemChanged(position);
         }
     }
 
@@ -197,7 +212,7 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
             smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
                 @Override
                 public void onLoadMore(RefreshLayout refreshlayout) {
-                    displayManager.getPostListByPage(pageNum, pageSize, new PostDataListener<List<Post>>() {
+                    displayManager.getPostListByPage(pageNum, pageSize,outerAdapter.getItemCount(),phoneNumber , new PostDataListener<List<Post>>() {
                         @Override
                         public void onSuccess(HttpListData<Post> newPostData) {
                             System.out.println(newPostData.isLastPage() + "newPostData.isLastPage()-------------");

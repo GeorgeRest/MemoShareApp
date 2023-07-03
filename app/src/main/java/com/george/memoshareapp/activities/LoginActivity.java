@@ -27,16 +27,11 @@ import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
+import com.george.memoshareapp.interfaces.OnCodeReceiverListener;
 import com.george.memoshareapp.manager.RetrofitManager;
-import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.PermissionUtils;
 import com.george.memoshareapp.view.MyCheckBox;
-
-import com.mob.MobSDK;
-import com.mob.OperationCallback;
 import com.orhanobut.logger.Logger;
-
-import org.litepal.LitePal;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -48,7 +43,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener , CodeLoginFragment.OnCodeReceivedListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener , OnCodeReceiverListener {
     private EventHandler eventHandler;
     private TextView tv_pw_login;
     private TextView tv_code_login;
@@ -75,6 +70,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
+
+//        LitePal.getDatabase();
+//        User user1 = new User();
+//        user1.setName("zxp");
+//        user1.setPhoneNumber("15242089476");
+//        user1.setPassword("123456");
+//        user1.save();
+//        LitePal.getDatabase();
+//        User user2 = new User();
+//        user2.setName("tyf");
+//        user2.setPhoneNumber("19818961591");
+//        user2.setPassword("123456");
+//        user2.save();
+
 
         fragmentManager = getSupportFragmentManager();
         setDefaultSelection(0);

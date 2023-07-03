@@ -20,7 +20,6 @@ import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 
-import java.io.File;
 import java.util.List;
 
 public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhotoRecyclerViewAdapter.ViewHolder> {
@@ -76,11 +75,14 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
             Uri uri = photoPathList.get(position);
             Glide.with(holder.imageView.getContext())
                     .load(uri)
+                    .thumbnail(Glide.with(context).load(R.drawable.photo_loading))
                     .into(holder.imageView);
             Log.d("TAG", "onBindViewHolder: "+uri.toString());
         } else if (url != null && !url.isEmpty()) {
             Glide.with(holder.imageView.getContext())
                     .load(url)
+                    .thumbnail(Glide.with(context).load(R.drawable.photo_loading))
+                    .error(R.drawable.ic_close)
                     .into(holder.imageView);
             Log.d("TAG", "onBindViewHolder: "+url);
         }

@@ -22,6 +22,20 @@ public class Relationship extends LitePalSupport implements Serializable {
     public static final int FANS_STATUS = 2;
     public static final int FRIEND_STATUS = 3;
 
+    public Relationship() {
+    }
+
+    public Relationship(String initiatorNumber, String targetNumber) {
+        this.initiatorNumber = initiatorNumber;
+        this.targetNumber = targetNumber;
+    }
+
+    public Relationship(String initiatorNumber, String targetNumber, int relationshipStatus) {
+        this.initiatorNumber = initiatorNumber;
+        this.targetNumber = targetNumber;
+        this.relationshipStatus = relationshipStatus;
+    }
+
     public Relationship(){
 
     }

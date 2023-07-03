@@ -1,10 +1,7 @@
 package com.george.memoshareapp.activities;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -14,10 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.george.memoshareapp.BuildConfig;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.beans.ImageParameters;
-import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.http.api.UserServiceApi;
@@ -27,14 +21,7 @@ import com.george.memoshareapp.utils.CodeSender;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.george.memoshareapp.view.MyCheckBox;
 
-import com.mob.MobSDK;
-import com.mob.OperationCallback;
 import com.orhanobut.logger.Logger;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;

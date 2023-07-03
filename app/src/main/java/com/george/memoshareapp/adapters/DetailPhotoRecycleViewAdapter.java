@@ -15,7 +15,6 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.FullScreenImageActivity;
 import com.george.memoshareapp.beans.ImageParameters;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +54,10 @@ public class DetailPhotoRecycleViewAdapter extends RecyclerView.Adapter<DetailPh
         holder.imageView.setLayoutParams(layoutParams);
         String url = mData.get(position).getPhotoCachePath();
         if (url != null && !url.isEmpty()) {
-            Glide.with(holder.imageView.getContext()).load(url).into(holder.imageView);
+            Glide.with(holder.imageView.getContext())
+                    .load(url)
+                    .thumbnail(Glide.with(context).load(R.drawable.photo_loading))
+                    .error(R.drawable.ic_close).into(holder.imageView);
         }
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
