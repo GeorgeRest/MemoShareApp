@@ -20,7 +20,6 @@ import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.dialog.LoadingDialog;
-import com.george.memoshareapp.http.api.UserApiService;
 import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.manager.RetrofitManager;

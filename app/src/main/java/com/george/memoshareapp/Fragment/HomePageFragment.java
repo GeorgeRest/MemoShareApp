@@ -181,7 +181,6 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
         state.showContent(null);
         System.out.println(postData.isLastPage() + "===========-------------");
         posts = postData.getItems();
-        System.out.println("----------" + posts.get(0).getImageParameters().get(0).getPhotoCachePath());
 
         if (posts == null) {
             state.showEmpty(null);

@@ -315,7 +315,6 @@ public class UserManager {
                 else{
                     Log.d("saveUserToLocal", "onResponse: " + response.code());
                 }
-                return null;
             }
 
 
