@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +26,13 @@ import com.george.memoshareapp.activities.FriendActivity;
 import com.george.memoshareapp.activities.LoginActivity;
 import com.george.memoshareapp.adapters.PersonPageAdapter;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.beans.Relationship;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.http.api.RelationshipServiceApi;
+import com.george.memoshareapp.http.api.UserServiceApi;
+import com.george.memoshareapp.http.response.HttpData;
+import com.george.memoshareapp.interfaces.OnSaveUserListener;
+import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.view.NiceImageView;
 import com.google.android.material.appbar.AppBarLayout;
@@ -35,9 +42,13 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewPersonPageFragment extends Fragment {
+import es.dmoral.toasty.Toasty;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class NewPersonPageFragment extends Fragment  {//外部
     private static final int EDITABLEACTIVITY_BACK = 1;
-    //外部
     private TabLayout mTabLayout;
     public ViewPager2 mViewPager2;
     private List<String> mData = new ArrayList<>();
@@ -47,7 +58,6 @@ public class NewPersonPageFragment extends Fragment {
     private Button quit;
     private SharedPreferences sharedPreferences1;
     private View rootView;
-
     private NiceImageView head;
     private TextView person_fragment_tv_name;
     private TextView mingyan;
@@ -59,8 +69,6 @@ public class NewPersonPageFragment extends Fragment {
     private boolean isFromIntent = false;
     private TextView friend;
     private ImageView editablesource;
-
-    private UserManager userManager;
     private TextView tv_location;
     private TextView signature;
     private TextView gender;
@@ -81,14 +89,17 @@ public class NewPersonPageFragment extends Fragment {
     private ImageView iv_sex;
     private User otheruser;
     private Bundle args;
-    private String newpostPhoneNumber;
-
+    private RelationshipServiceApi relationshipServiceApi;
+    private UserServiceApi userServiceApi;
+    private User userfromIDE;
+    private Relationship relationship;
+    private UserManager userManager;
+    private boolean alreadyAttention=false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
     public NewPersonPageFragment newInstance(User user, String newPostNumber) {
         NewPersonPageFragment newPersonPageFragment = new NewPersonPageFragment();
         Bundle args = new Bundle();
@@ -97,6 +108,7 @@ public class NewPersonPageFragment extends Fragment {
         newPersonPageFragment.setArguments(args);
         return newPersonPageFragment;
     }
+
     public NewPersonPageFragment newInstance(User user) {
         NewPersonPageFragment newPersonPageFragment = new NewPersonPageFragment();
         Bundle args = new Bundle();
@@ -104,69 +116,137 @@ public class NewPersonPageFragment extends Fragment {
         newPersonPageFragment.setArguments(args);
         return newPersonPageFragment;
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         sharedPreferences1 = getActivity().getSharedPreferences("User", MODE_PRIVATE);
         userPhoneNumber = sharedPreferences1.getString("phoneNumber", "");//我
         userManager = new UserManager(getContext());
-        userMe = userManager.findUserByPhoneNumber(userPhoneNumber);//根据登录的时候的手机号找到的用户
+        userMe=userManager.findUserByPhoneNumber(userPhoneNumber);
+        initData();
         args = getArguments();
         if (args != null) {
-
-            otheruser = (User)args.getSerializable("user");
+            otheruser = (User) args.getSerializable("user");
             phoneNumber = otheruser.getPhoneNumber();
             if (otheruser != null) {
-
+                // 当前设备正在登录的账号
                 if (phoneNumber.equals(userPhoneNumber)) {
                     rootView = inflater.inflate(R.layout.fragment_personal_page, container, false);
                     ismyslef = true;
+                    initView(rootView);
                 } else {
                     rootView = inflater.inflate(R.layout.fragment_personal_page_other, container, false);
                     ismyslef = false;
+                    initView(rootView);
                     editablesource = rootView.findViewById(R.id.person_fragment_iv_attention);
-                    isfollowingOrFriend1 = userManager.isFollowing(userMe, otheruser);
-                    if (isfollowingOrFriend1) {
-                        editablesource.setImageResource(R.drawable.already_attention);
-                    } else {
-                        editablesource.setImageResource(R.drawable.attention);
-                    }
-
+                    Relationship relationship = new Relationship(userMe.getPhoneNumber(), otheruser.getPhoneNumber());
+                    relationshipServiceApi = RetrofitManager.getInstance().create(RelationshipServiceApi.class);
+                    Call<HttpData<Relationship>> call = relationshipServiceApi.isFollowing(relationship);
+                    call.enqueue(new Callback<HttpData<Relationship>>() {
+                        @Override
+                        public void onResponse(Call<HttpData<Relationship>> call, Response<HttpData<Relationship>> response) {
+                            if (response.isSuccessful()){
+                                HttpData<Relationship> data = response.body();
+                                if (data.getCode()==200){
+                                    editablesource.setImageResource(R.drawable.already_attention);
+                                    alreadyAttention=true;
+                                }else if(data.getCode()==401){
+                                    editablesource.setImageResource(R.drawable.attention);
+                                    alreadyAttention=false;
+                                }
+                            }else {
+                                Toasty.error(getContext(), "response isfail", Toast.LENGTH_SHORT, true).show();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<HttpData<Relationship>> call, Throwable t) {
+                            Toasty.error(getContext(), "response onFailure", Toast.LENGTH_SHORT, true).show();
+                        }
+                    });
                 }
             }
             getParams2View(otheruser);
-            countFans = userManager.countFans(otheruser);
-            countFollowings = userManager.countFollowing(otheruser);
-            countFriends = userManager.countFriends(otheruser);
+            userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
+            userManager.countFollowing(otheruser, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    attentionNumber.setText(count + "");
+                }
+            });
+            userManager.countFans(otheruser, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    fensiNumber.setText(count + "");
+                }
+            });
             isFromIntent = true;
             headIcon(otheruser);
         } else {
             rootView = inflater.inflate(R.layout.fragment_personal_page, container, false);
+            initView(rootView);
+            UserServiceApi userServiceApi1 = RetrofitManager.getInstance().create(UserServiceApi.class);
+            userManager.saveUser(phoneNumber, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                    userfromIDE = new User();
+                    userfromIDE=user;
+                }
+                @Override
+                public void OnCount(Long count) {
+                }
+            });
             getParams2View(userMe);
-            countFans = userManager.countFans(userMe);
-            countFollowings = userManager.countFollowing(userMe);
-            countFriends = userManager.countFriends(userMe);
+            headIcon(userMe);
+            userManager.countFollowing(userMe, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    attentionNumber.setText(count + "");
+                }
+            });
+            userManager.countFans(userMe, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    fensiNumber.setText(count + "");
+                }
+            });
+            userManager.countFriends(userMe, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    friendNumber.setText(count+"");
+                }
+            });
             ismyslef = true;
             isFromIntent = false;
-            headIcon(userMe);
         }
-        initData();
-        initView(rootView);
-
         return rootView;
     }
-
     private void headIcon(User user) {
         head = (NiceImageView) rootView.findViewById(R.id.person_fragment_iv_head);
         String headPortraitPath = user.getHeadPortraitPath();
-        if (headPortraitPath != null ){
-            Glide.with(this).load(headPortraitPath).into(head);
-        }else{
+        if (headPortraitPath != null) {
+            Glide.with(this)
+                    .load(headPortraitPath)
+                    .thumbnail(Glide.with(getActivity())
+                            .load(R.drawable.photo_loading))
+                    .error(R.drawable.ic_close).into(head);
+        } else {
             head.setImageResource(R.mipmap.app_icon);
         }
     }
-
-
     private void getParams2View(User u1) {
         person_fragment_tv_name = (TextView) rootView.findViewById(R.id.person_fragment_tv_name);
         iv_sex = (ImageView) rootView.findViewById(R.id.sex);
@@ -182,7 +262,6 @@ public class NewPersonPageFragment extends Fragment {
         } else {
             person_fragment_tv_name.setText(name);
         }
-
         if (gender == null) {
             iv_sex.setImageResource(R.mipmap.sex_open);
         } else {
@@ -195,8 +274,6 @@ public class NewPersonPageFragment extends Fragment {
                 iv_sex.setVisibility(View.GONE);
             }
         }
-
-
         if (signature == null) {
             mingyan.setText("这个人很懒，什么都没有留下");
         } else {
@@ -210,8 +287,8 @@ public class NewPersonPageFragment extends Fragment {
     }
 
 
-
     private void initView(View rootView) {
+        userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
         head = (NiceImageView) rootView.findViewById(R.id.person_fragment_iv_head);
         person_fragment_tv_guanzhu = (TextView) rootView.findViewById(R.id.person_fragment_tv_guanzhu);
         person_fragment_tv_fensi = (TextView) rootView.findViewById(R.id.person_fragment_tv_fensi);
@@ -223,9 +300,6 @@ public class NewPersonPageFragment extends Fragment {
         attentionNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_guanzhu_number);
         fensiNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_fensi_number);
         if (phoneNumber == null) {
-            countFans = userManager.countFans(userMe);
-            countFollowings = userManager.countFollowing(userMe);
-            countFriends = userManager.countFriends(userMe);
             friend = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend);
             friendNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend_number);
             friendNumber.setText(String.valueOf(countFriends));
@@ -233,10 +307,17 @@ public class NewPersonPageFragment extends Fragment {
             if (userPhoneNumber.equals(phoneNumber)) {
                 friend = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend);
                 friendNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend_number);
-                friendNumber.setText(String.valueOf(countFriends));
+                userManager.countFriends(otheruser, new OnSaveUserListener() {
+                    @Override
+                    public void OnSaveUserListener(User user) {
+                    }
+                    @Override
+                    public void OnCount(Long count) {
+                        friendNumber.setText(count + "");
+                    }
+                });
             }
         }
-
         attentionNumber.setText(String.valueOf(countFollowings));
         fensiNumber.setText(String.valueOf(countFans));
         mTabLayout = rootView.findViewById(R.id.tab_layout);
@@ -250,7 +331,6 @@ public class NewPersonPageFragment extends Fragment {
             }
         }).attach();
         mTabLayout.setTabTextColors(Color.WHITE, Color.parseColor("#685C97"));
-
         appBarLayout = rootView.findViewById(R.id.appBar);
         for (int i = 0; i < mTabLayout.getTabCount(); i++) {
             View tab = ((ViewGroup) mTabLayout.getChildAt(0)).getChildAt(i);
@@ -259,7 +339,6 @@ public class NewPersonPageFragment extends Fragment {
                 tab.setBackground(null);
             }
         }
-
         quit = (Button) rootView.findViewById(R.id.quit_login);
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -269,41 +348,105 @@ public class NewPersonPageFragment extends Fragment {
                 getActivity().finish();
             }
         });
-
         editablesource.setOnClickListener(new View.OnClickListener() {
+            private Relationship relationship;
             @Override
             public void onClick(View v) {
-                if(phoneNumber!=null){
+                if (phoneNumber != null) {
+                    System.out.println(userMe+""+otheruser);
                     if (phoneNumber.equals(userPhoneNumber)) {//newpost和sp的电话号
                         Intent intent = new Intent(getActivity(), EditProfileActivity.class);
                         intent.putExtra("user", userMe);
                         startActivityForResult(intent, EDITABLEACTIVITY_BACK);
-                    } else {
-                        if (isfollowingOrFriend1) {
-                            isfollowingOrFriend1 = false;
-                            editablesource.setImageResource(R.drawable.attention);
-                            userManager.unfollowUser(userMe, otheruser);
-                        } else {
-                            isfollowingOrFriend1 = true;
-                            editablesource.setImageResource(R.drawable.already_attention);
-                            userManager.followUser(userMe, otheruser);
-                        }
-                        if (userPhoneNumber.equals(phoneNumber)) {
-                            attentionNumber.setText(userManager.countFollowing(otheruser) + "");
-                            fensiNumber.setText(userManager.countFans(otheruser) + "");
-                            friendNumber.setText(userManager.countFriends(otheruser) + "");
-                        } else {
-                            attentionNumber.setText(userManager.countFollowing(otheruser) + "");
-                            fensiNumber.setText(userManager.countFans(otheruser) + "");
-                        }
-                    }
 
+                    } else {
+                        relationship = new Relationship(userMe.getPhoneNumber(), otheruser.getPhoneNumber());
+
+
+                        if(alreadyAttention){
+                            alreadyAttention = false;
+                            editablesource.setImageResource(R.drawable.attention);
+                            relationship = new Relationship(userMe.getPhoneNumber(), otheruser.getPhoneNumber());
+
+
+// 取消关注操作
+                            relationshipServiceApi.unfollowUser(relationship).enqueue(new Callback<HttpData<Relationship>>() {
+                                @Override
+                                public void onResponse(Call<HttpData<Relationship>> call, Response<HttpData<Relationship>> response) {
+                                    if (response.isSuccessful()) {
+                                        // 取消关注成功，更新关注者和粉丝的数量
+
+                                        userManager.countFans(otheruser, new OnSaveUserListener() {
+                                            @Override
+                                            public void OnSaveUserListener(User user) {
+
+                                            }
+
+                                            @Override
+                                            public void OnCount(Long count) {
+                                                fensiNumber.setText(count+"");
+                                            }
+                                        });
+                                    } else {
+                                        // 处理错误情况
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<HttpData<Relationship>> call, Throwable t) {
+                                    // 处理网络错误
+                                }
+                            });
+
+
+                        }else {
+                            alreadyAttention = true;
+                            editablesource.setImageResource(R.drawable.already_attention);
+
+                            // 关注操作
+                            relationshipServiceApi.followUser(relationship).enqueue(new Callback<HttpData<Relationship>>() {
+                                @Override
+                                public void onResponse(Call<HttpData<Relationship>> call, Response<HttpData<Relationship>> response) {
+                                    if (response.isSuccessful()) {
+                                        // 关注成功，更新关注者和粉丝的数量
+
+                                        userManager.countFans(otheruser, new OnSaveUserListener() {
+                                            @Override
+                                            public void OnSaveUserListener(User user) {
+
+                                            }
+
+                                            @Override
+                                            public void OnCount(Long count) {
+                                                fensiNumber.setText(count+"");
+                                            }
+                                        });
+                                    } else {
+                                        // 处理错误情况
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<HttpData<Relationship>> call, Throwable t) {
+                                    // 处理网络错误
+                                }
+                            });
+
+                } userManager.countFans(otheruser, new OnSaveUserListener() {
+                            @Override
+                            public void OnSaveUserListener(User user) {
+                            }
+                            @Override
+                            public void OnCount(Long count) {
+                                fensiNumber.setText(count + "");
+                            }
+                        });
+                    }
                 }else {
                     Intent intent = new Intent(getActivity(), EditProfileActivity.class);
                     intent.putExtra("user", userMe);
                     startActivityForResult(intent, EDITABLEACTIVITY_BACK);
                 }
-
             }
         });
         if (ismyslef) {
@@ -313,33 +456,27 @@ public class NewPersonPageFragment extends Fragment {
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), FriendActivity.class);
                     if (args != null) {
-                        phoneNumber = newpostPhoneNumber;
                         intent.putExtra("postPhoneNumber", phoneNumber);
-                    }else {
-                        intent.putExtra("postPhoneNumber",userPhoneNumber);
+                    } else {
+                        intent.putExtra("postPhoneNumber", userPhoneNumber);
                     }
-
                     intent.putExtra("isFriend", 2);
                     intent.putExtra("ismyself", ismyslef);
                     startActivity(intent);
                 }
             });
         }
-
         person_fragment_tv_guanzhu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendActivity.class);
-
                 intent.putExtra("isFriend", 0);
                 intent.putExtra("ismyself", ismyslef);
                 if (args != null) {
-                    phoneNumber = newpostPhoneNumber;
                     intent.putExtra("postPhoneNumber", phoneNumber);
-                }else {
-                    intent.putExtra("postPhoneNumber",userPhoneNumber);
+                } else {
+                    intent.putExtra("postPhoneNumber", userPhoneNumber);
                 }
-
                 startActivity(intent);
             }
         });
@@ -347,34 +484,20 @@ public class NewPersonPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), FriendActivity.class);
-
                 intent.putExtra("isFriend", 1);
                 intent.putExtra("ismyself", ismyslef);
                 if (args != null) {
-                    phoneNumber = newpostPhoneNumber;
                     intent.putExtra("postPhoneNumber", phoneNumber);
-                }else {
-                    intent.putExtra("postPhoneNumber",userPhoneNumber);
+                } else {
+                    intent.putExtra("postPhoneNumber", userPhoneNumber);
                 }
-
                 startActivity(intent);
             }
         });
     }
-
     private void initData() {
         mData.add("发布");
         mData.add("点赞");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (userPhoneNumber.equals(phoneNumber)) {
-            attentionNumber.setText(userManager.countFollowing(otheruser) + "");
-            fensiNumber.setText(userManager.countFans(otheruser) + "");
-            friendNumber.setText(userManager.countFriends(otheruser) + "");
-        }
     }
 
     @Override
@@ -394,7 +517,6 @@ public class NewPersonPageFragment extends Fragment {
                         iv_sex.setImageResource(R.drawable.sex_woman);
                     }
                 }
-
                 if (otheruser != null) {
                     otheruser.setGender(editedGender);
                     otheruser.setBirthday(editedBirthday);
@@ -405,7 +527,6 @@ public class NewPersonPageFragment extends Fragment {
                     userMe.setBirthday(editedBirthday);
                     userMe.update(userMe.getId());
                 }
-
             }
         }
     }
