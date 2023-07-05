@@ -160,7 +160,7 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                 layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                 layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
                 LikeRecycleView.setLayoutManager(layoutManager);
-                DisplayManager displayManager = new DisplayManager(getActivity());
+                displayManager = new DisplayManager(getActivity());
                 displayManager.getLikePostsByPhoneNumber(pageNum, pageSize, phoneNumber, this, "点赞");
                 currentLatLng = ((MyApplication) getActivity().getApplication()).getCurrentLatLng();
                 ((DefaultItemAnimator) LikeRecycleView.getItemAnimator()).setSupportsChangeAnimations(false);
