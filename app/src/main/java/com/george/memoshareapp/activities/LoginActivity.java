@@ -282,6 +282,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (agreement.isChecked()) {
                 performLogin(phoneNumber, pwNumber);
             } else {
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
                 Toasty.info(this, "请勾选同意协议", Toast.LENGTH_SHORT).show();
             }
         } else if (CodeFragment != null && CodeFragment.isVisible()) {
@@ -299,6 +301,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //                performLoginVcCode(phoneNumber, et_code);
 
             } else {
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
                 Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT).show();
             }
 

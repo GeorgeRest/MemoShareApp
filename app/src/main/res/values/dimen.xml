@@ -11,4 +11,12 @@
 <dimen name="release_twoLines_margin">235dp</dimen>
 <dimen name="release_oneLine_margin">120dp</dimen>
 <dimen name="release_threeLines_margin">350dp</dimen>
+    <dimen name="dp_12">11.52dp</dimen>
+    <dimen name="dp_68">65.28dp</dimen><dimen name="dp_57">54.72dp</dimen>
+    <dimen name="dp_67">64.32dp</dimen><dimen name="dp_35">33.60dp</dimen>
+    <dimen name="dp_32">30.72dp</dimen><dimen name="dp_15">14.40dp</dimen><dimen name="dp_13">12.48dp</dimen>
+    <dimen name="dp_200">192.00dp</dimen>
+    <dimen name="dp_100">96.00dp</dimen>
+    <dimen name="dp_21">20.16dp</dimen>
+    <dimen name="dp_8">7.68dp</dimen>
 </resources>

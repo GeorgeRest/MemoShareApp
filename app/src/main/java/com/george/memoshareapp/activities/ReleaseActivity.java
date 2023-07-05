@@ -438,8 +438,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         }
         return list;
     }
-
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View v) {
@@ -448,11 +446,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 showBottomDialog();
                 break;
             case R.id.RL_time:
-
-
                 showDatePickerDialog(this, StyleType, release_time, calendar);
-
-
                 break;
             case R.id.release_button:
                 if (isInputEmpty()) {
@@ -460,7 +454,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     return;
                 }
                 getSystemTime();
-
                 if (location == null) {
                     location = "";
                 }
@@ -483,7 +476,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
 
     private void initRecordRecycler() {
-
         recordRecyclerView = (RecyclerView) findViewById(R.id.rl_record);
         recordRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         List<Recordings> recordings = new ArrayList<>();
@@ -492,21 +484,19 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         recordAdapter.setRecordListener(new RecordAdapter.RecordListener() {
             @Override
             public void onRecordClicked() {
-                RecordAudioDialogFragment fragment = RecordAudioDialogFragment.newInstance();
+                RecordAudioDialogFragment fragment = RecordAudioDialogFragment.newInstance();//用于显示录音对话框
                 fragment.show(getSupportFragmentManager(), RecordAudioDialogFragment.class.getSimpleName());
-                fragment.setDataListener(ReleaseActivity.this);
+                fragment.setDataListener(ReleaseActivity.this);//监听录音完成时，调用onRecordingDataReceived()将数据返回给ReleaseActivity
             }
         });
 
 
         recordRecyclerView.addItemDecoration(new SpacesItemDecoration(2, 0, 2, 0));
-
         RecordDragAndSwipe recordDragAndSwipe = new RecordDragAndSwipe(recordAdapter){
             boolean isUp = false;
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-
                 int[] itemLocation = new int[2];
                 viewHolder.itemView.getLocationInWindow(itemLocation);
                 int[] deleteLocation = new int[2];

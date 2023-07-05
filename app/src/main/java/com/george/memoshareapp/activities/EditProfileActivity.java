@@ -279,18 +279,15 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                             @Override
                             public void onResult(ArrayList<LocalMedia> result) {
                                 headPortraitPath = result.get(0).getRealPath();
-                                Glide.with(EditProfileActivity.this).load(destPath)
-                                        .thumbnail(Glide.with(EditProfileActivity.this).load(R.drawable.photo_loading))
-                                        .error(R.drawable.ic_close).into(head_portrait);
-                                edit.putString("headPortraitPath", headPortraitPath);
+
+                                Glide.with(EditProfileActivity.this).load(destPath).thumbnail(Glide.with(EditProfileActivity.this).load(R.drawable.photo_loading))
+                                        .error(R.drawable.ic_close).into(head_portrait);edit.putString("headPortraitPath", headPortraitPath);
                                 edit.commit();
                             }
-
                             @Override
                             public void onCancel() {
                             }
                         });
-
                 break;
             case R.id.rl_name:
                 Intent intent1 = new Intent(this, EditNameActivity.class);
@@ -307,8 +304,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.rl_birthday:
                 birthdayScrollWheel();
-
-
                 break;
             case R.id.rl_region:
                 if (isLoaded) {
@@ -361,7 +356,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 break;
         }
     }
-
     private void birthdayScrollWheel() {
         Calendar selectedDate = Calendar.getInstance();//系统当前时间
         Calendar startDate = Calendar.getInstance();
@@ -387,7 +381,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 .setDate(selectedDate)
                 .setRangDate(startDate, endDate)
                 .setLayoutRes(R.layout.calender_time_picker, new CustomListener() {
-
                     @Override
                     public void customLayout(View v) {
                         ImageView tvSubmit = (ImageView) v.findViewById(R.id.iv_calender_confirm);
@@ -417,7 +410,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 .build();
         pvCustomTime.show();
     }
-
     private void showBottomDialog() {
         //1、使用Dialog、设置style
         final Dialog dialog = new Dialog(this, R.style.DialogTheme);

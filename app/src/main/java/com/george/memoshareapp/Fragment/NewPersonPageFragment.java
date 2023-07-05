@@ -125,6 +125,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
         userPhoneNumber = sharedPreferences1.getString("phoneNumber", "");//我
         userManager = new UserManager(getContext());
         userMe=userManager.findUserByPhoneNumber(userPhoneNumber);
+
         initData();
         args = getArguments();
         if (args != null) {
@@ -497,6 +498,61 @@ public class NewPersonPageFragment extends Fragment  {//外部
         mData.add("点赞");
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (userPhoneNumber.equals(phoneNumber)) {
+            userManager.countFollowing(userMe, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    attentionNumber.setText(count + "");
+                }
+            });
+            userManager.countFans(userMe, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    fensiNumber.setText(count + "");
+                }
+            });
+            userManager.countFriends(userMe, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    friendNumber.setText(count+"");
+                }
+            });
+        }else {
+            userManager.countFollowing(otheruser, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    attentionNumber.setText(count + "");
+                }
+            });
+            userManager.countFans(otheruser, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    fensiNumber.setText(count + "");
+                }
+            });
+        }
+    }
+
+//
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

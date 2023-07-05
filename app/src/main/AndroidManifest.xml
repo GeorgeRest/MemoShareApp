@@ -29,6 +29,7 @@
             <action android:name="android.media.action.VIDEO_CAPTURE" />
         </intent>
     </queries>
+
     <application
         android:name=".application.MyApplication"
         android:allowBackup="true"
@@ -42,11 +43,15 @@
         android:theme="@style/Theme.MemoShareApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity android:name=".activities.NewPersonPageActivity"
-            android:exported="true"/>
-        <activity android:name=".activities.ChangePasswordActivity"
-            android:exported="true"/>
-
+        <activity
+            android:name=".activities.GroupChatActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.NewPersonPageActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ChangePasswordActivity"
+            android:exported="true" />
         <activity
             android:name=".activities.EditProfileActivity"
             android:exported="true">
@@ -58,15 +63,13 @@
         </activity>
         <activity
             android:name=".activities.FriendActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".activities.FullScreenImageActivity"
             android:exported="false" />
@@ -102,7 +105,6 @@
         <activity
             android:name=".activities.HomePageActivity"
             android:exported="false" />
-
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true"
@@ -123,34 +125,28 @@
             android:exported="true" />
         <activity
             android:name=".activities.ReleaseActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".activities.LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true" />
-
-        <activity android:name=".activities.test.TestUserPublishActivity"
+        <activity
+            android:name=".activities.test.TestUserPublishActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </activity>
-
-
-
-
-
-        <activity android:name=".activities.EditSignatureActivity"
-            android:exported="true"/>
-        <activity android:name=".activities.EditNameActivity"
-            android:exported="true"/>
+        <activity
+            android:name=".activities.EditSignatureActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.EditNameActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

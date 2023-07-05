@@ -131,6 +131,4 @@ dependencies {
     implementation 'com.github.liangjingkanji:StateLayout:1.4.1'
 
 
-    //wav转mp3的工具
-    implementation 'com.github.adrielcafe:AndroidAudioConverter:0.0.8'
 }
