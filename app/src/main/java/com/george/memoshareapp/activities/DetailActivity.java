@@ -2,7 +2,6 @@ package com.george.memoshareapp.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,10 +33,10 @@ import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.ReplyBean;
 import com.george.memoshareapp.beans.User;
-import com.george.memoshareapp.events.LastClickedPositionEvent;
+import com.george.memoshareapp.events.updateLikeState;
+import com.george.memoshareapp.interfaces.getLikeCountListener;
 import com.george.memoshareapp.manager.DisplayManager;
-import com.george.memoshareapp.manager.PostManager;
-import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.DateFormat;
 import com.george.memoshareapp.view.NoScrollListView;
 
@@ -74,7 +73,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private TextView detail_tv_like_number;
     private TextView detail_tv_comment_number;
     private List<String> ceShiList;
-
     private EditText commentEdit;            //评论输入框
     private NoScrollListView commentList;   //评论数据列表
     private LinearLayout bottomLinear;        //底部分享、评论等线性布局
@@ -94,11 +92,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private boolean has_like;
     private SharedPreferences sharedPreferences1;
     private SharedPreferences.Editor editor1;
-    private long likesCount;
     private String phoneNumber;
     private ScrollView scrollView;
 
     private DisplayManager manager;
+    private User postUser;
 
 
     @Override
@@ -110,29 +108,18 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
         phoneNumber = sharedPreferences1.getString("phoneNumber", "");
         editor1 = sharedPreferences1.edit();
-//        Post post =LitePal.where("id = ?", String.valueOf(this.post.getId())).findFirst(Post.class);
-
-
-        UserManager userManager = new UserManager(this);
-
-
-        likesCount = post.getLike();
-
         has_like = sharedPreferences1.getBoolean(this.post.getId() + ":" + phoneNumber, false);
-        detail_tv_like_number.setText(String.valueOf(likesCount));
         if (has_like) {
             like.setImageResource(R.mipmap.like_press);
         } else {
             like.setImageResource(R.mipmap.like);
         }
-        detail_tv_like_number.setText(String.valueOf(likesCount));
         putParameter2View();//传参
         commentNumber = commentAdapter.getCount();
         detail_tv_share_number.setText(shareNumber + "");
-        detail_tv_like_number.setText(likesCount + "");
         detail_tv_comment_number.setText(commentNumber + "");
         set_comments_number.setText("共" + commentNumber + "条评论");
-
+        getLikeCount();
         //设置文本监听
         submitComment.setEnabled(false);
         submitComment.setImageResource(R.drawable.button_send_click);
@@ -144,7 +131,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // When the text in the EditText changes, check if it's empty or not
                 if(s.toString().trim().length()==0){
                     submitComment.setEnabled(false);
                     submitComment.setImageResource(R.drawable.button_send_click);
@@ -163,13 +149,28 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    private void getLikeCount() {
+        new DisplayManager().getLikeCount(post.getId(), new getLikeCountListener() {
+            @Override
+            public void onSuccess(int likeCount) {
+                System.out.println("likeCount:" + likeCount);
+                detail_tv_like_number.setText(String.valueOf(likeCount));
+                System.out.println("likeCount:" + likeCount);
+            }
+
+        });
+    }
+
     private void putParameter2View() {
 
 
-        User user = post.getUser();
-        userName.setText(user.getName());
-        if(user.getHeadPortraitPath()!=null){
-            Glide.with(this).load(user.getHeadPortraitPath()).into(userIcon);
+        postUser = post.getUser();
+        userName.setText(postUser.getName());
+        if(postUser.getHeadPortraitPath()!=null){
+            Glide.with(this).load(AppProperties.SERVER_MEDIA_URL+postUser.getHeadPortraitPath())
+                    .thumbnail(Glide.with(this).load(R.drawable.photo_loading))
+                    .error(R.drawable.ic_close)
+                    .into(userIcon);
         }else{
             userIcon.setImageResource(R.mipmap.app_icon);
         }
@@ -250,9 +251,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 //进入个人主页
                 Intent intent1 = new Intent(this, NewPersonPageActivity.class);
 
-                UserManager userManager = new UserManager(this);
-                User user1 = userManager.findUserByPhoneNumber(post.getPhoneNumber());
-                intent1.putExtra("user", user1);
+                intent1.putExtra("user", postUser);
                 startActivity(intent1);
                 break;
             case R.id.detail_iv_share:
@@ -286,35 +285,30 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.detail_iv_like:
-                if (has_like) {
-                    like.setImageResource(R.mipmap.like);
-                    likesCount--;
-                    has_like = false;
-//                    LitePal.getDatabase().delete("post_user", "user_id = ? and post_id = ?",
-//                            new String[]{String.valueOf(user.getId()), String.valueOf(post.getId())});
+                new DisplayManager().updateLikeCount((int) post.getId(), phoneNumber, !has_like, new getLikeCountListener() {
+                    @Override
+                    public void onSuccess(int likeCount) {
+                        if (has_like) {
+                            like.setImageResource(R.mipmap.like);
+                            has_like = false;
+                            System.out.println("取消点赞");
+                        } else {
+                            like.setImageResource(R.mipmap.like_press);
+                            has_like = true;
+                        }
 
-                } else {
-                    like.setImageResource(R.mipmap.like_press);
-                    likesCount++;
-                    has_like = true;
-                    ContentValues values = new ContentValues();
-//                    values.put("user_id", user.getId());
-                    values.put("post_id", post.getId());
-                    LitePal.getDatabase().insert("post_user", null, values);
+                        editor1.putBoolean(post.getId() + ":" + phoneNumber, has_like);
+                        editor1.apply();
+                        EventBus.getDefault().post(new updateLikeState(post.getId(), has_like));
+                        if (likeCount > 10000) {
+                            double converted = Math.floor((double) likeCount / 10000 * 10) / 10;
+                            detail_tv_like_number.setText(converted + "万");
+                        } else {
+                            detail_tv_like_number.setText(String.valueOf(likeCount));
+                        }
+                    }
 
-                }
-                post.setLike(likesCount);
-                post.update(post.getId());
-                editor1.putBoolean(post.getId() + ":" + phoneNumber, has_like);
-                editor1.apply();
-                update();
-                if (likesCount > 10000) {
-                    double converted = Math.floor((double) likesCount / 10000 * 10) / 10;
-
-                    detail_tv_like_number.setText(converted + "万");
-                } else {
-                    detail_tv_like_number.setText(String.valueOf(likesCount));
-                }
+                });
                 break;
             default:
                 break;
@@ -371,15 +365,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         });
 
     }
-
-    private void update() {
-        int totalCount = LitePal.count(Post.class);
-        int id = totalCount - (int) post.getId();
-        EventBus.getDefault().post(new LastClickedPositionEvent(id));
-    }
-
-
-
 
     /**
      * 获取评论列表数据

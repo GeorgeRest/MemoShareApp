@@ -18,7 +18,7 @@ import java.util.Objects;
  * @version: 1.0
  */
 public class Post extends LitePalSupport implements Serializable {
-    private long id;
+    private int id;
     private String phoneNumber;
     private String publishedText;
     private List<String> photoCachePath;
@@ -30,7 +30,7 @@ public class Post extends LitePalSupport implements Serializable {
     private int isPublic;
     private String publishedTime;
     private String memoryTime;
-    private long like=-1;
+    private long like;
     private long share;
     private List<CommentBean> commentBeans;
     private List<User> userList =new ArrayList<>();
@@ -79,11 +79,11 @@ public class Post extends LitePalSupport implements Serializable {
         this.user = user;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -229,6 +229,28 @@ public class Post extends LitePalSupport implements Serializable {
         return Objects.hash(id, phoneNumber, publishedText, photoCachePath, recordings, contacts, location, longitude, latitude, isPublic, publishedTime, memoryTime, like, share, commentBeans, userList);
     }
 
-
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", publishedText='" + publishedText + '\'' +
+                ", photoCachePath=" + photoCachePath +
+                ", recordings=" + recordings +
+                ", contacts=" + contacts +
+                ", location='" + location + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", isPublic=" + isPublic +
+                ", publishedTime='" + publishedTime + '\'' +
+                ", memoryTime='" + memoryTime + '\'' +
+                ", like=" + like +
+                ", share=" + share +
+                ", commentBeans=" + commentBeans +
+                ", userList=" + userList +
+                ", imageParameters=" + imageParameters +
+                ", user=" + user +
+                '}';
+    }
 }
 

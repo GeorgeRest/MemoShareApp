@@ -1,6 +1,5 @@
 package com.george.memoshareapp.adapters;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,13 +35,10 @@ import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
-import com.george.memoshareapp.events.PostLikeUpdateEvent;
+import com.george.memoshareapp.interfaces.getLikeCountListener;
 import com.george.memoshareapp.manager.DisplayManager;
-import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.DateFormat;
-
-import org.greenrobot.eventbus.EventBus;
-import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,10 +63,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     private Post post;
     private List<Post> treePosition;
     private User postUser;
-
-    public HomeWholeRecyclerViewAdapter() {
-
-    }
 
     public HomeWholeRecyclerViewAdapter(Context context, List<Post> data) {
         this.mContext = context;
@@ -115,34 +107,34 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     public void onClick(View v) {
         ViewHolder holder = (ViewHolder) v.getTag();
         post = mData.get(holder.getAdapterPosition());
-        User user = LitePal.select("id, phoneNumber, password")
-                .where("phoneNumber = ?", phoneNumber)
-                .findFirst(User.class);
-        Post newPost = LitePal.where("id = ?", String.valueOf(post.getId())).findFirst(Post.class);
         switch (v.getId()) {
             case R.id.like:
-                long likeCount = newPost.getLike();
-                long id = post.getId();
+
+                int postId = (int) post.getId();
                 isLike = sp.getBoolean(post.getId() + ":" + phoneNumber, false);
                 isLike = !isLike;
                 if (isLike) {
                     holder.like.setImageResource(R.drawable.like_press);
-                    post.setLike(++likeCount);
-                    post.update(id);
-                    ContentValues values = new ContentValues();
-                    values.put("user_id", user.getId());
-                    values.put("post_id", post.getId());
-                    LitePal.getDatabase().insert("post_user", null, values);
-                    PostLikeUpdateEvent event = new PostLikeUpdateEvent(post, isLike);
-                    EventBus.getDefault().post(event);
+                    new DisplayManager().updateLikeCount(postId, phoneNumber, true, new getLikeCountListener() {
+                        @Override
+                        public void onSuccess(int likeCount) {
+                            post.setLike(likeCount);
+//
+                        }
+                    });
+//                    PostLikeUpdateEvent event = new PostLikeUpdateEvent(post, isLike);
+//                    EventBus.getDefault().post(event);
                 } else {
                     holder.like.setImageResource(R.drawable.like);
-                    post.setLike(--likeCount);
-                    post.update(id);
-                    LitePal.getDatabase().delete("post_user", "user_id = ? and post_id = ?",
-                            new String[]{String.valueOf(user.getId()), String.valueOf(post.getId())});
-                    PostLikeUpdateEvent event = new PostLikeUpdateEvent(post, isLike);
-                    EventBus.getDefault().post(event);
+                    new DisplayManager().updateLikeCount(postId, phoneNumber, false, new getLikeCountListener() {
+                        @Override
+                        public void onSuccess(int likeCount) {
+                            post.setLike(likeCount);
+                        }
+                    });
+
+//                    PostLikeUpdateEvent event = new PostLikeUpdateEvent(post, isLike);
+//                    EventBus.getDefault().post(event);
                 }
                 editor.putBoolean(post.getId() + ":" + phoneNumber, isLike);
                 editor.apply();
@@ -155,11 +147,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 break;
             case R.id.homewhole_iv_head_image_1:
                 Intent intent1 = new Intent(mContext, NewPersonPageActivity.class);
-//                intent1.putExtra("user", user);
 
-
-//                UserManager userManager = new UserManager(mContext);
-//                User user2 = userManager.findUserByPhoneNumber(newPost.getPhoneNumber());
                 intent1.putExtra("user", post.getUser());
                 mContext.startActivity(intent1);
                 break;
@@ -168,6 +156,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             switch (v.getId()) {
                 case R.id.record_one:
                     if (holder.recordings.size() > 0) {
+
                         handleClick(holder.recordings.get(0).getRecordCachePath(), holder.record_one);
                         holder.record_one.setImageResource(R.drawable.record_bg_click);
                     }
@@ -190,9 +179,9 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
     private void nameTimeLocationContent(ViewHolder holder, Post post) {
         postUser = post.getUser();
-        if(postUser.getHeadPortraitPath()!=null){
-            Glide.with(mContext).load(postUser.getHeadPortraitPath()).into(holder.iv_head_image_1);
-        }else{
+        if (postUser.getHeadPortraitPath() != null) {
+            Glide.with(mContext).load(AppProperties.SERVER_MEDIA_URL+postUser.getHeadPortraitPath()).into(holder.iv_head_image_1);
+        } else {
             holder.iv_head_image_1.setImageResource(R.mipmap.app_icon);
         }
         String name = postUser.getName();

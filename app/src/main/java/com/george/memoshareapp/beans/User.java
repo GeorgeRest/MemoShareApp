@@ -32,18 +32,18 @@ public class User extends LitePalSupport implements Serializable {
     private List<Relationship> user2 = new ArrayList<>();
 
 
-
-
-
-
+    public User(String phoneNumber, String name, String signature, String gender, String birthday, String region) {
+        this.phoneNumber=phoneNumber;
+        this.name = name;
+        this.signature = signature;
+        this.gender = gender;
+        this.birthday = birthday;
+        this.region = region;
+    }
 
     public User() {
     }
 
-    public String generateDefaultName(long userIndex) {
-        name = "忆享用户" + userIndex;
-        return name;
-    }
 
     public String getHeadPortraitPath() {
         return headPortraitPath;

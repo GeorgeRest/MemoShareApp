@@ -27,7 +27,7 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
     private List<ImageParameters> mData;
     private Post post;
     Context context;
-    private List<Uri> photoPathList;
+    private List<Uri> photoPathList; //用户发布后的uri
     private int outerAdapterPosition;
     public HomePhotoRecyclerViewAdapter(List<ImageParameters> data, Post post, Context context, int outerAdapterPosition) {
         this.mData = data;
@@ -72,14 +72,20 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
         holder.imageView.setLayoutParams(layoutParams);
         String url = mData.get(position).getPhotoCachePath();
         if (outerAdapterPosition==0&&photoPathList != null) {
+            if (position >= photoPathList.size()) {
+                return;
+            }
             Uri uri = photoPathList.get(position);
             Glide.with(holder.imageView.getContext())
                     .load(uri)
+                    .thumbnail(Glide.with(context).load(R.drawable.photo_loading))
                     .into(holder.imageView);
             Log.d("TAG", "onBindViewHolder: "+uri.toString());
         } else if (url != null && !url.isEmpty()) {
             Glide.with(holder.imageView.getContext())
                     .load(url)
+                    .thumbnail(Glide.with(context).load(R.drawable.photo_loading))
+                    .error(R.drawable.ic_close)
                     .into(holder.imageView);
             Log.d("TAG", "onBindViewHolder: "+url);
         }

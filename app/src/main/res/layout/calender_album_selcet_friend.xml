@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/ll_calender_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:layout_marginLeft="19dp"
+        android:layout_marginRight="19dp"
+        android:layout_marginBottom="19dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_calender_back"
+            android:layout_width="0dp"
+            android:layout_height="29dp"
+            android:layout_weight="1"
+            android:src="@drawable/back_gray"
+            android:layout_gravity="center_vertical"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/title_select_friend"
+            android:layout_gravity="center_vertical" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/album_complete"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/cakender_search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp">
+    </FrameLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/ll_calender_title">
+
+        <ListView
+            android:id="@+id/lv_contact_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.george.memoshareapp.view.LetterIndexView
+            android:id="@+id/letter_index_view"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"/>
+
+        <TextView
+            android:id="@+id/tv_show_letter_toast"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:text="A"
+            android:textSize="27sp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:background="#57525755"
+            android:visibility="gone"/>
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+</RelativeLayout>

@@ -2,8 +2,6 @@ package com.george.memoshareapp.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -11,21 +9,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
-import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.DetailPhotoRecycleViewAdapter;
-import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.beans.ImageParameters;
-import com.george.memoshareapp.beans.CommentBean;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
-import com.george.memoshareapp.beans.ReplyBean;
 import com.george.memoshareapp.http.api.PostServiceApi;
 import com.george.memoshareapp.http.response.HttpListData;
+import com.george.memoshareapp.interfaces.LikePostDataListener;
 import com.george.memoshareapp.interfaces.PostDataListener;
+import com.george.memoshareapp.interfaces.getLikeCountListener;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.CustomItemDecoration;
+import com.orhanobut.logger.Logger;
+import com.tencent.mmkv.MMKV;
 
 import org.litepal.LitePal;
 
@@ -54,6 +52,7 @@ public class DisplayManager {
     private DetailPhotoRecycleViewAdapter detailPhotoRecycleViewAdapter;
     List<Post> treePostList = new ArrayList<>();
     private String phoneNumber;
+    private MMKV kv;
 
     public DisplayManager() {
 
@@ -126,9 +125,6 @@ public class DisplayManager {
     }
 
 
-
-
-
     public List<Post> showMemoryTree(double latitude, double longitude) {
         treePostList.clear();
         LatLng latLng1 = new LatLng(latitude, longitude);
@@ -150,10 +146,96 @@ public class DisplayManager {
         return treePostList;
     }
 
-    public void getPostListByPage(int pageNum, int pageSize,  PostDataListener<List<Post>> listener) {
-
+    public void getPostListByPage(int pageNum, int pageSize, int itemCount, String phoneNumber, PostDataListener<List<Post>> listener) {
+        kv = MMKV.defaultMMKV();
         PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
-        Call<HttpListData<Post>> call = postServiceApi.getPosts(pageNum, pageSize);
+        Call<HttpListData<Post>> call = postServiceApi.getPosts(pageNum, pageSize, phoneNumber);
+        call.enqueue(new Callback<HttpListData<Post>>() {
+            @Override
+            public void onResponse(Call<HttpListData<Post>> call, Response<HttpListData<Post>> response) {
+                if (response.isSuccessful()) {
+                    HttpListData<Post> postListData = response.body();
+                    Log.d("lastPage", String.valueOf(postListData.isLastPage()));
+                    List<Post> postList = postListData.getItems();
+                    for (Post post : postList) {
+                        String key = "post_position_" + post.getId();
+                        int index = postList.indexOf(post);
+                        if (itemCount > 0) {
+                            index += itemCount; // 计算正确的索引位置
+                        }
+                        kv.encode(key, index);
+                        List<ImageParameters> imageParametersList = post.getImageParameters();
+                        List<Recordings> recordingsList = post.getRecordings();
+                        for (ImageParameters imageParameters : imageParametersList) {
+                            String photoCachePath = imageParameters.getPhotoCachePath();
+                            String path = AppProperties.SERVER_MEDIA_URL + photoCachePath;
+                            imageParameters.setPhotoCachePath(path);
+                        }
+                        for (Recordings Recordings : recordingsList) {
+                            String recordCachePath = Recordings.getRecordCachePath();
+                            String path = AppProperties.SERVER_RECORD_URL + recordCachePath;
+                            Recordings.setRecordCachePath(path);
+                        }
+
+
+                    }
+                    postListData.setItems(postList);
+                    listener.onSuccess(postListData,"好友");
+                } else {
+                    listener.onError("Request failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpListData<Post>> call, Throwable t) {
+                listener.onError(t.getMessage());
+            }
+        });
+    }
+
+//    public void getPostsByPhoneNumber(int pageNum, int pageSize, String phoneNumber, PostDataListener<List<Post>> listener) {
+//        PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
+//        Call<HttpListData<Post>> call = postServiceApi.getPostsByPhoneNumber(pageNum, pageSize, phoneNumber);
+//        call.enqueue(new Callback<HttpListData<Post>>() {
+//            @Override
+//            public void onResponse(Call<HttpListData<Post>> call, Response<HttpListData<Post>> response) {
+//                if (response.isSuccessful()) {
+//
+//                    HttpListData<Post> postListData = response.body();
+//                    Log.d("lastPage", String.valueOf(postListData.isLastPage()));
+//                    List<Post> postList = postListData.getItems();
+//                    for (Post post : postList) {
+//                        List<ImageParameters> imageParametersList = post.getImageParameters();
+//                        List<Recordings> recordingsList = post.getRecordings();
+//                        for (ImageParameters imageParameters : imageParametersList) {
+//                            String photoCachePath = imageParameters.getPhotoCachePath();
+//                            String path = AppProperties.SERVER_MEDIA_URL + photoCachePath;
+//                            imageParameters.setPhotoCachePath(path);
+//                        }
+//                        for (Recordings Recordings : recordingsList) {
+//                            String recordCachePath = Recordings.getRecordCachePath();
+//                            String path = AppProperties.SERVER_RECORD_URL + recordCachePath;
+//                            Recordings.setRecordCachePath(path);
+//                        }
+//                    }
+//                    postListData.setItems(postList);
+//                    listener.onSuccess(postListData);
+//                } else {
+//                    listener.onError("Request failed");
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<HttpListData<Post>> call, Throwable t) {
+//                Logger.d(t.getMessage());
+//            }
+//        });
+//
+//    }
+
+
+    public void getPostsByPhoneNumber(int pageNum, int pageSize, String phoneNumber, PostDataListener<List<Post>> listener,String type) {
+        PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
+        Call<HttpListData<Post>> call = postServiceApi.getPostsByPhoneNumber(pageNum, pageSize, phoneNumber);
         call.enqueue(new Callback<HttpListData<Post>>() {
             @Override
             public void onResponse(Call<HttpListData<Post>> call, Response<HttpListData<Post>> response) {
@@ -169,14 +251,14 @@ public class DisplayManager {
                             String path = AppProperties.SERVER_MEDIA_URL + photoCachePath;
                             imageParameters.setPhotoCachePath(path);
                         }
-                        for (Recordings Recordings:recordingsList) {
+                        for (Recordings Recordings : recordingsList) {
                             String recordCachePath = Recordings.getRecordCachePath();
                             String path = AppProperties.SERVER_RECORD_URL + recordCachePath;
                             Recordings.setRecordCachePath(path);
                         }
                     }
                     postListData.setItems(postList);
-                    listener.onSuccess(postListData);
+                    listener.onSuccess(postListData,type);
                 } else {
                     listener.onError("Request failed");
                 }
@@ -184,12 +266,83 @@ public class DisplayManager {
 
             @Override
             public void onFailure(Call<HttpListData<Post>> call, Throwable t) {
-                listener.onError(t.getMessage());
+                Logger.d(t.getMessage());
+            }
+        });
+    }
+    public void getLikePostsByPhoneNumber(int pageNum, int pageSize, String phoneNumber, LikePostDataListener<List<Post>> listener, String type) {
+        PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
+        Call<HttpListData<Post>> call = postServiceApi.getLikePostsByPhoneNumber(pageNum, pageSize, phoneNumber);
+        call.enqueue(new Callback<HttpListData<Post>>() {
+            @Override
+            public void onResponse(Call<HttpListData<Post>> call, Response<HttpListData<Post>> response) {
+                if (response.isSuccessful()) {
+                    HttpListData<Post> postListData = response.body();
+                    Log.d("lastPage", String.valueOf(postListData.isLastPage()));
+                    List<Post> postList = postListData.getItems();
+                    for (Post post : postList) {
+                        List<ImageParameters> imageParametersList = post.getImageParameters();
+                        List<Recordings> recordingsList = post.getRecordings();
+                        for (ImageParameters imageParameters : imageParametersList) {
+                            String photoCachePath = imageParameters.getPhotoCachePath();
+                            String path = AppProperties.SERVER_MEDIA_URL + photoCachePath;
+                            imageParameters.setPhotoCachePath(path);
+                        }
+                        for (Recordings Recordings : recordingsList) {
+                            String recordCachePath = Recordings.getRecordCachePath();
+                            String path = AppProperties.SERVER_RECORD_URL + recordCachePath;
+                            Recordings.setRecordCachePath(path);
+                        }
+                    }
+                    postListData.setItems(postList);
+                    listener.onPostLikeSuccess(postListData);
+                } else {
+                    listener.onPostLikeSuccessError("Request failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpListData<Post>> call, Throwable t) {
+                Logger.d(t.getMessage());
             }
         });
     }
 
+    public void updateLikeCount(int postId, String phoneNumber, boolean isLike, getLikeCountListener updateLike) {
+        PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
+        Call<Integer> call = postServiceApi.updateLikeCount(phoneNumber, postId, isLike);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                updateLike.onSuccess(response.body());//点赞数量
 
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Log.d("updateLikeCount", "onFailure: " + t.getMessage());
+            }
+        });
+
+    }
+
+    public void getLikeCount(int postId, getLikeCountListener getLikeCountListener) {
+        PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
+        Call<Integer> call = postServiceApi.getLikeCount(postId);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                getLikeCountListener.onSuccess(response.body());//点赞数量
+                System.out.println(response.body() + "-------------");
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Log.d("updateLikeCount", "onFailure: " + t.getMessage());
+            }
+        });
+
+    }
 
 }
 

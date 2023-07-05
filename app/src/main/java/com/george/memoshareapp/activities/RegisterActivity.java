@@ -171,6 +171,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case R.id.bt_register:
+                if(TextUtils.isEmpty(phone)||TextUtils.isEmpty(pw)||TextUtils.isEmpty(pwAgain)||TextUtils.isEmpty(vcCode)){
+                    Toasty.warning(this, "请输入完整信息", Toast.LENGTH_SHORT, true).show();
+                    return;
+                }
                 if (!pw.equals(pwAgain)) {
                     Toasty.warning(this, "两次密码输入不一致", Toast.LENGTH_SHORT, true).show();
                     return;

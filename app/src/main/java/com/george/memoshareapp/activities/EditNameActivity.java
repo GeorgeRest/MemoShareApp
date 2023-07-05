@@ -93,10 +93,6 @@ public class EditNameActivity extends AppCompatActivity implements View.OnClickL
                 intent.putExtra("result", name);
                 setResult(1, intent);
                 //todo 保存数据
-                User user = (User) getIntent().getSerializableExtra("user");
-                LitePal.getDatabase();
-                user.setName(name);
-                user.update(user.getId());
                 finish();
                 break;
         }
