@@ -34,11 +34,14 @@ import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.interfaces.OnSaveUserListener;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.view.NiceImageView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.orhanobut.logger.Logger;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +83,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
     private boolean isfollowingOrFriend1 = false;
     private long countFollowings;
     private long countFans;
-    private String phoneNumber;
+    private String otherPhoneNumber;
     private User userMe;
     private TextView person_fragment_tv_guanzhu;
     private TextView person_fragment_tv_fensi;
@@ -126,10 +129,10 @@ public class NewPersonPageFragment extends Fragment  {//外部
         args = getArguments();
         if (args != null) {
             otheruser = (User) args.getSerializable("user");
-            phoneNumber = otheruser.getPhoneNumber();
+            otherPhoneNumber = otheruser.getPhoneNumber();
             if (otheruser != null) {
                 // 当前设备正在登录的账号
-                if (phoneNumber.equals(userPhoneNumber)) {
+                if (otherPhoneNumber.equals(userPhoneNumber)) {
                     rootView = inflater.inflate(R.layout.fragment_personal_page, container, false);
                     ismyslef = true;
                     initView(rootView);
@@ -190,7 +193,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
             rootView = inflater.inflate(R.layout.fragment_personal_page, container, false);
             initView(rootView);
             UserServiceApi userServiceApi1 = RetrofitManager.getInstance().create(UserServiceApi.class);
-            userManager.saveUser(phoneNumber, new OnSaveUserListener() {
+            userManager.saveUser(otherPhoneNumber, new OnSaveUserListener() {
                 @Override
                 public void OnSaveUserListener(User user) {
                     userfromIDE = new User();
@@ -239,7 +242,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
         String headPortraitPath = user.getHeadPortraitPath();
         if (headPortraitPath != null) {
             Glide.with(this)
-                    .load(headPortraitPath)
+                    .load(AppProperties.SERVER_MEDIA_URL+headPortraitPath)
                     .thumbnail(Glide.with(getActivity())
                             .load(R.drawable.photo_loading))
                     .error(R.drawable.ic_close).into(head);
@@ -256,12 +259,9 @@ public class NewPersonPageFragment extends Fragment  {//外部
         String gender = u1.getGender();
         String signature = u1.getSignature();
         String region = u1.getRegion();
-        if (name == null) {
-            String s = u1.generateDefaultName(u1.getId());
-            person_fragment_tv_name.setText(s);
-        } else {
+
             person_fragment_tv_name.setText(name);
-        }
+
         if (gender == null) {
             iv_sex.setImageResource(R.mipmap.sex_open);
         } else {
@@ -299,12 +299,12 @@ public class NewPersonPageFragment extends Fragment  {//外部
         mingyan = (TextView) rootView.findViewById(R.id.person_fragment_tv_mingyan);
         attentionNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_guanzhu_number);
         fensiNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_fensi_number);
-        if (phoneNumber == null) {
+        if (otherPhoneNumber == null) {
             friend = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend);
             friendNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend_number);
             friendNumber.setText(String.valueOf(countFriends));
         } else {
-            if (userPhoneNumber.equals(phoneNumber)) {
+            if (userPhoneNumber.equals(otherPhoneNumber)) {
                 friend = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend);
                 friendNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend_number);
                 userManager.countFriends(otheruser, new OnSaveUserListener() {
@@ -322,7 +322,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
         fensiNumber.setText(String.valueOf(countFans));
         mTabLayout = rootView.findViewById(R.id.tab_layout);
         mViewPager2 = rootView.findViewById(R.id.person_pager);
-        personpageadapter = new PersonPageAdapter(getActivity(), mData);
+        personpageadapter = new PersonPageAdapter(getActivity(), mData,otherPhoneNumber);
         mViewPager2.setAdapter(personpageadapter);
         new TabLayoutMediator(mTabLayout, mViewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
@@ -352,10 +352,12 @@ public class NewPersonPageFragment extends Fragment  {//外部
             private Relationship relationship;
             @Override
             public void onClick(View v) {
-                if (phoneNumber != null) {
+                if (otherPhoneNumber != null) {
+                    userMe=userManager.findUserByPhoneNumber(userPhoneNumber);
                     System.out.println(userMe+""+otheruser);
-                    if (phoneNumber.equals(userPhoneNumber)) {//newpost和sp的电话号
+                    if (otherPhoneNumber.equals(userPhoneNumber)) {//newpost和sp的电话号
                         Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+                        Logger.d( userMe.toString());
                         intent.putExtra("user", userMe);
                         startActivityForResult(intent, EDITABLEACTIVITY_BACK);
 
@@ -456,7 +458,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), FriendActivity.class);
                     if (args != null) {
-                        intent.putExtra("postPhoneNumber", phoneNumber);
+                        intent.putExtra("postPhoneNumber", otherPhoneNumber);
                     } else {
                         intent.putExtra("postPhoneNumber", userPhoneNumber);
                     }
@@ -473,7 +475,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
                 intent.putExtra("isFriend", 0);
                 intent.putExtra("ismyself", ismyslef);
                 if (args != null) {
-                    intent.putExtra("postPhoneNumber", phoneNumber);
+                    intent.putExtra("postPhoneNumber", otherPhoneNumber);
                 } else {
                     intent.putExtra("postPhoneNumber", userPhoneNumber);
                 }
@@ -487,7 +489,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
                 intent.putExtra("isFriend", 1);
                 intent.putExtra("ismyself", ismyslef);
                 if (args != null) {
-                    intent.putExtra("postPhoneNumber", phoneNumber);
+                    intent.putExtra("postPhoneNumber", otherPhoneNumber);
                 } else {
                     intent.putExtra("postPhoneNumber", userPhoneNumber);
                 }
@@ -507,9 +509,11 @@ public class NewPersonPageFragment extends Fragment  {//外部
             if (data != null) {
                 String editedGender = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_GENDER);
                 String editedBirthday = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_BIRTHDAY);
-//                String editedLocation = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_REGION);
-//                String editedSignature = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_SIGNATURE);
-//                String editedName = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_NAME);
+                String editedLocation = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_REGION);
+                String editedSignature = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_SIGNATURE);
+                String editedName = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_NAME);
+                String editedHead = data.getStringExtra(EditProfileActivity.EXTRA_EDITED_HEAD_PORTRAIT);
+                Logger.d(editedHead);
                 if (editedGender != null) {
                     if (editedGender.equals("男")) {
                         iv_sex.setImageResource(R.mipmap.sex_man);
@@ -520,14 +524,29 @@ public class NewPersonPageFragment extends Fragment  {//外部
                 if (otheruser != null) {
                     otheruser.setGender(editedGender);
                     otheruser.setBirthday(editedBirthday);
-                    otheruser.update(otheruser.getId());
-                }
+                            }
                 if (userMe != null) {
                     userMe.setGender(editedGender);
                     userMe.setBirthday(editedBirthday);
-                    userMe.update(userMe.getId());
+                }
+                if(editedLocation!=null){
+                    tv_location.setText(editedLocation);
+                }
+                if(editedSignature!=null){
+                    mingyan.setText(editedSignature);
+                }
+                if(editedName!=null){
+                    person_fragment_tv_name.setText(editedName);
+                }
+                if(editedHead!=null){
+                    Glide.with(getActivity()).load(new File(editedHead)).into(head);
                 }
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

@@ -12,16 +12,17 @@ import java.util.List;
 
 public class PersonPageAdapter extends FragmentStateAdapter {
     private List<String> mData = new ArrayList<>();
-
-    public PersonPageAdapter(@NonNull FragmentActivity fragmentActivity, List<String> data) {
+    private String phoneNumber;
+    public PersonPageAdapter(@NonNull FragmentActivity fragmentActivity, List<String> data,String phoneNumber) {
         super(fragmentActivity);
         mData = data;
+        this.phoneNumber=phoneNumber;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return NewPersonFragment.newInstance(mData.get(position));
+        return NewPersonFragment.newInstance(mData.get(position),phoneNumber);
     }
 
     @Override

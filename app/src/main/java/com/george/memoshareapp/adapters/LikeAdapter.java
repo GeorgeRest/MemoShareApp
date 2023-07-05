@@ -2,6 +2,7 @@ package com.george.memoshareapp.adapters;
 
 import android.content.Context;
 
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -17,11 +18,14 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseDifferAdapter;
 import com.chad.library.adapter.base.dragswipe.listener.DragAndSwipeDataCallback;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.view.ProportionalImageView;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -34,11 +38,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * @date: 2023/6/10 16:34
  * @version: 1.0
  */
-public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>implements DragAndSwipeDataCallback {
+public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder> implements View.OnClickListener{
     private Context context;
     private LatLng currentLatLng;
     private double maxRatio = 1.33;
-
 
     public LikeAdapter(Context context, LatLng currentLatLng) {
         super(new DiffUtil.ItemCallback<Post>() {
@@ -46,8 +49,9 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
             public boolean areItemsTheSame(@NonNull Post oldItem, @NonNull Post newItem) {
                 // You need to implement an appropriate comparison here.
                 // This assumes that Post has an getId method that provides a unique identifier.
-                return oldItem.getId()==(newItem.getId());
+                return oldItem.getId() == (newItem.getId());
             }
+
             @Override
             public boolean areContentsTheSame(@NonNull Post oldItem, @NonNull Post newItem) {
                 // You need to implement the equals method in Post class.
@@ -56,7 +60,6 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
         });
         this.context = context;
         this.currentLatLng = currentLatLng;
-
     }
 
     @Override
@@ -64,6 +67,7 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
         if (post == null) {
             return;
         }
+        viewHolder.iv_photo.setTag(viewHolder);
         ImageParameters imageParameters = post.getImageParameters().get(0);
         String photoCachePath = imageParameters.getPhotoCachePath();
         int width = imageParameters.getWidth();
@@ -82,16 +86,18 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
             viewHolder.tv_distance.setText(distanceKm + "km");
         }
         viewHolder.tv_title.setText(title);
+        viewHolder.username.setText(post.getUser().getName());
         double ratio = (double) height / width;
         if (ratio > maxRatio) {
             ratio = maxRatio;
         }
-        viewHolder.  iv_photo.setHeightRatio(ratio);
+        viewHolder.iv_photo.setHeightRatio(ratio);
         Glide.with(context)
                 .load(photoCachePath)
-                .thumbnail(Glide.with(context).load(R.drawable.photo_loading))
+                .thumbnail(Glide.with(context).load(photoCachePath))
                 .error(R.drawable.ic_close)
                 .into(viewHolder.iv_photo);
+        Glide.with(context).load(post.getUser().getHeadPortraitPath()).into(viewHolder.circleImageView);
     }
 
     @NonNull
@@ -102,14 +108,19 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
     }
 
     @Override
-    public void dataSwap(int fromPosition, int toPosition) {
-        swap(fromPosition, toPosition);
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_cardview_like:
+                ViewHolder holder = (ViewHolder) view.getTag();
+                int position = holder.getAdapterPosition();
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("post", getItem(position));
+                context.startActivity(intent);
+                break;
+        }
+
     }
 
-    @Override
-    public void dataRemoveAt(int position) {
-        removeAt(position);
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView circleImageView;
@@ -117,6 +128,7 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
         TextView tv_distance;
         TextView tv_title;
         TextView username;
+
         public ViewHolder(View view) {
             super(view);
             circleImageView = view.findViewById(R.id.iv_cardview_like_user);
@@ -124,6 +136,8 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
             tv_distance = view.findViewById(R.id.like_distance);
             tv_title = view.findViewById(R.id.like_title);
             username = view.findViewById(R.id.like_username);
+            iv_photo.setOnClickListener(LikeAdapter.this);
+
         }
     }
 }

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<com.drake.statelayout.StateLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/state"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:empty_layout="@layout/layout_empty"
+    app:error_layout="@layout/layout_error"
+    app:loading_layout="@layout/layout_loading">
 <com.scwang.smart.refresh.layout.SmartRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -29,3 +36,4 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true" />
 </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+</com.drake.statelayout.StateLayout>

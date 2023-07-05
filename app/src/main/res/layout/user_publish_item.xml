@@ -73,7 +73,7 @@
                 android:id="@+id/iv_user_publish_recorder"
                 android:layout_width="50dp"
                 android:layout_height="25dp"
-                android:src="@mipmap/record_homepage" />
+                android:src="@drawable/publish_record" />
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="72dp"
@@ -109,6 +109,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/ll_user_publish_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/rl_user_publish_head"

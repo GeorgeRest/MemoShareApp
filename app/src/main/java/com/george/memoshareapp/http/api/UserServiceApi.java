@@ -7,6 +7,7 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
@@ -40,7 +41,8 @@ public interface UserServiceApi {
     Call<Long> countFriends(@Path("phoneNumber") String phoneNumber);
 
 
-    @PUT("updateUser/{phoneNumber}")
+    @Multipart
+    @PUT("user/updateUser/{phoneNumber}")
     Call<Boolean> updateUser(
             @Path("phoneNumber") String phoneNumber,
             @Query("gender") String gender,

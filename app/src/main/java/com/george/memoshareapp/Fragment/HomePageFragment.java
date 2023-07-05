@@ -106,9 +106,6 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                 List<Post> emptyList = new ArrayList<>();
                 outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), emptyList);
                 displayManager.getPostListByPage(pageNum, pageSize, outerAdapter.getItemCount(),phoneNumber,this);
-
-
-
                 smartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
                 smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
                 smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
@@ -121,7 +118,7 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
 
                         displayManager.getPostListByPage(pageNum, pageSize,outerAdapter.getItemCount(),phoneNumber, new PostDataListener<List<Post>>() {
                             @Override
-                            public void onSuccess(HttpListData<Post> newPostData) {
+                            public void onSuccess(HttpListData<Post> newPostData,String type) {
                                 kv.clearAll();
                                 posts.clear(); // 清除原有数据
                                 List<Post> newPosts = newPostData.getItems();
@@ -149,8 +146,6 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                 break;
             case "推荐":
                 rootView = inflater.inflate(R.layout.fragment_home_recommend, container, false);
-
-
                 break;
             case "活动":
                 rootView = inflater.inflate(R.layout.fragment_home_activity, container, false);
@@ -192,7 +187,7 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
 
 
     @Override
-    public void onSuccess(HttpListData<Post> postData) {
+    public void onSuccess(HttpListData<Post> postData,String type) {
         System.out.println("-----------");
         state.showContent(null);
 
@@ -215,7 +210,7 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                 public void onLoadMore(RefreshLayout refreshlayout) {
                     displayManager.getPostListByPage(pageNum, pageSize,outerAdapter.getItemCount(),phoneNumber , new PostDataListener<List<Post>>() {
                         @Override
-                        public void onSuccess(HttpListData<Post> newPostData) {
+                        public void onSuccess(HttpListData<Post> newPostData,String type) {
                             System.out.println(newPostData.isLastPage() + "newPostData.isLastPage()-------------");
                             System.out.println(pageNum + "pageNum-------------");
                             pageNum++;

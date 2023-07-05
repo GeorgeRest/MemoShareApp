@@ -229,6 +229,28 @@ public class Post extends LitePalSupport implements Serializable {
         return Objects.hash(id, phoneNumber, publishedText, photoCachePath, recordings, contacts, location, longitude, latitude, isPublic, publishedTime, memoryTime, like, share, commentBeans, userList);
     }
 
-
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", publishedText='" + publishedText + '\'' +
+                ", photoCachePath=" + photoCachePath +
+                ", recordings=" + recordings +
+                ", contacts=" + contacts +
+                ", location='" + location + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", isPublic=" + isPublic +
+                ", publishedTime='" + publishedTime + '\'' +
+                ", memoryTime='" + memoryTime + '\'' +
+                ", like=" + like +
+                ", share=" + share +
+                ", commentBeans=" + commentBeans +
+                ", userList=" + userList +
+                ", imageParameters=" + imageParameters +
+                ", user=" + user +
+                '}';
+    }
 }
 

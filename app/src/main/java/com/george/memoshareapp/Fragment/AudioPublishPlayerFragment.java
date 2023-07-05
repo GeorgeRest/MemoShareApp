@@ -1,5 +1,6 @@
 package com.george.memoshareapp.Fragment;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -98,6 +99,7 @@ public class AudioPublishPlayerFragment extends Fragment {
     private void initMediaPlayer() {
         try {
             mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(AUDIO_FILE_PATHS.get(currentFileIndex));
             mediaPlayer.prepare();
             seekBar.setMax(mediaPlayer.getDuration());

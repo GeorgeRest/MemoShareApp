@@ -36,6 +36,7 @@ import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.events.updateLikeState;
 import com.george.memoshareapp.interfaces.getLikeCountListener;
 import com.george.memoshareapp.manager.DisplayManager;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.DateFormat;
 import com.george.memoshareapp.view.NoScrollListView;
 
@@ -166,7 +167,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         postUser = post.getUser();
         userName.setText(postUser.getName());
         if(postUser.getHeadPortraitPath()!=null){
-            Glide.with(this).load(postUser.getHeadPortraitPath())
+            Glide.with(this).load(AppProperties.SERVER_MEDIA_URL+postUser.getHeadPortraitPath())
                     .thumbnail(Glide.with(this).load(R.drawable.photo_loading))
                     .error(R.drawable.ic_close)
                     .into(userIcon);

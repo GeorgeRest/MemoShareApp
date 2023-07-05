@@ -72,6 +72,9 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
         holder.imageView.setLayoutParams(layoutParams);
         String url = mData.get(position).getPhotoCachePath();
         if (outerAdapterPosition==0&&photoPathList != null) {
+            if (position >= photoPathList.size()) {
+                return;
+            }
             Uri uri = photoPathList.get(position);
             Glide.with(holder.imageView.getContext())
                     .load(uri)
