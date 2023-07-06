@@ -22,5 +22,6 @@
     <color name="complete_normal">#80997AE7</color>
     <color name="complete">#997AE7</color>
     <color name="separator">#4D605F65</color>
+    <color name="edit_bg">#f8f4fa</color>
 </resources>
 

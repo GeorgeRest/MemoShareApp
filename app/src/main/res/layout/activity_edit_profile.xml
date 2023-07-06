@@ -24,13 +24,25 @@
         android:gravity="center"
         android:text="编辑资料"
         android:textColor="#28282c"
-        android:textSize="18dp" />
+        android:textSize="17dp" />
+
+    <TextView
+        android:id="@+id/edit_tv_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="完成"
+        android:textColor="#80997AE7"
+        android:textSize="17dp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/textView"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="10dp"
         android:background="#ececec" />
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -39,11 +51,12 @@
         android:layout_height="95dp"
         android:layout_below="@id/textView"
         android:layout_centerHorizontal="true"
+
         android:layout_marginTop="40dp"
         android:src="@drawable/horizental_photo" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/camera"
+        android:id="@+id/head_portrait"
         android:layout_width="95dp"
         android:layout_height="95dp"
         android:layout_below="@id/textView"
@@ -65,14 +78,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/imageView2"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="40dp"
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="名字"
             android:textColor="#3f3f3f"
-            android:textSize="20dp" />
+            android:layout_marginLeft="10dp"
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/tv_edit_name"
@@ -81,7 +96,7 @@
             android:layout_toLeftOf="@id/right_arrow1"
             android:text="名字"
             android:textColor="#3f3f3f"
-            android:textSize="20dp" />
+            android:textSize="15dp" />
 
         <ImageView
             android:id="@+id/right_arrow1"
@@ -89,6 +104,7 @@
             android:layout_height="25dp"
             android:layout_alignParentRight="true"
             android:src="@mipmap/right_arrow" />
+
     </RelativeLayout>
 
     <View
@@ -96,7 +112,7 @@
         android:layout_height="1dp"
         android:layout_below="@id/rl_name"
 
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:background="#ececec" />
 
     <RelativeLayout
@@ -104,23 +120,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_name"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="个性签名"
+            android:layout_marginLeft="10dp"
             android:textColor="#3f3f3f"
-            android:textSize="20dp" />
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/tv_edit_signature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/right_arrow2"
-            android:text="xxxxx"
+            android:text="暂时还没有签名"
             android:textColor="#3f3f3f"
-            android:textSize="20dp" />
+            android:textSize="15dp" />
 
         <ImageView
             android:id="@+id/right_arrow2"
@@ -135,7 +152,7 @@
         android:layout_height="1dp"
         android:layout_below="@id/rl_signature"
 
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:background="#ececec" />
 
     <RelativeLayout
@@ -143,14 +160,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_signature"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="性别"
+            android:layout_marginLeft="10dp"
             android:textColor="#3f3f3f"
-            android:textSize="20dp" />
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/tv_edit_gender"
@@ -159,7 +177,7 @@
             android:layout_toLeftOf="@id/right_arrow3"
             android:text="男"
             android:textColor="#3f3f3f"
-            android:textSize="20dp" />
+            android:textSize="15dp" />
 
         <ImageView
             android:id="@+id/right_arrow3"
@@ -174,7 +192,7 @@
         android:layout_height="1dp"
         android:layout_below="@id/rl_gender"
 
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:background="#ececec" />
 
     <RelativeLayout
@@ -182,21 +200,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_gender"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="生日"
+            android:layout_marginLeft="10dp"
             android:textColor="#3f3f3f"
-            android:textSize="20dp" />
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/tv_edit_birthday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/right_arrow4"
-            android:text="xxxxx"
+            android:text=""
             android:textColor="#3f3f3f"
             android:textSize="20dp" />
 
@@ -213,7 +232,7 @@
         android:layout_height="1dp"
         android:layout_below="@id/rl_birthday"
 
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:background="#ececec" />
 
 
@@ -222,25 +241,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_birthday"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="地区"
+            android:layout_marginLeft="10dp"
             android:textColor="#3f3f3f"
-            android:textSize="20dp" />
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/tv_edit_region"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/right_arrow5"
-            android:text="请选择地区"
-            android:textColor="#3f3f3f"
-            android:textSize="20dp"
+            android:ellipsize="end"
             android:maxLines="1"
-            android:ellipsize="end"/>
+            android:text="中国"
+            android:textColor="#3f3f3f"
+            android:textSize="15dp" />
 
 
         <ImageView
@@ -252,11 +272,16 @@
     </RelativeLayout>
 
     <View
+        android:id="@+id/view_bottom_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/rl_birthday"
-
-        android:layout_marginTop="16dp"
+        android:layout_below="@id/rl_region"
+        android:layout_marginTop="5dp"
         android:background="#ececec" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/view_bottom_line"
+        android:background="@color/edit_bg"/>
 
 </RelativeLayout>

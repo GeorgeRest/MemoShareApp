@@ -1,9 +1,12 @@
 package com.george.memoshareapp.adapters;
+
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,9 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.Fragment.AudioPublishPlayerFragment;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.UserDateFormat;
+import com.orhanobut.logger.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +56,9 @@ public class UserPublishRecyclerAdapter extends RecyclerView.Adapter<UserPublish
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.iv_user_publish_recorder.setTag(holder);
+        holder.iv_user_publish_image.setTag(holder);
+        holder.ll_user_publish_content.setTag(holder);
+
         Post post = postList.get(position);
         holder.recordings = post.getRecordings();
 
@@ -108,15 +117,16 @@ public class UserPublishRecyclerAdapter extends RecyclerView.Adapter<UserPublish
             }
         }
 
-        if (post.getPhotoCachePath().size() == 1) {
+        if (post.getImageParameters().size() == 1) {
             holder.cv_user_publish_image_count.setVisibility(View.GONE);
         } else {
             holder.tv_user_publish_image_count.setVisibility(View.VISIBLE);
-            holder.tv_user_publish_image_count.setText(String.valueOf(post.getPhotoCachePath().size()));
+            holder.tv_user_publish_image_count.setText(String.valueOf(post.getImageParameters().size()));
         }
         Glide.with(context)
-                .load(post.getPhotoCachePath().get(0))
+                .load(post.getImageParameters().get(0).getPhotoCachePath())
                 .into(holder.iv_user_publish_image);
+        Logger.d(AppProperties.SERVER_MEDIA_URL + post.getImageParameters().get(0).getPhotoCachePath());
         holder.tv_user_publish_content.setText(post.getPublishedText());
         holder.tv_user_publish_location.setText(post.getLocation());
 
@@ -163,16 +173,28 @@ public class UserPublishRecyclerAdapter extends RecyclerView.Adapter<UserPublish
                 case R.id.iv_user_publish_recorder:
                     if (holder.recordings.size() > 0) {
                         handleClick(holder.recordings, holder.iv_user_publish_recorder);
-                        holder.iv_user_publish_recorder.setImageResource(R.drawable.record_bg_click);
+                        holder.iv_user_publish_recorder.setImageResource(R.drawable.publish_record);
                     }
                     break;
+
             }
         }
+        switch (v.getId()){
+            case R.id.iv_user_publish_image:
+            case R.id.ll_user_publish_content:
+                Post post = postList.get(holder.getAdapterPosition());
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("post", post);
+                Logger.d(post.toString());
+                context.startActivity(intent);
+                break;
+        }
+
     }
 
     private void handleClick(List<Recordings> recordings, ImageView iv) {
         if (currentPlayingImageView != null && currentPlayingImageView != iv) {
-            currentPlayingImageView.setImageResource(R.drawable.record_homepage);
+            currentPlayingImageView.setImageResource(R.drawable.publish_record);
         }
         if (fragment == null) {
             currentPlayingImageView = iv;
@@ -221,7 +243,7 @@ public class UserPublishRecyclerAdapter extends RecyclerView.Adapter<UserPublish
 
     public void resetPlayingButton() {
         if (currentPlayingImageView != null) {
-            currentPlayingImageView.setImageResource(R.drawable.record_homepage);
+            currentPlayingImageView.setImageResource(R.drawable.publish_record);
             currentPlayingImageView = null;
         }
     }
@@ -231,6 +253,7 @@ public class UserPublishRecyclerAdapter extends RecyclerView.Adapter<UserPublish
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        private LinearLayout ll_user_publish_content;
         public AudioPublishPlayerFragment fragment;
         CardView cv_user_publish_recorder_count;
         TextView tv_user_publish_recorder_count;
@@ -257,11 +280,13 @@ public class UserPublishRecyclerAdapter extends RecyclerView.Adapter<UserPublish
             cv_user_publish_image_count = itemView.findViewById(R.id.cv_user_publish_image_count);
             tv_user_publish_twoWord = itemView.findViewById(R.id.tv_user_publish_twoWord);
             rl_user_publish_time = itemView.findViewById(R.id.rl_user_publish_time);
-
+            ll_user_publish_content = itemView.findViewById(R.id.ll_user_publish_content);
             tv_user_publish_recorder_count = itemView.findViewById(R.id.tv_user_publish_recorder_count);
             iv_user_publish_recorder = itemView.findViewById(R.id.iv_user_publish_recorder);
-            iv_user_publish_recorder.setOnClickListener(UserPublishRecyclerAdapter.this);
             cv_user_publish_recorder_count = itemView.findViewById(R.id.cv_user_publish_recorder_count);
+            iv_user_publish_recorder.setOnClickListener(UserPublishRecyclerAdapter.this);
+            iv_user_publish_image.setOnClickListener(UserPublishRecyclerAdapter.this);
+            ll_user_publish_content.setOnClickListener(UserPublishRecyclerAdapter.this);
         }
     }
 }

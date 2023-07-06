@@ -100,7 +100,14 @@
 
         <activity
             android:name=".activities.ContactListActivity"
-            android:exported="true" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".activities.DetailActivity"
             android:exported="true" />
@@ -110,6 +117,7 @@
         <activity
             android:name=".activities.HomePageActivity"
             android:exported="false" />
+
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true"
@@ -140,7 +148,7 @@
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.TestUserPublishActivity"
+            android:name=".activities.test.TestUserPublishActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

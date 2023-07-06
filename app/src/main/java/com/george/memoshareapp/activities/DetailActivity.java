@@ -36,6 +36,7 @@ import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.events.updateLikeState;
 import com.george.memoshareapp.interfaces.getLikeCountListener;
 import com.george.memoshareapp.manager.DisplayManager;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.DateFormat;
 import com.george.memoshareapp.view.NoScrollListView;
 
@@ -109,9 +110,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         sharedPreferences1 = getSharedPreferences("User", MODE_PRIVATE);
         phoneNumber = sharedPreferences1.getString("phoneNumber", "");
         editor1 = sharedPreferences1.edit();
-
-//        likesCount = post.getLike();
-
         has_like = sharedPreferences1.getBoolean(this.post.getId() + ":" + phoneNumber, false);
         if (has_like) {
             like.setImageResource(R.mipmap.like_press);
@@ -121,7 +119,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         putParameter2View();//传参
         commentNumber = commentAdapter.getCount();
         detail_tv_share_number.setText(shareNumber + "");
-//        detail_tv_like_number.setText(likesCount + "");
         detail_tv_comment_number.setText(commentNumber + "");
         set_comments_number.setText("共" + commentNumber + "条评论");
         getLikeCount();
@@ -136,7 +133,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // When the text in the EditText changes, check if it's empty or not
                 if(s.toString().trim().length()==0){
                     submitComment.setEnabled(false);
                     submitComment.setImageResource(R.drawable.button_send_click);
@@ -161,6 +157,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             public void onSuccess(int likeCount) {
                 System.out.println("likeCount:" + likeCount);
                 detail_tv_like_number.setText(String.valueOf(likeCount));
+                System.out.println("likeCount:" + likeCount);
             }
 
         });
@@ -172,7 +169,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         postUser = post.getUser();
         userName.setText(postUser.getName());
         if(postUser.getHeadPortraitPath()!=null){
-            Glide.with(this).load(postUser.getHeadPortraitPath())
+            Glide.with(this).load(AppProperties.SERVER_MEDIA_URL+postUser.getHeadPortraitPath())
                     .thumbnail(Glide.with(this).load(R.drawable.photo_loading))
                     .error(R.drawable.ic_close)
                     .into(userIcon);
@@ -370,13 +367,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         });
 
     }
-
-    private void updateHomepageLikeState() {
-
-    }
-
-
-
 
     /**
      * 获取评论列表数据

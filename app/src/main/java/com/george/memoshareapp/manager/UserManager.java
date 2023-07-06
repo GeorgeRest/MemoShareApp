@@ -2,6 +2,7 @@ package com.george.memoshareapp.manager;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -11,13 +12,17 @@ import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.interfaces.OnSaveUserListener;
+import com.george.memoshareapp.interfaces.UpdateUserListener;
+import com.orhanobut.logger.Logger;
 
 import org.litepal.LitePal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,20 +64,6 @@ public class UserManager {
         return true;
     }
 
-    public static boolean saveUserInfo(String phone, String pw) {
-        LitePal.getDatabase();
-        User user = new User(phone, pw);
-        user.setRegion("中国");
-        user.setGender("男");
-        user.setSignature("暂时还没有简介");
-        if (user.save()) {
-            long userId = user.getId();
-            user.generateDefaultName((int) userId);
-            user.update(user.getId());
-            return true;
-        }
-        return false;
-    }
 
     public User isPhoneNumberRegistered(String phone) {
         LitePal.getDatabase();
@@ -160,7 +151,7 @@ public class UserManager {
 
     public User findUserByPhoneNumber(String phoneNumber) {
         User users = LitePal
-                .where("phoneNumber = ?", phoneNumber)
+                .where("phonenumber = ?", phoneNumber)
                 .findFirst(User.class);
         if (users != null) {
             return users;
@@ -168,6 +159,11 @@ public class UserManager {
             return null;
         }
     }
+//    public void updateUserInfo(User updateUser,String phoneNumber){
+//        LitePal.getDatabase();
+//        User user = new User( updateUser.getName(), updateUser.getSignature(),updateUser.getGender(), updateUser.getBirthday(), updateUser.getRegion());
+//        user.updateAll("phoneNumber = ?", user.getPhoneNumber());
+//    }
 
     // 检查是否满足互相关注的条件
     private boolean isMutualFollow(User initiator, User target) {
@@ -293,12 +289,24 @@ public class UserManager {
                 if (response.code() == 200) {
                     Log.d("saveUserToLocal", "onResponse: " + response.code());
                     User user = response.body().getData();
-                    user.saveOrUpdate("phoneNumber = ?", user.getPhoneNumber());
-                }
-                else{
+                    User existingUser = findUserByPhoneNumber(user.getPhoneNumber());
+                    if (existingUser != null) {
+                        // 用户存在，进行更新操作
+                        existingUser.setName(user.getName());
+                        existingUser.setSignature(user.getSignature());
+                        existingUser.setGender(user.getGender());
+                        existingUser.setBirthday(user.getBirthday());
+                        existingUser.setRegion(user.getRegion());
+                        existingUser.setHeadPortraitPath(user.getHeadPortraitPath());
+                        existingUser.save();
+                    } else {
+                        user.save();
+                    }
+                } else {
                     Log.d("saveUserToLocal", "onResponse: " + response.code());
                 }
             }
+
             @Override
             public void onFailure(Call<HttpData<User>> call, Throwable t) {
                 Log.d("saveUserToLocal", "onFailure: " + t.getMessage());
@@ -389,6 +397,63 @@ public void countFollowing(User user, OnSaveUserListener onSaveUserListener) {
             @Override
             public void onFailure(Call<Long> call, Throwable t) {
                 onSaveUserListener.OnCount(Long.valueOf(1234));
+            }
+        });
+    }
+    public void updateUserInfo(User user, MultipartBody.Part headImage, UpdateUserListener updateUserListener) {
+        LitePal.getDatabase();
+        User userByPhoneNumber = findUserByPhoneNumber(user.getPhoneNumber());
+        long userId = userByPhoneNumber.getId();  // 获取主键 id
+        user.setId(userId);  // 设置主键 id
+        Logger.d(userByPhoneNumber);
+        userByPhoneNumber.setGender(user.getGender());
+        userByPhoneNumber.setSignature(user.getSignature());
+        userByPhoneNumber.setName(user.getName());
+        userByPhoneNumber.setRegion(user.getRegion());
+        userByPhoneNumber.setBirthday(user.getBirthday());
+        userByPhoneNumber.setHeadPortraitPath(user.getHeadPortraitPath());
+
+        ContentValues values = new ContentValues();
+        values.put("gender", user.getGender());
+        values.put("signature", user.getSignature());
+        values.put("name", user.getName());
+        values.put("region", user.getRegion());
+        values.put("birthday", user.getBirthday());
+        values.put("headPortraitPath", user.getHeadPortraitPath());
+        values.put("id", userId);  // 设置更新条件
+
+        int updateCount = LitePal.update(User.class, values, 1);
+        Logger.d("Update count: " + updateCount);
+        Logger.d(user);
+
+
+
+        UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
+        Call<Boolean> call = userServiceApi.updateUser(user.getPhoneNumber(),user.getGender(),user.getSignature(),
+                user.getName(),user.getRegion(),user.getBirthday(),headImage);
+        call.enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                Logger.d("请求成功");
+                if(response.isSuccessful()){
+                    if(response.body()){
+                        updateUserListener.onUpdateUserListener(true);
+                    } else {
+                        updateUserListener.onUpdateUserListener(false);
+                    }
+                } else {
+                    try {
+                        Logger.d("请求失败: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                System.out.println("-------"+t.getMessage());
             }
         });
     }

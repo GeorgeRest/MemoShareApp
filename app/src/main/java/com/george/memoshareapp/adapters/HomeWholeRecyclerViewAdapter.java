@@ -37,6 +37,7 @@ import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.interfaces.getLikeCountListener;
 import com.george.memoshareapp.manager.DisplayManager;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.DateFormat;
 
 import java.util.ArrayList;
@@ -179,7 +180,7 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     private void nameTimeLocationContent(ViewHolder holder, Post post) {
         postUser = post.getUser();
         if (postUser.getHeadPortraitPath() != null) {
-            Glide.with(mContext).load(postUser.getHeadPortraitPath()).into(holder.iv_head_image_1);
+            Glide.with(mContext).load(AppProperties.SERVER_MEDIA_URL+postUser.getHeadPortraitPath()).into(holder.iv_head_image_1);
         } else {
             holder.iv_head_image_1.setImageResource(R.mipmap.app_icon);
         }
