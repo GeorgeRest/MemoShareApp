@@ -36,13 +36,6 @@ public class Relationship extends LitePalSupport implements Serializable {
         this.relationshipStatus = relationshipStatus;
     }
 
-    public Relationship(){
-
-    }
-    public Relationship(String initiatorNumber, String targetNumber) {
-        this.initiatorNumber = initiatorNumber;
-        this.targetNumber = targetNumber;
-    }
 
     public long getId() {
         return id;

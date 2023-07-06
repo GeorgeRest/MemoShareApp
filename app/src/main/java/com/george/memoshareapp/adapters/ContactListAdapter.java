@@ -8,17 +8,22 @@ import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.ContactInfo;
+import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.properties.AppProperties;
+import com.george.memoshareapp.utils.ChinesetoPinyin;
+import com.george.memoshareapp.utils.PinyinFirstLetter;
 
 import java.util.List;
 
 public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
 
     private Context context;
-    private List<ContactInfo> contactList;
+    private List<User> contactList;
 
-    public ContactListAdapter(Context context, List<ContactInfo> contactList) {
+    public ContactListAdapter(Context context, List<User> contactList) {
         this.context = context;
         this.contactList = contactList;
     }
@@ -39,7 +44,7 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
         return position;
     }
 
-    public void setData(List<ContactInfo> data) {
+    public void setData(List<User> data) {
         this.contactList = data;
     }
     @Override
@@ -48,15 +53,16 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
         if(convertView == null){
             convertView = View.inflate(context, R.layout.item_contact_list,null);
             holder = new ViewHolder();
-            holder.iv_photo = convertView.findViewById(R.id.iv_photo);
+            holder.iv_photo = convertView.findViewById(R.id.niv_photo);
             holder.tv_name = convertView.findViewById(R.id.tv_name);
             holder.tv_show_letter = convertView.findViewById(R.id.tv_show_letter);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
-        ContactInfo contact = contactList.get(position);
-        holder.iv_photo.setImageResource(contact.getPicture());
+        User contact = contactList.get(position);
+        // 获得头像
+        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+contact.getHeadPortraitPath()).into(holder.iv_photo);    // 获取头像
         holder.tv_name.setText(contact.getName());
 
         //获得当前position是属于哪个分组
@@ -67,7 +73,7 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
         //如果是，则显示showLetter，否则隐藏
         if (position == positionForSection) {
             holder.tv_show_letter.setVisibility(View.VISIBLE);
-            holder.tv_show_letter.setText(contact.getFirstLetter());
+            holder.tv_show_letter.setText(PinyinFirstLetter.getFirstLetter(ChinesetoPinyin.getPinyin(contact.getName())));
         } else {
             holder.tv_show_letter.setVisibility(View.GONE);
         }
@@ -83,7 +89,7 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
     @Override
     public int getPositionForSection(int sectionIndex) {
         for (int i = 0; i < contactList.size(); i++) {
-            if (contactList.get(i).getFirstLetter().charAt(0) == sectionIndex) {
+            if (PinyinFirstLetter.getFirstLetter(ChinesetoPinyin.getPinyin(contactList.get(i).getName())).charAt(0) == sectionIndex) {
                 return i;
             }
         }
@@ -91,7 +97,11 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
     }
     @Override
     public int getSectionForPosition(int position) {
-        return contactList.get(position).getFirstLetter().charAt(0);
+        if (contactList != null && position < contactList.size()) {
+            return PinyinFirstLetter.getFirstLetter(ChinesetoPinyin.getPinyin(contactList.get(position).getName())).charAt(0);
+        }
+        return -1; // or other value that makes sense in your context
+        //return PinyinFirstLetter.getFirstLetter(ChinesetoPinyin.getPinyin(contactList.get(position).getName())).charAt(0);
     }
 
     private static class ViewHolder{
@@ -100,5 +110,3 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
         TextView tv_show_letter;
     }
 }
-
-

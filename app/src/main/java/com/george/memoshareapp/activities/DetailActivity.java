@@ -160,7 +160,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onSuccess(int likeCount) {
                 System.out.println("likeCount:" + likeCount);
-                detail_tv_like_number.setText(String.valueOf(likesCount));
+                detail_tv_like_number.setText(String.valueOf(likeCount));
             }
 
         });

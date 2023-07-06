@@ -69,46 +69,46 @@ public class FriendFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
-
         state = (StateLayout) view.findViewById(R.id.state);
+        state.setEmptyLayout(R.layout.layout_empty);
+        state.setErrorLayout(R.layout.layout_error);
         state.setLoadingLayout(R.layout.layout_loading);
-        //state.showLoading(null, false, false);
+        state.showLoading(null, false, false);
 
         // 从Arguments中获取Bundle
         Bundle bundle = getArguments();
         if (bundle != null) {
-            // 从Bundle中提取自定义类型的List
-            //userList = (List<User>) bundle.getSerializable("userList");
             choice = bundle.getInt("choice");
             initiator_phoneNumber = bundle.getString("phoneNumber", "0");
             isMe = bundle.getBoolean("isMe");
         }
-        apiService = RetrofitManager.getInstance().create(UserServiceApi.class);
-        getData(initiator_phoneNumber,choice);
+
         rv_friend = (RecyclerView) view.findViewById(R.id.rv_friend);
         refreshLayout = (SmartRefreshLayout) view.findViewById(R.id.refreshLayout);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rv_friend.setLayoutManager(manager);
         adapter = new FriendBaseQuickAdapter(getContext(),choice,initiator_phoneNumber,isMe);
-        adapter.submitList(userList);
-        rv_friend.setAdapter(adapter);
+
+        apiService = RetrofitManager.getInstance().create(UserServiceApi.class);
+        getData(initiator_phoneNumber,choice);
+
 
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 refreshlayout.setNoMoreData(false);
-                userList.clear();  // 清空userList列表
+                //userList.clear();  // 清空userList列表
 //                UserManager userManager = new UserManager(getContext());
                 List<User> newUserList = null;
                 if(position == 0){
-                    newUserList = getFollowedUserList(initiator_phoneNumber);
+                    getFollowedUserList(initiator_phoneNumber);
                 } else if (position == 1) {
-                    newUserList = getFansUserList(initiator_phoneNumber);
+                    getFansUserList(initiator_phoneNumber);
                 } else if (position == 2) {
-                    newUserList = getFriendUserList(initiator_phoneNumber);
+                    getFriendUserList(initiator_phoneNumber);
                 }
-                userList.addAll(newUserList);
-                adapter.notifyDataSetChanged();
+//                userList.addAll(newUserList);
+//                adapter.notifyDataSetChanged();
                 refreshlayout.finishRefresh();
             }
         });
@@ -116,39 +116,43 @@ public class FriendFragment extends Fragment {
 
     private void getData(String phoneNumber,int choice) {
         if(choice == 0){
-            userList = getFollowedUserList(phoneNumber);
+            getFollowedUserList(phoneNumber);
         } else if (choice == 1) {
-            userList = getFansUserList(phoneNumber);
+            getFansUserList(phoneNumber);
         } else if (choice ==2) {
-            userList = getFriendUserList(phoneNumber);
+            getFriendUserList(phoneNumber);
         }
 
     }
 
-    private List<User> getFriendUserList(String phoneNumber) {
+    private void getFriendUserList(String phoneNumber) {
         Call<HttpListData<User>> friendUserCall = apiService.getFriendUser(phoneNumber);
         friendUserCall.enqueue(new Callback<HttpListData<User>>() {
             @Override
             public void onResponse(Call<HttpListData<User>> call, Response<HttpListData<User>> response) {
-                //todo 刷新消失
+                state.showContent(null);
                 userList1 = response.body().getItems();
+                adapter.submitList(userList1);
+                rv_friend.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
             }
             @Override
             public void onFailure(Call<HttpListData<User>> call, Throwable t) {
                 Toast.makeText(getContext(), "获取数据失败", Toast.LENGTH_SHORT).show();
             }
         });
-        return userList1;
     }
 
-    private List<User> getFansUserList(String phoneNumber) {
-
+    private void getFansUserList(String phoneNumber) {
         Call<HttpListData<User>> fansUserCall = apiService.getFansUser(phoneNumber);
         fansUserCall.enqueue(new Callback<HttpListData<User>>() {
             @Override
             public void onResponse(Call<HttpListData<User>> call, Response<HttpListData<User>> response) {
-                //todo 刷新消失
+                state.showContent(null);
                 userList1 = response.body().getItems();
+                adapter.submitList(userList1);
+                rv_friend.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -156,23 +160,24 @@ public class FriendFragment extends Fragment {
                 Toast.makeText(getContext(), "获取数据失败", Toast.LENGTH_SHORT).show();
             }
         });
-        return userList1;
     }
 
-    private List<User> getFollowedUserList(String phoneNumber) {
+    private void getFollowedUserList(String phoneNumber) {
         Call<HttpListData<User>> followedUserCall = apiService.getFollowedUser(phoneNumber);
         followedUserCall.enqueue(new Callback<HttpListData<User>>() {
             @Override
             public void onResponse(Call<HttpListData<User>> call, Response<HttpListData<User>> response) {
-                //todo 刷新消失
                 userList1 = response.body().getItems();
+                state.showContent(null);
+                adapter.submitList(userList1);
+                rv_friend.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
             }
             @Override
             public void onFailure(Call<HttpListData<User>> call, Throwable t) {
                 Toast.makeText(getContext(), "获取数据失败", Toast.LENGTH_SHORT).show();
             }
         });
-        return userList1;
     }
 
 

@@ -108,7 +108,6 @@ public class NewPersonPageFragment extends Fragment  {//外部
         newPersonPageFragment.setArguments(args);
         return newPersonPageFragment;
     }
-
     public NewPersonPageFragment newInstance(User user) {
         NewPersonPageFragment newPersonPageFragment = new NewPersonPageFragment();
         Bundle args = new Bundle();
@@ -122,11 +121,12 @@ public class NewPersonPageFragment extends Fragment  {//外部
         userPhoneNumber = sharedPreferences1.getString("phoneNumber", "");//我
         userManager = new UserManager(getContext());
         userMe=userManager.findUserByPhoneNumber(userPhoneNumber);
+
         initData();
         args = getArguments();
         if (args != null) {
             otheruser = (User) args.getSerializable("user");
-            phoneNumber = otheruser.getPhoneNumber();
+            phoneNumber= otheruser.getPhoneNumber();
             if (otheruser != null) {
                 // 当前设备正在登录的账号
                 if (phoneNumber.equals(userPhoneNumber)) {
@@ -189,17 +189,17 @@ public class NewPersonPageFragment extends Fragment  {//外部
         } else {
             rootView = inflater.inflate(R.layout.fragment_personal_page, container, false);
             initView(rootView);
-            UserServiceApi userServiceApi1 = RetrofitManager.getInstance().create(UserServiceApi.class);
-            userManager.saveUser(phoneNumber, new OnSaveUserListener() {
-                @Override
-                public void OnSaveUserListener(User user) {
-                    userfromIDE = new User();
-                    userfromIDE=user;
-                }
-                @Override
-                public void OnCount(Long count) {
-                }
-            });
+//            UserServiceApi userServiceApi1 = RetrofitManager.getInstance().create(UserServiceApi.class);
+//            userManager.saveUser(phoneNumber, new OnSaveUserListener() {
+//                @Override
+//                public void OnSaveUserListener(User user) {
+//                    userfromIDE = new User();
+//                    userfromIDE=user;
+//                }
+//                @Override
+//                public void OnCount(Long count) {
+//                }
+//            });
             getParams2View(userMe);
             headIcon(userMe);
             userManager.countFollowing(userMe, new OnSaveUserListener() {
@@ -237,13 +237,9 @@ public class NewPersonPageFragment extends Fragment  {//外部
     private void headIcon(User user) {
         head = (NiceImageView) rootView.findViewById(R.id.person_fragment_iv_head);
         String headPortraitPath = user.getHeadPortraitPath();
-        if (headPortraitPath != null) {
-            Glide.with(this)
-                    .load(headPortraitPath)
-                    .thumbnail(Glide.with(getActivity())
-                            .load(R.drawable.photo_loading))
-                    .error(R.drawable.ic_close).into(head);
-        } else {
+        if (headPortraitPath != null ){
+            Glide.with(this).load(headPortraitPath).into(head);
+        }else{
             head.setImageResource(R.mipmap.app_icon);
         }
     }
@@ -285,8 +281,6 @@ public class NewPersonPageFragment extends Fragment  {//外部
             tv_location.setText(region);
         }
     }
-
-
     private void initView(View rootView) {
         userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
         head = (NiceImageView) rootView.findViewById(R.id.person_fragment_iv_head);
@@ -352,7 +346,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
             private Relationship relationship;
             @Override
             public void onClick(View v) {
-                if (phoneNumber != null) {
+                if(phoneNumber!=null){
                     System.out.println(userMe+""+otheruser);
                     if (phoneNumber.equals(userPhoneNumber)) {//newpost和sp的电话号
                         Intent intent = new Intent(getActivity(), EditProfileActivity.class);
@@ -361,21 +355,16 @@ public class NewPersonPageFragment extends Fragment  {//外部
 
                     } else {
                         relationship = new Relationship(userMe.getPhoneNumber(), otheruser.getPhoneNumber());
-
-
                         if(alreadyAttention){
                             alreadyAttention = false;
                             editablesource.setImageResource(R.drawable.attention);
                             relationship = new Relationship(userMe.getPhoneNumber(), otheruser.getPhoneNumber());
-
-
 // 取消关注操作
                             relationshipServiceApi.unfollowUser(relationship).enqueue(new Callback<HttpData<Relationship>>() {
                                 @Override
                                 public void onResponse(Call<HttpData<Relationship>> call, Response<HttpData<Relationship>> response) {
                                     if (response.isSuccessful()) {
                                         // 取消关注成功，更新关注者和粉丝的数量
-
                                         userManager.countFans(otheruser, new OnSaveUserListener() {
                                             @Override
                                             public void OnSaveUserListener(User user) {
@@ -432,7 +421,8 @@ public class NewPersonPageFragment extends Fragment  {//外部
                                 }
                             });
 
-                } userManager.countFans(otheruser, new OnSaveUserListener() {
+                        }
+                        userManager.countFans(otheruser, new OnSaveUserListener() {
                             @Override
                             public void OnSaveUserListener(User user) {
                             }
@@ -457,8 +447,8 @@ public class NewPersonPageFragment extends Fragment  {//外部
                     Intent intent = new Intent(getActivity(), FriendActivity.class);
                     if (args != null) {
                         intent.putExtra("postPhoneNumber", phoneNumber);
-                    } else {
-                        intent.putExtra("postPhoneNumber", userPhoneNumber);
+                    }else {
+                        intent.putExtra("postPhoneNumber",userPhoneNumber);
                     }
                     intent.putExtra("isFriend", 2);
                     intent.putExtra("ismyself", ismyslef);
@@ -474,8 +464,8 @@ public class NewPersonPageFragment extends Fragment  {//外部
                 intent.putExtra("ismyself", ismyslef);
                 if (args != null) {
                     intent.putExtra("postPhoneNumber", phoneNumber);
-                } else {
-                    intent.putExtra("postPhoneNumber", userPhoneNumber);
+                }else {
+                    intent.putExtra("postPhoneNumber",userPhoneNumber);
                 }
                 startActivity(intent);
             }
@@ -488,8 +478,8 @@ public class NewPersonPageFragment extends Fragment  {//外部
                 intent.putExtra("ismyself", ismyslef);
                 if (args != null) {
                     intent.putExtra("postPhoneNumber", phoneNumber);
-                } else {
-                    intent.putExtra("postPhoneNumber", userPhoneNumber);
+                }else {
+                    intent.putExtra("postPhoneNumber",userPhoneNumber);
                 }
                 startActivity(intent);
             }
@@ -500,6 +490,60 @@ public class NewPersonPageFragment extends Fragment  {//外部
         mData.add("点赞");
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (userPhoneNumber.equals(phoneNumber)) {
+            userManager.countFollowing(userMe, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    attentionNumber.setText(count + "");
+                }
+            });
+            userManager.countFans(userMe, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    fensiNumber.setText(count + "");
+                }
+            });
+            userManager.countFriends(userMe, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    friendNumber.setText(count+"");
+                }
+            });
+        }else {
+            userManager.countFollowing(otheruser, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    attentionNumber.setText(count + "");
+                }
+            });
+            userManager.countFans(otheruser, new OnSaveUserListener() {
+                @Override
+                public void OnSaveUserListener(User user) {
+                }
+                @Override
+                public void OnCount(Long count) {
+                    fensiNumber.setText(count + "");
+                }
+            });
+        }
+    }
+
+//
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
