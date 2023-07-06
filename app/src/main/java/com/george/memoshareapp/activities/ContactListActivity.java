@@ -159,7 +159,19 @@ public class ContactListActivity extends AppCompatActivity {
     }
 
 
-    private void sortContacts(List<User> users) {
+//    private void sortContacts(List<User> users){
+//        Collections.sort(users, new Comparator<User>() {
+//            @Override
+//            public int compare(User u1, User u2) {
+//                String u1_name = ChinesetoPinyin.getPinyin(u1.getName());
+//                String u2_name = ChinesetoPinyin.getPinyin(u2.getName());
+//
+//                return u1_name.compareToIgnoreCase(u2_name);
+//            }
+//        });
+//    }
+
+    private void sortContacts(List<User> users){
         Collections.sort(users, new Comparator<User>() {
             @Override
             public int compare(User u1, User u2) {
@@ -312,34 +324,34 @@ public class ContactListActivity extends AppCompatActivity {
 //        rootLayout.getViewTreeObserver().removeOnGlobalLayoutListener(keyboardLayoutListener);
 //    }
 
-    private void sortContacts(List<ContactInfo> contacts) {
-        Collections.sort(contacts, new Comparator<ContactInfo>() {
-            @Override
-            public int compare(ContactInfo c1, ContactInfo c2) {
-                return c1.getPinyin().compareToIgnoreCase(c2.getPinyin());
-            }
-        });
-    }
-    private void initDate(){
-        contacts.add(new ContactInfo("张三",R.mipmap.photo_1));
-        contacts.add(new ContactInfo("李潇",R.mipmap.photo_2));
-        contacts.add(new ContactInfo("唐莉",R.mipmap.photo_3));
-        contacts.add(new ContactInfo("程思迪",R.mipmap.photo_4));
-        contacts.add(new ContactInfo("Audss",R.mipmap.photo_5));
-        contacts.add(new ContactInfo("王五",R.mipmap.photo_6));
-        contacts.add(new ContactInfo("CC",R.mipmap.photo_7));
-        contacts.add(new ContactInfo("张明敏",R.mipmap.photo_8));
-        contacts.add(new ContactInfo("lilies",R.mipmap.photo_9));
-        contacts.add(new ContactInfo("大师",R.mipmap.photo_10));
-        contacts.add(new ContactInfo("历史老师",R.mipmap.photo_2));
-        contacts.add(new ContactInfo("Kato",R.mipmap.photo_7));
-        contacts.add(new ContactInfo("seven",R.mipmap.photo_5));
-        contacts.add(new ContactInfo("吴仪",R.mipmap.photo_1));
-        contacts.add(new ContactInfo("李宏",R.mipmap.photo_3));
-        contacts.add(new ContactInfo("高倩倩",R.mipmap.photo_10));
-        contacts.add(new ContactInfo("福福",R.mipmap.photo_4));
-        contacts.add(new ContactInfo("小庞",R.mipmap.photo_9));
-        contacts.add(new ContactInfo("***",R.mipmap.photo_6));
+//    private void sortContacts1(List<ContactInfo> contacts) {
+//        Collections.sort(contacts, new Comparator<ContactInfo>() {
+//            @Override
+//            public int compare(ContactInfo c1, ContactInfo c2) {
+//                return c1.getPinyin().compareToIgnoreCase(c2.getPinyin());
+//            }
+//        });
+//    }
+//    private void initDate(){
+//        contacts.add(new ContactInfo("张三",R.mipmap.photo_1));
+//        contacts.add(new ContactInfo("李潇",R.mipmap.photo_2));
+//        contacts.add(new ContactInfo("唐莉",R.mipmap.photo_3));
+//        contacts.add(new ContactInfo("程思迪",R.mipmap.photo_4));
+//        contacts.add(new ContactInfo("Audss",R.mipmap.photo_5));
+//        contacts.add(new ContactInfo("王五",R.mipmap.photo_6));
+//        contacts.add(new ContactInfo("CC",R.mipmap.photo_7));
+//        contacts.add(new ContactInfo("张明敏",R.mipmap.photo_8));
+//        contacts.add(new ContactInfo("lilies",R.mipmap.photo_9));
+//        contacts.add(new ContactInfo("大师",R.mipmap.photo_10));
+//        contacts.add(new ContactInfo("历史老师",R.mipmap.photo_2));
+//        contacts.add(new ContactInfo("Kato",R.mipmap.photo_7));
+//        contacts.add(new ContactInfo("seven",R.mipmap.photo_5));
+//        contacts.add(new ContactInfo("吴仪",R.mipmap.photo_1));
+//        contacts.add(new ContactInfo("李宏",R.mipmap.photo_3));
+//        contacts.add(new ContactInfo("高倩倩",R.mipmap.photo_10));
+//        contacts.add(new ContactInfo("福福",R.mipmap.photo_4));
+//        contacts.add(new ContactInfo("小庞",R.mipmap.photo_9));
+//        contacts.add(new ContactInfo("***",R.mipmap.photo_6));
 
     private void getFriendUserList(String phoneNumber) {
         UserServiceApi serviceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
