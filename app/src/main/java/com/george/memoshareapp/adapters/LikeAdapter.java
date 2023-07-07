@@ -81,9 +81,12 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
             float distance = AMapUtils.calculateArea(latLng, currentLatLng);
             System.out.println("--------------distance:" + distance);
             DecimalFormat decimalFormat = new DecimalFormat("0.00");
-            String formattedDistance = decimalFormat.format(distance / 1000.0f);
-            float distanceKm = Float.parseFloat(formattedDistance);
-            viewHolder.tv_distance.setText(distanceKm + "km");
+            if(distance < 1000) {
+                viewHolder.tv_distance.setText(distance + "m");
+            } else {
+                String formattedDistance = decimalFormat.format(distance / 1000.0f);
+                viewHolder.tv_distance.setText(formattedDistance + "km");
+            }
         }
         viewHolder.tv_title.setText(title);
         viewHolder.username.setText(post.getUser().getName());
@@ -97,7 +100,7 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
                 .thumbnail(Glide.with(context).load(photoCachePath))
                 .error(R.drawable.ic_close)
                 .into(viewHolder.iv_photo);
-        Glide.with(context).load(post.getUser().getHeadPortraitPath()).into(viewHolder.circleImageView);
+        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+post.getUser().getHeadPortraitPath()).into(viewHolder.circleImageView);
     }
 
     @NonNull

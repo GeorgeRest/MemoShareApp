@@ -48,7 +48,6 @@ public class ContactListActivity extends AppCompatActivity {
 
     private ListView lv_contact_list;
     private ContactListAdapter contactListAdapter;
-//    private TextInputEditText sv_search;
     private LetterIndexView letterIndexView;
     private TextView tv_show_letter_toast;
     private List<User> userList = new ArrayList<>();
@@ -134,42 +133,9 @@ public class ContactListActivity extends AppCompatActivity {
         ivCsGlass.setVisibility(View.VISIBLE);
         tvCsSearch.setVisibility(View.VISIBLE);
         etSearch.setVisibility(View.GONE);
-
         rootLayout = findViewById(android.R.id.content);
-//        rootLayout.getViewTreeObserver().addOnGlobalLayoutListener( new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                int heightDiff = rootLayout.getRootView().getHeight() - rootLayout.getHeight();
-//                int contentViewTop = getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
-//
-//                // 输入法的高度大于 100，认为输入法打开了
-//                if(heightDiff - contentViewTop > 100) {
-//                    // 输入法打开状态
-//                    rl_text_before_layout.setVisibility(View.GONE);
-//                    etSearch.setVisibility(View.VISIBLE);
-//                } else {
-//                    // 输入法关闭状态
-//                    rl_text_before_layout.setVisibility(View.VISIBLE);
-//                    etSearch.setVisibility(View.GONE);
-//                }
-//            }
-//        });
-
         state = (StateLayout)findViewById(R.id.state);
     }
-
-
-//    private void sortContacts(List<User> users){
-//        Collections.sort(users, new Comparator<User>() {
-//            @Override
-//            public int compare(User u1, User u2) {
-//                String u1_name = ChinesetoPinyin.getPinyin(u1.getName());
-//                String u2_name = ChinesetoPinyin.getPinyin(u2.getName());
-//
-//                return u1_name.compareToIgnoreCase(u2_name);
-//            }
-//        });
-//    }
 
     private void sortContacts(List<User> users){
         Collections.sort(users, new Comparator<User>() {
@@ -182,63 +148,6 @@ public class ContactListActivity extends AppCompatActivity {
             }
         });
     }
-
-
-//    private void setupSearchView() {
-//        etSearch.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                // Intentionally left blank
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                String newText = s.toString();
-//                if(!TextUtils.isEmpty(newText)){
-//                    letterIndexView.setVisibility(View.GONE);
-//                } else{
-//                    letterIndexView.setVisibility(View.VISIBLE);
-//                }
-//                filterContacts(newText);
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-////                rl_text_before_layout.setVisibility(View.VISIBLE);
-//            }
-//        });
-//
-//        searchLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                rl_text_before_layout.setVisibility(View.GONE);
-//                etSearch.setVisibility(View.VISIBLE);
-//                etSearch.requestFocus();
-//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT);
-//            }
-//        });
-//
-////        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-////            @Override
-////            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-////                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-////                    // 在这里处理搜索逻辑
-////                    String newText = v.toString();
-////                    filterContacts(newText);
-////
-////                    // 搜索完成后，隐藏 EditText，显示自定义搜索框
-////                    etSearch.setVisibility(View.GONE);
-////                    searchLayout.setVisibility(View.VISIBLE);
-////                    etSearch.clearFocus();
-////                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-////                    imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
-////                    return true;
-////                }
-////                return false;
-////            }
-////        });
-//    }
 
     private void setupSearchView() {
         etSearch.addTextChangedListener(new TextWatcher() {
@@ -276,21 +185,6 @@ public class ContactListActivity extends AppCompatActivity {
             }
         });
 
-//        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_DONE || (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-//                    rl_text_before_layout.setVisibility(View.VISIBLE);
-//                    etSearch.setVisibility(View.GONE);
-//                    etSearch.setText("");
-//                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                    imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-
 
     }
     private void filterContacts(String query) {
@@ -318,41 +212,6 @@ public class ContactListActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        rootLayout.getViewTreeObserver().removeOnGlobalLayoutListener(keyboardLayoutListener);
-//    }
-
-//    private void sortContacts1(List<ContactInfo> contacts) {
-//        Collections.sort(contacts, new Comparator<ContactInfo>() {
-//            @Override
-//            public int compare(ContactInfo c1, ContactInfo c2) {
-//                return c1.getPinyin().compareToIgnoreCase(c2.getPinyin());
-//            }
-//        });
-//    }
-//    private void initDate(){
-//        contacts.add(new ContactInfo("张三",R.mipmap.photo_1));
-//        contacts.add(new ContactInfo("李潇",R.mipmap.photo_2));
-//        contacts.add(new ContactInfo("唐莉",R.mipmap.photo_3));
-//        contacts.add(new ContactInfo("程思迪",R.mipmap.photo_4));
-//        contacts.add(new ContactInfo("Audss",R.mipmap.photo_5));
-//        contacts.add(new ContactInfo("王五",R.mipmap.photo_6));
-//        contacts.add(new ContactInfo("CC",R.mipmap.photo_7));
-//        contacts.add(new ContactInfo("张明敏",R.mipmap.photo_8));
-//        contacts.add(new ContactInfo("lilies",R.mipmap.photo_9));
-//        contacts.add(new ContactInfo("大师",R.mipmap.photo_10));
-//        contacts.add(new ContactInfo("历史老师",R.mipmap.photo_2));
-//        contacts.add(new ContactInfo("Kato",R.mipmap.photo_7));
-//        contacts.add(new ContactInfo("seven",R.mipmap.photo_5));
-//        contacts.add(new ContactInfo("吴仪",R.mipmap.photo_1));
-//        contacts.add(new ContactInfo("李宏",R.mipmap.photo_3));
-//        contacts.add(new ContactInfo("高倩倩",R.mipmap.photo_10));
-//        contacts.add(new ContactInfo("福福",R.mipmap.photo_4));
-//        contacts.add(new ContactInfo("小庞",R.mipmap.photo_9));
-//        contacts.add(new ContactInfo("***",R.mipmap.photo_6));
-
     private void getFriendUserList(String phoneNumber) {
         UserServiceApi serviceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
         Call<HttpListData<User>> friendUserCall = serviceApi.getFriendUser(phoneNumber);
@@ -377,6 +236,5 @@ public class ContactListActivity extends AppCompatActivity {
     public void onClick(View view) {
         finish();
     }
-
 
 }

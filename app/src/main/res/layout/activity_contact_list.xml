@@ -38,23 +38,6 @@
                 android:textSize="20dp" />
 
         </RelativeLayout>
-
-<!--    <com.google.android.material.textfield.TextInputLayout-->
-<!--        android:id="@+id/search_layout"-->
-<!--        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="Search">-->
-
-        <android.widget.SearchView
-            android:id="@+id/sv_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-<!--        <com.google.android.material.textfield.TextInputEditText-->
-<!--            android:id="@+id/sv_search"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content" />-->
-<!--    </com.google.android.material.textfield.TextInputLayout>-->
     <FrameLayout
         android:id="@+id/contact_search_layout"
         android:layout_width="match_parent"
@@ -89,8 +72,7 @@
                 android:gravity="center"
                 android:background="#57525755"
                 android:visibility="gone"/>
-
-
+            
         </RelativeLayout>
 
     </LinearLayout>
