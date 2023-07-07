@@ -32,18 +32,18 @@
         android:layout_below="@+id/tv_friend_name"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="2dp"/>
+    
 
-    <Button
-        android:id="@+id/btn_follow"
+    <ImageView
+        android:id="@+id/iv_follow_state"
         android:layout_width="63dp"
-        android:layout_height="25dp"
-        android:textSize="14dp"
-        android:textColor="#80202025"
+        android:layout_height="26dp"
+        android:src="@mipmap/guangzhu"
         android:layout_alignParentRight="true"
-        android:background="@drawable/rounded_btn_follow"
         android:layout_centerVertical="true"
-        android:layout_marginRight="5dp"/>
-        <!--text具体由代码控制，设置选中背景-->
+        android:layout_marginRight="5dp"
+        />
+
 
 
 </RelativeLayout>
