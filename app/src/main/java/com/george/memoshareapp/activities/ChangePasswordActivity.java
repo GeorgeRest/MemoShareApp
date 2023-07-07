@@ -35,10 +35,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
     private ImageButton bt_ok;
     private TextView tv_getCode;
     private TextView code;
-    private String codePhone;
     private final long COUNTDOWN_TIME=60000;
-    private boolean isClicked = false;
-    private String codeReal;
     private EventHandler eventHandler;
     private String phone;
     private String pw;
@@ -86,10 +83,6 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                                         }
                                     }
 
-                                    //                                    @Override
-//                                    public void onFailure(Call<HttpData<User>> call, Throwable t) {
-//                                        Toasty.error(ChangePasswordActivity.this, "网络错误，请重试", Toast.LENGTH_SHORT,true).show();
-//                                    }
                                     @Override
                                     public void onFailure(Call<HttpData<User>> call, Throwable t) {
                                         loadingDialog.endAnim(); // 请求成功，结束加载框的动画

@@ -97,8 +97,6 @@ public class FriendFragment extends Fragment {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 refreshlayout.setNoMoreData(false);
-                //userList.clear();  // 清空userList列表
-//                UserManager userManager = new UserManager(getContext());
                 List<User> newUserList = null;
                 if(position == 0){
                     getFollowedUserList(initiator_phoneNumber);
@@ -107,8 +105,6 @@ public class FriendFragment extends Fragment {
                 } else if (position == 2) {
                     getFriendUserList(initiator_phoneNumber);
                 }
-//                userList.addAll(newUserList);
-//                adapter.notifyDataSetChanged();
                 refreshlayout.finishRefresh();
             }
         });

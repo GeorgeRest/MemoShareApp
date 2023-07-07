@@ -18,20 +18,8 @@ import android.widget.TextView;
 import com.george.memoshareapp.Fragment.FriendFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.FriendListPagerAdapter;
-import com.george.memoshareapp.beans.User;
-import com.george.memoshareapp.http.api.UserServiceApi;
-import com.george.memoshareapp.http.response.HttpData;
-import com.george.memoshareapp.http.response.HttpListData;
-import com.george.memoshareapp.manager.RetrofitManager;
-import com.george.memoshareapp.manager.UserManager;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class FriendActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -55,8 +43,6 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
     private FriendFragment fragment3;
     private FragmentManager manager;
     private FragmentTransaction transaction;
-    private UserManager userManager;
-    private UserServiceApi apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,43 +101,17 @@ public class FriendActivity extends AppCompatActivity implements View.OnClickLis
         choice = intent.getIntExtra("isFriend", 0);
         isMe = intent.getBooleanExtra("ismyself", false);
 
-//        userManager = new UserManager(this);
-//        List<User> followedUserList = userManager.getFollowedUser(phoneNumber);
-//        List<User> fansUserList = userManager.getFansUser(phoneNumber);
-//        List<User> friendUserList = userManager.getFriendUser(phoneNumber);
-
-//        apiService = RetrofitManager.getInstance().create(UserServiceApi.class);
-//        Call<HttpListData<User>> followedUserCall = apiService.getFollowedUser(phoneNumber);
-//        Call<HttpListData<User>> fansUserCall = apiService.getFansUser(phoneNumber);
-//        Call<HttpListData<User>> friendUserCall = apiService.getFriendUser(phoneNumber);
-//
-//        followedUserCall.enqueue(new Callback<HttpListData<User>>() {
-//            @Override
-//            public void onResponse(Call<HttpListData<User>> call, Response<HttpListData<User>> response) {
-//                HttpListData<User> data = response.body();
-//                List<User> items = data.getItems();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<HttpListData<User>> call, Throwable t) {
-//
-//            }
-//        });
-//
         Bundle bundle1 = new Bundle();
-        //bundle1.putSerializable("userList", (Serializable) followedUserList);
         bundle1.putInt("choice",0);
         bundle1.putString("phoneNumber",phoneNumber);
         bundle1.putBoolean("isMe",isMe);
 
         Bundle bundle2 = new Bundle();
-        //bundle2.putSerializable("userList", (Serializable) fansUserList);
         bundle2.putInt("choice",1);
         bundle2.putString("phoneNumber",phoneNumber);
         bundle2.putBoolean("isMe",isMe);
 
         Bundle bundle3 = new Bundle();
-        //bundle3.putSerializable("userList", (Serializable) friendUserList);
         bundle3.putInt("choice",2);
         bundle3.putString("phoneNumber",phoneNumber);
         bundle3.putBoolean("isMe",isMe);
