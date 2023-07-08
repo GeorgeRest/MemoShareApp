@@ -2,6 +2,7 @@ package com.george.memoshareapp.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import com.bigkoo.pickerview.view.TimePickerView;
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.EditProfileActivity;
+import com.george.memoshareapp.activities.RemindActivity;
 import com.george.memoshareapp.utils.GlideEngine;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
@@ -73,6 +75,7 @@ public class CalendarTripFragment extends Fragment implements
     private TimePickerView pvCustomTime;
     private View view;
     private ImageView add_blue;
+    private ImageView add_red;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
@@ -92,7 +95,9 @@ public class CalendarTripFragment extends Fragment implements
         mRelativeTool = view.findViewById(R.id.rl_tool);
         mCalendarView = view.findViewById(R.id.calendarView);
         add_blue = view.findViewById(R.id.add_blue);
+        add_red = view.findViewById(R.id.add_red);
         add_blue.setOnClickListener(this);
+        add_red.setOnClickListener(this);
 
         mTextMonthDay.setOnClickListener(new View.OnClickListener() {
             private TimePickerView pvTime;
@@ -272,8 +277,8 @@ public class CalendarTripFragment extends Fragment implements
 
                 break;
             case R.id.add_red:
-
-
+                Intent intent = new Intent(getContext(), RemindActivity.class);
+                startActivity(intent);
                 break;
 
         }
