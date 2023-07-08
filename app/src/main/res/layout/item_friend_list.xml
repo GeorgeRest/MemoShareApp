@@ -32,13 +32,12 @@
         android:layout_below="@+id/tv_friend_name"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="2dp"/>
-    
+
 
     <ImageView
         android:id="@+id/iv_follow_state"
         android:layout_width="63dp"
         android:layout_height="26dp"
-        android:src="@mipmap/guangzhu"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
