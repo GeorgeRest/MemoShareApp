@@ -24,6 +24,7 @@ import java.util.List;
 
 public class AudioPublishPlayerFragment extends Fragment {
     public static List<String> AUDIO_FILE_PATHS = new ArrayList<>();
+    public static String AUDIO_FILE_PATH = "";
     private MediaPlayer mediaPlayer = null;
     private Handler handler;
     private Runnable runnable;
@@ -127,7 +128,7 @@ public class AudioPublishPlayerFragment extends Fragment {
                 mediaPlayer.stop();
                 mediaPlayer.release();
                 mediaPlayer = null;
-                iv_record_pause.setImageResource(R.mipmap.publish_recorder_pause);
+                iv_record_pause.setImageResource(R.mipmap.publish_recorder_pause1);
             }
             initMediaPlayer();
         } else {
@@ -142,7 +143,7 @@ public class AudioPublishPlayerFragment extends Fragment {
                 mediaPlayer.stop();
                 mediaPlayer.release();
                 mediaPlayer = null;
-                iv_record_pause.setImageResource(R.mipmap.publish_recorder_pause);
+                iv_record_pause.setImageResource(R.mipmap.publish_recorder_pause1);
             }
             initMediaPlayer();
         } else {
@@ -208,10 +209,10 @@ public class AudioPublishPlayerFragment extends Fragment {
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
-                iv_record_pause.setImageResource(R.mipmap.publish_recorder_play);
+                iv_record_pause.setImageResource(R.mipmap.publish_recorder_play1);
             } else {
                 mediaPlayer.start();
-                iv_record_pause.setImageResource(R.mipmap.publish_recorder_pause);
+                iv_record_pause.setImageResource(R.mipmap.publish_recorder_pause1);
                 updateSeekBar();
             }
         }

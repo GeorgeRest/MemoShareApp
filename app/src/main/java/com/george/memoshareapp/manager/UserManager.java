@@ -88,6 +88,10 @@ public class UserManager {
                 .findFirst(User.class);
         if (user == null) {
             Toasty.info(context, "请先注册", Toast.LENGTH_SHORT, true).show();
+//            user = new User();
+//            user.setPhoneNumber(phone);
+//            user.setPassword(pw);
+//            user.save();
             return false;
         }
         if (!user.getPassword().equals(pw)) {

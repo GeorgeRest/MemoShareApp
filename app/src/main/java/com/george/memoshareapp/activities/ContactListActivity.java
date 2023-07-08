@@ -4,12 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -99,14 +101,15 @@ public class ContactListActivity extends AppCompatActivity {
         letterIndexView = (LetterIndexView) findViewById(R.id.letter_index_view);
         tv_show_letter_toast = (TextView) findViewById(R.id.tv_show_letter_toast);
 
+
         searchLayout = findViewById(R.id.contact_search_layout);
         View customSearchView = LayoutInflater.from(this).inflate(R.layout.custom_search_view, searchLayout, false);
         ivCsGlass = customSearchView.findViewById(R.id.iv_cs_glass);
         tvCsSearch = customSearchView.findViewById(R.id.tv_cs_search);
         etSearch = customSearchView.findViewById(R.id.et_search);
         rl_text_before_layout = customSearchView.findViewById(R.id.rl_text_before_layout);
-
         searchLayout.addView(customSearchView);
+
 
         // 先初始化搜索框的可见性
         ivCsGlass.setVisibility(View.VISIBLE);
@@ -114,85 +117,29 @@ public class ContactListActivity extends AppCompatActivity {
         etSearch.setVisibility(View.GONE);
 
         rootLayout = findViewById(android.R.id.content);
-//        rootLayout.getViewTreeObserver().addOnGlobalLayoutListener( new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                int heightDiff = rootLayout.getRootView().getHeight() - rootLayout.getHeight();
-//                int contentViewTop = getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
-//
-//                // 输入法的高度大于 100，认为输入法打开了
-//                if(heightDiff - contentViewTop > 100) {
-//                    // 输入法打开状态
-//                    rl_text_before_layout.setVisibility(View.GONE);
-//                    etSearch.setVisibility(View.VISIBLE);
-//                } else {
-//                    // 输入法关闭状态
-//                    rl_text_before_layout.setVisibility(View.VISIBLE);
-//                    etSearch.setVisibility(View.GONE);
-//                }
-//            }
-//        });
+        rootLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                rootLayout.getWindowVisibleDisplayFrame(r);
+                int screenHeight = rootLayout.getRootView().getHeight();
+
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight < screenHeight * 0.15) {
+                    ivCsGlass.setVisibility(View.VISIBLE);
+                    tvCsSearch.setVisibility(View.VISIBLE);
+                    etSearch.setVisibility(View.GONE);
+                }else {
+                    ivCsGlass.setVisibility(View.GONE);
+                    tvCsSearch.setVisibility(View.GONE);
+                    etSearch.setVisibility(View.VISIBLE);
+                    etSearch.requestFocus();
+                }
+            }
+        });
 
     }
-
-
-
-
-//    private void setupSearchView() {
-//        etSearch.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                // Intentionally left blank
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                String newText = s.toString();
-//                if(!TextUtils.isEmpty(newText)){
-//                    letterIndexView.setVisibility(View.GONE);
-//                } else{
-//                    letterIndexView.setVisibility(View.VISIBLE);
-//                }
-//                filterContacts(newText);
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-////                rl_text_before_layout.setVisibility(View.VISIBLE);
-//            }
-//        });
-//
-//        searchLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                rl_text_before_layout.setVisibility(View.GONE);
-//                etSearch.setVisibility(View.VISIBLE);
-//                etSearch.requestFocus();
-//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT);
-//            }
-//        });
-//
-////        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-////            @Override
-////            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-////                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-////                    // 在这里处理搜索逻辑
-////                    String newText = v.toString();
-////                    filterContacts(newText);
-////
-////                    // 搜索完成后，隐藏 EditText，显示自定义搜索框
-////                    etSearch.setVisibility(View.GONE);
-////                    searchLayout.setVisibility(View.VISIBLE);
-////                    etSearch.clearFocus();
-////                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-////                    imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
-////                    return true;
-////                }
-////                return false;
-////            }
-////        });
-//    }
 
     private void setupSearchView() {
         etSearch.addTextChangedListener(new TextWatcher() {
@@ -230,22 +177,6 @@ public class ContactListActivity extends AppCompatActivity {
             }
         });
 
-//        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_DONE || (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-//                    rl_text_before_layout.setVisibility(View.VISIBLE);
-//                    etSearch.setVisibility(View.GONE);
-//                    etSearch.setText("");
-//                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                    imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-
-
     }
     private void filterContacts(String query) {
         List<ContactInfo> filteredList = new ArrayList<>();
@@ -272,11 +203,6 @@ public class ContactListActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        rootLayout.getViewTreeObserver().removeOnGlobalLayoutListener(keyboardLayoutListener);
-//    }
 
     private void sortContacts(List<ContactInfo> contacts) {
         Collections.sort(contacts, new Comparator<ContactInfo>() {
