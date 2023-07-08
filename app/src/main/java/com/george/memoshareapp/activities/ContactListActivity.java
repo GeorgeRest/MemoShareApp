@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -120,20 +122,27 @@ public class ContactListActivity extends AppCompatActivity {
         letterIndexView = (LetterIndexView) findViewById(R.id.letter_index_view);
         tv_show_letter_toast = (TextView) findViewById(R.id.tv_show_letter_toast);
 
+
         searchLayout = findViewById(R.id.contact_search_layout);
         View customSearchView = LayoutInflater.from(this).inflate(R.layout.custom_search_view, searchLayout, false);
         ivCsGlass = customSearchView.findViewById(R.id.iv_cs_glass);
         tvCsSearch = customSearchView.findViewById(R.id.tv_cs_search);
         etSearch = customSearchView.findViewById(R.id.et_search);
         rl_text_before_layout = customSearchView.findViewById(R.id.rl_text_before_layout);
-
         searchLayout.addView(customSearchView);
+
 
         // 先初始化搜索框的可见性
         ivCsGlass.setVisibility(View.VISIBLE);
         tvCsSearch.setVisibility(View.VISIBLE);
         etSearch.setVisibility(View.GONE);
         rootLayout = findViewById(android.R.id.content);
+        rootLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                rootLayout.getWindowVisibleDisplayFrame(r);
+                int screenHeight = rootLayout.getRootView().getHeight();
         state = (StateLayout)findViewById(R.id.state);
     }
 
@@ -147,6 +156,22 @@ public class ContactListActivity extends AppCompatActivity {
                 return u1_name.compareToIgnoreCase(u2_name);
             }
         });
+    }
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight < screenHeight * 0.15) {
+                    ivCsGlass.setVisibility(View.VISIBLE);
+                    tvCsSearch.setVisibility(View.VISIBLE);
+                    etSearch.setVisibility(View.GONE);
+                }else {
+                    ivCsGlass.setVisibility(View.GONE);
+                    tvCsSearch.setVisibility(View.GONE);
+                    etSearch.setVisibility(View.VISIBLE);
+                    etSearch.requestFocus();
+                }
+            }
+        });
+
     }
 
     private void setupSearchView() {
@@ -212,6 +237,9 @@ public class ContactListActivity extends AppCompatActivity {
         }
     }
 
+
+    private void sortContacts(List<ContactInfo> contacts) {
+        Collections.sort(contacts, new Comparator<ContactInfo>() {
     private void getFriendUserList(String phoneNumber) {
         UserServiceApi serviceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
         Call<HttpListData<User>> friendUserCall = serviceApi.getFriendUser(phoneNumber);
