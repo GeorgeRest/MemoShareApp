@@ -7,33 +7,39 @@
     app:empty_layout="@layout/layout_empty"
     app:error_layout="@layout/layout_error"
     app:loading_layout="@layout/layout_loading">
-<com.scwang.smart.refresh.layout.SmartRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/publish_refreshLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/publish_refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <com.scwang.smart.refresh.header.MaterialHeader
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <FrameLayout
                 android:id="@+id/publish_record_fragment_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:translationZ="10dp"/>
+                android:translationZ="10dp" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/test_publish_recycler"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
+
         <com.scwang.smart.refresh.footer.ClassicsFooter
             android:id="@+id/publish_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true" />
-</com.scwang.smart.refresh.layout.SmartRefreshLayout>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </com.drake.statelayout.StateLayout>

@@ -191,7 +191,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void putParameter2View() {
 
 
-        postUser = post.getUser();
+        postUser = post.getUser().get(0);
         userName.setText(postUser.getName());
         if(postUser.getHeadPortraitPath()!=null){
             Glide.with(this).load(AppProperties.SERVER_MEDIA_URL+postUser.getHeadPortraitPath())

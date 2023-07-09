@@ -70,7 +70,6 @@ public class UserPublishRecyclerAdapter extends RecyclerView.Adapter<UserPublish
         holder.rl_user_publish_time.setBackground(null);
         holder.cv_user_publish_image_count.setVisibility(View.GONE);
         holder.cv_user_publish_recorder_count.setVisibility(View.GONE);
-        Glide.with(context).clear(holder.iv_user_publish_image);
 
 
         if (position > 0) {
@@ -124,6 +123,7 @@ public class UserPublishRecyclerAdapter extends RecyclerView.Adapter<UserPublish
         if (post.getImageParameters().size() == 1) {
             holder.cv_user_publish_image_count.setVisibility(View.GONE);
         } else {
+            holder.cv_user_publish_image_count.setVisibility(View.VISIBLE);
             holder.tv_user_publish_image_count.setVisibility(View.VISIBLE);
             holder.tv_user_publish_image_count.setText(String.valueOf(post.getImageParameters().size()));
         }

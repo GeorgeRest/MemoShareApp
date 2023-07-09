@@ -646,7 +646,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         data.putExtra(EXTRA_EDITED_GENDER, tv_edit_gender.getText().toString());
         data.putExtra(EXTRA_EDITED_REGION, tv_edit_region.getText().toString());
         data.putExtra(EXTRA_EDITED_HEAD_PORTRAIT, sp.getString("headPortraitPath", AppProperties.DEFAULT_AVATAR));
-
         setResult(RESULT_OK, data);
         finish();
     }
