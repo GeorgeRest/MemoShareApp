@@ -22,6 +22,7 @@ public class EditNameActivity extends AppCompatActivity implements View.OnClickL
     private EditText et_edit_name;
     private TextView tv_complete;
     private TextView tv_number;
+    private String newStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +54,15 @@ public class EditNameActivity extends AppCompatActivity implements View.OnClickL
                 // 文本改变的时候的监听
                 if (s.length() > 20) {  // 判断字符数量是否超过20
                     // 如果超过20，则截取前20个字符，替换原输入
-                    String newStr = s.subSequence(0, 20).toString();
+                    newStr = s.subSequence(0, 20).toString();
                     et_edit_name.setText(newStr);
                     // 重置光标位置到文本末尾
                     et_edit_name.setSelection(newStr.length());
+                    tv_number.setText(newStr.length() + "/20");
+                }else {
+                    tv_number.setText(s.length() + "/20");
                 }
                 // 更新TextView的显示
-                tv_number.setText(s.length() + "/20");
 
                 if(s.toString().trim().length()==0){
                     tv_complete.setEnabled(false);
@@ -92,7 +95,10 @@ public class EditNameActivity extends AppCompatActivity implements View.OnClickL
                 Intent intent = new Intent();
                 intent.putExtra("result", name);
                 setResult(1, intent);
-                //todo 保存数据
+                User user = (User) getIntent().getSerializableExtra("user");
+                LitePal.getDatabase();
+                user.setName(name);
+                user.update(user.getId());
                 finish();
                 break;
         }

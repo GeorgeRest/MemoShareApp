@@ -1,52 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.drake.statelayout.StateLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/state"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ContactListActivity"
-    android:orientation="vertical">
+    app:loading_layout="@layout/layout_loading">
 
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="30dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:onClick="onClick"
-            android:src="@mipmap/back_register_contact" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:maxWidth="200dp"
-            android:text="联系人"
-            android:textColor="#202025"
-            android:textSize="20dp" />
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:onClick="onClick"
+                android:src="@mipmap/back_register_contact" />
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:maxWidth="200dp"
+                android:text="联系人"
+                android:textColor="#202025"
+                android:textSize="20dp" />
 
-<!--    <com.google.android.material.textfield.TextInputLayout-->
-<!--        android:id="@+id/search_layout"-->
-<!--        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="Search">-->
-
-<!--        <com.google.android.material.textfield.TextInputEditText-->
-<!--            android:id="@+id/sv_search"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content" />-->
-<!--    </com.google.android.material.textfield.TextInputLayout>-->
+        </RelativeLayout>
     <FrameLayout
         android:id="@+id/contact_search_layout"
         android:layout_width="match_parent"
@@ -56,33 +47,33 @@
     </FrameLayout>
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ListView
-            android:id="@+id/lv_contact_list"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
 
-        <com.george.memoshareapp.view.LetterIndexView
-            android:id="@+id/letter_index_view"
-            android:layout_width="36dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"/>
+            <ListView
+                android:id="@+id/lv_contact_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/tv_show_letter_toast"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:text="A"
-            android:textSize="27sp"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:background="#57525755"
-            android:visibility="gone"/>
+            <com.george.memoshareapp.view.LetterIndexView
+                android:id="@+id/letter_index_view"
+                android:layout_width="36dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"/>
 
+            <TextView
+                android:id="@+id/tv_show_letter_toast"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:text="A"
+                android:textSize="27sp"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:background="#57525755"
+                android:visibility="gone"/>
 
-    </RelativeLayout>
+        </RelativeLayout>
 
-</LinearLayout>
+    </LinearLayout>
+</com.drake.statelayout.StateLayout>

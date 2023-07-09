@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<dimen name="grid_expected_size">1dp</dimen>
-<dimen name="image_size_large">280dp</dimen>
-    <dimen name="image_size_large1">300dp</dimen>
-<dimen name="image_size_detail">300dp</dimen>
-<dimen name="image_size_medium">210dp</dimen>
-<dimen name="image_size_small">140dp</dimen>
-    <dimen name="image_size_small1">100dp</dimen>
+    <dimen name="grid_expected_size">1dp</dimen>
+
+    <dimen name="image_size_large">280dp</dimen>
+    <dimen name="image_size_small">140dp</dimen>
+
+    <dimen name="image_size_detail">360dp</dimen>
+    <dimen name="image_size_medium">210dp</dimen>
+
+    <dimen name="detail_image_max">360dp</dimen>
+    <dimen name="detail_image_mid">180dp</dimen>
+    <dimen name="detail_image_min">115dp</dimen>
 <dimen name="spacing">3dp</dimen>
 <dimen name="release_twoLines_margin">235dp</dimen>
 <dimen name="release_oneLine_margin">120dp</dimen>

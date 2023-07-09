@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.RemindActivity"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:src="@mipmap/back_register_contact" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:maxWidth="200dp"
+            android:text="设置提醒"
+            android:textColor="#D31B1515"
+            android:textSize="17dp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="#ececec"
+        android:layout_marginBottom="5dp"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="13dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择提醒对象"
+            android:textSize="17dp"
+            android:textColor="#D31B1515"/>
+
+        <TextView
+            android:id="@+id/tv_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="#D31B1515"
+            android:layout_toLeftOf="@+id/iv_skip1"
+            android:layout_marginRight="5dp"/>
+
+        <ImageView
+            android:id="@+id/iv_skip1"
+            android:layout_width="17dp"
+            android:layout_height="19dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/skip" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ececec"
+        android:layout_marginTop="5dp"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="13dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="提醒事件"
+            android:textSize="17dp"
+            android:textColor="#D31B1515"/>
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="#D31B1515"
+            android:layout_toLeftOf="@+id/iv_skip2"
+            android:layout_marginRight="5dp"/>
+
+        <ImageView
+            android:id="@+id/iv_skip2"
+            android:layout_width="17dp"
+            android:layout_height="19dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/skip" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ececec"
+        android:layout_marginTop="5dp"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="13dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="提醒时间"
+            android:textSize="17dp"
+            android:textColor="#D31B1515"/>
+
+        <TextView
+            android:id="@+id/tv_time_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="#D31B1515"
+            android:layout_toLeftOf="@+id/tv_time_hour"
+            android:layout_marginRight="5dp"/>
+        <TextView
+            android:id="@+id/tv_time_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="#D31B1515"
+            android:layout_toLeftOf="@+id/iv_skip3"
+            android:layout_marginRight="5dp"/>
+
+        <ImageView
+            android:id="@+id/iv_skip3"
+            android:layout_width="17dp"
+            android:layout_height="19dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/skip" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ececec"
+        android:layout_marginTop="5dp"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_interval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="13dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="提醒间隔"
+            android:textSize="17dp"
+            android:textColor="#D31B1515"/>
+
+        <TextView
+            android:id="@+id/tv_interval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="#D31B1515"
+            android:layout_toLeftOf="@+id/iv_skip4"
+            android:layout_marginRight="5dp"/>
+
+        <ImageView
+            android:id="@+id/iv_skip4"
+            android:layout_width="17dp"
+            android:layout_height="19dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/skip" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ececec"
+        android:layout_marginTop="5dp"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="13dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="备注"
+            android:textSize="17dp"
+            android:textColor="#D31B1515"/>
+
+        <TextView
+            android:id="@+id/tv_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="#D31B1515"
+            android:layout_toLeftOf="@+id/iv_skip5"
+            android:layout_marginRight="5dp"/>
+
+        <ImageView
+            android:id="@+id/iv_skip5"
+            android:layout_width="17dp"
+            android:layout_height="19dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/skip" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ececec"
+        android:layout_marginTop="5dp"/>
+
+</LinearLayout>

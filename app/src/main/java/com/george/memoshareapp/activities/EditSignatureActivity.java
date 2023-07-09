@@ -71,7 +71,10 @@ public class EditSignatureActivity extends AppCompatActivity implements View.OnC
                 Intent intent = new Intent();
                 intent.putExtra("result", sign);
                 setResult(2, intent);
-                //todo 保存数据
+                User user = (User) getIntent().getSerializableExtra("user");
+                LitePal.getDatabase();
+                user.setSignature(sign);
+                user.update(user.getId());
                 finish();
                 break;
         }

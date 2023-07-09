@@ -47,6 +47,7 @@ import com.george.memoshareapp.adapters.ImageAdapter;
 import com.george.memoshareapp.adapters.RecordAdapter;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
+import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.interfaces.PhotoChangedListener;
 import com.george.memoshareapp.interfaces.RecordingDataListener;
 import com.george.memoshareapp.manager.PostManager;
@@ -129,6 +130,8 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
     private LinearLayout ll_move_add;
     private RecyclerView rl_record;
     private RecyclerView rv_image;
+    private User contact_user;
+    private List<User> contactUserList = new ArrayList<>();
 
 
     @Override
@@ -460,7 +463,7 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                 content = release_edit.getText().toString();
                 content = removeAtNames(content);
                 recordingsList.removeAll(Collections.singleton(null));
-                postManager.getDBParameter(getImageUriList(), phoneNumber, content, recordingsList, addedNames, location, longitude, latitude, PUBLIC_PERMISSION, getSystemTime(), memoryTime());
+                postManager.getDBParameter(getImageUriList(), phoneNumber, content, recordingsList, contactUserList, location, longitude, latitude, PUBLIC_PERMISSION, getSystemTime(), memoryTime());
                 break;
             case R.id.release_back:
                 finish();
@@ -595,7 +598,10 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
                 break;
             case RESULT_CODE_CONTACT:
-                contactName = data.getStringExtra("name");
+                //todo
+                contact_user = (User) data.getSerializableExtra("contact_user");
+                contactUserList.add(contact_user);
+                contactName= contact_user.getName();
                 addAtName(contactName);
                 break;
             case RESULT_OK:

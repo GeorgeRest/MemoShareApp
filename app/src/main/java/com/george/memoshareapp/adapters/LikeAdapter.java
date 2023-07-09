@@ -23,6 +23,7 @@ import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.view.ProportionalImageView;
+import com.orhanobut.logger.Logger;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -47,14 +48,11 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
         super(new DiffUtil.ItemCallback<Post>() {
             @Override
             public boolean areItemsTheSame(@NonNull Post oldItem, @NonNull Post newItem) {
-                // You need to implement an appropriate comparison here.
-                // This assumes that Post has an getId method that provides a unique identifier.
                 return oldItem.getId() == (newItem.getId());
             }
 
             @Override
             public boolean areContentsTheSame(@NonNull Post oldItem, @NonNull Post newItem) {
-                // You need to implement the equals method in Post class.
                 return oldItem.equals(newItem);
             }
         });
@@ -76,17 +74,20 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
         String title = post.getPublishedText();
         double latitude = post.getLatitude();
         double longitude = post.getLongitude();
-        if (latitude != 0.0 || longitude != 0.0) {
+        if (latitude != 0 || longitude != 0) {
             LatLng latLng = new LatLng(latitude, longitude);
-            float distance = AMapUtils.calculateArea(latLng, currentLatLng);
-            System.out.println("--------------distance:" + distance);
-            DecimalFormat decimalFormat = new DecimalFormat("0.00");
-            String formattedDistance = decimalFormat.format(distance / 1000.0f);
-            float distanceKm = Float.parseFloat(formattedDistance);
-            viewHolder.tv_distance.setText(distanceKm + "km");
+            float distance = AMapUtils.calculateLineDistance(latLng, currentLatLng);
+            Logger.d("distance", distance);
+            DecimalFormat decimalFormat = new DecimalFormat("0.0");
+            if (distance < 1000) {
+                viewHolder.tv_distance.setText(decimalFormat.format(distance) + "m");
+            } else {
+                String formattedDistance = decimalFormat.format(distance / 1000.0f);
+                viewHolder.tv_distance.setText(formattedDistance + "km");
+            }
         }
         viewHolder.tv_title.setText(title);
-        viewHolder.username.setText(post.getUser().getName());
+        viewHolder.username.setText(post.getUser().get(0).getName());
         double ratio = (double) height / width;
         if (ratio > maxRatio) {
             ratio = maxRatio;
@@ -97,7 +98,7 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
                 .thumbnail(Glide.with(context).load(photoCachePath))
                 .error(R.drawable.ic_close)
                 .into(viewHolder.iv_photo);
-        Glide.with(context).load(post.getUser().getHeadPortraitPath()).into(viewHolder.circleImageView);
+        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+post.getUser().get(0).getHeadPortraitPath()).into(viewHolder.circleImageView);
     }
 
     @NonNull

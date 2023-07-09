@@ -29,6 +29,8 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
     Context context;
     private List<Uri> photoPathList; //用户发布后的uri
     private int outerAdapterPosition;
+    private String phoneNumber;
+
     public HomePhotoRecyclerViewAdapter(List<ImageParameters> data, Post post, Context context, int outerAdapterPosition) {
         this.mData = data;
         this.post = post;
@@ -42,6 +44,7 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
         this.context = context;
         this.photoPathList = photoPathList;
         this.outerAdapterPosition=outerAdapterPosition;
+        phoneNumber = context.getSharedPreferences("User", Context.MODE_PRIVATE).getString("phoneNumber", "");
     }
 
     @NonNull
@@ -71,7 +74,7 @@ public class HomePhotoRecyclerViewAdapter extends RecyclerView.Adapter<HomePhoto
         }
         holder.imageView.setLayoutParams(layoutParams);
         String url = mData.get(position).getPhotoCachePath();
-        if (outerAdapterPosition==0&&photoPathList != null) {
+        if (outerAdapterPosition==0&&photoPathList != null&&post.getPhoneNumber().equals(phoneNumber)) {
             if (position >= photoPathList.size()) {
                 return;
             }

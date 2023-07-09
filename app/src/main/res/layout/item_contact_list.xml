@@ -21,11 +21,12 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
-        <ImageView
-            android:id="@+id/iv_photo"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@color/common_google_signin_btn_text_light_disabled"/>
+        <com.george.memoshareapp.view.NiceImageView
+            android:id="@+id/niv_photo"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@mipmap/head_portrait"
+            android:layout_marginLeft="5dp"/>
 
         <TextView
             android:id="@+id/tv_name"
@@ -34,7 +35,7 @@
             android:layout_marginLeft="15dp"
             android:textSize="16sp"
             android:text="name"
-            android:layout_toRightOf="@+id/iv_photo"
+            android:layout_toRightOf="@+id/niv_photo"
             android:layout_centerVertical="true"/>
     </RelativeLayout>
 

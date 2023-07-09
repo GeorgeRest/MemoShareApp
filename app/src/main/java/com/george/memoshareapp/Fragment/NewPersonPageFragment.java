@@ -58,7 +58,6 @@ public class NewPersonPageFragment extends Fragment  {//外部
     private PersonPageAdapter personpageadapter;
     private AppBarLayout appBarLayout;
     private TextView toolbarTitle;
-    private Button quit;
     private SharedPreferences sharedPreferences1;
     private View rootView;
     private NiceImageView head;
@@ -98,6 +97,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
     private Relationship relationship;
     private UserManager userManager;
     private boolean alreadyAttention=false;
+    private ImageView iv_menu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -261,7 +261,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
         String signature = u1.getSignature();
         String region = u1.getRegion();
 
-            person_fragment_tv_name.setText(name);
+        person_fragment_tv_name.setText(name);
 
         if (gender == null) {
             iv_sex.setImageResource(R.mipmap.sex_open);
@@ -300,6 +300,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
         mingyan = (TextView) rootView.findViewById(R.id.person_fragment_tv_mingyan);
         attentionNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_guanzhu_number);
         fensiNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_fensi_number);
+        iv_menu = (ImageView) rootView.findViewById(R.id.person_fragment_iv_menu);
         if (otherPhoneNumber == null) {
             friend = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend);
             friendNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend_number);
@@ -340,15 +341,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
                 tab.setBackground(null);
             }
         }
-        quit = (Button) rootView.findViewById(R.id.quit_login);
-        quit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sharedPreferences1.edit().putBoolean("isLogin", false).commit();
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-                getActivity().finish();
-            }
-        });
+
         editablesource.setOnClickListener(new View.OnClickListener() {
             private Relationship relationship;
             @Override
@@ -430,7 +423,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
                                 }
                             });
 
-                } userManager.countFans(otheruser, new OnSaveUserListener() {
+                        } userManager.countFans(otheruser, new OnSaveUserListener() {
                             @Override
                             public void OnSaveUserListener(User user) {
                             }
@@ -492,10 +485,20 @@ public class NewPersonPageFragment extends Fragment  {//外部
                 startActivity(intent);
             }
         });
+        iv_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferences1.edit().putBoolean("isLogin",false).commit();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
+            }
+        });
+
     }
     private void initData() {
         mData.add("发布");
         mData.add("点赞");
+
     }
 
 
@@ -575,7 +578,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
                 if (otheruser != null) {
                     otheruser.setGender(editedGender);
                     otheruser.setBirthday(editedBirthday);
-                            }
+                }
                 if (userMe != null) {
                     userMe.setGender(editedGender);
                     userMe.setBirthday(editedBirthday);

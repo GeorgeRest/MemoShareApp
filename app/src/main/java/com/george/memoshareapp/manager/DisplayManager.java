@@ -161,6 +161,52 @@ public class DisplayManager {
                         String key = "post_position_" + post.getId();
                         int index = postList.indexOf(post);
                         if (itemCount > 0) {
+                            index += itemCount;
+                        }
+                        kv.encode(key, index);
+                        List<ImageParameters> imageParametersList = post.getImageParameters();
+                        List<Recordings> recordingsList = post.getRecordings();
+                        for (ImageParameters imageParameters : imageParametersList) {
+                            String photoCachePath = imageParameters.getPhotoCachePath();
+                            String path = AppProperties.SERVER_MEDIA_URL + photoCachePath;
+                            imageParameters.setPhotoCachePath(path);
+                        }
+                        for (Recordings Recordings : recordingsList) {
+                            String recordCachePath = Recordings.getRecordCachePath();
+                            String path = AppProperties.SERVER_RECORD_URL + recordCachePath;
+                            Recordings.setRecordCachePath(path);
+                        }
+
+
+                    }
+                    postListData.setItems(postList);
+                    listener.onSuccess(postListData,"推荐");
+                } else {
+                    listener.onError("Request failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpListData<Post>> call, Throwable t) {
+                listener.onError(t.getMessage());
+            }
+        });
+    }
+    public void getPostListByPageFriend(int pageNum, int pageSize, int itemCount, String phoneNumber, PostDataListener<List<Post>> listener) {
+        kv = MMKV.defaultMMKV();
+        PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
+        Call<HttpListData<Post>> call = postServiceApi.getFriendPosts(pageNum, pageSize, phoneNumber);
+        call.enqueue(new Callback<HttpListData<Post>>() {
+            @Override
+            public void onResponse(Call<HttpListData<Post>> call, Response<HttpListData<Post>> response) {
+                if (response.isSuccessful()) {
+                    HttpListData<Post> postListData = response.body();
+                    Log.d("lastPage", String.valueOf(postListData.isLastPage()));
+                    List<Post> postList = postListData.getItems();
+                    for (Post post : postList) {
+                        String key = "post_position_" + post.getId();
+                        int index = postList.indexOf(post);
+                        if (itemCount > 0) {
                             index += itemCount; // 计算正确的索引位置
                         }
                         kv.encode(key, index);
