@@ -77,7 +77,8 @@
         </activity>
         <activity
             android:name=".activities.FriendActivity"
-            android:exported="true"android:windowSoftInputMode="adjustPan">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -95,7 +96,7 @@
         <service android:name="com.amap.api.location.APSService" /> <!-- 设置高德Key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="b73d5e0ad525991966aed0de9c8cecc5" />
+            android:value="2aa9e9c64bf84bb690985a9f72e9c3b1" />
         <meta-data
             android:name="ScopedStorage"
             android:value="true" />

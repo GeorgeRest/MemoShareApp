@@ -61,7 +61,6 @@ public class GroupChatRecordAdapter extends RecyclerView.Adapter<GroupChatRecord
         });
         // 设置其他视图的信息，例如录音的时长，文件大小等
         holder.record_time.setText((recordings.getRecordTime())+"'");
-
     }
 
 

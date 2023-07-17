@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +39,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.orhanobut.logger.Logger;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -92,6 +92,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
     private User otheruser;
     private Bundle args;
     private RelationshipServiceApi relationshipServiceApi;
+    private SmartRefreshLayout publishSmartRefreshLayout;
     private UserServiceApi userServiceApi;
     private User userfromIDE;
     private Relationship relationship;
@@ -111,7 +112,6 @@ public class NewPersonPageFragment extends Fragment  {//外部
         newPersonPageFragment.setArguments(args);
         return newPersonPageFragment;
     }
-
     public NewPersonPageFragment newInstance(User user) {
         NewPersonPageFragment newPersonPageFragment = new NewPersonPageFragment();
         Bundle args = new Bundle();
@@ -125,7 +125,6 @@ public class NewPersonPageFragment extends Fragment  {//外部
         userPhoneNumber = sharedPreferences1.getString("phoneNumber", "");//我
         userManager = new UserManager(getContext());
         userMe=userManager.findUserByPhoneNumber(userPhoneNumber);
-
         initData();
         args = getArguments();
         if (args != null) {
@@ -192,20 +191,13 @@ public class NewPersonPageFragment extends Fragment  {//外部
             headIcon(otheruser);
         } else {
             rootView = inflater.inflate(R.layout.fragment_personal_page, container, false);
+
             initView(rootView);
-            UserServiceApi userServiceApi1 = RetrofitManager.getInstance().create(UserServiceApi.class);
-            userManager.saveUser(otherPhoneNumber, new OnSaveUserListener() {
-                @Override
-                public void OnSaveUserListener(User user) {
-                    userfromIDE = new User();
-                    userfromIDE=user;
-                }
-                @Override
-                public void OnCount(Long count) {
-                }
-            });
             getParams2View(userMe);
             headIcon(userMe);
+
+
+
             userManager.countFollowing(userMe, new OnSaveUserListener() {
                 @Override
                 public void OnSaveUserListener(User user) {
@@ -260,9 +252,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
         String gender = u1.getGender();
         String signature = u1.getSignature();
         String region = u1.getRegion();
-
-        person_fragment_tv_name.setText(name);
-
+            person_fragment_tv_name.setText(name);
         if (gender == null) {
             iv_sex.setImageResource(R.mipmap.sex_open);
         } else {
@@ -286,9 +276,8 @@ public class NewPersonPageFragment extends Fragment  {//外部
             tv_location.setText(region);
         }
     }
-
-
     private void initView(View rootView) {
+
         userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
         head = (NiceImageView) rootView.findViewById(R.id.person_fragment_iv_head);
         person_fragment_tv_guanzhu = (TextView) rootView.findViewById(R.id.person_fragment_tv_guanzhu);
@@ -300,6 +289,8 @@ public class NewPersonPageFragment extends Fragment  {//外部
         mingyan = (TextView) rootView.findViewById(R.id.person_fragment_tv_mingyan);
         attentionNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_guanzhu_number);
         fensiNumber = (TextView) rootView.findViewById(R.id.person_fragment_tv_fensi_number);
+
+
         iv_menu = (ImageView) rootView.findViewById(R.id.person_fragment_iv_menu);
         if (otherPhoneNumber == null) {
             friend = (TextView) rootView.findViewById(R.id.person_fragment_tv_friend);
@@ -354,7 +345,6 @@ public class NewPersonPageFragment extends Fragment  {//外部
                         Logger.d( userMe.toString());
                         intent.putExtra("user", userMe);
                         startActivityForResult(intent, EDITABLEACTIVITY_BACK);
-
                     } else {
                         relationship = new Relationship(userMe.getPhoneNumber(), otheruser.getPhoneNumber());
                         if(alreadyAttention){
@@ -370,43 +360,34 @@ public class NewPersonPageFragment extends Fragment  {//外部
                                         userManager.countFans(otheruser, new OnSaveUserListener() {
                                             @Override
                                             public void OnSaveUserListener(User user) {
-
                                             }
-
                                             @Override
                                             public void OnCount(Long count) {
                                                 fensiNumber.setText(count+"");
                                             }
                                         });
                                     } else {
-                                        // 处理错误情况
+                                       Toasty.error(getContext(),"response 失败");
                                     }
                                 }
-
                                 @Override
                                 public void onFailure(Call<HttpData<Relationship>> call, Throwable t) {
                                     // 处理网络错误
                                 }
                             });
-
-
                         }else {
                             alreadyAttention = true;
                             editablesource.setImageResource(R.drawable.already_attention);
-
                             // 关注操作
                             relationshipServiceApi.followUser(relationship).enqueue(new Callback<HttpData<Relationship>>() {
                                 @Override
                                 public void onResponse(Call<HttpData<Relationship>> call, Response<HttpData<Relationship>> response) {
                                     if (response.isSuccessful()) {
                                         // 关注成功，更新关注者和粉丝的数量
-
                                         userManager.countFans(otheruser, new OnSaveUserListener() {
                                             @Override
                                             public void OnSaveUserListener(User user) {
-
                                             }
-
                                             @Override
                                             public void OnCount(Long count) {
                                                 fensiNumber.setText(count+"");
@@ -416,14 +397,12 @@ public class NewPersonPageFragment extends Fragment  {//外部
                                         // 处理错误情况
                                     }
                                 }
-
                                 @Override
                                 public void onFailure(Call<HttpData<Relationship>> call, Throwable t) {
                                     // 处理网络错误
                                 }
                             });
-
-                        } userManager.countFans(otheruser, new OnSaveUserListener() {
+                } userManager.countFans(otheruser, new OnSaveUserListener() {
                             @Override
                             public void OnSaveUserListener(User user) {
                             }
@@ -500,12 +479,10 @@ public class NewPersonPageFragment extends Fragment  {//外部
         mData.add("点赞");
 
     }
-
-
-    @Override
+   @Override
     public void onDestroy() {
         super.onDestroy();
-        if (userPhoneNumber.equals(phoneNumber)) {
+        if (userPhoneNumber.equals(otherPhoneNumber)) {
             userManager.countFollowing(userMe, new OnSaveUserListener() {
                 @Override
                 public void OnSaveUserListener(User user) {
@@ -554,8 +531,6 @@ public class NewPersonPageFragment extends Fragment  {//外部
             });
         }
     }
-
-//
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -597,10 +572,5 @@ public class NewPersonPageFragment extends Fragment  {//外部
                 }
             }
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 }
