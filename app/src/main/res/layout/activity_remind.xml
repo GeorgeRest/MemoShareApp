@@ -29,7 +29,7 @@
             android:maxWidth="200dp"
             android:text="设置提醒"
             android:textColor="#D31B1515"
-            android:textSize="20dp" />
+            android:textSize="17dp" />
     </RelativeLayout>
 
     <View
@@ -49,14 +49,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="选择提醒对象"
-            android:textSize="20dp"
+            android:textSize="17dp"
             android:textColor="#D31B1515"/>
 
         <TextView
             android:id="@+id/tv_contact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textColor="#D31B1515"
             android:layout_toLeftOf="@+id/iv_skip1"
             android:layout_marginRight="5dp"/>
@@ -64,7 +64,7 @@
         <ImageView
             android:id="@+id/iv_skip1"
             android:layout_width="17dp"
-            android:layout_height="20dp"
+            android:layout_height="19dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/skip" />
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="提醒事件"
-            android:textSize="20dp"
+            android:textSize="17dp"
             android:textColor="#D31B1515"/>
 
         <TextView
@@ -102,7 +102,7 @@
         <ImageView
             android:id="@+id/iv_skip2"
             android:layout_width="17dp"
-            android:layout_height="20dp"
+            android:layout_height="19dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/skip" />
@@ -124,7 +124,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="提醒时间"
-            android:textSize="20dp"
+            android:textSize="17dp"
             android:textColor="#D31B1515"/>
 
         <TextView
@@ -147,7 +147,7 @@
         <ImageView
             android:id="@+id/iv_skip3"
             android:layout_width="17dp"
-            android:layout_height="20dp"
+            android:layout_height="19dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/skip" />
@@ -169,7 +169,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="提醒间隔"
-            android:textSize="20dp"
+            android:textSize="17dp"
             android:textColor="#D31B1515"/>
 
         <TextView
@@ -184,7 +184,7 @@
         <ImageView
             android:id="@+id/iv_skip4"
             android:layout_width="17dp"
-            android:layout_height="20dp"
+            android:layout_height="19dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/skip" />
@@ -206,7 +206,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="备注"
-            android:textSize="20dp"
+            android:textSize="17dp"
             android:textColor="#D31B1515"/>
 
         <TextView
@@ -221,7 +221,7 @@
         <ImageView
             android:id="@+id/iv_skip5"
             android:layout_width="17dp"
-            android:layout_height="20dp"
+            android:layout_height="19dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/skip" />
