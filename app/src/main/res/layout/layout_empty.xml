@@ -9,6 +9,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No data available" />
+        android:text="好友还未发布" />
 
 </LinearLayout>

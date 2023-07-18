@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +14,7 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -98,6 +100,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private ScrollView scrollView;
 
     private DisplayManager manager;
+    private View rootLayout;
     private User postUser;
 
 
@@ -149,6 +152,28 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         });
 
+        rootLayout = findViewById(R.id.ll_activity_detail);
+        rootLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                rootLayout.getWindowVisibleDisplayFrame(r);
+                int screenHeight = rootLayout.getRootView().getHeight();
+
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight < screenHeight * 0.15) {
+                    bottomLinear.setVisibility(View.VISIBLE);
+                    commentLinear.setVisibility(View.GONE);
+                }else {
+                    bottomLinear.setVisibility(View.GONE);
+                    commentLinear.setVisibility(View.VISIBLE);
+                    commentEdit.requestFocus();
+                }
+            }
+        });
+
+
     }
 
     private void getLikeCount() {
@@ -166,7 +191,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void putParameter2View() {
 
 
-        postUser = post.getUser();
+        postUser = post.getUser().get(0);
         userName.setText(postUser.getName());
         if(postUser.getHeadPortraitPath()!=null){
             Glide.with(this).load(AppProperties.SERVER_MEDIA_URL+postUser.getHeadPortraitPath())
@@ -400,6 +425,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 } else {
                     //隐藏输入法
                     imm.hideSoftInputFromWindow(commentEdit.getWindowToken(), 0);
+
+
                 }
             }
         }, 100);

@@ -23,7 +23,6 @@ import com.george.memoshareapp.R;
 public class MessageFragment extends Fragment {
 
     private View view;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

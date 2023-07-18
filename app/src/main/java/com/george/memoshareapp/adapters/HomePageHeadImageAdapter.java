@@ -35,7 +35,7 @@ public class HomePageHeadImageAdapter extends RecyclerView.Adapter<HomePageHeadI
 
         nameToPictureMap = new HashMap<>();
         for (ContactInfo info : contactPicture) {
-            nameToPictureMap.put(info.getName(), info.getPicture());
+//            nameToPictureMap.put(info.getName(), info.getPicture());
         }
     }
 
@@ -47,53 +47,7 @@ public class HomePageHeadImageAdapter extends RecyclerView.Adapter<HomePageHeadI
         return new HomePageHeadImageAdapter.ViewHolder(view);
     }
 
-//@Override
-//public void onBindViewHolder(@NonNull HomePageHeadImageAdapter.ViewHolder holder, int position) {
-//    // 首先，将所有ImageView和TextView重置为默认状态
-//    holder.ivHeadImage1.setVisibility(View.GONE);
-//    holder.ivHeadImage2.setVisibility(View.GONE);
-//    holder.ivHeadImage3.setVisibility(View.GONE);
-//    holder.tvMoreCount.setVisibility(View.GONE);
-//    holder.tvMoreCount.setText("");
-//
-//    // 计算这一项中应该显示的第一个头像的索引
-//    int start = position * 3;
-//
-//    // 遍历这一项中应该显示的所有头像
-//    for (int i = 0; i < 3; i++) {
-//        // 计算当前头像的索引
-//        int index = start + i;
-//
-//        // 如果当前头像的索引小于总的头像数量，那么我们就可以显示这个头像
-//        if (index < contactName.size()) {
-//            String name = contactName.get(index);
-//            Integer picture = nameToPictureMap.get(name);
-//            if (picture != null) {
-//                switch (i) {
-//                    case 0:
-//                        holder.ivHeadImage1.setVisibility(View.VISIBLE);
-//                        holder.ivHeadImage1.setImageResource(picture);
-//                        break;
-//                    case 1:
-//                        holder.ivHeadImage2.setVisibility(View.VISIBLE);
-//                        holder.ivHeadImage2.setImageResource(picture);
-//                        break;
-//                    case 2:
-//                        // 在最后一个位置上，我们要特别处理超过三个头像的情况
-//                        if (index < contactName.size() - 1) {
-//                            holder.ivHeadImage3.setVisibility(View.VISIBLE);
-//                            holder.tvMoreCount.setVisibility(View.VISIBLE);
-//                            holder.tvMoreCount.setText("+" + (contactName.size() - index - 1));
-//                        } else {
-//                            holder.ivHeadImage3.setVisibility(View.VISIBLE);
-//                            holder.ivHeadImage3.setImageResource(picture);
-//                        }
-//                        break;
-//                }
-//            }
-//        }
-//    }
-//}
+
 @Override
 public void onBindViewHolder(@NonNull HomePageHeadImageAdapter.ViewHolder holder, int position) {
     holder.ivHeadImage1.setVisibility(View.GONE);

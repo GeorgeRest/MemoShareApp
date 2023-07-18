@@ -183,15 +183,14 @@
                     android:textStyle="bold" />
 
 
-
                 <ImageView
                     android:id="@+id/person_fragment_iv_menu"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginRight="20dp"
                     android:layout_width="30dp"
                     android:layout_height="20dp"
-                    android:src="@mipmap/menu"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="18dp"
+                    android:src="@mipmap/menu"/>
             </RelativeLayout>
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
@@ -216,12 +215,5 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
     </androidx.viewpager2.widget.ViewPager2>
 
-    <Button
-        android:id="@+id/quit_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="退出登录"
-        android:onClick="quitLogin"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

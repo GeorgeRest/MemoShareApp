@@ -72,7 +72,7 @@
                 android:gravity="center"
                 android:background="#57525755"
                 android:visibility="gone"/>
-            
+
         </RelativeLayout>
 
     </LinearLayout>

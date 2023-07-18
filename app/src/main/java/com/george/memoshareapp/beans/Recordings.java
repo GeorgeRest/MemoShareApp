@@ -108,15 +108,5 @@ public class Recordings extends LitePalSupport implements Serializable {
         this.mediaPlayer = mediaPlayer;
     }
 
-    @Override
-    public String toString() {
-        return "Recordings{" +
-                "post=" + post +
-                ", recordCachePath='" + recordCachePath + '\'' +
-                ", recordTime=" + recordTime +
-                ", countDownTimer=" + countDownTimer +
-                ", initialRecordTime=" + initialRecordTime +
-                '}';
-    }
 }
 

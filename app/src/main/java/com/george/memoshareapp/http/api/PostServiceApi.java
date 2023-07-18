@@ -39,6 +39,8 @@ public interface PostServiceApi {
 
     @GET("api/getPostsByPhoneNumber")
     Call<HttpListData<Post>> getPostsByPhoneNumber(@Query("pageNum") int pageNum, @Query("pageSize") int pageSize, @Query("phoneNumber") String phoneNumber);
+    @GET("api/getFriendPosts")
+    Call<HttpListData<Post>> getFriendPosts(@Query("pageNum") int pageNum, @Query("pageSize") int pageSize, @Query("phoneNumber") String phoneNumber);
 
     @GET("api/getLikePostsByPhoneNumber")
     Call<HttpListData<Post>> getLikePostsByPhoneNumber(@Query("pageNum") int pageNum, @Query("pageSize") int pageSize, @Query("phoneNumber") String phoneNumber);

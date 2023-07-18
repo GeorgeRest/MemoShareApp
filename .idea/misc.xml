@@ -97,6 +97,7 @@
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_register.xml" value="0.41370869033047736" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_release.xml" value="0.25956284153005466" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_release_1.xml" value="0.5" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_remind.xml" value="0.28873873873873873" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_retrieve_password.xml" value="0.33" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_test.xml" value="0.2791666666666667" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/activity_test_record.xml" value="0.3338541666666667" />
@@ -117,7 +118,7 @@
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_media_playback_publish.xml" value="0.28873873873873873" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_message.xml" value="0.328125" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_message_page.xml" value="0.26927083333333335" />
-        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_personal_page.xml" value="0.32916666666666666" />
+        <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_personal_page.xml" value="0.25" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_personal_page_other.xml" value="0.2838795394154119" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_pw_login.xml" value="0.17864583333333334" />
         <entry key="..\:/IDEA/apps/AndroidStudio/AndroidStudio_Projects/MemoShareApp/app/src/main/res/layout/fragment_record_audio.xml" value="0.26927083333333335" />

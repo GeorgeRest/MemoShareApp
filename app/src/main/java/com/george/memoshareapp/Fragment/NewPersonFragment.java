@@ -114,8 +114,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                 test_publish_recycler = (RecyclerView) rootView.findViewById(R.id.test_publish_recycler);
                 displayManager.getPostsByPhoneNumber(pageNum, pageSize, phoneNumber, this, "发布");
                 publishSmartRefreshLayout = rootView.findViewById(R.id.publish_refreshLayout);
-                publishSmartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
-                publishSmartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
                 publishSmartRefreshLayout.setEnableAutoLoadMore(true);
                 publishSmartRefreshLayout.setFooterHeight(80);
 
@@ -154,8 +152,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                 LikeRecycleView = (RecyclerView) rootView.findViewById(R.id.recycleViewStagged);
                 likeSmartRefreshLayout = (SmartRefreshLayout) rootView.findViewById(R.id.refreshLayout);
                 likeSmartRefreshLayout.setEnableAutoLoadMore(true);
-                likeSmartRefreshLayout.autoRefresh();//自动刷新
-                likeSmartRefreshLayout.autoLoadMore();//自动加载
 
                 layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                 layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
@@ -172,24 +168,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                 likeAdapter = new LikeAdapter(getActivity(), currentLatLng);
                 LikeRecycleView.setAdapter(likeAdapter); // 将适配器设置到RecyclerView
 
-//                LikeRecycleView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//
-//                    @Override
-//
-//                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//
-//                        super.onScrollStateChanged(recyclerView, newState);
-//
-//                        layoutManager.invalidateSpanAssignments();//重新布局
-//
-//                    }
-//                    @Override
-//                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//
-//                        super.onScrolled(recyclerView, dx, dy);
-//                    }
-//
-//                });
                 likeSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
                     @Override
                     public void onRefresh(RefreshLayout refreshlayout) {
@@ -233,18 +211,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
 
     }
 
-
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onPostUpdateEvent(PostLikeUpdateEvent event) {
-//        if (recyclerViewAdapter == null) {
-//            return;
-//        }
-//        System.out.println("--------------------" + event.getPost().getId() + "-------------------");
-//        likePost = new DisplayManager(getActivity()).getLikePost(0);
-//        recyclerViewAdapter.submitList(likePost);
-//        layoutManager.invalidateSpanAssignments();
-//
-//    }
 
     public void onDestroy() {
         super.onDestroy();
