@@ -1,5 +1,6 @@
 package com.george.memoshareapp.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,25 +8,27 @@ import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.beans.ContactInfo;
+import com.george.memoshareapp.beans.User;
 
 import java.util.List;
 
 public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.ViewHolder> {
+    private Context context;
 
-    private List<ContactInfo> contacts;
+    private List<User> contacts;
 
-    public HorizontalAdapter(List<ContactInfo> contacts) {
+    public HorizontalAdapter(List<User> contacts) {
         this.contacts = contacts;
     }
 
-    public void addContact(ContactInfo contact) {
+    public void addContact(User contact) {
         contacts.add(contact);
         notifyDataSetChanged();
 
     }
-    public void removeContact(ContactInfo contact) {
+    public void removeContact(User contact) {
         contacts.remove(contact);
         notifyDataSetChanged();
 
@@ -44,14 +47,18 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
         return contacts.size();
     }
 
-    public List<ContactInfo> getContacts() {
+    public List<User> getContacts() {
         return contacts;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ContactInfo contact = contacts.get(position);
-        holder.ivPhoto.setImageResource(contact.getPicture()); // 这里是假设你的图片是一个资源ID
+        User contact = contacts.get(position);
+        Glide.with(context)
+                .load(contact.getHeadPortraitPath()) // 图片的 URL
+                .into(holder.ivPhoto); // 要加载到的 ImageView
+
+
     }
 
 

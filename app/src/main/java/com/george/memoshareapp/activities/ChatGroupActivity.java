@@ -9,14 +9,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.beans.ContactInfo;
+import com.george.memoshareapp.beans.User;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class ChatGroupActivity extends AppCompatActivity {
 
-    private List<ContactInfo> contactList;
+    private List<User> contactList;
     private String photoChatName;
     private ImageView more;
     private TextView tv_title;
@@ -27,7 +27,7 @@ public class ChatGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_group);
         Intent intent = getIntent();
-        contactList = (List<ContactInfo>) intent.getSerializableExtra("contact_list");
+        contactList = (List<User>) intent.getSerializableExtra("contact_list");
         photoChatName = intent.getStringExtra("photo_chat_name");
         initView();
     }

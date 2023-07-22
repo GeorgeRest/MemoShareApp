@@ -290,7 +290,6 @@ package com.george.memoshareapp.activities;
 //
 //    }
 //}
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -304,6 +303,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -311,10 +312,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.drake.statelayout.StateLayout;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ContactListAdapter;
-import com.george.memoshareapp.beans.ContactInfo;
+import com.george.memoshareapp.adapters.HorizontalAdapter;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpListData;
@@ -323,8 +328,8 @@ import com.george.memoshareapp.utils.ChinesetoPinyin;
 import com.george.memoshareapp.view.LetterIndexView;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -334,7 +339,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ContactListActivity extends AppCompatActivity {
+public class ContactListActivity extends AppCompatActivity implements ContactListAdapter.OnContactsSelectedListener{
 
     private ListView lv_contact_list;
     private ContactListAdapter contactListAdapter;
@@ -349,6 +354,11 @@ public class ContactListActivity extends AppCompatActivity {
     private TextInputEditText etSearch;
     private RelativeLayout rl_text_before_layout;
     private View rootLayout;
+    private HorizontalAdapter horizontalAdapter;
+    private RecyclerView horizontal_recycler_view;
+    private ImageView photo_chat_name_dialog_iv;
+    private Button btn_submit;
+    private Button btn_add_contacts_complete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -362,8 +372,12 @@ public class ContactListActivity extends AppCompatActivity {
         state.setLoadingLayout(R.layout.layout_loading);
         state.showLoading(null, false, false);
 
-        contactListAdapter = new ContactListAdapter(this, new ArrayList<>());
+        horizontalAdapter = new HorizontalAdapter(userList);
+
+        contactListAdapter = new ContactListAdapter(this, userList, horizontalAdapter, horizontal_recycler_view);
+        contactListAdapter.setOnContactsSelectedListener(this);
         lv_contact_list.setAdapter(contactListAdapter);
+        horizontal_recycler_view.setAdapter(horizontalAdapter);
 
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
         String phoneNumber = sp.getString("phoneNumber", "");
@@ -372,10 +386,7 @@ public class ContactListActivity extends AppCompatActivity {
         lv_contact_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent();
-                intent.putExtra("contact_user",userList.get(position));
-                setResult(ReleaseActivity.RESULT_CODE_CONTACT,intent);
-                finish();   //关闭页面,回传结果
+
             }
         });
 
@@ -406,10 +417,13 @@ public class ContactListActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        photo_chat_name_dialog_iv = (ImageView) findViewById(R.id.photo_chat_name_dialog_iv);
+        btn_submit = (Button) findViewById(R.id.btn_submit);
+        btn_add_contacts_complete = (Button) findViewById(R.id.btn_add_contacts_complete);
         lv_contact_list = (ListView) findViewById(R.id.lv_contact_list);
         letterIndexView = (LetterIndexView) findViewById(R.id.letter_index_view);
         tv_show_letter_toast = (TextView) findViewById(R.id.tv_show_letter_toast);
-
+        horizontal_recycler_view = (RecyclerView) findViewById(R.id.horizontal_recycler_view);
         searchLayout = findViewById(R.id.contact_search_layout);
         View customSearchView = LayoutInflater.from(this).inflate(R.layout.custom_search_view, searchLayout, false);
         ivCsGlass = customSearchView.findViewById(R.id.iv_cs_glass);
@@ -425,7 +439,83 @@ public class ContactListActivity extends AppCompatActivity {
         etSearch.setVisibility(View.GONE);
         rootLayout = findViewById(android.R.id.content);
         state = (StateLayout)findViewById(R.id.state);
+
+        btn_add_contacts_complete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //弹出一个输入相册名字的框
+                onCompletionClicked(v);
+
+            }
+        });
     }
+
+        public void onCompletionClicked(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        builder.setView(dialogView);
+
+        EditText etCustomInput = dialogView.findViewById(R.id.et_custom_input);
+        Button btnSubmit = dialogView.findViewById(R.id.btn_submit);
+
+        AlertDialog dialog = builder.create();
+
+        etCustomInput.addTextChangedListener(new TextWatcher() {
+
+            private ImageView photo_chat_name_dialog_iv;
+
+            @Override
+             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+             @Override
+             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                 photo_chat_name_dialog_iv = dialogView.findViewById(R.id.photo_chat_name_dialog_iv);
+                 if (etCustomInput.getText().toString().length()>0){
+                     photo_chat_name_dialog_iv.setImageResource(R.mipmap.photo_chat_name_ok);
+                     btnSubmit.setOnClickListener(new View.OnClickListener() {
+                         @Override
+                         public void onClick(View v) {
+
+                             String input = etCustomInput.getText().toString();
+
+
+                             List<User> userList = new ArrayList<User>();
+                             userList = horizontalAdapter.getContacts();
+                             Intent intent = new Intent(getBaseContext(), ChatGroupActivity.class);
+                             intent.putExtra("contact_list", (Serializable) userList);
+                             intent.putExtra("photo_chat_name", input);
+
+                             startActivity(intent);
+
+                             finish();
+
+                             dialog.dismiss();  // Close the dialog
+                         }
+                     });
+
+                 }
+                 if (etCustomInput.getText().toString().length()==0){
+                     photo_chat_name_dialog_iv.setImageResource(R.mipmap.photo_chat_name);
+                 }
+                 if (etCustomInput.getText().toString().length()>12){
+                     Toasty.warning(ContactListActivity.this,"名称不能超过11个字");
+                 }
+             }
+             @Override
+             public void afterTextChanged(Editable s) {}
+        });
+
+
+        dialog.show();
+    }
+
+
+
+
+
+
+
+
 
     private void sortContacts(List<User> users){
         Collections.sort(users, new Comparator<User>() {
@@ -527,4 +617,10 @@ public class ContactListActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onContactsSelected(boolean[] selectedItems) {
+
+    }
 }
+
+
