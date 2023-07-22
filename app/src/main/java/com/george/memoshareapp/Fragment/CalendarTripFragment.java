@@ -1,11 +1,8 @@
 package com.george.memoshareapp.Fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,26 +21,15 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
-import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.activities.EditProfileActivity;
+import com.george.memoshareapp.activities.ContactListActivity;
 import com.george.memoshareapp.activities.RemindActivity;
-import com.george.memoshareapp.utils.GlideEngine;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
-import com.luck.picture.lib.basic.PictureSelector;
-import com.luck.picture.lib.config.SelectMimeType;
-import com.luck.picture.lib.engine.CropFileEngine;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.interfaces.OnResultCallbackListener;
-import com.orhanobut.logger.Logger;
-import com.yalantis.ucrop.UCrop;
-import com.yalantis.ucrop.UCropImageEngine;
 
 import java.time.Month;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -254,7 +240,8 @@ public class CalendarTripFragment extends Fragment implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_blue:
-
+                Intent intent1 = new Intent(getContext(), ContactListActivity.class);
+                startActivity(intent1);
                 break;
             case R.id.add_red:
                 Intent intent = new Intent(getContext(), RemindActivity.class);

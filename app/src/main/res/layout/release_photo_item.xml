@@ -19,7 +19,13 @@
             android:adjustViewBounds="true"
             android:background="@null"/>
 
-    </androidx.cardview.widget.CardView>
 
+
+    </androidx.cardview.widget.CardView>
+    <TextView
+        android:id="@+id/chat_group_member_name"
+        android:layout_width="115dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"/>
 
 </RelativeLayout>

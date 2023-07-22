@@ -3,14 +3,20 @@ package com.george.memoshareapp.beans;
 import com.george.memoshareapp.utils.ChinesetoPinyin;
 import com.george.memoshareapp.utils.PinyinFirstLetter;
 
-import net.sourceforge.pinyin4j.PinyinHelper;
-
 import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
-public class ContactInfo extends LitePalSupport {
+import java.io.Serializable;
+
+public class ContactInfo extends LitePalSupport implements Serializable {
     private String name;
     private String phoneNumber;
+    private boolean isSelected; // 新添加的字段
+
+    // ...其他字段和方法
+
+
+
     @Column(ignore = true)
     private int picture;
     @Column(ignore = true)
@@ -23,13 +29,24 @@ public class ContactInfo extends LitePalSupport {
     public ContactInfo(){
 
     }
+    public ContactInfo(String name,String phoneNumber,int picture){
+        this.name = name;
+this.picture=picture;
+        this.phoneNumber=phoneNumber;
+    }
     public ContactInfo(String name, int picture){
         this.name = name;
         this.picture = picture;
         this.pinyin = ChinesetoPinyin.getPinyin(name);
         this.firstLetter = PinyinFirstLetter.getFirstLetter(pinyin);
     }
+    public boolean isSelected() {
+        return isSelected;
+    }
 
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public String getName() {
         return name;

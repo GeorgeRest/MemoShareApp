@@ -44,6 +44,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ChatGroupMoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ChatGroupActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.GroupChatActivity"
             android:exported="true" />
         <activity
@@ -51,7 +57,8 @@
             android:exported="true" />
         <activity
             android:name=".activities.ChangePasswordActivity"
-            android:exported="true" /><activity
+            android:exported="true" />
+        <activity
             android:name=".activities.RemindNoteActivity"
             android:exported="false" />
         <activity
@@ -103,13 +110,12 @@
 
         <activity
             android:name=".activities.ContactListActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".activities.DetailActivity"
@@ -119,7 +125,7 @@
             android:exported="true" />
         <activity
             android:name=".activities.HomePageActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true"
@@ -140,7 +146,7 @@
             android:exported="true" />
         <activity
             android:name=".activities.ReleaseActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true" />
