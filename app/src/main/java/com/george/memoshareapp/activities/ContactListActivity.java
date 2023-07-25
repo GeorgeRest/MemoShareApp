@@ -372,7 +372,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         state.setLoadingLayout(R.layout.layout_loading);
         state.showLoading(null, false, false);
 
-        horizontalAdapter = new HorizontalAdapter(userList);
+        horizontalAdapter = new HorizontalAdapter(userList,this);
 
         contactListAdapter = new ContactListAdapter(this, userList, horizontalAdapter, horizontal_recycler_view);
         contactListAdapter.setOnContactsSelectedListener(this);
@@ -477,8 +477,6 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                          public void onClick(View v) {
 
                              String input = etCustomInput.getText().toString();
-
-
                              List<User> userList = new ArrayList<User>();
                              userList = horizontalAdapter.getContacts();
                              Intent intent = new Intent(getBaseContext(), ChatGroupActivity.class);
@@ -508,10 +506,6 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
 
         dialog.show();
     }
-
-
-
-
 
 
 
@@ -600,6 +594,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
             public void onResponse(Call<HttpListData<User>> call, Response<HttpListData<User>> response) {
                 state.showContent(null);
                 userList = response.body().getItems();
+                System.out.println(userList+"-=============");
                 sortContacts(userList); // 按拼音首字母排序
                 // 设置数据给 contactListAdapter 对象
                 contactListAdapter.setData(userList);

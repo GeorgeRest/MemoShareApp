@@ -41,8 +41,8 @@ public class ChatGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChatGroupActivity.this, ChatGroupMoreActivity.class);
-                intent.putExtra("contactList",(Serializable) contactList);
-                intent.putExtra("photoChatName",photoChatName);
+                intent.putExtra("contact_list",(Serializable) contactList);
+                intent.putExtra("photo_chat_name",photoChatName);
 
                 startActivity(intent);
 

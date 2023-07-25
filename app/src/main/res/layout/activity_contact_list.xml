@@ -1,10 +1,15 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.drake.statelayout.StateLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/state"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities.ContactListActivity"
-    android:orientation="vertical">
+    app:loading_layout="@layout/layout_loading">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
     <RelativeLayout android:layout_width="match_parent" android:layout_height="40dp" android:paddingLeft="10dp" android:paddingRight="10dp">
         <ImageView
             android:id="@+id/iv_back"
@@ -62,4 +67,5 @@
             android:background="#57525755"
             android:visibility="gone"/>
     </RelativeLayout>
-</LinearLayout>
+    </LinearLayout>
+</com.drake.statelayout.StateLayout>

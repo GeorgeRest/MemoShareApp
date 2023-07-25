@@ -37,7 +37,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_image"
+        android:id="@+id/chat_more_member_rv_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/divider"

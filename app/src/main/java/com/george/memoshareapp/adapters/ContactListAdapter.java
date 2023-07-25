@@ -157,13 +157,16 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.ChinesetoPinyin;
 import com.george.memoshareapp.utils.PinyinFirstLetter;
 import com.george.memoshareapp.view.AlbumFriendCheckBox;
+import com.george.memoshareapp.view.NiceImageView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -176,6 +179,7 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
     private RecyclerView horizontalRecyclerView;
     private User contact;
     private OnContactsSelectedListener contactsSelectedListener;
+    private NiceImageView iv_photo;
 
 
     public ContactListAdapter(Context context, List<User> contactList) {
@@ -207,16 +211,22 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
         return position;
     }
 
+//    public void setData(List<User> data) {
+//        this.contactList = data;
+//    }
     public void setData(List<User> data) {
         this.contactList = data;
+        this.checkedItems = new boolean[data.size()];
+        Arrays.fill(checkedItems, false);
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if(convertView == null){
             convertView = View.inflate(context, R.layout.item_contact_list,null);
             holder = new ViewHolder();
-            holder.iv_photo = convertView.findViewById(R.id.niv_photo);
+            holder.iv_photo =  convertView.findViewById(R.id.iv_photo);
             holder.tv_name = convertView.findViewById(R.id.tv_name);
             holder.tv_show_letter = convertView.findViewById(R.id.tv_show_letter);
             holder.checkbox = convertView.findViewById(R.id.checkbox);
@@ -225,8 +235,26 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
             holder = (ViewHolder) convertView.getTag();
         }
         contact = contactList.get(position);
-        // 获得头像
-        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+ contact.getHeadPortraitPath()).into(holder.iv_photo);    // 获取头像
+
+
+        String imagePath = AppProperties.SERVER_MEDIA_URL+ contact.getHeadPortraitPath();
+        System.out.println(imagePath+"==============="+context);
+        if(imagePath != null && !imagePath.isEmpty()) {
+            int cornerRadius = 20;
+            Glide.with(context)
+                    .load(imagePath) // 图片的 URL
+                    .transform(new RoundedCorners(cornerRadius)) // 设置圆角
+                    .into(holder.iv_photo); // 要加载到的 ImageView
+
+//            Glide.with(context).load(imagePath).into(holder.iv_photo);
+        } else {
+            // Handle the case where imagePath is null or empty.
+            // For example, you could load a default image.
+        }
+
+
+
+
         holder.tv_name.setText(contact.getName());
         holder.checkbox.setChecked(checkedItems[position]);
 
@@ -242,18 +270,15 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
         } else {
             holder.tv_show_letter.setVisibility(View.GONE);
         }
+
         holder.checkbox.setOnCheckedChangeListener(new AlbumFriendCheckBox.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(AlbumFriendCheckBox checkBox, boolean isChecked) {
                 checkedItems[position] = isChecked;
-                if (isChecked) {
-                    horizontalAdapter.addContact(contact);  // 将选中的 contact 添加到 HorizontalAdapter 中
-                } else {
-                    horizontalAdapter.removeContact(contact);  // 将取消选中的 contact 从 HorizontalAdapter 中移除
-                }
                 if (contactsSelectedListener != null) {
                     contactsSelectedListener.onContactsSelected(checkedItems);
                 }
+                updateHorizontalAdapter(); // 调用更新方法
                 if (horizontalAdapter.getItemCount() > 5) {
                     horizontalRecyclerView.scrollToPosition(horizontalAdapter.getItemCount() - 1);  // 滚动到最后一个item
                 }
@@ -261,6 +286,7 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
         });
         return convertView;
     }
+
 
     @Override
     public Object[] getSections() {
@@ -276,6 +302,22 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
         }
         return -1;
     }
+
+    public void updateHorizontalAdapter() {
+        horizontalAdapter.setContacts(getSelectedContacts());
+        horizontalAdapter.notifyDataSetChanged();
+    }
+
+    private List<User> getSelectedContacts() {
+        List<User> selectedContacts = new ArrayList<>();
+        for (int i = 0; i < contactList.size(); i++) {
+            if (checkedItems[i]) {
+                selectedContacts.add(contactList.get(i));
+            }
+        }
+        return selectedContacts;
+    }
+
     @Override
     public int getSectionForPosition(int position) {
         if (contactList != null && position < contactList.size()) {

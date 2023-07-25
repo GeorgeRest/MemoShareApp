@@ -9,8 +9,10 @@ import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.properties.AppProperties;
 
 import java.util.List;
 
@@ -19,8 +21,9 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
 
     private List<User> contacts;
 
-    public HorizontalAdapter(List<User> contacts) {
+    public HorizontalAdapter(List<User> contacts,Context context) {
         this.contacts = contacts;
+        this.context=context;
     }
 
     public void addContact(User contact) {
@@ -54,11 +57,17 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         User contact = contacts.get(position);
+        String imagePath = AppProperties.SERVER_MEDIA_URL+ contact.getHeadPortraitPath();
+        int cornerRadius = 20;
         Glide.with(context)
-                .load(contact.getHeadPortraitPath()) // 图片的 URL
+                .load(imagePath) // 图片的 URL
+                .transform(new RoundedCorners(cornerRadius)) // 设置圆角
                 .into(holder.ivPhoto); // 要加载到的 ImageView
 
 
+    }
+    public void setContacts(List<User> contacts) {
+        this.contacts = contacts;
     }
 
 

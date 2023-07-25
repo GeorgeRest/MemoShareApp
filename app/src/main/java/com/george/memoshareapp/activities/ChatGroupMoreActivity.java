@@ -8,10 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.beans.ContactInfo;
+import com.george.memoshareapp.adapters.ChatGroupMemberAdapter;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.manager.UserManager;
 
@@ -20,7 +21,7 @@ import java.util.List;
 public class ChatGroupMoreActivity extends AppCompatActivity {
 
     private TextView photo_chat_title_name;
-    private List<ContactInfo> contactList;
+    private List<User> contactList;
     private String photoChatTitleName;
     private ImageView chat_group_back;
     private SharedPreferences sp;
@@ -33,36 +34,45 @@ public class ChatGroupMoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat_group_more);
         initView();
         Intent intent = getIntent();
-        contactList = (List<ContactInfo>) intent.getSerializableExtra("contactList");//有图片
-        photoChatTitleName = intent.getStringExtra("photoChatName");
+        contactList = (List<User>) intent.getSerializableExtra("contact_list");//有图片
+        photoChatTitleName = intent.getStringExtra("photo_chat_name");
         photo_chat_title_name.setText(photoChatTitleName);
-        //根据list里面的contactinfo的电话号，找用户（朋友里）
-        sp = getSharedPreferences("User", MODE_PRIVATE);
-        //我
-        phoneNumber = sp.getString("phoneNumber", "");
-        UserManager userManager = new UserManager(this);
-        User userMe = userManager.findUserByPhoneNumber(phoneNumber);
-        String MyName = userMe.getName();
-        String headPortraitPath = userMe.getHeadPortraitPath();
-        int myHeadPath = Integer.valueOf(headPortraitPath);
-        ContactInfo contactInfo = new ContactInfo(MyName, phoneNumber,myHeadPath);
-        contactList.add(contactInfo);
 
-        //ChatGroupMemberImageAdapter chatGroupMemberImageAdapter = new ChatGroupMemberImageAdapter(this, contactList);
-//        recyclerView.setAdapter(chatGroupMemberImageAdapter);
+
+
+
+        phoneNumber = getSharedPreferences("User", MODE_PRIVATE).getString("phoneNumber", "");
+        User userMe = new UserManager(this).findUserByPhoneNumber(phoneNumber);
+
+
+
+
+        contactList.add(userMe);
+        ChatGroupMemberAdapter chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, contactList);
+        recyclerView.setAdapter(chatGroupMemberImageAdapter);
+
+
+
+        int spanCount = 5; // 设置网格的列数
+        GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
+        recyclerView.setLayoutManager(layoutManager);
+
+
+
+
+
+
     }
 
     private void initView() {
-        recyclerView = (RecyclerView) findViewById(R.id.rv_image);
-
+        recyclerView = (RecyclerView) findViewById(R.id.chat_more_member_rv_image);
         photo_chat_title_name = (TextView) findViewById(R.id.photo_chat_name);
         chat_group_back = (ImageView) findViewById(R.id.chat_group_back);
         chat_group_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
-            }
-        });
+            }});
 
     }
 
@@ -70,6 +80,5 @@ public class ChatGroupMoreActivity extends AppCompatActivity {
     public void onBackPressed() {
         finish();
         super.onBackPressed();
-
     }
 }
