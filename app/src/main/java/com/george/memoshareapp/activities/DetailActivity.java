@@ -36,8 +36,13 @@ import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.ReplyBean;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.events.updateLikeState;
+import com.george.memoshareapp.http.api.CommentServiceApi;
+import com.george.memoshareapp.http.api.UserServiceApi;
+import com.george.memoshareapp.http.response.HttpData;
+import com.george.memoshareapp.http.response.HttpListData;
 import com.george.memoshareapp.interfaces.getLikeCountListener;
 import com.george.memoshareapp.manager.DisplayManager;
+import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.DateFormat;
 import com.george.memoshareapp.view.NoScrollListView;
@@ -46,7 +51,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -120,6 +132,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             like.setImageResource(R.mipmap.like);
         }
         putParameter2View();//传参
+        getCommentData();
         commentNumber = commentAdapter.getCount();
         detail_tv_share_number.setText(shareNumber + "");
         detail_tv_comment_number.setText(commentNumber + "");
@@ -246,8 +259,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         intent = getIntent();
         post = (Post) intent.getSerializableExtra("post");
         manager = new DisplayManager();
-        commentAdapter = new CommentAdapter(this,getCommentData(),R.layout.item_comment,handler);
-        commentList.setAdapter(commentAdapter);
+//        commentAdapter = new CommentAdapter(this,getCommentData(),R.layout.item_comment,handler);
+//        commentList.setAdapter(commentAdapter);
 
         boolean shouldCheckComments = getIntent().getBooleanExtra("shouldCheckComments", false);
         if (shouldCheckComments) {
@@ -396,16 +409,41 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     /**
      * 获取评论列表数据
      */
-    private List<CommentBean> getCommentData() {
+    private void getCommentData() {
+//        list = new ArrayList<CommentBean>();
+//
+//        List<CommentBean> commentBeans = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(CommentBean.class);
+//        for (CommentBean commentBean : commentBeans) {
+//            List<ReplyBean> replyBeans = LitePal.where("commentbean_id = ?", String.valueOf(commentBean.getId())).find(ReplyBean.class);
+//            commentBean.setReplyList(replyBeans);
+//            list.add(commentBean);
+//        }
+//        return list;
+
         list = new ArrayList<CommentBean>();
 
-        List<CommentBean> commentBeans = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(CommentBean.class);
-        for (CommentBean commentBean : commentBeans) {
-            List<ReplyBean> replyBeans = LitePal.where("commentbean_id = ?", String.valueOf(commentBean.getId())).find(ReplyBean.class);
-            commentBean.setReplyList(replyBeans);
-            list.add(commentBean);
-        }
-        return list;
+        CommentServiceApi service = RetrofitManager.getInstance().create(CommentServiceApi.class);
+
+        service.getComments(post.getId()).enqueue(new Callback<HttpListData<CommentBean>>() {
+            @Override
+            public void onResponse(Call<HttpListData<CommentBean>> call, Response<HttpListData<CommentBean>> response) {
+                if (response.isSuccessful()) {
+                    HttpListData<CommentBean> body = response.body();
+                    List<CommentBean> items = body.getItems();
+                    // 更新评论列表
+                    // 让服务器的API在返回评论时就包含对应的回复列表，这样只需要一个网络请求就能获取到所有的评论和回复
+                    list.addAll(items);
+                    CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), list, R.layout.item_comment, handler);
+                    commentAdapter.notifyDataSetChanged();
+                } else {
+                    // 处理错误
+                }
+            }
+            @Override
+            public void onFailure(Call<HttpListData<CommentBean>> call, Throwable t) {
+
+            }
+        });
     }
 
 
@@ -449,59 +487,137 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      * 发表评论
      */
     private void publishComment() {
-        CommentBean bean = new CommentBean();
-        bean.setCommentUserPhoto(R.mipmap.touxiangceshi);
-        bean.setCommentUserName("seven");
-        bean.setCommentTime(null);
-        bean.setCommentUserPhoneNumber("12345");
-        bean.setCommentContent(text);
-        bean.save();
-        SQLiteDatabase db = LitePal.getDatabase();
-        String sql = "UPDATE CommentBean SET post_id = ? WHERE id = ?";
-        db.execSQL(sql, new Object[]{post.getId(), bean.getId()});
-        list.add(bean);
-        commentAdapter.notifyDataSetChanged();
-        commentNumber++;
-        detail_tv_comment_number.setText(String.valueOf(commentNumber));
-        set_comments_number.setText("共" + commentNumber + "条评论");
+//        CommentBean bean = new CommentBean();
+//        bean.setCommentTime(null);
+//        bean.setCommentContent(text);
+//        bean.save();
+//        SQLiteDatabase db = LitePal.getDatabase();
+//        String sql = "UPDATE CommentBean SET post_id = ? WHERE id = ?";
+//        db.execSQL(sql, new Object[]{post.getId(), bean.getId()});
+//        list.add(bean);
+//        commentAdapter.notifyDataSetChanged();
+//        commentNumber++;
+//        detail_tv_comment_number.setText(String.valueOf(commentNumber));
+//        set_comments_number.setText("共" + commentNumber + "条评论");
+
+        CommentBean comment = new CommentBean();
+        comment.setCommentTime(new Date());
+        comment.setCommentContent(text);
+        comment.setPostId(post.getId());  // 假设post是你当前的帖子对象
+
+        CommentServiceApi service = RetrofitManager.getInstance().create(CommentServiceApi.class);
+
+        service.postComment(comment).enqueue(new Callback<HttpData<CommentBean>>() {
+            @Override
+            public void onResponse(Call<HttpData<CommentBean>> call, Response<HttpData<CommentBean>> response) {
+                if (response.isSuccessful()) {
+                    HttpData<CommentBean> data = response.body();
+                    CommentBean commentBean = data.getData();
+                    // 更新评论列表
+                    list.add(commentBean);
+                    commentAdapter.notifyDataSetChanged();
+                    commentNumber++;
+                    detail_tv_comment_number.setText(String.valueOf(commentNumber));
+                    set_comments_number.setText("共" + commentNumber + "条评论");
+                } else {
+                    // 处理错误
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpData<CommentBean>> call, Throwable t) {
+
+            }
+        });
     }
 
     /**
      * 回复评论
      */
     private void replyComment() {
-        ReplyBean bean = new ReplyBean();
-        bean.setReplyUserPhoto(R.mipmap.touxiangceshi);
-        bean.setReplyNickname("Aven");
-        bean.setReplyTime(null);
-        bean.setCommentNickname(list.get(position).getCommentUserName());
-        bean.setReplyContent(text);
-        bean.save();
-        SQLiteDatabase db = LitePal.getDatabase();
-        String sql = "UPDATE ReplyBean SET commentbean_id = ? WHERE id = ?";
-        db.execSQL(sql, new Object[]{list.get(position).getId(), bean.getId()});
+//        ReplyBean bean = new ReplyBean();
+//        bean.setReplyTime(null);
+//        //bean.setCommentNickname(list.get(position).getCommentUserName());
+//        bean.setReplyContent(text);
+//        bean.save();
+//        SQLiteDatabase db = LitePal.getDatabase();
+//        String sql = "UPDATE ReplyBean SET commentbean_id = ? WHERE id = ?";
+//        db.execSQL(sql, new Object[]{list.get(position).getId(), bean.getId()});
+//
+//        commentAdapter.getReplyComment(bean, position);
+//        commentAdapter.notifyDataSetChanged();
 
-        commentAdapter.getReplyComment(bean, position);
-        commentAdapter.notifyDataSetChanged();
+        ReplyBean reply = new ReplyBean();
+        reply.setReplyTime(new Date());
+        reply.setReplyContent(text);
+        reply.setCommentBeanId(list.get(position).getId());
+
+        CommentServiceApi service = RetrofitManager.getInstance().create(CommentServiceApi.class);
+
+        service.postReply(reply).enqueue(new Callback<HttpData<ReplyBean>>() {
+            @Override
+            public void onResponse(Call<HttpData<ReplyBean>> call, Response<HttpData<ReplyBean>> response) {
+                if (response.isSuccessful()) {
+                    HttpData<ReplyBean> body = response.body();
+                    ReplyBean data = body.getData();
+                    // 更新评论列表
+                    commentAdapter.getReplyComment(data, position);
+                    commentAdapter.notifyDataSetChanged();
+                } else {
+                    // 处理错误
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpData<ReplyBean>> call, Throwable t) {
+
+            }
+        });
 
     }
     /**
      * 回复子评论
      */
     private void replySubComment() {
-        List<ReplyBean> rList = list.get(commentPosition).getReplyList();
-        ReplyBean bean = new ReplyBean();
-        bean.setReplyUserPhoto(R.mipmap.touxiangceshi);
-        bean.setReplyNickname("Seven");
-        bean.setReplyTime(null);
-        bean.setCommentNickname(rList.get(replyPosition).getReplyNickname());
-        bean.setReplyContent(text);
-        bean.save();
-        SQLiteDatabase db = LitePal.getDatabase();
-        String sql = "UPDATE ReplyBean SET commentbean_id = ? WHERE id = ?";
-        db.execSQL(sql, new Object[] {list.get(commentPosition).getId(), bean.getId()});
-        rList.add(rList.size(), bean);
-        commentAdapter.notifyDataSetChanged();
+//        List<ReplyBean> rList = list.get(commentPosition).getReplyList();
+//        ReplyBean bean = new ReplyBean();
+//        bean.setReplyTime(null);
+//        //bean.setCommentNickname(rList.get(replyPosition).getReplyNickname());
+//        bean.setReplyContent(text);
+//        bean.save();
+//        SQLiteDatabase db = LitePal.getDatabase();
+//        String sql = "UPDATE ReplyBean SET commentbean_id = ? WHERE id = ?";
+//        db.execSQL(sql, new Object[] {list.get(commentPosition).getId(), bean.getId()});
+//        rList.add(rList.size(), bean);
+//        commentAdapter.notifyDataSetChanged();
+
+        ReplyBean reply = new ReplyBean();
+        reply.setReplyTime(new Date());
+        reply.setReplyContent(text);
+        reply.setCommentBeanId(list.get(commentPosition).getId()); // 假设list中的对象有getId()方法
+
+        CommentServiceApi service = RetrofitManager.getInstance().create(CommentServiceApi.class);
+
+        service.postSubReply(reply).enqueue(new Callback<HttpData<ReplyBean>>() {
+            @Override
+            public void onResponse(Call<HttpData<ReplyBean>> call, Response<HttpData<ReplyBean>> response) {
+                if (response.isSuccessful()) {
+                    HttpData<ReplyBean> body = response.body();
+                    ReplyBean data = body.getData();
+                    // 更新你的评论列表
+                    List<ReplyBean> rList = list.get(commentPosition).getReplyList();
+                    rList.add(rList.size(), data); // 如果ReplyBean和Reply类不同，你可能需要转换对象
+                    commentAdapter.notifyDataSetChanged();
+                } else {
+                    // 处理错误
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpData<ReplyBean>> call, Throwable t) {
+
+            }
+        });
     }
 
     @SuppressLint("HandlerLeak")

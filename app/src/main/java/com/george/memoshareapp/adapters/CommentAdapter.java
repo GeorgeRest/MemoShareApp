@@ -14,9 +14,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.CommentBean;
 import com.george.memoshareapp.beans.ReplyBean;
+import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.view.NoScrollListView;
 
 import java.text.SimpleDateFormat;
@@ -66,8 +70,6 @@ public class CommentAdapter extends BaseAdapter {
                     convertView.findViewById(R.id.commentItemImg);
             holder.commentNickname = (TextView)
                     convertView.findViewById(R.id.commentNickname);
-//            holder.commentItemTime = (TextView)
-//                    convertView.findViewById(R.id.commentItemTime);
             holder.commentItemContentAndTime = (TextView)
                     convertView.findViewById(R.id.commentItemContentAndTime);
             holder.replyList = (NoScrollListView)
@@ -77,9 +79,12 @@ public class CommentAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.commentItemImg.setImageResource(bean.getCommentUserPhoto());
-        holder.commentNickname.setText(bean.getCommentUserName());
-//        holder.commentItemTime.setText(getTimeFormatText(bean.getCommentTime()));
+        UserManager userManager = new UserManager(context);
+        User user = userManager.findUserByPhoneNumber(bean.getCommentUserPhoneNumber());
+        // 设置头像
+        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+user.getHeadPortraitPath()).into(holder.commentItemImg);
+        //设置评论人名字
+        holder.commentNickname.setText(user.getName());
 
         String content = bean.getCommentContent();
         String time = getTimeFormatText(bean.getCommentTime());
@@ -95,6 +100,7 @@ public class CommentAdapter extends BaseAdapter {
 
         holder.replyList.setAdapter(adapter);
 
+        //设置点击事件
         TextviewClickListener tcl = new TextviewClickListener(position);
         holder.commentItemContentAndTime.setOnClickListener(tcl);
         return convertView;

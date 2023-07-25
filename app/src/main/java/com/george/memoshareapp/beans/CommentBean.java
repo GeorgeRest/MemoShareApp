@@ -20,29 +20,28 @@ import java.io.Serializable;
 
 
 public class CommentBean extends LitePalSupport implements Serializable {
-    private long id;
-    private Post post;
+    private int id;
+    private int postId;
     private String commentContent;
     private Date commentTime;
     private String commentUserPhoneNumber;
-    private String commentUserName;         //(后期修改)
-    private int commentUserPhoto;           //(后期修改)
     private List<ReplyBean> replyBeanList = new ArrayList<>();      //回复内容列表
 
-    public long getId() {
+
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Post getPost() {
-        return post;
+    public int getPostId() {
+        return postId;
     }
 
-    public void setPost(Post post) {
-        this.post = post;
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 
     public String getCommentContent() {
@@ -69,21 +68,6 @@ public class CommentBean extends LitePalSupport implements Serializable {
         this.commentUserPhoneNumber = commentUserPhoneNumber;
     }
 
-    public String getCommentUserName() {
-        return commentUserName;
-    }
-
-    public void setCommentUserName(String commentUserName) {
-        this.commentUserName = commentUserName;
-    }
-
-    public int getCommentUserPhoto() {
-        return commentUserPhoto;
-    }
-
-    public void setCommentUserPhoto(int commentUserPhoto) {
-        this.commentUserPhoto = commentUserPhoto;
-    }
 
     public List<ReplyBean> getReplyList() {
         return replyBeanList;
@@ -94,17 +78,4 @@ public class CommentBean extends LitePalSupport implements Serializable {
         this.replyBeanList = replyBeanList;
     }
 
-    @Override
-    public String toString() {
-        return "CommentBean{" +
-                "id=" + id +
-                ", post=" + post +
-                ", commentContent='" + commentContent + '\'' +
-                ", commentTime='" + commentTime + '\'' +
-                ", commentUserPhoneNumber='" + commentUserPhoneNumber + '\'' +
-                ", commentUserName='" + commentUserName + '\'' +
-                ", commentUserPhoto=" + commentUserPhoto +
-                ", replyBeanList=" + replyBeanList +
-                '}';
-    }
 }

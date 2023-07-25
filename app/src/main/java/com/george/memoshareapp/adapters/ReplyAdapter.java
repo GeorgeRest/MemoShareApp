@@ -16,8 +16,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.ReplyBean;
+import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.properties.AppProperties;
 
 import org.litepal.LitePal;
 
@@ -68,28 +72,28 @@ public class ReplyAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         bean = list.get(position);
         replayId = bean.getId();
-
-
         ViewHolder holder = null;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(resourceId, null);
             holder.replyPhoto = (ImageView) convertView.findViewById(R.id.iv_reply_photo);
             holder.replyName = (TextView) convertView.findViewById(R.id.tv_reply_name);
-//            holder.replyTime= (TextView)convertView.findViewById(R.id.tv_replyTime);
             holder.replyTextAndTime = (TextView) convertView.findViewById(R.id.replyContentAndTime);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.replyPhoto.setImageResource(bean.getReplyUserPhoto());
-        holder.replyName.setText(bean.getReplyNickname());
-//        holder.replyTime.setText(getTimeFormatText(bean.getReplyTime()));
+        UserManager userManager = new UserManager(context);
+        //user1:回复人 user2:被回复人
+        User user1 = userManager.findUserByPhoneNumber(bean.getReplyPhoneNumber());
+        User user2 = userManager.findUserByPhoneNumber(bean.getCommentPhoneNumber());
+        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+user1.getHeadPortraitPath()).into(holder.replyPhoto);
+        holder.replyName.setText(user1.getName());
 
         String content = bean.getReplyContent();
         String time = getTimeFormatText(bean.getReplyTime());
         SpannableString spannableString = new SpannableString(content + "   " + time);
-        String commentNickName = bean.getCommentNickname();
+        String commentNickName = user2.getName();
         ss = new SpannableString("回复" + commentNickName
                 + "：" + spannableString);
         ss.setSpan(new ForegroundColorSpan(Color.parseColor("#80202025")), 2,
@@ -110,7 +114,6 @@ public class ReplyAdapter extends BaseAdapter {
         public ImageView replyPhoto;
         public TextView replyName;
         public TextView replyTextAndTime;
-//        public TextView replyTime;
     }
 
     /**
@@ -121,19 +124,18 @@ public class ReplyAdapter extends BaseAdapter {
 
         public TextviewClickListener(int position) {
             this.replyPosition = position;
-
         }
 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.replyContentAndTime:
-                    Cursor cursor = LitePal.findBySQL("select commentbean_id from replybean where id=?", String.valueOf(replayId));
-                    if (cursor != null && cursor.moveToFirst()) {
-                        int columnIndex = cursor.getColumnIndex("commentbean_id");
-                        commentbeanId = cursor.getInt(columnIndex);
-                        cursor.close();
-                    }
+//                    Cursor cursor = LitePal.findBySQL("select commentbean_id from replybean where id=?", String.valueOf(replayId));
+//                    if (cursor != null && cursor.moveToFirst()) {
+//                        int columnIndex = cursor.getColumnIndex("commentbean_id");
+//                        commentbeanId = cursor.getInt(columnIndex);
+//                        cursor.close();
+//                    }
                     handler.sendMessage(handler.obtainMessage(1, replyPosition,position));
                     break;
             }
