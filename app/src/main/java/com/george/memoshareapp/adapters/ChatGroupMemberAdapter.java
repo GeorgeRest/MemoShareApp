@@ -51,6 +51,9 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return VIEW_TYPE_USER; // 返回用于显示用户头像和姓名的视图类型
         }
     }
+    public List<User> getContacts(){
+        return contacts;
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -102,7 +105,7 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     intent.putExtra("chatTitleName",photoChatTitleName);
                     intent.putExtra("FriendList", (Serializable) FriendList);
                     intent.putExtra("comeFromChatGroupMoreActivity",true);
-                    context.startActivity(intent);
+                    ((ChatGroupMoreActivity)context).startActivityForResult(intent, 2);
                     if (context instanceof ChatGroupMoreActivity) {
                         ((ChatGroupMoreActivity) context).finish();
                     }

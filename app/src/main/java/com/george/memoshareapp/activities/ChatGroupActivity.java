@@ -10,13 +10,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
-import com.george.memoshareapp.interfaces.OnAddedContactListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatGroupActivity extends AppCompatActivity implements OnAddedContactListener {
+public class ChatGroupActivity extends AppCompatActivity  {
 
 
     private List<User> contactList;
@@ -28,10 +27,7 @@ public class ChatGroupActivity extends AppCompatActivity implements OnAddedConta
     private List<User> newAddList=new ArrayList<>();
 
 
-    @Override
-    public void onAddedContact(List<User> addedContactList) {
-        newAddList=addedContactList;
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +35,7 @@ public class ChatGroupActivity extends AppCompatActivity implements OnAddedConta
         setContentView(R.layout.activity_chat_group);
         Intent intent = getIntent();
         if (intent.getBooleanExtra("comeFromChatGroupMoreActivity",false)){
-            contactList = (List<User>) intent.getSerializableExtra("contact_list");
+            contactList = (List<User>) intent.getSerializableExtra("addedContactList");
             photoChatName = intent.getStringExtra("photoChatTitleName");
         }else {
             contactList = (List<User>) intent.getSerializableExtra("contact_list");
@@ -59,10 +55,17 @@ public class ChatGroupActivity extends AppCompatActivity implements OnAddedConta
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ChatGroupActivity.this, ChatGroupMoreActivity.class);
+
                 intent.putExtra("contact_list",(Serializable) contactList);
-                intent.putExtra("FriendList",(Serializable) friendList);
+
+                if (!intent.getBooleanExtra("comeFromChatGroupMoreActivity",false)){
+                    intent.putExtra("FriendList",(Serializable) friendList);
+                }
+
                 intent.putExtra("photo_chat_name",photoChatName);
-                startActivity(intent);
+                intent.putExtra("comeFromChatGroupActivity",true);
+                startActivityForResult(intent,1);
+                finish();
             }
         });
         back.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +75,19 @@ public class ChatGroupActivity extends AppCompatActivity implements OnAddedConta
             }
         });
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            // 处理从B页面返回的数据
+            List<User> contactListFromChatGroupMoreActivity = (List<User>) data.getSerializableExtra("addedContactList");
+            System.out.println("-=-==-="+contactListFromChatGroupMoreActivity);
+            if (contactListFromChatGroupMoreActivity != null && !contactListFromChatGroupMoreActivity.isEmpty()) {
+                contactList=contactListFromChatGroupMoreActivity;
+                // 在这里可以刷新RecyclerView等视图，使新的列表数据生效
+            }
+        }
     }
 
 

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ChatGroupMemberAdapter;
 import com.george.memoshareapp.beans.User;
-import com.george.memoshareapp.interfaces.OnAddedContactListener;
 import com.george.memoshareapp.manager.UserManager;
 
 import java.io.Serializable;
@@ -32,21 +31,21 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
     private List<User> friendList;
     private ChatGroupMemberAdapter chatGroupMemberImageAdapter;
     private List<User> addedContactList;
-
+    private String chatTitleName;
+    private Intent intent;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_group_more);
-
+        intent = getIntent();
         initView();
-        Intent intent = getIntent();
+
         if (intent.getBooleanExtra("comeFromContactListActivity",false)){
             addedContactList = (List<User>) intent.getSerializableExtra("addedContactList");
-            OnAddedContactListener addedContactListener = new ChatGroupActivity();
-            addedContactListener.onAddedContact(addedContactList);
-            String chatTitleName = intent.getStringExtra("chatTitleName");
+
+            chatTitleName = intent.getStringExtra("chatTitleName");
             photo_chat_title_name.setText(chatTitleName);
             chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, addedContactList,friendList,photoChatTitleName);
             recyclerView.setAdapter(chatGroupMemberImageAdapter) ;
@@ -86,9 +85,34 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
         chat_group_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-            }});
+                // 在返回按钮被点击时，设置返回数据并结束当前页面
+                if (intent.getBooleanExtra("comeFromContactListActivity",false)){
+                    Intent resultIntent = new Intent(ChatGroupMoreActivity.this, ChatGroupActivity.class);
+                    resultIntent.putExtra("addedContactList", (Serializable) chatGroupMemberImageAdapter.getContacts());
+                    System.out.println("============--"+chatGroupMemberImageAdapter.getContacts());
+                    resultIntent.putExtra("comeFromChatGroupMoreActivity",true);
+                    resultIntent.putExtra("photoChatTitleName",chatTitleName);
+                    startActivity(resultIntent);
+                }
 
+
+                finish();
+            }
+        });
+
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2 && resultCode == RESULT_OK) {
+            // 获取从C页面返回的数据
+            List<User> resultData = (List<User>) data.getSerializableExtra("resultData");
+            // 根据获取的数据进行后续处理
+            if (resultData != null && !resultData.isEmpty()) {
+                contactList=resultData;
+            }
+
+        }
     }
 
 
@@ -96,7 +120,7 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
         // Set the result data and pass the updated list of added contacts through the interface
-        Intent resultIntent = new Intent();
+        Intent resultIntent = new Intent(this,ChatGroupActivity.class);
         resultIntent.putExtra("addedContactList", (Serializable) addedContactList);
         setResult(RESULT_OK, resultIntent);
         // Finish the activity

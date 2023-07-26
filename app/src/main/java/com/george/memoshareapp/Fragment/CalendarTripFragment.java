@@ -241,6 +241,7 @@ public class CalendarTripFragment extends Fragment implements
         switch (view.getId()) {
             case R.id.add_blue:
                 Intent intent1 = new Intent(getContext(), ContactListActivity.class);
+                intent1.putExtra("ComeFromCalendarTripFragment",true);
                 startActivity(intent1);
                 break;
             case R.id.add_red:
