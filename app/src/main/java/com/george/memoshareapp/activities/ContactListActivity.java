@@ -359,6 +359,10 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     private ImageView photo_chat_name_dialog_iv;
     private Button btn_submit;
     private Button btn_add_contacts_complete;
+    private List<User> enableAddChatMemberList;
+    private List<User> alreadyExitContactsList;
+    private boolean comeFromChatGroupMoreActivity;
+    private String chatTitleName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -366,22 +370,68 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         setContentView(R.layout.activity_contact_list);
 
         initView();
-
-        state.setEmptyLayout(R.layout.layout_empty);
-        state.setErrorLayout(R.layout.layout_error);
-        state.setLoadingLayout(R.layout.layout_loading);
-        state.showLoading(null, false, false);
-
-        horizontalAdapter = new HorizontalAdapter(userList,this);
-
-        contactListAdapter = new ContactListAdapter(this, userList, horizontalAdapter, horizontal_recycler_view);
-        contactListAdapter.setOnContactsSelectedListener(this);
-        lv_contact_list.setAdapter(contactListAdapter);
-        horizontal_recycler_view.setAdapter(horizontalAdapter);
-
+        Intent intent = getIntent();
+        comeFromChatGroupMoreActivity = intent.getBooleanExtra("comeFromChatGroupMoreActivity", false);
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
         String phoneNumber = sp.getString("phoneNumber", "");
-        getFriendUserList(phoneNumber);
+        if (comeFromChatGroupMoreActivity){
+
+        }else {
+            getFriendUserList(phoneNumber);
+
+            state.setEmptyLayout(R.layout.layout_empty);
+            state.setErrorLayout(R.layout.layout_error);
+            state.setLoadingLayout(R.layout.layout_loading);
+            state.showLoading(null, false, false);
+        }
+
+
+        if (comeFromChatGroupMoreActivity){
+
+            chatTitleName = intent.getStringExtra("chatTitleName");
+            alreadyExitContactsList = (List<User>) intent.getSerializableExtra("alreadyExitContacts");
+            List<User> friendList = (List<User>) intent.getSerializableExtra("FriendList");
+            List<User> usersNotInAlreadyExitContactsList = new ArrayList<>();
+            for (User u:friendList) {
+                boolean userExists = false;
+                for (User existingUser : alreadyExitContactsList) {
+                    if (u.getPhoneNumber().equals(existingUser.getPhoneNumber())) {
+                        userExists = true;
+                        break;
+                    }
+                }
+                if (!userExists) {
+                    usersNotInAlreadyExitContactsList.add(u);
+                }
+
+            }
+
+            System.out.println("==============1"+friendList);
+            System.out.println("==============1"+alreadyExitContactsList.size());
+            System.out.println("==============1usersNotInAlreadyExitContactsList"+usersNotInAlreadyExitContactsList);
+
+
+
+            horizontalAdapter = new HorizontalAdapter(userList,this);
+            contactListAdapter = new ContactListAdapter(this, usersNotInAlreadyExitContactsList, horizontalAdapter, horizontal_recycler_view);
+
+            contactListAdapter.setOnContactsSelectedListener(this);
+            lv_contact_list.setAdapter(contactListAdapter);
+            horizontal_recycler_view.setAdapter(horizontalAdapter);
+
+        }else {
+            horizontalAdapter = new HorizontalAdapter(userList,this);
+            contactListAdapter = new ContactListAdapter(this, userList, horizontalAdapter, horizontal_recycler_view);
+            contactListAdapter.setOnContactsSelectedListener(this);
+            lv_contact_list.setAdapter(contactListAdapter);
+            horizontal_recycler_view.setAdapter(horizontalAdapter);
+        }
+
+
+
+
+
+
 
         lv_contact_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -443,8 +493,24 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         btn_add_contacts_complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //弹出一个输入相册名字的框
-                onCompletionClicked(v);
+                if (comeFromChatGroupMoreActivity){
+
+                    List<User> addedContactList = horizontalAdapter.getContacts();//点击添加好友选的
+
+                    addedContactList.addAll(alreadyExitContactsList);
+                    //应该把新增加的用户传回去，传给ChatGroupMoreActivity
+                    Intent intent = new Intent(ContactListActivity.this, ChatGroupMoreActivity.class);
+                    intent.putExtra("addedContactList",(Serializable) addedContactList);
+                    intent.putExtra("chatTitleName",chatTitleName);
+                    intent.putExtra("comeFromContactListActivity",true);
+                    startActivity(intent);
+                    finish();
+                }else {
+                    //弹出一个输入相册名字的框
+                    onCompletionClicked(v);
+
+                }
+
 
             }
         });
@@ -477,10 +543,11 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                          public void onClick(View v) {
 
                              String input = etCustomInput.getText().toString();
-                             List<User> userList = new ArrayList<User>();
-                             userList = horizontalAdapter.getContacts();
+                             List<User> alreadyCheckedUserList = new ArrayList<User>();
+                             alreadyCheckedUserList = horizontalAdapter.getContacts();
                              Intent intent = new Intent(getBaseContext(), ChatGroupActivity.class);
-                             intent.putExtra("contact_list", (Serializable) userList);
+                             intent.putExtra("contact_list", (Serializable) alreadyCheckedUserList);
+                             intent.putExtra("FriendList", (Serializable) userList);
                              intent.putExtra("photo_chat_name", input);
 
                              startActivity(intent);
@@ -594,7 +661,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
             public void onResponse(Call<HttpListData<User>> call, Response<HttpListData<User>> response) {
                 state.showContent(null);
                 userList = response.body().getItems();
-                System.out.println(userList+"-=============");
+                System.out.println(userList.size()+"-=============");
                 sortContacts(userList); // 按拼音首字母排序
                 // 设置数据给 contactListAdapter 对象
                 contactListAdapter.setData(userList);

@@ -14,11 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ChatGroupMemberAdapter;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.interfaces.OnAddedContactListener;
 import com.george.memoshareapp.manager.UserManager;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ChatGroupMoreActivity extends AppCompatActivity {
+public class ChatGroupMoreActivity extends AppCompatActivity  {
 
     private TextView photo_chat_title_name;
     private List<User> contactList;
@@ -27,29 +29,42 @@ public class ChatGroupMoreActivity extends AppCompatActivity {
     private SharedPreferences sp;
     private String phoneNumber;
     private RecyclerView recyclerView;
+    private List<User> friendList;
+    private ChatGroupMemberAdapter chatGroupMemberImageAdapter;
+    private List<User> addedContactList;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_group_more);
+
         initView();
         Intent intent = getIntent();
-        contactList = (List<User>) intent.getSerializableExtra("contact_list");//有图片
-        photoChatTitleName = intent.getStringExtra("photo_chat_name");
-        photo_chat_title_name.setText(photoChatTitleName);
+        if (intent.getBooleanExtra("comeFromContactListActivity",false)){
+            addedContactList = (List<User>) intent.getSerializableExtra("addedContactList");
+            OnAddedContactListener addedContactListener = new ChatGroupActivity();
+            addedContactListener.onAddedContact(addedContactList);
+            String chatTitleName = intent.getStringExtra("chatTitleName");
+            photo_chat_title_name.setText(chatTitleName);
+            chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, addedContactList,friendList,photoChatTitleName);
+            recyclerView.setAdapter(chatGroupMemberImageAdapter) ;
+        }else {
+            contactList = (List<User>) intent.getSerializableExtra("contact_list");
+            friendList = (List<User>) intent.getSerializableExtra("FriendList");
+            photoChatTitleName = intent.getStringExtra("photo_chat_name");
+            photo_chat_title_name.setText(photoChatTitleName);
+
+            phoneNumber = getSharedPreferences("User", MODE_PRIVATE).getString("phoneNumber", "");
+            User userMe = new UserManager(this).findUserByPhoneNumber(phoneNumber);
+            contactList.add(userMe);
+
+             chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, contactList,friendList,photoChatTitleName);
+            recyclerView.setAdapter(chatGroupMemberImageAdapter) ;
+        }
 
 
-
-
-        phoneNumber = getSharedPreferences("User", MODE_PRIVATE).getString("phoneNumber", "");
-        User userMe = new UserManager(this).findUserByPhoneNumber(phoneNumber);
-
-
-
-
-        contactList.add(userMe);
-        ChatGroupMemberAdapter chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, contactList);
-        recyclerView.setAdapter(chatGroupMemberImageAdapter);
 
 
 
@@ -76,9 +91,17 @@ public class ChatGroupMoreActivity extends AppCompatActivity {
 
     }
 
+
+
     @Override
     public void onBackPressed() {
+        // Set the result data and pass the updated list of added contacts through the interface
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("addedContactList", (Serializable) addedContactList);
+        setResult(RESULT_OK, resultIntent);
+        // Finish the activity
         finish();
-        super.onBackPressed();
     }
+
+
 }

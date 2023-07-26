@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.activities.ChatGroupMoreActivity;
 import com.george.memoshareapp.activities.ContactListActivity;
 import com.george.memoshareapp.activities.NewPersonPageActivity;
 import com.george.memoshareapp.beans.User;
@@ -21,77 +22,20 @@ import com.george.memoshareapp.properties.AppProperties;
 import java.io.Serializable;
 import java.util.List;
 
-//public class ChatGroupMemberAdapter extends RecyclerView.Adapter<ChatGroupMemberAdapter.ViewHolder> {
-//    private Context context;
-//    private List<User> contacts;
-//    public ChatGroupMemberAdapter(Context context,List<User> contacts) {
-//        this.contacts = contacts;
-//        this.context=context;
-//
-//
-//    }
-//    @Override
-//    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.release_photo_item, parent, false);
-//        return new ViewHolder(view);
-//    }
-//    @Override
-//    public int getItemCount() {
-//        return contacts.size();
-//    }
-//
-//
-//    @Override
-//    public void onBindViewHolder(ViewHolder holder, int position) {
-//        ViewGroup.LayoutParams layoutParams = holder.ivPhoto.getLayoutParams();
-//        layoutParams.width = holder.ivPhoto.getResources().getDimensionPixelSize(R.dimen.chat_member);
-//        layoutParams.height = holder.ivPhoto.getResources().getDimensionPixelSize(R.dimen.chat_member);
-//        User contact = contacts.get(position);
-//        String imagePath = AppProperties.SERVER_MEDIA_URL+ contact.getHeadPortraitPath();
-//        int cornerRadius = 20;
-//        Glide.with(context)
-//                .load(imagePath)
-//                .transform(new RoundedCorners(cornerRadius)) // 设置圆角
-//                .into(holder.ivPhoto);
-//
-//        holder.name.setText(contact.getName());
-//        holder.ivPhoto.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                    int position = holder.getAdapterPosition();
-//                    if (position != RecyclerView.NO_POSITION) {
-//                        Intent intent = new Intent(context, NewPersonPageActivity.class);
-//                        intent.putExtra("user", contact);
-//                        context.startActivity(intent);
-//                }
-//            }
-//        });
-//
-//    }
-//
-//
-//    static class ViewHolder extends RecyclerView.ViewHolder {
-//        ImageView ivPhoto;
-//        TextView name;
-//        public ViewHolder(View view) {
-//            super(view);
-//            ivPhoto = view.findViewById(R.id.chat_more_member_image_view);
-//            name = view.findViewById(R.id.chat_more_member_name);
-//        }
-//    }
-//
-//
-//}
 public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_USER = 1;
     private static final int VIEW_TYPE_CUSTOM_IMAGE = 2;
 
     private Context context;
     private List<User> contacts;
+    private List<User> FriendList;
+    private String photoChatTitleName;
 
-    public ChatGroupMemberAdapter(Context context, List<User> contacts) {
+    public ChatGroupMemberAdapter(Context context, List<User> contacts,List<User> FriendList,String photoChatTitleName) {
         this.context = context;
         this.contacts = contacts;
+        this.FriendList=FriendList;
+        this.photoChatTitleName=photoChatTitleName;
     }
 
     @Override
@@ -154,8 +98,14 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, ContactListActivity.class);
-                    intent.putExtra("alreadyExitContacts", (Serializable) contacts);
+                    intent.putExtra("alreadyExitContacts", (Serializable) contacts);//包括我自己，和已经存在的朋友
+                    intent.putExtra("chatTitleName",photoChatTitleName);
+                    intent.putExtra("FriendList", (Serializable) FriendList);
+                    intent.putExtra("comeFromChatGroupMoreActivity",true);
                     context.startActivity(intent);
+                    if (context instanceof ChatGroupMoreActivity) {
+                        ((ChatGroupMoreActivity) context).finish();
+                    }
                 }
             });
         }

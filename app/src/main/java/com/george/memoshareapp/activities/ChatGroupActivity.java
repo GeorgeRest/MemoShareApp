@@ -10,25 +10,43 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.interfaces.OnAddedContactListener;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ChatGroupActivity extends AppCompatActivity {
+public class ChatGroupActivity extends AppCompatActivity implements OnAddedContactListener {
+
 
     private List<User> contactList;
     private String photoChatName;
     private ImageView more;
     private TextView tv_title;
     private ImageView back;
+    private List<User> friendList;
+    private List<User> newAddList=new ArrayList<>();
+
+
+    @Override
+    public void onAddedContact(List<User> addedContactList) {
+        newAddList=addedContactList;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_group);
         Intent intent = getIntent();
-        contactList = (List<User>) intent.getSerializableExtra("contact_list");
-        photoChatName = intent.getStringExtra("photo_chat_name");
+        if (intent.getBooleanExtra("comeFromChatGroupMoreActivity",false)){
+            contactList = (List<User>) intent.getSerializableExtra("contact_list");
+            photoChatName = intent.getStringExtra("photoChatTitleName");
+        }else {
+            contactList = (List<User>) intent.getSerializableExtra("contact_list");
+            friendList = (List<User>) intent.getSerializableExtra("FriendList");
+            photoChatName = intent.getStringExtra("photo_chat_name");
+        }
+
         initView();
     }
 
@@ -42,10 +60,9 @@ public class ChatGroupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ChatGroupActivity.this, ChatGroupMoreActivity.class);
                 intent.putExtra("contact_list",(Serializable) contactList);
+                intent.putExtra("FriendList",(Serializable) friendList);
                 intent.putExtra("photo_chat_name",photoChatName);
-
                 startActivity(intent);
-
             }
         });
         back.setOnClickListener(new View.OnClickListener() {
@@ -56,4 +73,8 @@ public class ChatGroupActivity extends AppCompatActivity {
         });
 
     }
+
+
+
+
 }
