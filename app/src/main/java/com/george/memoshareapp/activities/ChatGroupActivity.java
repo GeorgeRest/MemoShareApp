@@ -36,6 +36,7 @@ public class ChatGroupActivity extends AppCompatActivity  {
         Intent intent = getIntent();
         if (intent.getBooleanExtra("comeFromChatGroupMoreActivity",false)){
             contactList = (List<User>) intent.getSerializableExtra("addedContactList");
+            friendList = (List<User>) intent.getSerializableExtra("FriendList");
             photoChatName = intent.getStringExtra("photoChatTitleName");
         }else {
             contactList = (List<User>) intent.getSerializableExtra("contact_list");
@@ -58,9 +59,9 @@ public class ChatGroupActivity extends AppCompatActivity  {
 
                 intent.putExtra("contact_list",(Serializable) contactList);
 
-                if (!intent.getBooleanExtra("comeFromChatGroupMoreActivity",false)){
+//                if (!intent.getBooleanExtra("comeFromChatGroupMoreActivity",false)){
                     intent.putExtra("FriendList",(Serializable) friendList);
-                }
+//                }
 
                 intent.putExtra("photo_chat_name",photoChatName);
                 intent.putExtra("comeFromChatGroupActivity",true);

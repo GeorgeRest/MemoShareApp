@@ -43,7 +43,7 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
 
         if (intent.getBooleanExtra("comeFromContactListActivity",false)){
             addedContactList = (List<User>) intent.getSerializableExtra("addedContactList");
-
+            friendList = (List<User>) intent.getSerializableExtra("FriendList");
             chatTitleName = intent.getStringExtra("chatTitleName");
             photo_chat_title_name.setText(chatTitleName);
             chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, addedContactList,friendList,chatTitleName);
@@ -67,9 +67,9 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
                 contactList.add(userMe);
             }
 
-
-             chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, contactList,friendList,chatTitleName);
+            chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, contactList,friendList,chatTitleName);
             recyclerView.setAdapter(chatGroupMemberImageAdapter) ;
+
         }
 
 
@@ -121,9 +121,12 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
             // 根据获取的数据进行后续处理
             if (resultData != null && !resultData.isEmpty()) {
                 contactList=resultData;
+                System.out.println("=========contactList"+contactList);
+                chatGroupMemberImageAdapter.notifyDataSetChanged();
             }
 
         }
+        finish();
     }
 
 

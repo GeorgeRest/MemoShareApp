@@ -106,9 +106,7 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     intent.putExtra("FriendList", (Serializable) FriendList);
                     intent.putExtra("comeFromChatGroupMoreActivity",true);
                     ((ChatGroupMoreActivity)context).startActivityForResult(intent, 2);
-                    if (context instanceof ChatGroupMoreActivity) {
-                        ((ChatGroupMoreActivity) context).finish();
-                    }
+
                 }
             });
         }
