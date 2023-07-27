@@ -82,6 +82,8 @@ public class ChatGroupActivity extends AppCompatActivity  {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             // 处理从B页面返回的数据
             List<User> contactListFromChatGroupMoreActivity = (List<User>) data.getSerializableExtra("addedContactList");
+            String photoChatTitleName = data.getStringExtra("photoChatTitleName");
+            photoChatName=photoChatTitleName;
             System.out.println("-=-==-="+contactListFromChatGroupMoreActivity);
             if (contactListFromChatGroupMoreActivity != null && !contactListFromChatGroupMoreActivity.isEmpty()) {
                 contactList=contactListFromChatGroupMoreActivity;

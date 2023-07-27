@@ -23,7 +23,6 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
 
     private TextView photo_chat_title_name;
     private List<User> contactList;
-    private String photoChatTitleName;
     private ImageView chat_group_back;
     private SharedPreferences sp;
     private String phoneNumber;
@@ -47,19 +46,19 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
 
             chatTitleName = intent.getStringExtra("chatTitleName");
             photo_chat_title_name.setText(chatTitleName);
-            chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, addedContactList,friendList,photoChatTitleName);
+            chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, addedContactList,friendList,chatTitleName);
             recyclerView.setAdapter(chatGroupMemberImageAdapter) ;
         }else {
             contactList = (List<User>) intent.getSerializableExtra("contact_list");
             friendList = (List<User>) intent.getSerializableExtra("FriendList");
-            photoChatTitleName = intent.getStringExtra("photo_chat_name");
-            photo_chat_title_name.setText(photoChatTitleName);
+            chatTitleName = intent.getStringExtra("photo_chat_name");
+            photo_chat_title_name.setText(chatTitleName);
 
             phoneNumber = getSharedPreferences("User", MODE_PRIVATE).getString("phoneNumber", "");
             User userMe = new UserManager(this).findUserByPhoneNumber(phoneNumber);
             contactList.add(userMe);
 
-             chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, contactList,friendList,photoChatTitleName);
+             chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, contactList,friendList,chatTitleName);
             recyclerView.setAdapter(chatGroupMemberImageAdapter) ;
         }
 
@@ -86,14 +85,16 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 // 在返回按钮被点击时，设置返回数据并结束当前页面
-                if (intent.getBooleanExtra("comeFromContactListActivity",false)){
+//                if (intent.getBooleanExtra("comeFromContactListActivity",false)){
                     Intent resultIntent = new Intent(ChatGroupMoreActivity.this, ChatGroupActivity.class);
                     resultIntent.putExtra("addedContactList", (Serializable) chatGroupMemberImageAdapter.getContacts());
                     System.out.println("============--"+chatGroupMemberImageAdapter.getContacts());
                     resultIntent.putExtra("comeFromChatGroupMoreActivity",true);
                     resultIntent.putExtra("photoChatTitleName",chatTitleName);
                     startActivity(resultIntent);
-                }
+                    finish();
+//                }
+
 
 
                 finish();
