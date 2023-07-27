@@ -75,6 +75,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     private boolean comeFromChatGroupMoreActivity;
     private String chatTitleName;
     private List<User> friendList;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +83,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         setContentView(R.layout.activity_contact_list);
 
         initView();
-        Intent intent = getIntent();
+        intent = getIntent();
         comeFromChatGroupMoreActivity = intent.getBooleanExtra("comeFromChatGroupMoreActivity", false);
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
         String phoneNumber = sp.getString("phoneNumber", "");
@@ -105,7 +106,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
             System.out.println("===comeFromChatGroupMoreActivity到conatctlist"+ friendList);
             List<User> usersNotInAlreadyExitContactsList = new ArrayList<>();
 
-            //第二次friendList=null
+
             for (User u: friendList) {
                 boolean userExists = false;
                 for (User existingUser : alreadyExitContactsList) {
@@ -120,9 +121,6 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
 
             }
 
-            System.out.println("==============1"+ friendList);
-            System.out.println("==============1"+alreadyExitContactsList.size());
-            System.out.println("==============1usersNotInAlreadyExitContactsList"+usersNotInAlreadyExitContactsList);
 
 
 
@@ -391,7 +389,21 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     }
 
     public void onClick(View view) {
-        finish();
+        if (comeFromChatGroupMoreActivity){
+            Intent intent1 = new Intent(this, ChatGroupMoreActivity.class);
+            intent1.putExtra("contact_list",(Serializable) alreadyExitContactsList);
+            intent1.putExtra("chatTitleName",chatTitleName);
+            intent1.putExtra("comeFromContactListActivity",true);
+            intent1.putExtra("FriendList",(Serializable) friendList);
+            startActivity(intent1);
+            finish();
+
+        }else {
+            finish();
+        }
+
+
+
     }
 
     @Override

@@ -94,18 +94,13 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
         chat_group_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 在返回按钮被点击时，设置返回数据并结束当前页面
-//                if (intent.getBooleanExtra("comeFromContactListActivity",false)){
                     Intent resultIntent = new Intent(ChatGroupMoreActivity.this, ChatGroupActivity.class);
                     resultIntent.putExtra("addedContactList", (Serializable) chatGroupMemberImageAdapter.getContacts());
+                    resultIntent.putExtra("FriendList",(Serializable) friendList);
                     System.out.println("============--"+chatGroupMemberImageAdapter.getContacts());
                     resultIntent.putExtra("comeFromChatGroupMoreActivity",true);
                     resultIntent.putExtra("photoChatTitleName",chatTitleName);
                     startActivity(resultIntent);
-                    finish();
-//                }
-
-
 
                 finish();
             }
