@@ -53,10 +53,20 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
             friendList = (List<User>) intent.getSerializableExtra("FriendList");
             chatTitleName = intent.getStringExtra("photo_chat_name");
             photo_chat_title_name.setText(chatTitleName);
-
             phoneNumber = getSharedPreferences("User", MODE_PRIVATE).getString("phoneNumber", "");
             User userMe = new UserManager(this).findUserByPhoneNumber(phoneNumber);
-            contactList.add(userMe);
+            boolean userMeExitInContectList=false;
+            for (User u:contactList) {
+                if ((u.getPhoneNumber()).equals(userMe.getPhoneNumber())){
+                    userMeExitInContectList=true;
+                    break;
+                }
+            }
+
+            if (!userMeExitInContectList){
+                contactList.add(userMe);
+            }
+
 
              chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, contactList,friendList,chatTitleName);
             recyclerView.setAdapter(chatGroupMemberImageAdapter) ;
