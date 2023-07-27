@@ -76,6 +76,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     private String chatTitleName;
     private List<User> friendList;
     private Intent intent;
+    private ImageView back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,6 +183,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         photo_chat_name_dialog_iv = (ImageView) findViewById(R.id.photo_chat_name_dialog_iv);
         btn_submit = (Button) findViewById(R.id.btn_submit);
         btn_add_contacts_complete = (Button) findViewById(R.id.btn_add_contacts_complete);
+        back = (ImageView) findViewById(R.id.iv_back);
         lv_contact_list = (ListView) findViewById(R.id.lv_contact_list);
         letterIndexView = (LetterIndexView) findViewById(R.id.letter_index_view);
         tv_show_letter_toast = (TextView) findViewById(R.id.tv_show_letter_toast);
@@ -199,6 +201,23 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         ivCsGlass.setVisibility(View.VISIBLE);
         tvCsSearch.setVisibility(View.VISIBLE);
         etSearch.setVisibility(View.GONE);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (comeFromChatGroupMoreActivity){
+                    Intent intent1 = new Intent(ContactListActivity.this, ChatGroupMoreActivity.class);
+                    intent1.putExtra("addedContactList",(Serializable) alreadyExitContactsList);
+                    intent1.putExtra("chatTitleName",chatTitleName);
+                    intent1.putExtra("comeFromContactListActivity",true);
+                    intent1.putExtra("FriendList",(Serializable) friendList);
+                    startActivity(intent1);
+                    finish();
+
+                }else {
+                    finish();
+                }
+            }
+        });
         rootLayout = findViewById(android.R.id.content);
         state = (StateLayout)findViewById(R.id.state);
 
@@ -388,23 +407,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         });
     }
 
-    public void onClick(View view) {
-        if (comeFromChatGroupMoreActivity){
-            Intent intent1 = new Intent(this, ChatGroupMoreActivity.class);
-            intent1.putExtra("contact_list",(Serializable) alreadyExitContactsList);
-            intent1.putExtra("chatTitleName",chatTitleName);
-            intent1.putExtra("comeFromContactListActivity",true);
-            intent1.putExtra("FriendList",(Serializable) friendList);
-            startActivity(intent1);
-            finish();
 
-        }else {
-            finish();
-        }
-
-
-
-    }
 
     @Override
     public void onContactsSelected(boolean[] selectedItems) {

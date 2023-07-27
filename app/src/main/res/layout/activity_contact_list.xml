@@ -17,7 +17,7 @@
             android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
-            android:onClick="onClick"
+
             android:src="@mipmap/back_register_contact"/>
         <TextView android:id="@+id/tv_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerHorizontal="true" android:layout_centerVertical="true" android:maxWidth="200dp" android:text="联系人" android:textColor="#202025" android:textSize="20dp"/>
         <Button
