@@ -13,13 +13,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface CommentServiceApi {
-    @GET("comment/getComments")
-    Call<HttpListData<CommentBean>> getComments(@Query("postId") int postId);
-
-    @POST("comment/postComment")
+    @POST("/comment/postComment")
     Call<HttpData<CommentBean>> postComment(@Body CommentBean comment);
 
     @POST("comment/postReply")
@@ -27,6 +25,9 @@ public interface CommentServiceApi {
 
     @POST("comment/postSubReply")
     Call<HttpData<ReplyBean>> postSubReply(@Body ReplyBean reply);
+
+    @GET("comment/getComments/{postId}")
+    Call<HttpListData<CommentBean>> getComments(@Path("postId") int postId);
 
 }
 

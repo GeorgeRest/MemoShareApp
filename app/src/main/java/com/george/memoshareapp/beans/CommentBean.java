@@ -3,6 +3,8 @@ package com.george.memoshareapp.beans;
 import org.litepal.crud.LitePalSupport;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,9 +25,9 @@ public class CommentBean extends LitePalSupport implements Serializable {
     private int id;
     private int postId;
     private String commentContent;
-    private Date commentTime;
+    private String commentTime;
     private String commentUserPhoneNumber;
-    private List<ReplyBean> replyBeanList = new ArrayList<>();      //回复内容列表
+    private List<ReplyBean> replyCommentList = new ArrayList<>() ;      //回复内容列表
 
 
     public int getId() {
@@ -52,12 +54,23 @@ public class CommentBean extends LitePalSupport implements Serializable {
         this.commentContent = commentContent;
     }
 
-    public Date getCommentTime() {
+    public String getCommentTime() {
         return commentTime;
     }
 
-    public void setCommentTime(Date commentTime) {
-        this.commentTime = commentTime == null ? new Date() : commentTime;
+    public void setCommentTime(String commentTime) {
+//        Date parse=null;
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+//        Date date = new Date();
+//        String format = dateFormat.format(date);
+//        try {
+//            parse = dateFormat.parse(format);
+//
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
+//        }
+//        this.commentTime = commentTime == null ? format : "commentTime";
+        this.commentTime = commentTime;
     }
 
     public String getCommentUserPhoneNumber() {
@@ -69,13 +82,11 @@ public class CommentBean extends LitePalSupport implements Serializable {
     }
 
 
-    public List<ReplyBean> getReplyList() {
-        return replyBeanList;
+    public List<ReplyBean> getReplyCommentList() {
+        return replyCommentList;
     }
 
-
-    public void setReplyList(List<ReplyBean> replyBeanList) {
-        this.replyBeanList = replyBeanList;
+    public void setReplyCommentList(List<ReplyBean> replyCommentList) {
+        this.replyCommentList = replyCommentList;
     }
-
 }

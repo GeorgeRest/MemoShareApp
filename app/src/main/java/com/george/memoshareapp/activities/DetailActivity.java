@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,7 +36,6 @@ import com.george.memoshareapp.beans.ReplyBean;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.events.updateLikeState;
 import com.george.memoshareapp.http.api.CommentServiceApi;
-import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.http.response.HttpListData;
 import com.george.memoshareapp.interfaces.getLikeCountListener;
@@ -48,17 +46,16 @@ import com.george.memoshareapp.utils.DateFormat;
 import com.george.memoshareapp.view.NoScrollListView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.litepal.LitePal;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -97,8 +94,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private int commentPosition;             //记录回复子评论属于的评论索引
     private int replyPosition;                //记录回复子评论的索引
     private int submit_case = 0;			//评论，回复评论，回复子评论
-    private int count;                        //记录评论ID
-    private boolean isReply;                //是否是回复
     private String text = "";            //记录对话框中的内容
     private CommentAdapter commentAdapter;
     private List<CommentBean> list;
@@ -110,7 +105,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private long likesCount;
     private String phoneNumber;
     private ScrollView scrollView;
-
     private DisplayManager manager;
     private View rootLayout;
     private User postUser;
@@ -133,10 +127,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         }
         putParameter2View();//传参
         getCommentData();
-        commentNumber = commentAdapter.getCount();
         detail_tv_share_number.setText(shareNumber + "");
-        detail_tv_comment_number.setText(commentNumber + "");
-        set_comments_number.setText("共" + commentNumber + "条评论");
         getLikeCount();
         //设置文本监听
         submitComment.setEnabled(false);
@@ -202,8 +193,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void putParameter2View() {
-
-
         postUser = post.getUser().get(0);
         userName.setText(postUser.getName());
         if(postUser.getHeadPortraitPath()!=null){
@@ -259,8 +248,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         intent = getIntent();
         post = (Post) intent.getSerializableExtra("post");
         manager = new DisplayManager();
-//        commentAdapter = new CommentAdapter(this,getCommentData(),R.layout.item_comment,handler);
-//        commentList.setAdapter(commentAdapter);
 
         boolean shouldCheckComments = getIntent().getBooleanExtra("shouldCheckComments", false);
         if (shouldCheckComments) {
@@ -305,8 +292,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 onFocusChange(true);
                 break;
 
-            case R.id.submitComment:    //发表评论按钮
-                if(isEditEmply()) {
+            case R.id.submitComment:            //发表评论按钮
+                if(isEditEmpty()) {
                     switch (submit_case) {
                         case 0:
                             publishComment();
@@ -410,16 +397,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      * 获取评论列表数据
      */
     private void getCommentData() {
-//        list = new ArrayList<CommentBean>();
-//
-//        List<CommentBean> commentBeans = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(CommentBean.class);
-//        for (CommentBean commentBean : commentBeans) {
-//            List<ReplyBean> replyBeans = LitePal.where("commentbean_id = ?", String.valueOf(commentBean.getId())).find(ReplyBean.class);
-//            commentBean.setReplyList(replyBeans);
-//            list.add(commentBean);
-//        }
-//        return list;
-
         list = new ArrayList<CommentBean>();
 
         CommentServiceApi service = RetrofitManager.getInstance().create(CommentServiceApi.class);
@@ -433,20 +410,21 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     // 更新评论列表
                     // 让服务器的API在返回评论时就包含对应的回复列表，这样只需要一个网络请求就能获取到所有的评论和回复
                     list.addAll(items);
-                    CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), list, R.layout.item_comment, handler);
-                    commentAdapter.notifyDataSetChanged();
+                    commentAdapter = new CommentAdapter(getApplicationContext(), list, R.layout.item_comment, handler);
+                    commentList.setAdapter(commentAdapter);
+                    commentNumber = commentAdapter.getCount();
+                    detail_tv_comment_number.setText(String.valueOf(commentNumber));
+                    set_comments_number.setText("共" + commentNumber + "条评论");
                 } else {
-                    // 处理错误
+                    Toast.makeText(DetailActivity.this, "response is not Successful", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onFailure(Call<HttpListData<CommentBean>> call, Throwable t) {
-
+                Toast.makeText(DetailActivity.this, "onFailure", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-
 
     /**
      * 显示或隐藏输入法
@@ -463,20 +441,18 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 } else {
                     //隐藏输入法
                     imm.hideSoftInputFromWindow(commentEdit.getWindowToken(), 0);
-
-
                 }
             }
         }, 100);
     }
 
+
     /**
      * 判断对话框中是否输入内容
      */
-    private boolean isEditEmply() {
+    private boolean isEditEmpty() {
         text = commentEdit.getText().toString().trim();
         if (text.equals("")) {
-            Toast.makeText(getApplicationContext(), "评论不能为空", Toast.LENGTH_SHORT).show();
             return false;
         }
         commentEdit.setText("");
@@ -487,40 +463,33 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      * 发表评论
      */
     private void publishComment() {
-//        CommentBean bean = new CommentBean();
-//        bean.setCommentTime(null);
-//        bean.setCommentContent(text);
-//        bean.save();
-//        SQLiteDatabase db = LitePal.getDatabase();
-//        String sql = "UPDATE CommentBean SET post_id = ? WHERE id = ?";
-//        db.execSQL(sql, new Object[]{post.getId(), bean.getId()});
-//        list.add(bean);
-//        commentAdapter.notifyDataSetChanged();
-//        commentNumber++;
-//        detail_tv_comment_number.setText(String.valueOf(commentNumber));
-//        set_comments_number.setText("共" + commentNumber + "条评论");
-
         CommentBean comment = new CommentBean();
-        comment.setCommentTime(new Date());
+        comment.setCommentUserPhoneNumber(phoneNumber);
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        String dateString = formatter.format(date);
+        comment.setCommentTime(dateString);
         comment.setCommentContent(text);
         comment.setPostId(post.getId());  // 假设post是你当前的帖子对象
 
-        CommentServiceApi service = RetrofitManager.getInstance().create(CommentServiceApi.class);
+        // 更新评论列表
+        list.add(comment);
+        commentAdapter.notifyDataSetChanged();
+        commentNumber = commentAdapter.getCount();
+        detail_tv_comment_number.setText(String.valueOf(commentNumber));
+        set_comments_number.setText("共" + commentNumber + "条评论");
 
+        CommentServiceApi service = RetrofitManager.getInstance().create(CommentServiceApi.class);
         service.postComment(comment).enqueue(new Callback<HttpData<CommentBean>>() {
             @Override
             public void onResponse(Call<HttpData<CommentBean>> call, Response<HttpData<CommentBean>> response) {
                 if (response.isSuccessful()) {
                     HttpData<CommentBean> data = response.body();
                     CommentBean commentBean = data.getData();
-                    // 更新评论列表
-                    list.add(commentBean);
-                    commentAdapter.notifyDataSetChanged();
-                    commentNumber++;
-                    detail_tv_comment_number.setText(String.valueOf(commentNumber));
-                    set_comments_number.setText("共" + commentNumber + "条评论");
+
                 } else {
-                    // 处理错误
+                    int code = response.code();
+                    Toast.makeText(DetailActivity.this, String.valueOf(code), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -535,34 +504,26 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      * 回复评论
      */
     private void replyComment() {
-//        ReplyBean bean = new ReplyBean();
-//        bean.setReplyTime(null);
-//        //bean.setCommentNickname(list.get(position).getCommentUserName());
-//        bean.setReplyContent(text);
-//        bean.save();
-//        SQLiteDatabase db = LitePal.getDatabase();
-//        String sql = "UPDATE ReplyBean SET commentbean_id = ? WHERE id = ?";
-//        db.execSQL(sql, new Object[]{list.get(position).getId(), bean.getId()});
-//
-//        commentAdapter.getReplyComment(bean, position);
-//        commentAdapter.notifyDataSetChanged();
-
         ReplyBean reply = new ReplyBean();
-        reply.setReplyTime(new Date());
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        String dateString = formatter.format(date);
+        reply.setReplyTime(dateString);
         reply.setReplyContent(text);
+        reply.setReplyPhoneNumber(phoneNumber); //回复人
+        reply.setCommentPhoneNumber(list.get(position).getCommentUserPhoneNumber());          //被回复人
         reply.setCommentBeanId(list.get(position).getId());
+        // 更新评论列表
+        commentAdapter.getReplyComment(reply, position);
+        commentAdapter.notifyDataSetChanged();
 
         CommentServiceApi service = RetrofitManager.getInstance().create(CommentServiceApi.class);
-
         service.postReply(reply).enqueue(new Callback<HttpData<ReplyBean>>() {
             @Override
             public void onResponse(Call<HttpData<ReplyBean>> call, Response<HttpData<ReplyBean>> response) {
                 if (response.isSuccessful()) {
                     HttpData<ReplyBean> body = response.body();
                     ReplyBean data = body.getData();
-                    // 更新评论列表
-                    commentAdapter.getReplyComment(data, position);
-                    commentAdapter.notifyDataSetChanged();
                 } else {
                     // 处理错误
                 }
@@ -579,22 +540,20 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      * 回复子评论
      */
     private void replySubComment() {
-//        List<ReplyBean> rList = list.get(commentPosition).getReplyList();
-//        ReplyBean bean = new ReplyBean();
-//        bean.setReplyTime(null);
-//        //bean.setCommentNickname(rList.get(replyPosition).getReplyNickname());
-//        bean.setReplyContent(text);
-//        bean.save();
-//        SQLiteDatabase db = LitePal.getDatabase();
-//        String sql = "UPDATE ReplyBean SET commentbean_id = ? WHERE id = ?";
-//        db.execSQL(sql, new Object[] {list.get(commentPosition).getId(), bean.getId()});
-//        rList.add(rList.size(), bean);
-//        commentAdapter.notifyDataSetChanged();
-
+        List<ReplyBean> rList = list.get(commentPosition).getReplyCommentList();
         ReplyBean reply = new ReplyBean();
-        reply.setReplyTime(new Date());
+        Date date = new Date();
+        //Date 转为 "yyyy-MM-dd'T'HH:mm:ss"格式的字符串
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        String dateString = formatter.format(date);
+        reply.setReplyTime(dateString);
         reply.setReplyContent(text);
-        reply.setCommentBeanId(list.get(commentPosition).getId()); // 假设list中的对象有getId()方法
+        reply.setReplyPhoneNumber(phoneNumber);
+        reply.setCommentPhoneNumber(rList.get(replyPosition).getReplyPhoneNumber());
+        reply.setCommentBeanId(list.get(commentPosition).getId());
+        // 更新评论列表
+        rList.add(rList.size(), reply);
+        commentAdapter.notifyDataSetChanged();
 
         CommentServiceApi service = RetrofitManager.getInstance().create(CommentServiceApi.class);
 
@@ -604,10 +563,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 if (response.isSuccessful()) {
                     HttpData<ReplyBean> body = response.body();
                     ReplyBean data = body.getData();
-                    // 更新你的评论列表
-                    List<ReplyBean> rList = list.get(commentPosition).getReplyList();
-                    rList.add(rList.size(), data); // 如果ReplyBean和Reply类不同，你可能需要转换对象
-                    commentAdapter.notifyDataSetChanged();
                 } else {
                     // 处理错误
                 }

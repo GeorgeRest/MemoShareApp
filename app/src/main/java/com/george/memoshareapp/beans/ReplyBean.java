@@ -10,7 +10,7 @@ public class ReplyBean extends LitePalSupport {
     private String replyPhoneNumber;	//回复人账号
     private String commentPhoneNumber;	//被回复人账号
     private String replyContent;	    //回复的内容
-    private Date replyTime;             //回复时间
+    private String replyTime;             //回复时间
 
 
     public int getId() {
@@ -53,11 +53,11 @@ public class ReplyBean extends LitePalSupport {
         this.replyContent = replyContent;
     }
 
-    public Date getReplyTime() {
+    public String getReplyTime() {
         return replyTime;
     }
 
-    public void setReplyTime(Date replyTime) {
-        this.replyTime = replyTime == null ? new Date() : replyTime;
+    public void setReplyTime(String replyTime) {
+        this.replyTime = replyTime;
     }
 }
