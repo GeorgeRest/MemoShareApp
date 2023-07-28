@@ -18,5 +18,7 @@
     <dimen name="release_oneLine_margin">120dp</dimen>
     <dimen name="release_threeLines_margin">350dp</dimen>
 
+    <dimen name="remind_time">12dp</dimen>
+
 
 </resources>

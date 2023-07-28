@@ -23,5 +23,6 @@
     <color name="complete">#997AE7</color>
     <color name="separator">#4D605F65</color>
     <color name="edit_bg">#f8f4fa</color>
+    <color name="remind_time">#83252527</color>
 </resources>
 
