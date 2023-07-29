@@ -32,6 +32,8 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
     private List<User> addedContactList;
     private String chatTitleName;
     private Intent intent;
+    private int chatRoomID;
+
 
 
     @Override
@@ -44,6 +46,7 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
         if (intent.getBooleanExtra("comeFromContactListActivity",false)){
             addedContactList = (List<User>) intent.getSerializableExtra("addedContactList");
             friendList = (List<User>) intent.getSerializableExtra("FriendList");
+            chatRoomID = intent.getIntExtra("ChatRoomID", -1);
             chatTitleName = intent.getStringExtra("chatTitleName");
             photo_chat_title_name.setText(chatTitleName);
             chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, addedContactList,friendList,chatTitleName);
@@ -52,6 +55,7 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
             contactList = (List<User>) intent.getSerializableExtra("contact_list");
             friendList = (List<User>) intent.getSerializableExtra("FriendList");
             chatTitleName = intent.getStringExtra("photo_chat_name");
+            chatRoomID = intent.getIntExtra("ChatRoomID", -1);
             photo_chat_title_name.setText(chatTitleName);
             phoneNumber = getSharedPreferences("User", MODE_PRIVATE).getString("phoneNumber", "");
             User userMe = new UserManager(this).findUserByPhoneNumber(phoneNumber);
@@ -67,7 +71,7 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
                 contactList.add(userMe);
             }
 
-            chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, contactList,friendList,chatTitleName);
+            chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, contactList,friendList,chatTitleName,chatRoomID);
             recyclerView.setAdapter(chatGroupMemberImageAdapter) ;
 
         }
@@ -99,6 +103,7 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
                     resultIntent.putExtra("FriendList",(Serializable) friendList);
                     System.out.println("============--"+chatGroupMemberImageAdapter.getContacts());
                     resultIntent.putExtra("comeFromChatGroupMoreActivity",true);
+                    resultIntent.putExtra("ChatRoomID",chatRoomID);
                     resultIntent.putExtra("photoChatTitleName",chatTitleName);
                     startActivity(resultIntent);
 
@@ -131,6 +136,7 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
         // Set the result data and pass the updated list of added contacts through the interface
         Intent resultIntent = new Intent(this,ChatGroupActivity.class);
         resultIntent.putExtra("addedContactList", (Serializable) addedContactList);
+        resultIntent.putExtra("ChatRoomID",chatRoomID);
         setResult(RESULT_OK, resultIntent);
         // Finish the activity
         finish();

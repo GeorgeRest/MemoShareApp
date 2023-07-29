@@ -25,7 +25,7 @@ public class ChatGroupActivity extends AppCompatActivity  {
     private ImageView back;
     private List<User> friendList;
     private List<User> newAddList=new ArrayList<>();
-
+    private int chatRoomID;
 
 
 
@@ -37,11 +37,14 @@ public class ChatGroupActivity extends AppCompatActivity  {
         if (intent.getBooleanExtra("comeFromChatGroupMoreActivity",false)){
             contactList = (List<User>) intent.getSerializableExtra("addedContactList");
             friendList = (List<User>) intent.getSerializableExtra("FriendList");
+            chatRoomID = intent.getIntExtra("ChatRoomID", -1);
             photoChatName = intent.getStringExtra("photoChatTitleName");
-        }else {
+
+        }else {//来自ContactListActivity
             contactList = (List<User>) intent.getSerializableExtra("contact_list");
             friendList = (List<User>) intent.getSerializableExtra("FriendList");
             photoChatName = intent.getStringExtra("photo_chat_name");
+            chatRoomID = intent.getIntExtra("ChatRoomID", -1);
         }
 
         initView();
@@ -65,6 +68,8 @@ public class ChatGroupActivity extends AppCompatActivity  {
 
                 intent.putExtra("photo_chat_name",photoChatName);
                 intent.putExtra("comeFromChatGroupActivity",true);
+                intent.putExtra("ChatRoomID",chatRoomID);
+
                 startActivityForResult(intent,1);
                 finish();
             }

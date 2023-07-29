@@ -30,7 +30,15 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private List<User> contacts;
     private List<User> FriendList;
     private String photoChatTitleName;
+    private  int ChatRoomID;
 
+    public ChatGroupMemberAdapter(Context context, List<User> contacts,List<User> FriendList,String photoChatTitleName,int chatRoomID) {
+        this.context = context;
+        this.contacts = contacts;
+        this.FriendList=FriendList;
+        this.photoChatTitleName=photoChatTitleName;
+        this.ChatRoomID=chatRoomID;
+    }
     public ChatGroupMemberAdapter(Context context, List<User> contacts,List<User> FriendList,String photoChatTitleName) {
         this.context = context;
         this.contacts = contacts;
@@ -105,6 +113,7 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     intent.putExtra("chatTitleName",photoChatTitleName);
                     intent.putExtra("FriendList", (Serializable) FriendList);
                     intent.putExtra("comeFromChatGroupMoreActivity",true);
+                    intent.putExtra("ChatRoomID",ChatRoomID);
                     ((ChatGroupMoreActivity)context).startActivityForResult(intent, 2);
 
                 }

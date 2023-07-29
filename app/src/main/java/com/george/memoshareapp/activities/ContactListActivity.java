@@ -1,7 +1,6 @@
 package com.george.memoshareapp.activities;
 
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,10 +30,15 @@ import com.drake.statelayout.StateLayout;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ContactListAdapter;
 import com.george.memoshareapp.adapters.HorizontalAdapter;
+import com.george.memoshareapp.beans.ChatRoom;
+import com.george.memoshareapp.beans.ChatRoomMember;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.http.api.ChatRoomApi;
 import com.george.memoshareapp.http.api.UserServiceApi;
+import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.http.response.HttpListData;
 import com.george.memoshareapp.manager.RetrofitManager;
+import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.ChinesetoPinyin;
 import com.george.memoshareapp.view.LetterIndexView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -77,6 +81,9 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     private List<User> friendList;
     private Intent intent;
     private ImageView back;
+    private String phoneNumber;
+    private int chatRoomId;
+    private int chatRoomID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +94,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         intent = getIntent();
         comeFromChatGroupMoreActivity = intent.getBooleanExtra("comeFromChatGroupMoreActivity", false);
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
-        String phoneNumber = sp.getString("phoneNumber", "");
+        phoneNumber = sp.getString("phoneNumber", "");
 
         if (intent.getBooleanExtra("ComeFromCalendarTripFragment",false)){
             getFriendUserList(phoneNumber);
@@ -100,7 +107,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
 
 
         if (comeFromChatGroupMoreActivity){
-
+            chatRoomID = intent.getIntExtra("ChatRoomID", -1);
             chatTitleName = intent.getStringExtra("chatTitleName");
             alreadyExitContactsList = (List<User>) intent.getSerializableExtra("alreadyExitContacts");
             friendList = (List<User>) intent.getSerializableExtra("FriendList");
@@ -208,6 +215,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                     Intent intent1 = new Intent(ContactListActivity.this, ChatGroupMoreActivity.class);
                     intent1.putExtra("addedContactList",(Serializable) alreadyExitContactsList);
                     intent1.putExtra("chatTitleName",chatTitleName);
+                    intent1.putExtra("ChatRoomID",chatRoomID);
                     intent1.putExtra("comeFromContactListActivity",true);
                     intent1.putExtra("FriendList",(Serializable) friendList);
                     startActivity(intent1);
@@ -234,7 +242,38 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                     intent.putExtra("addedContactList",(Serializable) addedContactList);
                     intent.putExtra("chatTitleName",chatTitleName);
                     intent.putExtra("FriendList",(Serializable) friendList);
+                    intent.putExtra("ChatRoomID",chatRoomID);
                     intent.putExtra("comeFromContactListActivity",true);
+
+//                    ChatRoomApi chatRoomApi = RetrofitManager.getInstance().create(ChatRoomApi.class);
+//                    List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
+//                    for (User u:addedContactList) {
+//                        ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomID, Long.parseLong(u.getPhoneNumber()),0);
+//                        chatRoomMemberList.add(chatRoomMember);
+//
+//                    }
+//                    Call<HttpData<ChatRoom>> call = chatRoomApi.AddChatRoomMember(chatRoomMemberList);
+//                    call.enqueue(new Callback<HttpData<ChatRoom>>() {
+//                        @Override
+//                        public void onResponse(Call<HttpData<ChatRoom>> call, Response<HttpData<ChatRoom>> response) {
+//                            // 请求成功的处理逻辑
+//                            if (response.isSuccessful()) {
+//
+//
+//                            } else {
+//                                // 请求失败的处理逻辑
+//                                // ... 处理错误 ...
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<HttpData<ChatRoom>> call, Throwable t) {
+//                            // 请求失败的处理逻辑
+//                            // ... 处理错误 ...
+//                        }
+//                    });
+
+
                     startActivity(intent);
                     finish();
                 }else {
@@ -277,10 +316,16 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                              String input = etCustomInput.getText().toString();
                              List<User> alreadyCheckedUserList = new ArrayList<User>();
                              alreadyCheckedUserList = horizontalAdapter.getContacts();
+
+//                             createChatRoom(alreadyCheckedUserList,input);
+
                              Intent intent = new Intent(getBaseContext(), ChatGroupActivity.class);
                              intent.putExtra("contact_list", (Serializable) alreadyCheckedUserList);
                              intent.putExtra("FriendList", (Serializable) userList);
                              intent.putExtra("photo_chat_name", input);
+                             intent.putExtra("ChatRoomID", chatRoomId);
+
+
 
                              startActivity(intent);
 
@@ -306,6 +351,68 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         dialog.show();
     }
 
+
+    private void createChatRoom(List<User> alreadyCheckedUserList, String input) {
+        // 创建一个聊天室对象，填充需要的数据
+        ChatRoom chatRoom = new ChatRoom();
+        if (alreadyCheckedUserList.size()>0){
+            chatRoom.setType("多人");
+        }else {
+            chatRoom.setType("单人");
+        }
+        chatRoom.setName(input);
+//        chatRoom.setAvatar();//设置拼接头像
+
+        // 获取ChatRoomController实例
+
+        ChatRoomApi chatRoomApi = RetrofitManager.getInstance().create(ChatRoomApi.class);
+
+        // 发送创建聊天室的请求
+        Call<HttpData<ChatRoom>> call = chatRoomApi.createChatRoom(chatRoom);
+        call.enqueue(new Callback<HttpData<ChatRoom>>() {
+            @Override
+            public void onResponse(Call<HttpData<ChatRoom>> call, Response<HttpData<ChatRoom>> response) {
+                // 请求成功的处理逻辑
+                if (response.isSuccessful()) {
+                    HttpData<ChatRoom> httpData = response.body();
+                    if (httpData != null && httpData.getData() != null) {
+                        ChatRoom createdChatRoom = httpData.getData();
+                        // 在这里处理创建成功后的逻辑，获取聊天室的ID等信息
+                        chatRoomId = createdChatRoom.getId();
+                        List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
+                        for (User u:alreadyCheckedUserList) {
+                            ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomId,Integer.valueOf(u.getPhoneNumber()),0);
+                            chatRoomMemberList.add(chatRoomMember);
+                        }
+                        User user = new UserManager(ContactListActivity.this).findUserByPhoneNumber(phoneNumber);
+                        ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomId,Integer.valueOf(user.getPhoneNumber()),1);
+
+                        chatRoomMemberList.add(chatRoomMember);
+                        chatRoomApi.AddChatRoomMember(chatRoomMemberList);
+
+
+                    }
+//                    Intent intent = new Intent(getBaseContext(), ChatGroupActivity.class);
+//                    intent.putExtra("contact_list", (Serializable) alreadyCheckedUserList);
+//                    intent.putExtra("FriendList", (Serializable) userList);
+//                    intent.putExtra("photo_chat_name", input);
+//                    intent.putExtra("ChatRoomID", chatRoomId);
+//                    startActivity(intent);
+//                    finish();
+//                    dialog.dismiss();
+                } else {
+                    // 请求失败的处理逻辑
+                    // ... 处理错误 ...
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpData<ChatRoom>> call, Throwable t) {
+                // 请求失败的处理逻辑
+                // ... 处理错误 ...
+            }
+        });
+    }
 
 
 
