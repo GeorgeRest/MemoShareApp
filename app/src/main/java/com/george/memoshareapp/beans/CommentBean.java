@@ -29,6 +29,7 @@ public class CommentBean extends LitePalSupport implements Serializable {
     private int commentUserPhoto;           //(后期修改)
     private List<ReplyBean> replyBeanList = new ArrayList<>();      //回复内容列表
 
+
     public long getId() {
         return id;
     }

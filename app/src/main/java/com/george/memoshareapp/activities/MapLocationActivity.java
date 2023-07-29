@@ -263,11 +263,12 @@ public class MapLocationActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         mapView.onDestroy();
         if (locationClient != null) {
             locationClient.onDestroy();
         }
+        super.onDestroy();
+
     }
 
     public void finish(View view) {

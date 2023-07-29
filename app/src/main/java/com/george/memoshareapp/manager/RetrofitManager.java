@@ -10,6 +10,8 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -57,6 +59,13 @@ public class RetrofitManager {
 
     }
 
+    public WebSocket createWebSocket(String url, WebSocketListener listener) {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        return getOkhttpClient().newWebSocket(request, listener);
+    }
+
 
     /**
      * 日志拦截器
@@ -65,7 +74,7 @@ public class RetrofitManager {
      */
     private Interceptor getHttpLoggingInterceptor() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         return interceptor;
     }
 
