@@ -60,6 +60,8 @@ public class HomeFragment extends Fragment {//外部
 
             }
         }).attach();
+        int initialPage = 1;
+        mViewPager2.setCurrentItem(initialPage, false);
 
 
     }

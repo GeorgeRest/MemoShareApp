@@ -29,6 +29,7 @@ import com.george.memoshareapp.runnable.SavePhotoRunnable;
 import com.george.memoshareapp.utils.ImageUtil;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
+import com.tencent.mmkv.MMKV;
 
 import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
@@ -64,12 +65,14 @@ public class PostManager {
     private File file;
     private SavePhotoRunnable savePhotoRunnable;
     private ImageParameters imageParameters;
-
+    private List<String> contactPhoneNumberList = new ArrayList<>();
     private List<String> photoPathList = new ArrayList<>();
     private List<ImageParameters> imageParametersList = new ArrayList<>();
 
     private List<File> recordFileList = new ArrayList<>();
     private List<File> MediaFileList = new ArrayList<>();
+    private List<User> userList = new ArrayList<>();
+    private MMKV kv;
 
     public PostManager(Context context) {
         this.context = context;
@@ -77,23 +80,15 @@ public class PostManager {
         phoneNumber = sp.getString("phoneNumber", "");
 
     }
-    public Post findUser(String id) {
-        Post post = LitePal.where("id = ?", id).findFirst(Post.class);
-        if (post != null) {
-            return post;
-        } else {
-            return null;
-        }
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void getDBParameter(List<Uri> imageUriList, String phoneNumber, String editTextContent, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime) {
+    public void getDBParameter(List<Uri> imageUriList, String phoneNumber, String editTextContent, List<Recordings> record, List<User> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime) {
         this.imageUriList = imageUriList;
-        saveContent2DB(imageParametersList,photoPathList,imageUriList,context,phoneNumber, editTextContent, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
+        saveContent2DB(imageParametersList, photoPathList, imageUriList, context, phoneNumber, editTextContent, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void saveContent2DB(List<ImageParameters> imageParametersList,List<String> photoPathList,List<Uri> imageUriList, Context context, String phoneNumber, String editTextContent, List<Recordings> record, List<String> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime) {
+    public void saveContent2DB(List<ImageParameters> imageParametersList, List<String> photoPathList, List<Uri> imageUriList, Context context, String phoneNumber, String editTextContent, List<Recordings> record, List<User> contacts, String location, double longitude, double latitude, int PUBLIC_PERMISSION, String publishedTime, String memoireTime) {
         LoadingDialog loadingDialog = new LoadingDialog(context);
         loadingDialog.show();
 
@@ -136,14 +131,15 @@ public class PostManager {
         }
         Log.d(TAG, "saveContent2DB: " + photoPathList);
 
-        for (ImageParameters imageParameters:imageParametersList) {
+        for (ImageParameters imageParameters : imageParametersList) {
             Log.d(TAG, "saveContent2DB: " + imageParameters);
 
         }
         recordFileList.clear();
         MediaFileList.clear();
+        contactPhoneNumberList.clear();
         ////////////////////////////////////////////////
-        for (Uri imageUri:imageUriList) {
+        for (Uri imageUri : imageUriList) {
             String realPath = getRealPathFromUri(context, imageUri);
             File file = new File(realPath);
             MediaFileList.add(file);
@@ -154,7 +150,10 @@ public class PostManager {
             recordFileList.add(recordFile);
         }
 
-
+        for (User user : contacts) {
+            String contactPhoneNumber = user.getPhoneNumber();
+            contactPhoneNumberList.add(contactPhoneNumber);
+        }
 //===============================================
 
         Map<String, RequestBody> fields = new HashMap<>();
@@ -179,7 +178,7 @@ public class PostManager {
         fields.put("memoryTime", toRequestBody(memoireTime));
         fields.put("like", toRequestBody(String.valueOf(0)));
         fields.put("shareCount", toRequestBody(String.valueOf(0)));
-        fields.put("contacts", toRequestBody(new Gson().toJson(contacts)));
+        fields.put("contacts", toRequestBody(new Gson().toJson(contactPhoneNumberList)));
         fields.put("imageParameters", toRequestBody(new Gson().toJson(imageParametersList)));
         fields.put("recordings", toRequestBody(new Gson().toJson(record)));
 
@@ -194,11 +193,10 @@ public class PostManager {
                 loadingDialog.endAnim();
                 loadingDialog.dismiss();
                 releaseActivity = (ReleaseActivity) PostManager.this.context;
-                if(response.isSuccessful()){
-                    Logger.d("Upload upload success");
-                    Toasty.info(context, "发布成功", Toast.LENGTH_SHORT, true).show();
+                if (response.isSuccessful()) {
 
-                }else{
+                    Toasty.info(context, "发布成功", Toast.LENGTH_SHORT, true).show();
+                } else {
                     Logger.d("Upload upload fail");
                 }
                 releaseActivity.finish();
@@ -206,14 +204,24 @@ public class PostManager {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Logger.d("Upload upload fail"+t.getMessage());
+                Logger.d("Upload upload fail" + t.getMessage());
                 loadingDialog.endAnim();
                 loadingDialog.dismiss();
                 releaseActivity.finish();
             }
         });
+
         User postUser = new UserManager(context).findUserByPhoneNumber(phoneNumber);
-        Post post = new Post(phoneNumber, editTextContent, photoPathList, record, contacts, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime,postUser);
+        userList.add(postUser);
+        userList.addAll(contacts);
+
+        for (User user : contacts) {
+            user.setPassword("");
+            user.saveOrUpdate("phoneNumber = ?", user.getPhoneNumber());
+        }
+
+
+        Post post = new Post(phoneNumber, editTextContent, photoPathList, record, contactPhoneNumberList, location, longitude, latitude, PUBLIC_PERMISSION, publishedTime, memoireTime, userList);
         post.setImageParameters(imageParametersList);
         for (ImageParameters imageParameters : imageParametersList) {
             imageParameters.setPost(post);
@@ -236,14 +244,10 @@ public class PostManager {
         executor.shutdown();
     }
 
-
-
-
-
     private String getRealPathFromUri(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
+            String[] proj = {MediaStore.Images.Media.DATA};
             cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();

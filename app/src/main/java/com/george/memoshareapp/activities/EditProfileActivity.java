@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -222,7 +223,10 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             tv_edit_gender.setText(gender);
         }
         String birthday = user.getBirthday();
-        if (birthday != null) {
+        if (birthday == null || birthday.isEmpty()) {
+            String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            tv_edit_birthday.setText(currentDate);
+        } else {
             tv_edit_birthday.setText(birthday);
         }
         String name = user.getName();
@@ -646,7 +650,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         data.putExtra(EXTRA_EDITED_GENDER, tv_edit_gender.getText().toString());
         data.putExtra(EXTRA_EDITED_REGION, tv_edit_region.getText().toString());
         data.putExtra(EXTRA_EDITED_HEAD_PORTRAIT, sp.getString("headPortraitPath", AppProperties.DEFAULT_AVATAR));
-
         setResult(RESULT_OK, data);
         finish();
     }

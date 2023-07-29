@@ -92,7 +92,6 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         switch (mParam1) {
             case "好友":
                 rootView = inflater.inflate(R.layout.fragment_home_friend, container, false);
@@ -105,7 +104,7 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                 outerRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_recycler);
                 List<Post> emptyList = new ArrayList<>();
                 outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), emptyList);
-                displayManager.getPostListByPage(pageNum, pageSize, outerAdapter.getItemCount(),phoneNumber,this);
+                displayManager.getPostListByPageFriend(pageNum, pageSize, outerAdapter.getItemCount(),phoneNumber,this);
                 smartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
                 smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
                 smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
@@ -116,17 +115,16 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                         pageNum = 1;
 
-                        displayManager.getPostListByPage(pageNum, pageSize,outerAdapter.getItemCount(),phoneNumber, new PostDataListener<List<Post>>() {
+                        displayManager.getPostListByPageFriend(pageNum, pageSize,outerAdapter.getItemCount(),phoneNumber, new PostDataListener<List<Post>>() {
                             @Override
                             public void onSuccess(HttpListData<Post> newPostData,String type) {
+
                                 kv.clearAll();
-                                posts.clear(); // 清除原有数据
+                                posts.clear();
                                 List<Post> newPosts = newPostData.getItems();
-                                // 将新数据添加到列表中
                                 posts.addAll(newPosts);
-                                // 通知 adapter 更新列表
-                                outerAdapter.notifyDataSetChanged(); // 通知整个列表数据变化，重绘视图
-                                refreshLayout.finishRefresh(); //结束刷新
+                                outerAdapter.notifyDataSetChanged();
+                                refreshLayout.finishRefresh();
 
                                 if (newPostData.isLastPage()) {
                                     refreshLayout.setNoMoreData(true);
@@ -142,10 +140,53 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                         });
                     }
                 });
-
                 break;
             case "推荐":
-                rootView = inflater.inflate(R.layout.fragment_home_recommend, container, false);
+                rootView = inflater.inflate(R.layout.fragment_home_friend, container, false);
+                state = (StateLayout) rootView.findViewById(R.id.state);
+                state.setEmptyLayout(R.layout.layout_empty);
+                state.setErrorLayout(R.layout.layout_error);
+                state.setLoadingLayout(R.layout.layout_loading);
+                state.showLoading(null, false, false);
+                displayManager = new DisplayManager();
+                outerRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_recycler);
+                List<Post> emptyList1 = new ArrayList<>();
+                outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), emptyList1);
+                displayManager.getPostListByPage(pageNum, pageSize, outerAdapter.getItemCount(),phoneNumber,this);
+                smartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
+                smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
+                smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
+                smartRefreshLayout.setEnableAutoLoadMore(true);
+                smartRefreshLayout.setFooterHeight(80);
+                smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+                    @Override
+                    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                        pageNum = 1;
+                        displayManager.getPostListByPage(pageNum, pageSize,outerAdapter.getItemCount(),phoneNumber, new PostDataListener<List<Post>>() {
+                            @Override
+                            public void onSuccess(HttpListData<Post> newPostData,String type) {
+                                kv.clearAll();
+                                posts.clear();
+                                List<Post> newPosts = newPostData.getItems();
+                                posts.addAll(newPosts);
+
+                                outerAdapter.notifyDataSetChanged();
+                                refreshLayout.finishRefresh();
+                                if (newPostData.isLastPage()) {
+                                    refreshLayout.setNoMoreData(true);
+                                } else {
+                                    pageNum++;
+                                    refreshLayout.setNoMoreData(false);
+                                }
+                            }
+                            @Override
+                            public void onError(String error) {
+                                refreshLayout.finishRefresh(false); // 结束刷新，但没有收到数据
+                            }
+                        });
+                    }
+                });
+
                 break;
             case "活动":
                 rootView = inflater.inflate(R.layout.fragment_home_activity, container, false);
@@ -194,7 +235,7 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
         System.out.println(postData.isLastPage() + "===========-------------");
         posts = postData.getItems();
 
-        if (posts == null) {
+        if (posts.size()==0) {
             state.showEmpty(null);
         } else {
             outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), posts);

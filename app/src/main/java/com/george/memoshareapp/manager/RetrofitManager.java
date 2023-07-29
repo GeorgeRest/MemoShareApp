@@ -20,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitManager {
 
-    private static RetrofitManager mInstance;
+    private static volatile RetrofitManager mInstance;
 
     private final Retrofit mRetrofit;
 

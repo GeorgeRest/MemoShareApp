@@ -39,6 +39,7 @@ import com.george.memoshareapp.interfaces.getLikeCountListener;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.DateFormat;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,9 +58,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     private SharedPreferences sp;
     private boolean isLike;
     private String phoneNumber;
-    private List<ContactInfo> contactPicture = new ArrayList<>();
-    private Map<String, Integer> nameToPictureMap = new HashMap<>();
-    private List<String> contactName = new ArrayList<>();
     private Post post;
     private List<Post> treePosition;
     private User postUser;
@@ -71,7 +69,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         sp = mContext.getSharedPreferences("User", Context.MODE_PRIVATE);
         phoneNumber = sp.getString("phoneNumber", "");
         editor = sp.edit();
-        initDate();
     }
 
     public static HomeWholeRecyclerViewAdapter getInstance() {
@@ -109,7 +106,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         post = mData.get(holder.getAdapterPosition());
         switch (v.getId()) {
             case R.id.like:
-
                 int postId = (int) post.getId();
                 isLike = sp.getBoolean(post.getId() + ":" + phoneNumber, false);
                 isLike = !isLike;
@@ -119,11 +115,8 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                         @Override
                         public void onSuccess(int likeCount) {
                             post.setLike(likeCount);
-//
                         }
                     });
-//                    PostLikeUpdateEvent event = new PostLikeUpdateEvent(post, isLike);
-//                    EventBus.getDefault().post(event);
                 } else {
                     holder.like.setImageResource(R.drawable.like);
                     new DisplayManager().updateLikeCount(postId, phoneNumber, false, new getLikeCountListener() {
@@ -132,9 +125,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                             post.setLike(likeCount);
                         }
                     });
-
-//                    PostLikeUpdateEvent event = new PostLikeUpdateEvent(post, isLike);
-//                    EventBus.getDefault().post(event);
                 }
                 editor.putBoolean(post.getId() + ":" + phoneNumber, isLike);
                 editor.apply();
@@ -146,11 +136,15 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                 mContext.startActivity(intent);
                 break;
             case R.id.homewhole_iv_head_image_1:
-                Intent intent1 = new Intent(mContext, NewPersonPageActivity.class);
-
-                intent1.putExtra("user", post.getUser());
-                mContext.startActivity(intent1);
+                onHeadImageClicked(0);
                 break;
+            case R.id.iv_head_image_2:
+                onHeadImageClicked(1);
+                break;
+            case R.id.iv_head_image_3:
+                onHeadImageClicked(2);
+                break;
+
         }
         if (holder.recordings != null && !holder.recordings.isEmpty()) {
             switch (v.getId()) {
@@ -177,12 +171,19 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         }
     }
 
+    private void onHeadImageClicked(int index) {
+        if (index >= 0 && index < post.getUser().size()) {
+            User user = post.getUser().get(index);
+            Intent intent = new Intent(mContext, NewPersonPageActivity.class);
+            intent.putExtra("user", user);
+            mContext.startActivity(intent);
+        }
+    }
+
     private void nameTimeLocationContent(ViewHolder holder, Post post) {
-        postUser = post.getUser();
+        postUser = post.getUser().get(0);
         if (postUser.getHeadPortraitPath() != null) {
-            Glide.with(mContext).load(AppProperties.SERVER_MEDIA_URL+postUser.getHeadPortraitPath()).into(holder.iv_head_image_1);
-        } else {
-            holder.iv_head_image_1.setImageResource(R.mipmap.app_icon);
+            Glide.with(mContext).load(AppProperties.SERVER_MEDIA_URL + postUser.getHeadPortraitPath()).into(holder.iv_head_image_1);
         }
         String name = postUser.getName();
         String publishedTime = post.getPublishedTime();
@@ -226,6 +227,8 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.like.setTag(holder);
         holder.chat.setTag(holder);
         holder.iv_head_image_1.setTag(holder);
+        holder.iv_head_image_2.setTag(holder);
+        holder.iv_head_image_3.setTag(holder);
 
         holder.bind(post);
     }
@@ -272,10 +275,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
     private void setUpContactNameAndPicture(ViewHolder holder, Post post) {
         holder.bind(post);
-        contactName = post.getContacts();
-        for (ContactInfo info : contactPicture) {
-            nameToPictureMap.put(info.getName(), info.getPicture());
-        }
         handleContacts(holder);
     }
 
@@ -284,25 +283,27 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
         holder.iv_head_image_2.setVisibility(View.GONE);
         holder.iv_head_image_3.setVisibility(View.GONE);
         holder.tv_head_out_number.setVisibility(View.GONE);
-        if (contactName != null && contactName.size() > 0) {
-            switch (contactName.size()) {
+
+        if (post.getUser() != null && post.getUser().size() > 1) {
+            switch (post.getUser().size() - 1) {
                 default:
                     holder.tv_head_out_number.setVisibility(View.VISIBLE);
-                    holder.tv_head_out_number.setText("+" + (contactName.size() - 2));
+                    holder.tv_head_out_number.setText("+" + (post.getUser().size() - 3));
                 case 2:
-                    if (contactName.get(1) != null) {
+                    if (post.getUser().get(2) != null) {
+                        Logger.d(post.getId() + ": " + post.getUser().get(2).getHeadPortraitPath());
+                        String headPortrait2 = AppProperties.SERVER_MEDIA_URL + post.getUser().get(2).getHeadPortraitPath();
                         holder.iv_head_image_3.setVisibility(View.VISIBLE);
-                        holder.iv_head_image_3.setImageResource(nameToPictureMap.get(contactName.get(1)));
+                        Glide.with(mContext).load(headPortrait2).into(holder.iv_head_image_3);
                     }
                 case 1:
-                    if (contactName.get(0) != null) {
+                    if (post.getUser().get(1) != null) {
+                        Logger.d(post.getId() + ": " + post.getUser().get(1).getHeadPortraitPath());
+                        String headPortrait1 = AppProperties.SERVER_MEDIA_URL + post.getUser().get(1).getHeadPortraitPath();
                         holder.iv_head_image_2.setVisibility(View.VISIBLE);
-                        holder.iv_head_image_2.setImageResource(nameToPictureMap.get(contactName.get(0)));
+                        Glide.with(mContext).load(headPortrait1).into(holder.iv_head_image_2);
                     }
             }
-        } else {
-            holder.iv_head_image_2.setVisibility(View.GONE);
-            holder.iv_head_image_3.setVisibility(View.GONE);
         }
     }
 
@@ -425,6 +426,8 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             rl_layout = (RelativeLayout) itemView.findViewById(R.id.rl_layout);
             ll_head_images = (LinearLayout) itemView.findViewById(R.id.ll_head_images);
             iv_head_image_1.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
+            iv_head_image_2.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
+            iv_head_image_3.setOnClickListener(HomeWholeRecyclerViewAdapter.this);
 
         }
 
@@ -475,28 +478,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
             currentPlayingImageView.setImageResource(R.drawable.record_homepage);  // Use your own default image here
             currentPlayingImageView = null;
         }
-    }
-
-    private void initDate() {
-        contactPicture.add(new ContactInfo("张三", R.mipmap.photo_1));
-        contactPicture.add(new ContactInfo("李潇", R.mipmap.photo_2));
-        contactPicture.add(new ContactInfo("唐莉", R.mipmap.photo_3));
-        contactPicture.add(new ContactInfo("程思迪", R.mipmap.photo_4));
-        contactPicture.add(new ContactInfo("Audss", R.mipmap.photo_5));
-        contactPicture.add(new ContactInfo("王五", R.mipmap.photo_6));
-        contactPicture.add(new ContactInfo("CC", R.mipmap.photo_7));
-        contactPicture.add(new ContactInfo("张明敏", R.mipmap.photo_8));
-        contactPicture.add(new ContactInfo("lilies", R.mipmap.photo_9));
-        contactPicture.add(new ContactInfo("大师", R.mipmap.photo_10));
-        contactPicture.add(new ContactInfo("历史老师", R.mipmap.photo_2));
-        contactPicture.add(new ContactInfo("Kato", R.mipmap.photo_7));
-        contactPicture.add(new ContactInfo("seven", R.mipmap.photo_5));
-        contactPicture.add(new ContactInfo("吴仪", R.mipmap.photo_1));
-        contactPicture.add(new ContactInfo("李宏", R.mipmap.photo_3));
-        contactPicture.add(new ContactInfo("高倩倩", R.mipmap.photo_10));
-        contactPicture.add(new ContactInfo("福福", R.mipmap.photo_4));
-        contactPicture.add(new ContactInfo("小庞", R.mipmap.photo_9));
-        contactPicture.add(new ContactInfo("***", R.mipmap.photo_6));
     }
 
 }

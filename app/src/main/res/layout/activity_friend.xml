@@ -83,10 +83,17 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#F8F4FA" />
-    <android.widget.SearchView
-        android:id="@+id/sv_search"
+<!--    <android.widget.SearchView-->
+<!--        android:id="@+id/sv_search"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="35dp"/>-->
+    <FrameLayout
+        android:id="@+id/contact_search_layout_friend"
         android:layout_width="match_parent"
-        android:layout_height="35dp"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp">
+    </FrameLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp_friend"

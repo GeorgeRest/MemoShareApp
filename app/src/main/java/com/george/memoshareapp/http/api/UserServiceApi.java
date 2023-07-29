@@ -2,6 +2,9 @@ package com.george.memoshareapp.http.api;
 
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.http.response.HttpData;
+import com.george.memoshareapp.http.response.HttpListData;
+
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -55,4 +58,13 @@ public interface UserServiceApi {
 
     @GET("user/getUser/{phoneNumber}")
     Call<HttpData<User>> getUserByPhoneNumber(@Path("phoneNumber") String phoneNumber);
+
+    @GET("user/getFollowedUser")
+    Call<HttpListData<User>> getFollowedUser(@Query("userPhoneNumber") String phoneNumber);
+
+    @GET("user/getFansUser")
+    Call<HttpListData<User>> getFansUser(@Query("userPhoneNumber") String phoneNumber);
+
+    @GET("user/getFriendUser")
+    Call<HttpListData<User>> getFriendUser(@Query("userPhoneNumber") String phoneNumber);
 }

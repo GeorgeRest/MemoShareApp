@@ -36,6 +36,7 @@ public class Relationship extends LitePalSupport implements Serializable {
         this.relationshipStatus = relationshipStatus;
     }
 
+
     public long getId() {
         return id;
     }

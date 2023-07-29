@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_hold_other_pic_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_pic_chat_other_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:visibility="visible">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardCornerRadius="50dp">
+
+                <ImageView
+                    android:id="@+id/iv_pic_chat_other_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#D81B1B"/>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tv_pic_chat_other_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="蝎子莱莱"
+                android:layout_marginLeft="50dp"
+                android:textSize="10dp"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:id="@+id/tv_pic_chat_other_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2020/6/23 13:00"
+                android:layout_alignTop="@+id/tv_pic_chat_other_name"
+                android:layout_marginLeft="50dp"
+                android:textSize="10dp"
+                android:textColor="@color/black"
+                android:layout_marginTop="13dp"/>
+
+        </RelativeLayout>
+        <androidx.cardview.widget.CardView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginRight="50dp"
+            app:cardCornerRadius="22dp">
+
+            <ImageView
+                android:id="@+id/iv_chat_other_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_hold_self_pic_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_pic_chat_self_detail"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                app:cardCornerRadius="50dp">
+
+                <ImageView
+                    android:id="@+id/iv_text_chat_self_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#D81B1B"/>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tv_pic_chat_self_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="蝎子莱莱"
+                android:layout_marginRight="50dp"
+                android:textSize="10dp"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:id="@+id/tv_pic_chat_self_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="2020/6/23 13:00"
+                android:layout_alignTop="@+id/tv_pic_chat_self_name"
+                android:layout_marginRight="50dp"
+                android:textSize="10dp"
+                android:textColor="@color/black"
+                android:layout_marginTop="13dp"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_alignParentRight="true"
+                app:cardCornerRadius="22dp"
+                android:layout_marginLeft="50dp"
+                android:paddingVertical="5dp"
+                android:paddingHorizontal="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_chat_self_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

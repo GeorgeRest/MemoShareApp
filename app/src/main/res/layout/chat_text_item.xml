@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_hold_other_text_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_text_chat_other_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:visibility="visible">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardCornerRadius="50dp">
+
+                <ImageView
+                    android:id="@+id/iv_text_chat_other_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#D81B1B"/>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tv_text_chat_other_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="蝎子莱莱"
+                android:layout_marginLeft="50dp"
+                android:textSize="10dp"
+                android:textColor="@color/black"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:id="@+id/tv_text_chat_other_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2020/6/23 13:00"
+                android:layout_alignTop="@+id/tv_text_chat_other_name"
+                android:layout_marginLeft="50dp"
+                android:textSize="10dp"
+                android:textColor="@color/black"
+                android:layout_marginTop="13dp"/>
+
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/chat_bg_others_shape"
+            android:layout_marginRight="50dp"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="10dp">
+
+            <TextView
+                android:id="@+id/tv_text_chat_other_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFFFF"
+                android:text="哈哈哈hhhhhhhhhhhhhhhhhh哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
+                android:textSize="10dp"/>
+
+            </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_hold_self_text_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_text_chat_self_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:visibility="visible">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                app:cardCornerRadius="50dp">
+
+                <ImageView
+                    android:id="@+id/iv_text_chat_self_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#D81B1B"/>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tv_voice_chat_self_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp"
+                android:text="蝎子莱莱"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/black"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/tv_text_chat_self_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="2020/6/23 13:00"
+                android:layout_alignTop="@+id/tv_voice_chat_self_name"
+                android:layout_marginRight="50dp"
+                android:textSize="10dp"
+                android:textColor="@color/black"
+                android:layout_marginTop="13dp"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/chat_bg_self_shape"
+            android:layout_marginLeft="50dp"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="10dp">
+
+            <TextView
+                android:id="@+id/tv_text_chat_self_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#A996F4"
+                android:text="哈哈哈hhhhhhhhhhhhhhhhhh哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
+                android:textSize="10dp"/>
+
+        </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
