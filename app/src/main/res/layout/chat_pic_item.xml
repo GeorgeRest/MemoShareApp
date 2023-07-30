@@ -143,7 +143,24 @@
                     android:id="@+id/iv_chat_self_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
-
+                <View
+                    android:id="@+id/chat_self_image_gray"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#80000000"
+                    android:visibility="gone"/>
+                <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                    android:id="@+id/circularProgressBar"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:cpb_background_progressbar_color="#bdbbbc"
+                    app:cpb_background_progressbar_width="6dp"
+                    app:cpb_progress_direction="to_right"
+                    app:cpb_progressbar_color="#F8F5F5"
+                    app:cpb_progressbar_width="6dp"
+                    android:layout_gravity="center"
+                    app:cpb_round_border="false"
+                    android:visibility="gone"/>
             </androidx.cardview.widget.CardView>
 
         </RelativeLayout>

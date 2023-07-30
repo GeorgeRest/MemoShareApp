@@ -13,6 +13,7 @@ public class VoiceMessageItem extends MultiItemEntity {
     private Date date;
     private int UserSide;
     private String name;
+    private int progress;
     // 语音消息内容等相关属性和方法
 
     @Override
@@ -58,6 +59,16 @@ public class VoiceMessageItem extends MultiItemEntity {
     public Date getItemDate() {
 
         return date;
+    }
+
+    @Override
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    @Override
+    public int getProgress() {
+        return progress;
     }
 
     @Override

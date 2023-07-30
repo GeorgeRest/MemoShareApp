@@ -13,6 +13,7 @@ public class TextMessageItem extends MultiItemEntity {
     private Date date;
     private int UserSide;
     private String name;
+    private int progress;
 
     public TextMessageItem(String textContent, Date date, int userSide, String name) {
         this.textContent = textContent;
@@ -57,6 +58,16 @@ public class TextMessageItem extends MultiItemEntity {
     public Date getItemDate() {
 
         return date;
+    }
+
+    @Override
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    @Override
+    public int getProgress() {
+        return progress;
     }
 
     @Override

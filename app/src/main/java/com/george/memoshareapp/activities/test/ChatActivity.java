@@ -16,6 +16,7 @@ import android.widget.ListView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.ChatMessage;
 import com.george.memoshareapp.service.ChatService;
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -24,12 +25,15 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import kotlin.Unit;
+
 public class ChatActivity extends AppCompatActivity {
 
     private ChatService mService;
     private boolean mBound = false;
     private ListView listview;
     private List<String> MessageList=new ArrayList<>();
+    private CircularProgressBar circularProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -13,6 +13,7 @@ public class ImageMessageItem extends MultiItemEntity {
     private Date date;
     private int UserSide;
     private String name;
+    private int progress;
 
     @Override
     public int getItemShowType() {
@@ -61,6 +62,17 @@ public class ImageMessageItem extends MultiItemEntity {
 
         return date;
     }
+
+    @Override
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    @Override
+    public int getProgress() {
+        return progress;
+    }
+
 
     public ImageMessageItem(String imagePath, Date date, int userSide, String name) {
         ImagePath = imagePath;

@@ -23,5 +23,7 @@ public abstract class MultiItemEntity {
     public abstract void setItemDate(Date date);
 
     public abstract Date getItemDate();
+    public abstract void setProgress(int progress);
+    public abstract int getProgress();
 
 }

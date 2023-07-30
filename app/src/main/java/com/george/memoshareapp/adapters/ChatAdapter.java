@@ -22,6 +22,8 @@ import com.chad.library.adapter.base.BaseMultiItemAdapter;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.properties.MessageType;
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
+import com.orhanobut.logger.Logger;
 
 
 import java.io.IOException;
@@ -59,7 +61,6 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                     case MultiItemEntity.SELF:
                         textChatViewHolder.ll_hold_other_text_chat.setVisibility(View.VISIBLE);
                         textChatViewHolder.ll_hold_self_text_chat.setVisibility(View.VISIBLE);
-
                         textChatViewHolder.ll_hold_other_text_chat.setVisibility(View.GONE);
                         textChatViewHolder.tv_text_chat_self_name.setText(multiItemEntity.getUserName());
                         textChatViewHolder.tv_text_chat_self_content.setText(multiItemEntity.getItemContent());
@@ -68,6 +69,9 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                         format.setTimeZone(TimeZone.getDefault());
                         String time = format.format(date);
                         textChatViewHolder.tv_text_chat_self_time.setText(time);
+
+
+
                         break;
                     case MultiItemEntity.OTHER:
                         textChatViewHolder.ll_hold_other_text_chat.setVisibility(View.VISIBLE);
@@ -106,12 +110,21 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
 
                         picChatViewHolder.tv_pic_chat_self_name.setText(multiItem.getUserName());
                         Date date = multiItem.getItemDate();
+
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                         format.setTimeZone(TimeZone.getDefault());
                         String time = format.format(date);
                         picChatViewHolder.tv_pic_chat_self_time.setText(time);
                         setSelfImage(multiItem.getItemContent());
-
+                        picChatViewHolder.circularProgressBar.setProgress(multiItem.getProgress());
+                        if(multiItem.getProgress()<100){
+                            picChatViewHolder.image_gray.setVisibility(View.VISIBLE);
+                            picChatViewHolder.circularProgressBar.setVisibility(View.VISIBLE);
+                            Logger.d(multiItem.getProgress());
+                        }else{
+                            picChatViewHolder.image_gray.setVisibility(View.GONE);
+                            picChatViewHolder.circularProgressBar.setVisibility(View.GONE);
+                        }
 
                         break;
                     case MultiItemEntity.OTHER:
@@ -318,6 +331,8 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
     }
 
     public class PicChatViewHolder extends RecyclerView.ViewHolder{
+        private final View image_gray;
+        private CircularProgressBar circularProgressBar;
         private LinearLayout ll_hold_other_pic_chat;
         private LinearLayout ll_hold_self_pic_chat;
         private ImageView iv_pic_chat_other_profile;
@@ -347,6 +362,8 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
             rl_pic_chat_self_detail = itemView.findViewById(R.id.rl_pic_chat_self_detail);
             iv_chat_other_image = itemView.findViewById(R.id.iv_chat_other_image);
             iv_chat_self_image = itemView.findViewById(R.id.iv_chat_self_image);
+            circularProgressBar = itemView.findViewById(R.id.circularProgressBar);
+            image_gray = itemView.findViewById(R.id.chat_self_image_gray);
 
         }
     }

@@ -46,7 +46,8 @@
         <service
             android:name=".service.ChatService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true">
+        </service>
 
         <activity
             android:name=".activities.test.ChatActivity"
@@ -59,13 +60,13 @@
             android:exported="true" />
         <activity
             android:name=".activities.GroupChatActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.NewPersonPageActivity"
-            android:exported="true" />
-        <activity
-            android:name=".activities.ChangePasswordActivity"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".activities.RemindNoteActivity"
             android:exported="false" />

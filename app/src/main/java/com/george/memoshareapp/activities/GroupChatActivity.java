@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -25,25 +27,37 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ChatAdapter;
 import com.george.memoshareapp.beans.ImageMessageItem;
 import com.george.memoshareapp.beans.TextMessageItem;
+import com.george.memoshareapp.http.ProgressRequestBody;
+import com.george.memoshareapp.http.api.ChatServiceApi;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.interfaces.SendListener;
+import com.george.memoshareapp.manager.RetrofitManager;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.entity.MediaExtraInfo;
 import com.luck.picture.lib.utils.MediaUtils;
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class GroupChatActivity extends AppCompatActivity implements SendListener {
 
     private FragmentManager manager;
     private Fragment myChatBar;
     private final int CHOOSE_PIC_REQUEST_CODE = 3;
-
+    private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
     private List<String> mImageList = new ArrayList<>();
     private List<MultiItemEntity> multiItemEntityList = new ArrayList<>();
@@ -144,12 +158,14 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
 //            Log.i(TAG, "原始宽高: " + media.getWidth() + "x" + media.getHeight());
 //            Log.i(TAG, "裁剪宽高: " + media.getCropImageWidth() + "x" + media.getCropImageHeight());
 //            Log.i(TAG, "文件大小: " + media.getSize());
-
             String path = new File(media.getRealPath()).getPath();
             Date date = new Date(System.currentTimeMillis());
-
             mImageList.add(path); // 接收已选图片地址，用于接口上传图片
-            multiItemEntityList.add(new ImageMessageItem(path,date, MultiItemEntity.SELF,"user"));
+            //需要进行上传图片或视频
+            ImageMessageItem imageMessageItem = new ImageMessageItem(path, date, MultiItemEntity.SELF, "user");
+            multiItemEntityList.add(imageMessageItem);
+            uploadFile(path,imageMessageItem);
+
         }
         chatAdapter.notifyDataSetChanged();
     }
@@ -159,5 +175,57 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
         multiItemEntityList.add(multiItem);
         chatAdapter.notifyDataSetChanged();
 
+    }
+
+    private void uploadFile(String filePath,ImageMessageItem imageItem) {
+        ChatServiceApi service = RetrofitManager.getInstance().create(ChatServiceApi.class);
+        File file = new File(filePath);
+        int itemPosition = chatAdapter.getItemPosition(imageItem);
+    Logger.d("itemPosition"+itemPosition);
+        ProgressRequestBody fileBody = new ProgressRequestBody(file, new ProgressRequestBody.UploadCallbacks() {
+            @Override
+            public void onProgressUpdate(int percentage) {
+                mainThreadHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageItem.setProgress(percentage);
+                        chatAdapter.notifyItemChanged(itemPosition);
+                    }
+                },500);
+            }
+
+            @Override
+            public void onError() {
+                // do something on error
+            }
+
+            @Override
+            public void onFinish() {
+                mainThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageItem.setProgress(100);
+                        chatAdapter.notifyItemChanged(itemPosition);
+                    }
+                });
+            }
+        });
+
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), fileBody);
+        String descriptionString = "This is a description";
+        RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), descriptionString);
+
+        Call<ResponseBody> call = service.upload(description, body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+               Logger.d(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 }
