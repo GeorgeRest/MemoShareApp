@@ -244,7 +244,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                     intent.putExtra("FriendList",(Serializable) friendList);
                     intent.putExtra("ChatRoomID",chatRoomID);
                     intent.putExtra("comeFromContactListActivity",true);
-
+//加人
 //                    ChatRoomApi chatRoomApi = RetrofitManager.getInstance().create(ChatRoomApi.class);
 //                    List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
 //                    for (User u:addedContactList) {
@@ -317,7 +317,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                              List<User> alreadyCheckedUserList = new ArrayList<User>();
                              alreadyCheckedUserList = horizontalAdapter.getContacts();
 
-//                             createChatRoom(alreadyCheckedUserList,input);
+                             createChatRoom(alreadyCheckedUserList,input);
 
                              Intent intent = new Intent(getBaseContext(), ChatGroupActivity.class);
                              intent.putExtra("contact_list", (Serializable) alreadyCheckedUserList);
