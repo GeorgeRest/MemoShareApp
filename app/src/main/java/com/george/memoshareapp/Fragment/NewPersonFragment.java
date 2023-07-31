@@ -30,8 +30,6 @@ import com.george.memoshareapp.interfaces.PostDataListener;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.SpacesItemDecoration;
 import com.orhanobut.logger.Logger;
-import com.scwang.smart.refresh.footer.ClassicsFooter;
-import com.scwang.smart.refresh.header.ClassicsHeader;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
@@ -199,6 +197,9 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                         }, "点赞");
                     }
                 });
+                break;
+            case "相册":
+
                 break;
 
             default:

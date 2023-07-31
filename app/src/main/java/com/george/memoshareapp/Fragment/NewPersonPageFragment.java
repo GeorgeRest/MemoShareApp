@@ -477,6 +477,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
     private void initData() {
         mData.add("发布");
         mData.add("点赞");
+        mData.add("相册");
 
     }
    @Override
