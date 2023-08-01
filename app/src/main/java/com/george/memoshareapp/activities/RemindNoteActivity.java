@@ -1,5 +1,7 @@
 package com.george.memoshareapp.activities;
 
+import static com.george.memoshareapp.activities.RemindActivity.RESULT_CODE_REMIND_NOTE;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -66,7 +68,7 @@ public class RemindNoteActivity extends AppCompatActivity implements View.OnClic
                 String sign = et_note.getText().toString().trim();
                 Intent intent = new Intent();
                 intent.putExtra("result", sign);
-                setResult(3, intent);
+                setResult(RESULT_CODE_REMIND_NOTE, intent);
                 finish();
                 break;
         }

@@ -1,5 +1,7 @@
 package com.george.memoshareapp.activities;
 
+import static com.george.memoshareapp.activities.RemindActivity.RESULT_CODE_REMIND_CONTENT;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -69,7 +71,7 @@ public class RemindContentActivity extends AppCompatActivity implements View.OnC
                 String sign = et_content.getText().toString().trim();
                 Intent intent = new Intent();
                 intent.putExtra("result", sign);
-                setResult(1, intent);
+                setResult(RESULT_CODE_REMIND_CONTENT, intent);
                 finish();
                 break;
         }

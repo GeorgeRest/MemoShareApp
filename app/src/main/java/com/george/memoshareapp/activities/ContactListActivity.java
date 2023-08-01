@@ -202,7 +202,7 @@ public class ContactListActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent();
-                    intent.putExtra("name",filteredList.get(position).getName());
+                    intent.putExtra("contact_user",userList.get(position));
                     setResult(ReleaseActivity.RESULT_CODE_CONTACT,intent);
                     finish();
                 }
