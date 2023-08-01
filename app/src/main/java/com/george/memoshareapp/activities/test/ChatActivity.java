@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.activities.GroupChatActivity;
 import com.george.memoshareapp.beans.ChatMessage;
 import com.george.memoshareapp.service.ChatService;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
@@ -32,18 +33,13 @@ public class ChatActivity extends AppCompatActivity {
     private ChatService mService;
     private boolean mBound = false;
     private ListView listview;
-    private List<String> MessageList=new ArrayList<>();
+    private List<String> MessageList = new ArrayList<>();
     private CircularProgressBar circularProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        EventBus.getDefault().register(this);
-        ArrayAdapter<String>adapter=new ArrayAdapter<String>(ChatActivity.this,
-                android.R.layout.simple_list_item_1,MessageList);
-        listview = findViewById(R.id.listView);
-        listview.setAdapter(adapter);
 
 
     }
@@ -90,15 +86,14 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(ChatMessage message) {
-    MessageList.add(message.getContent());
-        ArrayAdapter<String>adapter=new ArrayAdapter<String>(ChatActivity.this,
-                android.R.layout.simple_list_item_1,MessageList);
-        listview.setAdapter(adapter);
+
+
+    public void intent(View view) {
+        Intent intent = new Intent(this, GroupChatActivity.class);
+        startActivity(intent);
     }
 }

@@ -69,7 +69,12 @@
 
         <activity
             android:name=".activities.RemindNoteActivity"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.RemindContentActivity"
             android:exported="false" />
@@ -129,6 +134,7 @@
         <activity
             android:name=".activities.DetailActivity"
             android:exported="true" />
+
         <activity
             android:name=".activities.MapLocationActivity"
             android:exported="true" />

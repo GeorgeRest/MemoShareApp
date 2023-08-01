@@ -25,5 +25,7 @@ public abstract class MultiItemEntity {
     public abstract Date getItemDate();
     public abstract void setProgress(int progress);
     public abstract int getProgress();
+    public abstract void setFileName(String  fileName);
+    public abstract String getFileName();
 
 }

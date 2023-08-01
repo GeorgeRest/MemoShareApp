@@ -13,9 +13,10 @@ import com.google.common.eventbus.Subscribe;
  * @version: 1.0
  */
 public class ChatMessageEvent {
-    private ChatMessage chatMessage;
+   public final   ChatMessage chatMessage;
 
-    public void onMessageEvent(ChatMessage message) {
-        this.chatMessage = message;
+    public ChatMessageEvent(ChatMessage chatMessage) {
+        this.chatMessage = chatMessage;
     }
+
 }

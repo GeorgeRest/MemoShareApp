@@ -25,19 +25,30 @@ import android.widget.Toast;
 import com.george.memoshareapp.Fragment.MyChatBarFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ChatAdapter;
+import com.george.memoshareapp.beans.ChatAttachment;
+import com.george.memoshareapp.beans.ChatMessage;
 import com.george.memoshareapp.beans.ImageMessageItem;
 import com.george.memoshareapp.beans.TextMessageItem;
+import com.george.memoshareapp.beans.VoiceMessageItem;
+import com.george.memoshareapp.events.ChatMessageEvent;
+import com.george.memoshareapp.events.SendMessageEvent;
 import com.george.memoshareapp.http.ProgressRequestBody;
 import com.george.memoshareapp.http.api.ChatServiceApi;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.interfaces.SendListener;
 import com.george.memoshareapp.manager.RetrofitManager;
+import com.george.memoshareapp.properties.AppProperties;
+import com.george.memoshareapp.properties.MessageType;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.entity.MediaExtraInfo;
 import com.luck.picture.lib.utils.MediaUtils;
 import com.orhanobut.logger.Logger;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -71,17 +82,17 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE},3);
+            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
         }
 
         manager = getSupportFragmentManager();
 
-        if(myChatBar==null){
+        if (myChatBar == null) {
             myChatBar = new MyChatBarFragment();
         }
 
         initView();
-
+        EventBus.getDefault().register(this);
     }
 
     private void initView() {
@@ -91,19 +102,18 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
         TextView tv_group_chat_name = (TextView) findViewById(R.id.tv_group_chat_name);
 
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fl_group_chat_detail_bar,myChatBar);
+        transaction.replace(R.id.fl_group_chat_detail_bar, myChatBar);
         transaction.commit();
         Date date = new Date(System.currentTimeMillis());
-        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉",date,MultiItemEntity.OTHER,"鲨鱼辣椒"));
-        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉巴拉巴拉巴拉",date,MultiItemEntity.OTHER,"鲨鱼辣椒"));
-        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉",date,MultiItemEntity.OTHER,"鲨鱼辣椒"));
+        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉", date, MultiItemEntity.OTHER, "鲨鱼辣椒"));
+        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉巴拉巴拉巴拉", date, MultiItemEntity.OTHER, "鲨鱼辣椒"));
+        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉", date, MultiItemEntity.OTHER, "鲨鱼辣椒"));
 
         RecyclerView rcl_group_chat_detail = (RecyclerView) findViewById(R.id.rcl_group_chat_detail);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         chatAdapter = new ChatAdapter(this, multiItemEntityList);
         rcl_group_chat_detail.setLayoutManager(layoutManager);
         rcl_group_chat_detail.setAdapter(chatAdapter);
-
 
 
     }
@@ -113,7 +123,7 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode){
+        switch (requestCode) {
             case CHOOSE_PIC_REQUEST_CODE:
                 Toast.makeText(this, "退出选择图片", Toast.LENGTH_SHORT).show();
                 if (resultCode == RESULT_OK) {
@@ -129,6 +139,7 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
 
         }
     }
+
     private void analyticalSelectResults(ArrayList<LocalMedia> result) {
         mImageList = new ArrayList<>();
         for (LocalMedia media : result) {
@@ -162,36 +173,56 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
             Date date = new Date(System.currentTimeMillis());
             mImageList.add(path); // 接收已选图片地址，用于接口上传图片
             //需要进行上传图片或视频
+
             ImageMessageItem imageMessageItem = new ImageMessageItem(path, date, MultiItemEntity.SELF, "user");
+            imageMessageItem.setFileName(media.getFileName());
+            Logger.d(imageMessageItem.getFileName());
             multiItemEntityList.add(imageMessageItem);
-            uploadFile(path,imageMessageItem);
+            uploadFile(path, imageMessageItem);
 
         }
         chatAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * 发送消息给service->服务器并更新UI
+     *
+     * @param multiItem
+     */
     @Override
     public void sendContent(MultiItemEntity multiItem) {
+
         multiItemEntityList.add(multiItem);
         chatAdapter.notifyDataSetChanged();
+        switch (multiItem.getItemShowType()) {
+            case MessageType.TEXT:
+                EventBus.getDefault().post(new SendMessageEvent(new ChatMessage(13, "17", multiItem.getItemContent(), "文本")));
+                break;
+            case MessageType.VOICE:
+                Logger.d("发送语音");
+                uploadFile(multiItem.getItemContent(), multiItem);
+                break;
+            default:
+                break;
+        }
 
     }
 
-    private void uploadFile(String filePath,ImageMessageItem imageItem) {
+    private void uploadFile(String filePath, MultiItemEntity multiItem) {
         ChatServiceApi service = RetrofitManager.getInstance().create(ChatServiceApi.class);
         File file = new File(filePath);
-        int itemPosition = chatAdapter.getItemPosition(imageItem);
-    Logger.d("itemPosition"+itemPosition);
+        int itemPosition = chatAdapter.getItemPosition(multiItem);
+        Logger.d("itemPosition" + itemPosition);
         ProgressRequestBody fileBody = new ProgressRequestBody(file, new ProgressRequestBody.UploadCallbacks() {
             @Override
             public void onProgressUpdate(int percentage) {
-                mainThreadHandler.postDelayed(new Runnable() {
+                mainThreadHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        imageItem.setProgress(percentage);
+                        multiItem.setProgress(percentage);
                         chatAdapter.notifyItemChanged(itemPosition);
                     }
-                },500);
+                });
             }
 
             @Override
@@ -204,10 +235,11 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
                 mainThreadHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        imageItem.setProgress(100);
+                        multiItem.setProgress(100);
                         chatAdapter.notifyItemChanged(itemPosition);
                     }
                 });
+
             }
         });
 
@@ -219,7 +251,23 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-               Logger.d(response.body());
+                if (response.isSuccessful()) {
+                    String type = "";
+                    switch (multiItem.getItemShowType()) {
+                        case MessageType.VOICE:
+                            type = "语音";
+                            break;
+                        case MessageType.IMAGE:
+                            type = "图片";
+                            break;
+                        default:
+                            return;
+                    }
+                    ChatMessage message = new ChatMessage(13, "17", "", type);
+                    ChatAttachment attachment = new ChatAttachment(multiItem.getFileName(), type);
+                    message.setAttachment(attachment);
+                    EventBus.getDefault().post(new SendMessageEvent(message));
+                }
             }
 
             @Override
@@ -227,5 +275,44 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    /**
+     * 接收服务器消息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onChatMessageEvent(ChatMessageEvent event) {
+        ChatMessage chatMessage = event.chatMessage;
+        String filePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+        MultiItemEntity multiItem = null;
+
+        switch (chatMessage.getMessageType()) {
+            case "文本":
+                multiItem = new TextMessageItem(chatMessage.getContent(), new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+                break;
+            case "图片":
+                Logger.d(filePath);
+                multiItem = new ImageMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+                break;
+            case "语音":
+                multiItem = new VoiceMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+                Logger.d(filePath);
+                break;
+            case "视频":
+
+                break;
+            default:
+                break;
+        }
+        if (multiItem != null) {
+            multiItemEntityList.add(multiItem);
+            chatAdapter.notifyDataSetChanged();
+        }
     }
 }

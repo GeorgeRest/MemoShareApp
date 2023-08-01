@@ -14,6 +14,7 @@ public class VoiceMessageItem extends MultiItemEntity {
     private int UserSide;
     private String name;
     private int progress;
+    private String fileName;
     // 语音消息内容等相关属性和方法
 
     @Override
@@ -69,6 +70,16 @@ public class VoiceMessageItem extends MultiItemEntity {
     @Override
     public int getProgress() {
         return progress;
+    }
+
+    @Override
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    @Override
+    public String getFileName() {
+            return fileName;
     }
 
     @Override

@@ -38,6 +38,20 @@ public class ChatMessage {
         this.attachment = attachment;
     }
 
+    public ChatMessage(int chatRoomId, String senderId, String content, String messageType) {
+        this.chatRoomId = chatRoomId;
+        this.senderId = senderId;
+        this.content = content;
+        this.messageType = messageType;
+    }
+    public ChatMessage(int chatRoomId, String senderId, String content, String messageType, ChatAttachment attachment) {
+        this.chatRoomId = chatRoomId;
+        this.senderId = senderId;
+        this.content = content;
+        this.messageType = messageType;
+        this.attachment = attachment;
+    }
+
     public int getId() {
         return id;
     }

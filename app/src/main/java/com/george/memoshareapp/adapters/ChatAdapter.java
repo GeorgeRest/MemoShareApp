@@ -42,7 +42,7 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
     private MediaPlayer mediaPlayer;
     private CountDownTimer countDownTimer;
 
-    public ChatAdapter(Context context, List<MultiItemEntity> multiItemEntities){
+    public ChatAdapter(Context context, List<MultiItemEntity> multiItemEntities) {
         super(multiItemEntities);
         this.context = context;
         this.multiItemEntities = multiItemEntities;
@@ -50,14 +50,14 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
             @NonNull
             @Override
             public TextChatViewHolder onCreate(@NonNull Context context, @NonNull ViewGroup viewGroup, int i) {
-                View view = View.inflate(getContext(), R.layout.chat_text_item,null );
+                View view = View.inflate(getContext(), R.layout.chat_text_item, null);
                 return new TextChatViewHolder(view);
             }
 
             @Override
             public void onBind(@NonNull RecyclerView.ViewHolder viewHolder, int i, @Nullable MultiItemEntity multiItemEntity) {
-                textChatViewHolder = (TextChatViewHolder)viewHolder;
-                switch (multiItemEntity.getUserSideType()){
+                textChatViewHolder = (TextChatViewHolder) viewHolder;
+                switch (multiItemEntity.getUserSideType()) {
                     case MultiItemEntity.SELF:
                         textChatViewHolder.ll_hold_other_text_chat.setVisibility(View.VISIBLE);
                         textChatViewHolder.ll_hold_self_text_chat.setVisibility(View.VISIBLE);
@@ -69,7 +69,6 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                         format.setTimeZone(TimeZone.getDefault());
                         String time = format.format(date);
                         textChatViewHolder.tv_text_chat_self_time.setText(time);
-
 
 
                         break;
@@ -95,14 +94,14 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreate(@NonNull Context context, @NonNull ViewGroup viewGroup, int i) {
-                View view = View.inflate(getContext(), R.layout.chat_pic_item,null);
+                View view = View.inflate(getContext(), R.layout.chat_pic_item, null);
                 return new PicChatViewHolder(view);
             }
 
             @Override
             public void onBind(@NonNull RecyclerView.ViewHolder viewHolder, int i, @Nullable MultiItemEntity multiItem) {
                 picChatViewHolder = (PicChatViewHolder) viewHolder;
-                switch (multiItem.getUserSideType()){
+                switch (multiItem.getUserSideType()) {
                     case MultiItemEntity.SELF:
                         picChatViewHolder.ll_hold_self_pic_chat.setVisibility(View.VISIBLE);
                         picChatViewHolder.ll_hold_other_pic_chat.setVisibility(View.VISIBLE);
@@ -117,11 +116,11 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                         picChatViewHolder.tv_pic_chat_self_time.setText(time);
                         setSelfImage(multiItem.getItemContent());
                         picChatViewHolder.circularProgressBar.setProgress(multiItem.getProgress());
-                        if(multiItem.getProgress()<100){
+                        if (multiItem.getProgress() < 100) {
                             picChatViewHolder.image_gray.setVisibility(View.VISIBLE);
                             picChatViewHolder.circularProgressBar.setVisibility(View.VISIBLE);
                             Logger.d(multiItem.getProgress());
-                        }else{
+                        } else {
                             picChatViewHolder.image_gray.setVisibility(View.GONE);
                             picChatViewHolder.circularProgressBar.setVisibility(View.GONE);
                         }
@@ -151,13 +150,13 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreate(@NonNull Context context, @NonNull ViewGroup viewGroup, int i) {
-                if(mediaPlayer == null){
+                if (mediaPlayer == null) {
                     mediaPlayer = new MediaPlayer();
-                }else {
+                } else {
                     mediaPlayer.reset();
                 }
 
-                View view = View.inflate(getContext(), R.layout.chat_voice_item,null);
+                View view = View.inflate(getContext(), R.layout.chat_voice_item, null);
                 return new VoiceChatViewHolder(view);
             }
 
@@ -165,7 +164,7 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
             public void onBind(@NonNull RecyclerView.ViewHolder viewHolder, int i, @Nullable MultiItemEntity multiItem) {
 
                 voiceChatViewHolder = (VoiceChatViewHolder) viewHolder;
-                switch (multiItem.getUserSideType()){
+                switch (multiItem.getUserSideType()) {
                     case MultiItemEntity.SELF:
                         voiceChatViewHolder.ll_hold_other_voice_chat.setVisibility(View.VISIBLE);
                         voiceChatViewHolder.ll_hold_self_voice_chat.setVisibility(View.VISIBLE);
@@ -180,26 +179,33 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                         voiceChatViewHolder.tv_voice_chat_self_time.setText(time);
 
                         String voicePath = multiItem.getItemContent();
-                        int durationInSeconds=getAudioTime(voicePath);
+                        int durationInSeconds = getAudioTime(voicePath);
 
-                        Toast.makeText(context, "时间是"+durationInSeconds, Toast.LENGTH_SHORT).show();
-                        voiceChatViewHolder.chat_self_voice_count.setText(durationInSeconds+"“");
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)voiceChatViewHolder.rl_self_chat_rec_voice_bg.getLayoutParams();
-                        if(durationInSeconds<=5){
-                            layoutParams.width = 99*4;
-                        }else if(durationInSeconds>5&&durationInSeconds<=10){
-                            layoutParams.width = 120*4;
-                        }else if(durationInSeconds>10&&durationInSeconds<=20){
-                            layoutParams.width = 137*4;
-                        }else if(durationInSeconds>20&&durationInSeconds<=30){
-                            layoutParams.width = 153*4;
-                        }else if(durationInSeconds>30&&durationInSeconds<=40){
-                            layoutParams.width = 166*4;
-                        }else if(durationInSeconds>40&&durationInSeconds<=50){
-                            layoutParams.width = 178*4;
+                        Toast.makeText(context, "时间是" + durationInSeconds, Toast.LENGTH_SHORT).show();
+                        voiceChatViewHolder.chat_self_voice_count.setText(durationInSeconds + "“");
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) voiceChatViewHolder.rl_self_chat_rec_voice_bg.getLayoutParams();
+
+                        if (multiItem.getProgress() < 100) {
+                            voiceChatViewHolder.circularProgressBar.setVisibility(View.VISIBLE);
+                            Logger.d(multiItem.getProgress());
+                        } else {
+                            voiceChatViewHolder.circularProgressBar.setVisibility(View.GONE);
+                        }
+                        if (durationInSeconds <= 5) {
+                            layoutParams.width = 99 * 4;
+                        } else if (durationInSeconds > 5 && durationInSeconds <= 10) {
+                            layoutParams.width = 120 * 4;
+                        } else if (durationInSeconds > 10 && durationInSeconds <= 20) {
+                            layoutParams.width = 137 * 4;
+                        } else if (durationInSeconds > 20 && durationInSeconds <= 30) {
+                            layoutParams.width = 153 * 4;
+                        } else if (durationInSeconds > 30 && durationInSeconds <= 40) {
+                            layoutParams.width = 166 * 4;
+                        } else if (durationInSeconds > 40 && durationInSeconds <= 50) {
+                            layoutParams.width = 178 * 4;
                         } else if (durationInSeconds > 50) {
-                            layoutParams.width = 189*4;
-                        }else {
+                            layoutParams.width = 189 * 4;
+                        } else {
                             Toast.makeText(context, "出错了", Toast.LENGTH_SHORT).show();
                         }
                         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
@@ -229,27 +235,27 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                         voiceChatViewHolder.tv_voice_chat_other_time.setText(time1);
 
                         String voicePath1 = multiItem.getItemContent();
-                        int durationInSeconds1=getAudioTime(voicePath1);
+                        int durationInSeconds1 = getAudioTime(voicePath1);
 
 
-                        voiceChatViewHolder.chat_other_voice_count.setText(durationInSeconds1+"“");
+                        voiceChatViewHolder.chat_other_voice_count.setText(durationInSeconds1 + "“");
 
-                        RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams)voiceChatViewHolder.rl_other_chat_rec_voice_bg.getLayoutParams();
-                        if(durationInSeconds1<=5){
-                            layoutParams1.width = 99*4;
-                        }else if(durationInSeconds1>5&&durationInSeconds1<=10){
-                            layoutParams1.width = 120*4;
-                        }else if(durationInSeconds1>10&&durationInSeconds1<=20){
-                            layoutParams1.width = 137*4;
-                        }else if(durationInSeconds1>20&&durationInSeconds1<=30){
-                            layoutParams1.width = 153*4;
-                        }else if(durationInSeconds1>30&&durationInSeconds1<=40){
-                            layoutParams1.width = 166*4;
-                        }else if(durationInSeconds1>40&&durationInSeconds1<=50){
-                            layoutParams1.width = 178*4;
+                        LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) voiceChatViewHolder.rl_other_chat_rec_voice_bg.getLayoutParams();
+                        if (durationInSeconds1 <= 5) {
+                            layoutParams1.width = 99 * 4;
+                        } else if (durationInSeconds1 > 5 && durationInSeconds1 <= 10) {
+                            layoutParams1.width = 120 * 4;
+                        } else if (durationInSeconds1 > 10 && durationInSeconds1 <= 20) {
+                            layoutParams1.width = 137 * 4;
+                        } else if (durationInSeconds1 > 20 && durationInSeconds1 <= 30) {
+                            layoutParams1.width = 153 * 4;
+                        } else if (durationInSeconds1 > 30 && durationInSeconds1 <= 40) {
+                            layoutParams1.width = 166 * 4;
+                        } else if (durationInSeconds1 > 40 && durationInSeconds1 <= 50) {
+                            layoutParams1.width = 178 * 4;
                         } else if (durationInSeconds1 > 50) {
-                            layoutParams1.width = 189*4;
-                        }else {
+                            layoutParams1.width = 189 * 4;
+                        } else {
                             Toast.makeText(context, "出错了", Toast.LENGTH_SHORT).show();
                         }
 
@@ -296,7 +302,7 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
     }
 
 
-    public class TextChatViewHolder extends RecyclerView.ViewHolder{
+    public class TextChatViewHolder extends RecyclerView.ViewHolder {
         private LinearLayout ll_hold_other_text_chat;
         private LinearLayout ll_hold_self_text_chat;
         private ImageView iv_text_chat_other_profile;
@@ -321,8 +327,8 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
             tv_text_chat_other_name = itemView.findViewById(R.id.tv_text_chat_other_name);
             tv_text_chat_self_name = itemView.findViewById(R.id.tv_voice_chat_self_name);
             tv_text_chat_other_time = itemView.findViewById(R.id.tv_text_chat_other_time);
-            tv_text_chat_self_time  = itemView.findViewById(R.id.tv_text_chat_self_time);
-            rl_text_chat_other_detail  = itemView.findViewById(R.id.rl_text_chat_other_detail);
+            tv_text_chat_self_time = itemView.findViewById(R.id.tv_text_chat_self_time);
+            rl_text_chat_other_detail = itemView.findViewById(R.id.rl_text_chat_other_detail);
             rl_text_chat_self_detail = itemView.findViewById(R.id.rl_text_chat_self_detail);
             tv_text_chat_other_content = itemView.findViewById(R.id.tv_text_chat_other_content);
             tv_text_chat_self_content = itemView.findViewById(R.id.tv_text_chat_self_content);
@@ -330,7 +336,7 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
         }
     }
 
-    public class PicChatViewHolder extends RecyclerView.ViewHolder{
+    public class PicChatViewHolder extends RecyclerView.ViewHolder {
         private final View image_gray;
         private CircularProgressBar circularProgressBar;
         private LinearLayout ll_hold_other_pic_chat;
@@ -369,8 +375,9 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
     }
 
 
-    public class VoiceChatViewHolder extends RecyclerView.ViewHolder{
+    public class VoiceChatViewHolder extends RecyclerView.ViewHolder {
 
+        private CircularProgressBar circularProgressBar;
         private RelativeLayout rl_other_chat_rec_voice_bg;
         private RelativeLayout rl_self_chat_rec_voice_bg;
         private LinearLayout ll_hold_other_voice_chat;
@@ -397,29 +404,30 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
             tv_voice_chat_other_name = itemView.findViewById(R.id.tv_voice_chat_other_name);
             tv_voice_chat_self_name = itemView.findViewById(R.id.tv_voice_chat_self_name);
             tv_voice_chat_other_time = itemView.findViewById(R.id.tv_voice_chat_other_time);
-            tv_voice_chat_self_time  = itemView.findViewById(R.id.tv_voice_chat_self_time);
-            rl_voice_chat_other_detail  = itemView.findViewById(R.id.rl_voice_chat_other_detail);
+            tv_voice_chat_self_time = itemView.findViewById(R.id.tv_voice_chat_self_time);
+            rl_voice_chat_other_detail = itemView.findViewById(R.id.rl_voice_chat_other_detail);
             rl_voice_chat_self_detail = itemView.findViewById(R.id.rl_voice_chat_self_detail);
             chat_other_voice_count = itemView.findViewById(R.id.chat_other_voice_count);
             chat_self_voice_count = itemView.findViewById(R.id.chat_self_voice_count);
             rl_other_chat_rec_voice_bg = itemView.findViewById(R.id.rl_other_chat_rec_voice_bg);
             rl_self_chat_rec_voice_bg = itemView.findViewById(R.id.rl_self_chat_rec_voice_bg);
-
+            circularProgressBar = itemView.findViewById(R.id.circularProgressBar);
         }
     }
+
     private void startSelfCountdown(int startTime) {
         countDownTimer = new CountDownTimer(startTime * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 // 每秒更新 TextView 的文本
                 int secondsRemaining = (int) millisUntilFinished / 1000;
-                voiceChatViewHolder.chat_self_voice_count.setText(secondsRemaining+"“");
+                voiceChatViewHolder.chat_self_voice_count.setText(secondsRemaining + "“");
             }
 
             @Override
             public void onFinish() {
                 // 倒计时结束后执行的操作
-                voiceChatViewHolder.chat_self_voice_count.setText(startTime+"“");
+                voiceChatViewHolder.chat_self_voice_count.setText(startTime + "“");
             }
         };
 
@@ -432,18 +440,19 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
             public void onTick(long millisUntilFinished) {
                 // 每秒更新 TextView 的文本
                 int secondsRemaining = (int) millisUntilFinished / 1000;
-                voiceChatViewHolder.chat_other_voice_count.setText(secondsRemaining+"“");
+                voiceChatViewHolder.chat_other_voice_count.setText(secondsRemaining + "“");
             }
 
             @Override
             public void onFinish() {
                 // 倒计时结束后执行的操作
-                voiceChatViewHolder.chat_other_voice_count.setText(startTime+"“");
+                voiceChatViewHolder.chat_other_voice_count.setText(startTime + "“");
             }
         };
 
         countDownTimer.start();
     }
+
     private void playAudio(String filePath) {
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
@@ -474,6 +483,7 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
             e.printStackTrace();
         }
     }
+
     private void releaseMediaPlayer() {
         if (mediaPlayer != null) {
             mediaPlayer.release();

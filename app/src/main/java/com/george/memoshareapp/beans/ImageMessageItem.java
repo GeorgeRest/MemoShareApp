@@ -14,6 +14,7 @@ public class ImageMessageItem extends MultiItemEntity {
     private int UserSide;
     private String name;
     private int progress;
+    private String fileName;
 
     @Override
     public int getItemShowType() {
@@ -71,6 +72,16 @@ public class ImageMessageItem extends MultiItemEntity {
     @Override
     public int getProgress() {
         return progress;
+    }
+
+    @Override
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    @Override
+    public String getFileName() {
+        return fileName;
     }
 
 

@@ -53,6 +53,7 @@ public class MyVoiceRecordFragment extends Fragment {
     private MediaPlayer mediaPlayer;
     private AudioTrack audioTrack;
     private final int CHOOSE_PIC_REQUEST_CODE = 3;
+    private String fileName;
 
     public MyVoiceRecordFragment() {
         // Required empty public constructor
@@ -149,7 +150,9 @@ public class MyVoiceRecordFragment extends Fragment {
                                 stopRecording();
                                 SendListener listener = (SendListener) getActivity();
                                 Date date = new Date(System.currentTimeMillis());
-                                listener.sendContent(new VoiceMessageItem(audioFile.getAbsolutePath(),date, MultiItemEntity.SELF,"user"));
+                                VoiceMessageItem voiceMessageItem = new VoiceMessageItem(audioFile.getAbsolutePath(), date, MultiItemEntity.SELF, "user");
+                                voiceMessageItem.setFileName(fileName);
+                                listener.sendContent(voiceMessageItem);
                                 Toast.makeText(getContext(), "已发送语音", Toast.LENGTH_SHORT).show();
                             }
                             isRecording = false;
@@ -199,7 +202,7 @@ public class MyVoiceRecordFragment extends Fragment {
     }
 
     private void startRecording() {
-        String fileName = "audio_" + System.currentTimeMillis() + ".3gp";
+        fileName = "audio_" + System.currentTimeMillis() + ".3gp";
         try {
             mediaRecorder = new MediaRecorder();
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);

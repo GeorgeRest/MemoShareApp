@@ -14,6 +14,7 @@ public class TextMessageItem extends MultiItemEntity {
     private int UserSide;
     private String name;
     private int progress;
+    private String fileName;
 
     public TextMessageItem(String textContent, Date date, int userSide, String name) {
         this.textContent = textContent;
@@ -68,6 +69,16 @@ public class TextMessageItem extends MultiItemEntity {
     @Override
     public int getProgress() {
         return progress;
+    }
+
+    @Override
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    @Override
+    public String getFileName() {
+        return fileName;
     }
 
     @Override

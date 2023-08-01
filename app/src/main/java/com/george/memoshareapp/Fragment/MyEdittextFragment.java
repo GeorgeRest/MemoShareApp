@@ -17,12 +17,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.ChatMessage;
 import com.george.memoshareapp.beans.TextMessageItem;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.interfaces.SendListener;
 import com.george.memoshareapp.utils.GlideEngine;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -160,6 +163,7 @@ public class MyEdittextFragment extends Fragment {
                         Date date = new Date(System.currentTimeMillis());
                         listener.sendContent(new TextMessageItem(text,date, MultiItemEntity.SELF,"user"));
                         Toast.makeText(getContext(), "发送文字成功", Toast.LENGTH_SHORT).show();
+
                         et_group_chat.setText("");
 
                         break;
@@ -171,5 +175,6 @@ public class MyEdittextFragment extends Fragment {
 
 
     }
+
 
 }

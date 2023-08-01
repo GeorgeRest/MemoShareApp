@@ -31,6 +31,16 @@ public ChatAttachment() {
         this.updatedAt = updatedAt;
     }
 
+    public ChatAttachment( String filePath, String fileType) {
+        this.filePath = filePath;
+        this.fileType = fileType;
+    }
+    public ChatAttachment(int messageId, String filePath, String fileType) {
+        this.messageId = messageId;
+        this.filePath = filePath;
+        this.fileType = fileType;
+    }
+
     public int getId() {
         return id;
     }

@@ -144,6 +144,18 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                android:id="@+id/circularProgressBar"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                app:cpb_background_progressbar_color="#bdbbbc"
+                app:cpb_background_progressbar_width="1dp"
+                app:cpb_progress_direction="to_right"
+                app:cpb_progressbar_color="#F8F5F5"
+                app:cpb_progressbar_width="1dp"
+                android:layout_gravity="center"
+                app:cpb_round_border="false"
+                android:layout_toLeftOf="@+id/rl_self_chat_rec_voice_bg"/>
             <RelativeLayout
                 android:id="@+id/rl_self_chat_rec_voice_bg"
                 android:layout_width="99dp"

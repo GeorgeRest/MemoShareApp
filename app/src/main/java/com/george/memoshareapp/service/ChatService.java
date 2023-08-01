@@ -8,12 +8,16 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 
 import com.george.memoshareapp.beans.ChatMessage;
+import com.george.memoshareapp.events.ChatMessageEvent;
+import com.george.memoshareapp.events.SendMessageEvent;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import es.dmoral.toasty.Toasty;
 import okhttp3.OkHttpClient;
@@ -40,6 +44,12 @@ public class ChatService extends Service {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String url = "ws://192.168.1.3:6028/websocket/17";
         OkHttpClient client = new OkHttpClient();
@@ -63,7 +73,7 @@ public class ChatService extends Service {
                         .setDateFormat("yyyy-MM-dd HH:mm:ss")
                         .create();
                 ChatMessage message = gson.fromJson(text, ChatMessage.class);
-                EventBus.getDefault().post(message);
+                EventBus.getDefault().post(new ChatMessageEvent(message)); //接收到的消息给到ChatActivity
                 // 现在你可以操作message对象，例如显示消息内容
                 Logger.d("WebSocket 收到消息"+message);
             }
@@ -82,12 +92,27 @@ public class ChatService extends Service {
         });
         return START_STICKY;
     }
-
+    public void sendMessage(String message) {
+        if (mWebSocket != null && message != null) {
+            mWebSocket.send(message);
+        }
+    }
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (mWebSocket != null) {
             mWebSocket.close(1000, "Service destroyed");
         }
+        super.onDestroy();
+    }
+
+    /**
+     * 发送消息给服务器
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void SendMessageEvent(SendMessageEvent event) {
+        ChatMessage message = event.message;
+        sendMessage(new Gson().toJson(message));
     }
 }
