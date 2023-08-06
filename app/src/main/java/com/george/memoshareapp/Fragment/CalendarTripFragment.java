@@ -198,6 +198,7 @@ public class CalendarTripFragment extends Fragment implements
         mCalendarView.setSchemeDate(map);
     }
 
+
     private Calendar getSchemeCalendar(int year, int month, int day, int color) {
         Calendar calendar = new Calendar();
         calendar.setYear(year);

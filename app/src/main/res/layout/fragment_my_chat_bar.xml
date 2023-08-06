@@ -1,0 +1,30 @@
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/ll_group_chat_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_group_chat_input_type"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/group_chat_voice" />
+
+        <FrameLayout
+            android:id="@+id/fl_group_chat_bar"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</LinearLayout>

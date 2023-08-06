@@ -1,164 +1,318 @@
 package com.george.memoshareapp.activities;
 
-import static android.text.format.DateUtils.formatElapsedTime;
-
-import android.media.AudioFormat;
-import android.media.MediaMetadataRetriever;
-import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Chronometer;
-import android.widget.ImageView;
-import android.widget.Toast;
-
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.george.memoshareapp.BuildConfig;
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.george.memoshareapp.Fragment.MyChatBarFragment;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.adapters.GroupChatRecordAdapter;
-import com.george.memoshareapp.application.MyApplication;
-import com.george.memoshareapp.beans.Recordings;
-import com.george.memoshareapp.interfaces.RecordingDataListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.zlw.main.recorderlib.RecordManager;
-import com.zlw.main.recorderlib.recorder.RecordConfig;
-import com.zlw.main.recorderlib.recorder.RecordHelper;
-import com.zlw.main.recorderlib.recorder.listener.RecordResultListener;
-import com.zlw.main.recorderlib.recorder.listener.RecordStateListener;
+import com.george.memoshareapp.adapters.ChatAdapter;
+import com.george.memoshareapp.beans.ChatAttachment;
+import com.george.memoshareapp.beans.ChatMessage;
+import com.george.memoshareapp.beans.ImageMessageItem;
+import com.george.memoshareapp.beans.TextMessageItem;
+import com.george.memoshareapp.beans.VoiceMessageItem;
+import com.george.memoshareapp.events.ChatMessageEvent;
+import com.george.memoshareapp.events.SendMessageEvent;
+import com.george.memoshareapp.http.ProgressRequestBody;
+import com.george.memoshareapp.http.api.ChatServiceApi;
+import com.george.memoshareapp.interfaces.MultiItemEntity;
+import com.george.memoshareapp.interfaces.SendListener;
+import com.george.memoshareapp.manager.RetrofitManager;
+import com.george.memoshareapp.properties.AppProperties;
+import com.george.memoshareapp.properties.MessageType;
+import com.luck.picture.lib.basic.PictureSelector;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.entity.MediaExtraInfo;
+import com.luck.picture.lib.utils.MediaUtils;
+import com.orhanobut.logger.Logger;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class GroupChatActivity extends AppCompatActivity {
-    private boolean mStartRecording = true;
-    private long timeWhenPaused = 0;
-    private boolean isRecording = false;
-    private FloatingActionButton record_start;
-    private FloatingActionButton record_stop;
-    private Chronometer mChronometerTime;
-    private ImageView mIvClose;
-    private RecyclerView rl_record;
-    private Button please_say;
-    private boolean isClosed = false;
-    private RecordingDataListener recordingDataListener;
-    private RecyclerView recordRecyclerView;
-    private List<Recordings> recordingsList = new ArrayList<>();
-    private GroupChatRecordAdapter recordAdapter;
-    private ImageView deleteArea;
-    private RecordManager recordManager;
-    private File recordDir;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+public class GroupChatActivity extends AppCompatActivity implements SendListener {
 
+    private FragmentManager manager;
+    private Fragment myChatBar;
+    private final int CHOOSE_PIC_REQUEST_CODE = 3;
+    private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+
+    private List<String> mImageList = new ArrayList<>();
+    private List<MultiItemEntity> multiItemEntityList = new ArrayList<>();
+    private ChatAdapter chatAdapter;
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat);
-        recordDir = new File(this.getFilesDir(), "recordDir");
-        if (!recordDir.exists()) {
-            recordDir.mkdir();
-        }
-        initView();
 
-        recordAdapter = new GroupChatRecordAdapter(this, recordingsList);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        rl_record.setLayoutManager(linearLayoutManager);
-        rl_record.setAdapter(recordAdapter);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+        }
+
+        manager = getSupportFragmentManager();
+
+        if (myChatBar == null) {
+            myChatBar = new MyChatBarFragment();
+        }
+
+        initView();
+        EventBus.getDefault().register(this);
     }
 
     private void initView() {
-        rl_record = (RecyclerView) findViewById(R.id.record);
-        record_start = (FloatingActionButton) findViewById(R.id.record_start);
-        please_say = (Button) findViewById(R.id.please_say);
 
-        initRecordManager(recordDir);
-        initRecordEvent();
+        ImageButton ibtn_group_chat_back = (ImageButton) findViewById(R.id.ibtn_group_chat_back);
+        ImageButton ibtn_group_chat_menu = (ImageButton) findViewById(R.id.ibtn_group_chat_menu);
+        TextView tv_group_chat_name = (TextView) findViewById(R.id.tv_group_chat_name);
 
-        please_say.setOnTouchListener(new View.OnTouchListener() {
-            private long touchDownTime; //添加一个变量来记录按下的时间
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.fl_group_chat_detail_bar, myChatBar);
+        transaction.commit();
+        Date date = new Date(System.currentTimeMillis());
+        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉", date, MultiItemEntity.OTHER, "鲨鱼辣椒"));
+        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉巴拉巴拉巴拉", date, MultiItemEntity.OTHER, "鲨鱼辣椒"));
+        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉", date, MultiItemEntity.OTHER, "鲨鱼辣椒"));
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    touchDownTime = System.currentTimeMillis(); //在按下的时候记录当前时间
-                    RecordManager.getInstance().start();
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    long touchDuration = System.currentTimeMillis() - touchDownTime; //抬起时计算按下的时间长度
-                    if(touchDuration < 1000) { //如果按下的时间小于1秒
-                        Toast.makeText(v.getContext(), "按下的时间太短", Toast.LENGTH_SHORT).show(); //弹出 Toast
-                    } else {
-                        RecordManager.getInstance().stop(); //否则执行长按监听的操作
-                    }
+        RecyclerView rcl_group_chat_detail = (RecyclerView) findViewById(R.id.rcl_group_chat_detail);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        chatAdapter = new ChatAdapter(this, multiItemEntityList);
+        rcl_group_chat_detail.setLayoutManager(layoutManager);
+        rcl_group_chat_detail.setAdapter(chatAdapter);
+
+
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case CHOOSE_PIC_REQUEST_CODE:
+                Toast.makeText(this, "退出选择图片", Toast.LENGTH_SHORT).show();
+                if (resultCode == RESULT_OK) {
+                    Toast.makeText(this, "成功返回", Toast.LENGTH_SHORT).show();
+                    ArrayList<LocalMedia> result = PictureSelector.obtainSelectorList(data);
+                    analyticalSelectResults(result);
+                } else if (resultCode == RESULT_CANCELED) {
+                    Log.i("TAG", "onActivityResult PictureSelector Cancel");
                 }
-                return false;
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    private void analyticalSelectResults(ArrayList<LocalMedia> result) {
+        mImageList = new ArrayList<>();
+        for (LocalMedia media : result) {
+            if (media.getWidth() == 0 || media.getHeight() == 0) {
+                if (PictureMimeType.isHasImage(media.getMimeType())) {
+                    MediaExtraInfo imageExtraInfo = MediaUtils.getImageSize(this, media.getPath());
+                    media.setWidth(imageExtraInfo.getWidth());
+                    media.setHeight(imageExtraInfo.getHeight());
+                } else if (PictureMimeType.isHasVideo(media.getMimeType())) {
+                    MediaExtraInfo videoExtraInfo = MediaUtils.getVideoSize(this, media.getPath());
+                    media.setWidth(videoExtraInfo.getWidth());
+                    media.setHeight(videoExtraInfo.getHeight());
+                }
             }
-        });
+//            Log.i(TAG, "文件名: " + media.getFileName());
+//            Log.i(TAG, "是否压缩:" + media.isCompressed());
+//            Log.i(TAG, "压缩:" + media.getCompressPath());
+//            Log.i(TAG, "初始路径:" + media.getPath());
+//            Log.i(TAG, "绝对路径:" + media.getRealPath());
+//            Log.i(TAG, "是否裁剪:" + media.isCut());
+//            Log.i(TAG, "裁剪:" + media.getCutPath());
+//            Log.i(TAG, "是否开启原图:" + media.isOriginal());
+//            Log.i(TAG, "原图路径:" + media.getOriginalPath());
+//            Log.i(TAG, "沙盒路径:" + media.getSandboxPath());
+//            Log.i(TAG, "水印路径:" + media.getWatermarkPath());
+//            Log.i(TAG, "视频缩略图:" + media.getVideoThumbnailPath());
+//            Log.i(TAG, "原始宽高: " + media.getWidth() + "x" + media.getHeight());
+//            Log.i(TAG, "裁剪宽高: " + media.getCropImageWidth() + "x" + media.getCropImageHeight());
+//            Log.i(TAG, "文件大小: " + media.getSize());
+            String path = new File(media.getRealPath()).getPath();
+            Date date = new Date(System.currentTimeMillis());
+            mImageList.add(path); // 接收已选图片地址，用于接口上传图片
+            //需要进行上传图片或视频
+
+            ImageMessageItem imageMessageItem = new ImageMessageItem(path, date, MultiItemEntity.SELF, "user");
+            imageMessageItem.setFileName(media.getFileName());
+            Logger.d(imageMessageItem.getFileName());
+            multiItemEntityList.add(imageMessageItem);
+            uploadFile(path, imageMessageItem);
+
+        }
+        chatAdapter.notifyDataSetChanged();
     }
 
-    private void initRecordManager(File recordDir) {
+    /**
+     * 发送消息给service->服务器并更新UI
+     *
+     * @param multiItem
+     */
+    @Override
+    public void sendContent(MultiItemEntity multiItem) {
 
-        recordManager = RecordManager.getInstance();
-        recordManager.init(MyApplication.getInstance(), BuildConfig.DEBUG);
-        recordManager.changeFormat(RecordConfig.RecordFormat.MP3);
-        recordManager.changeRecordConfig(recordManager.getRecordConfig().setSampleRate(16000));
-        recordManager.changeRecordConfig(recordManager.getRecordConfig().setEncodingConfig(AudioFormat.ENCODING_PCM_8BIT));
-        recordManager.changeRecordDir(recordDir.getAbsolutePath());
+        multiItemEntityList.add(multiItem);
+        chatAdapter.notifyDataSetChanged();
+        switch (multiItem.getItemShowType()) {
+            case MessageType.TEXT:
+                EventBus.getDefault().post(new SendMessageEvent(new ChatMessage(13, "17", multiItem.getItemContent(), "文本")));
+                break;
+            case MessageType.VOICE:
+                Logger.d("发送语音");
+                uploadFile(multiItem.getItemContent(), multiItem);
+                break;
+            default:
+                break;
+        }
 
     }
 
-    private void initRecordEvent() {
-
-        recordManager.setRecordStateListener(new RecordStateListener() {
+    private void uploadFile(String filePath, MultiItemEntity multiItem) {
+        ChatServiceApi service = RetrofitManager.getInstance().create(ChatServiceApi.class);
+        File file = new File(filePath);
+        int itemPosition = chatAdapter.getItemPosition(multiItem);
+        Logger.d("itemPosition" + itemPosition);
+        ProgressRequestBody fileBody = new ProgressRequestBody(file, new ProgressRequestBody.UploadCallbacks() {
             @Override
-            public void onStateChange(RecordHelper.RecordState state) {
-
-                recordManager.setRecordResultListener(new RecordResultListener() {
-
-                    private long time1;
-
+            public void onProgressUpdate(int percentage) {
+                mainThreadHandler.post(new Runnable() {
                     @Override
-                    public void onResult(File result) {
-//                        if (isClosed) {
-//                            boolean deleted = result.delete();
-//
-//                            return;
-//                        }
-                        System.out.println(result.getAbsolutePath() + "----------");
-                        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                        retriever.setDataSource(result.getAbsolutePath());
-                        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                        long totalDurationMs = Long.parseLong(time);  // 总时长，单位为毫秒
-                        System.out.println("=========time====="+time);
-                        System.out.println("=========time====="+Long.parseLong(time));
-                        time1 = (Long.parseLong(time))/1000;
-                        System.out.println("=========time====="+ time1);
-
-                        String formattedTime = formatElapsedTime(totalDurationMs);
-
-                        Recordings recordings = new Recordings();
-
-                        recordings.setRecordTime(time1);
-
-                        recordings.setRecordCachePath(result.getAbsolutePath());
-//                        if (recordingDataListener != null) {
-//                            recordingDataListener.onRecordingDataReceived(recordings, 1);
-//                        }
-                        recordingsList.add(recordings);
-                        // 通知adapter数据已经改变
-
-                        recordAdapter.notifyItemInserted(0);
-                        System.out.println("notify+--------");
+                    public void run() {
+                        multiItem.setProgress(percentage);
+                        chatAdapter.notifyItemChanged(itemPosition);
                     }
                 });
             }
 
             @Override
-            public void onError(String error) {
+            public void onError() {
+                // do something on error
+            }
+
+            @Override
+            public void onFinish() {
+                mainThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        multiItem.setProgress(100);
+                        chatAdapter.notifyItemChanged(itemPosition);
+                    }
+                });
+
+            }
+        });
+
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), fileBody);
+        String descriptionString = "This is a description";
+        RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data"), descriptionString);
+
+        Call<ResponseBody> call = service.upload(description, body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    String type = "";
+                    switch (multiItem.getItemShowType()) {
+                        case MessageType.VOICE:
+                            type = "语音";
+                            break;
+                        case MessageType.IMAGE:
+                            type = "图片";
+                            break;
+                        default:
+                            return;
+                    }
+                    ChatMessage message = new ChatMessage(13, "17", "", type);
+                    ChatAttachment attachment = new ChatAttachment(multiItem.getFileName(), type);
+                    message.setAttachment(attachment);
+                    EventBus.getDefault().post(new SendMessageEvent(message));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
             }
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    /**
+     * 接收服务器消息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onChatMessageEvent(ChatMessageEvent event) {
+        ChatMessage chatMessage = event.chatMessage;
+        String filePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+        MultiItemEntity multiItem = null;
+
+        switch (chatMessage.getMessageType()) {
+            case "文本":
+                multiItem = new TextMessageItem(chatMessage.getContent(), new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+                break;
+            case "图片":
+                Logger.d(filePath);
+                multiItem = new ImageMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+                break;
+            case "语音":
+                multiItem = new VoiceMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+                Logger.d(filePath);
+                break;
+            case "视频":
+
+                break;
+            default:
+                break;
+        }
+        if (multiItem != null) {
+            multiItemEntityList.add(multiItem);
+            chatAdapter.notifyDataSetChanged();
+        }
+    }
 }
