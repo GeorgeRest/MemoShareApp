@@ -19,7 +19,9 @@ public class ChatAttachment {
     private String fileType;
     private String createdAt;
     private String updatedAt;
-public ChatAttachment() {
+
+    public ChatAttachment() {
+
     }
 
     public ChatAttachment(int id, int messageId, String filePath, String fileType, String createdAt, String updatedAt) {
@@ -31,10 +33,11 @@ public ChatAttachment() {
         this.updatedAt = updatedAt;
     }
 
-    public ChatAttachment( String filePath, String fileType) {
+    public ChatAttachment(String filePath, String fileType) {
         this.filePath = filePath;
         this.fileType = fileType;
     }
+
     public ChatAttachment(int messageId, String filePath, String fileType) {
         this.messageId = messageId;
         this.filePath = filePath;

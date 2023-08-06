@@ -289,12 +289,16 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChatMessageEvent(ChatMessageEvent event) {
         ChatMessage chatMessage = event.chatMessage;
-        String filePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+        String filePath=null;
+        if(chatMessage.getAttachment() != null) {
+            filePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+        }
         MultiItemEntity multiItem = null;
 
         switch (chatMessage.getMessageType()) {
             case "文本":
                 multiItem = new TextMessageItem(chatMessage.getContent(), new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+
                 break;
             case "图片":
                 Logger.d(filePath);
