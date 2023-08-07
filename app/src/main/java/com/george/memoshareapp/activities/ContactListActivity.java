@@ -245,33 +245,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                     intent.putExtra("ChatRoomID",chatRoomID);
                     intent.putExtra("comeFromContactListActivity",true);
 //加人
-//                    ChatRoomApi chatRoomApi = RetrofitManager.getInstance().create(ChatRoomApi.class);
-//                    List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
-//                    for (User u:addedContactList) {
-//                        ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomID, Long.parseLong(u.getPhoneNumber()),0);
-//                        chatRoomMemberList.add(chatRoomMember);
-//
-//                    }
-//                    Call<HttpData<ChatRoom>> call = chatRoomApi.AddChatRoomMember(chatRoomMemberList);
-//                    call.enqueue(new Callback<HttpData<ChatRoom>>() {
-//                        @Override
-//                        public void onResponse(Call<HttpData<ChatRoom>> call, Response<HttpData<ChatRoom>> response) {
-//                            // 请求成功的处理逻辑
-//                            if (response.isSuccessful()) {
-//
-//
-//                            } else {
-//                                // 请求失败的处理逻辑
-//                                // ... 处理错误 ...
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<HttpData<ChatRoom>> call, Throwable t) {
-//                            // 请求失败的处理逻辑
-//                            // ... 处理错误 ...
-//                        }
-//                    });
+                    addContactListToIDE(addedContactList);
 
 
                     startActivity(intent);
@@ -287,7 +261,37 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         });
     }
 
-        public void onCompletionClicked(View view) {
+    private void addContactListToIDE(List<User> addedContactList) {
+        ChatRoomApi chatRoomApi = RetrofitManager.getInstance().create(ChatRoomApi.class);
+        List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
+        for (User u: addedContactList) {
+            ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomID, u.getPhoneNumber(),0);
+            chatRoomMemberList.add(chatRoomMember);
+
+        }
+        Call<HttpData<ChatRoom>> call = chatRoomApi.AddChatRoomMember(chatRoomMemberList);
+        call.enqueue(new Callback<HttpData<ChatRoom>>() {
+            @Override
+            public void onResponse(Call<HttpData<ChatRoom>> call, Response<HttpData<ChatRoom>> response) {
+                // 请求成功的处理逻辑
+                if (response.isSuccessful()) {
+
+
+                } else {
+                    // 请求失败的处理逻辑
+                    // ... 处理错误 ...
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpData<ChatRoom>> call, Throwable t) {
+                // 请求失败的处理逻辑
+                // ... 处理错误 ...
+            }
+        });
+    }
+
+    public void onCompletionClicked(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.custom_dialog, null);
@@ -381,11 +385,11 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                         chatRoomId = createdChatRoom.getId();
                         List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
                         for (User u:alreadyCheckedUserList) {
-                            ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomId,Integer.valueOf(u.getPhoneNumber()),0);
+                            ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomId,u.getPhoneNumber(),0);
                             chatRoomMemberList.add(chatRoomMember);
                         }
                         User user = new UserManager(ContactListActivity.this).findUserByPhoneNumber(phoneNumber);
-                        ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomId,Integer.valueOf(user.getPhoneNumber()),1);
+                        ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomId,user.getPhoneNumber(),1);
 
                         chatRoomMemberList.add(chatRoomMember);
                         chatRoomApi.AddChatRoomMember(chatRoomMemberList);

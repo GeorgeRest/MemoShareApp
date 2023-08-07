@@ -16,23 +16,26 @@ import java.util.Date;
 
 public class ChatRoomMember {
     private int chatRoomId;
-    private int userId;
+    private String userId;
     private Date lastReadAt;
     private int isAdmin;
     private Date createdAt;
     private Date updatedAt;
 
-    public ChatRoomMember() {
 
-    }
 
-    public ChatRoomMember(int chatRoomId, int userId, Date lastReadAt, int isAdmin, Date createdAt, Date updatedAt) {
+    public ChatRoomMember(int chatRoomId, String userId, Date lastReadAt, int isAdmin, Date createdAt, Date updatedAt) {
         this.chatRoomId = chatRoomId;
         this.userId = userId;
         this.lastReadAt = lastReadAt;
         this.isAdmin = isAdmin;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+    public ChatRoomMember(int chatRoomId, String userId, int isAdmin) {
+        this.chatRoomId = chatRoomId;
+        this.userId = userId;
+        this.isAdmin = isAdmin;
     }
 
     public int getChatRoomId() {
@@ -43,11 +46,11 @@ public class ChatRoomMember {
         this.chatRoomId = chatRoomId;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
