@@ -2,6 +2,7 @@ package com.george.memoshareapp.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 
@@ -10,7 +11,6 @@ import androidx.annotation.Nullable;
 import com.george.memoshareapp.beans.ChatMessage;
 import com.george.memoshareapp.events.ChatMessageEvent;
 import com.george.memoshareapp.events.SendMessageEvent;
-import com.george.memoshareapp.manager.RetrofitManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.orhanobut.logger.Logger;
@@ -19,7 +19,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import es.dmoral.toasty.Toasty;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -51,7 +50,9 @@ public class ChatService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String url = "ws://192.168.1.3:6028/websocket/17";
+        SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
+        String phoneNumber = sp.getString("phoneNumber", "");
+        String url = "ws://192.168.43.204:6028/websocket/"+phoneNumber;
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()

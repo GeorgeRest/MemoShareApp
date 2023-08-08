@@ -17,15 +17,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.beans.ChatMessage;
 import com.george.memoshareapp.beans.TextMessageItem;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.interfaces.SendListener;
 import com.george.memoshareapp.utils.GlideEngine;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,6 +51,7 @@ public class MyEdittextFragment extends Fragment {
     private final int CHOOSE_PIC_REQUEST_CODE = 3;
     private static final int REQUEST_SELECT_MEDIA = 100;
     private List<String> mImageList = new ArrayList<>();
+
     public MyEdittextFragment() {
         // Required empty public constructor
     }

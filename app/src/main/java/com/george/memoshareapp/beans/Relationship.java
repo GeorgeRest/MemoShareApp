@@ -19,7 +19,6 @@ public class Relationship extends LitePalSupport implements Serializable {
     private String targetNumber;
     private int relationshipStatus;     //关系类型，如关注、粉丝、朋友等
     public static final int ATTENTION_STATUS = 1;
-    public static final int FANS_STATUS = 2;
     public static final int FRIEND_STATUS = 3;
 
     public Relationship() {

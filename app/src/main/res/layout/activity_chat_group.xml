@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.RemindActivity"
     android:background="#F8F4FA"
     android:orientation="vertical">
@@ -46,6 +47,82 @@
         android:layout_marginTop="3dp"
         android:background="#ececec"
         android:layout_marginBottom="5dp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcl_group_chat_detail"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+
+    <FrameLayout
+        android:id="@+id/fl_group_chat_detail_bar"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"/>
+    <FrameLayout
+        android:id="@+id/fl_group_chat_rec_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                app:layout_constraintBottom_toTopOf="@+id/rl_rec_bg"
+                android:layout_marginBottom="15dp">
+
+                <RelativeLayout
+                    android:id="@+id/rl_press_2_del_rec"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true">
+
+                    <ImageView
+                        android:id="@+id/iv_press_2_del_rec_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/group_chat_record_page_del_unpress"/>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/group_chat_record_page_del_press_left"/>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/group_chat_record_page_del_press_right"/>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+
+
+            <RelativeLayout
+                android:id="@+id/rl_rec_bg"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/group_chat_record_page_bg"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/group_chat_record_page_icon"/>
+
+            </RelativeLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
 
 
 </LinearLayout>

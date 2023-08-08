@@ -1,36 +1,32 @@
 package com.george.memoshareapp.beans;
 
 
+import org.litepal.annotation.Column;
+import org.litepal.crud.LitePalSupport;
+
 import java.util.Date;
 
-/**
- * @projectName: MemoShare
- * @package: com.george.memoshare.bean
- * @className: chatRoom
- * @author: George
- * @description: TODO
- * @date: 2023/7/20 16:56
- * @version: 1.0
- */
+public class ChatRoom extends LitePalSupport {
 
-public class ChatRoom {
+    @Column(unique = true, defaultValue = "unknown")
     private int id;
-    private String type;
-    private String name;
-    private String avatar;
-    private Date createdAt;
-    private Date updatedAt;
-    public ChatRoom() {
-    }
+//    private int IDEChatRoomId;
+//
+//    public int getIDEChatRoomId() {
+//        return IDEChatRoomId;
+//    }
+//
+//    public void setIDEChatRoomId(int IDEChatRoomId) {
+//        this.IDEChatRoomId = IDEChatRoomId;
+//    }
 
-    public ChatRoom(int id, String type, String name, String avatar, Date createdAt, Date updatedAt) {
-        this.id = id;
-        this.type = type;
-        this.name = name;
-        this.avatar = avatar;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
+    private String type;
+
+    private String name;
+
+    private Date createdAt;
+
+    private Date updatedAt;
 
     public int getId() {
         return id;
@@ -54,14 +50,6 @@ public class ChatRoom {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
 
     public Date getCreatedAt() {

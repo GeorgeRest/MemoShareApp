@@ -39,10 +39,14 @@ public class MyChatBarFragment extends Fragment {
 
     Fragment myEtFragment = null;
     Fragment myRecFragment = null;
+    private int chatRoomId;
 
 
     public MyChatBarFragment() {
         // Required empty public constructor
+    }
+    public MyChatBarFragment(int chatRoomId) {
+        this.chatRoomId=chatRoomId;
     }
 
     /**

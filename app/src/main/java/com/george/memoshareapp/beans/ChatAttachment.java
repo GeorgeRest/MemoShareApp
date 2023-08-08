@@ -1,7 +1,7 @@
 package com.george.memoshareapp.beans;
 
 
-import java.util.Date;
+import org.litepal.crud.LitePalSupport;
 
 /**
  * @projectName: MemoShare
@@ -12,7 +12,7 @@ import java.util.Date;
  * @date: 2023/7/20 17:09
  * @version: 1.0
  */
-public class ChatAttachment {
+public class ChatAttachment extends LitePalSupport {
     private int id;
     private int messageId;
     private String filePath;

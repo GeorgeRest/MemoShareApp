@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="MemoShare" />
-    <version value="56" />
+    <version value="59" />
     <list>
         <list>
             <mapping class="com.george.memoshareapp.beans.User"></mapping>
@@ -12,6 +12,10 @@
             <mapping class="com.george.memoshareapp.beans.ImageParameters"></mapping>
             <mapping class="com.george.memoshareapp.beans.Relationship"></mapping>
             <mapping class="com.george.memoshareapp.beans.ContactInfo"></mapping>
+            <mapping class="com.george.memoshareapp.beans.ChatRoom"></mapping>
+            <mapping class="com.george.memoshareapp.beans.ChatRoomMember"></mapping>
+            <mapping class="com.george.memoshareapp.beans.ChatMessage"></mapping>
+            <mapping class="com.george.memoshareapp.beans.ChatAttachment"></mapping>
 
         </list>
     </list>
