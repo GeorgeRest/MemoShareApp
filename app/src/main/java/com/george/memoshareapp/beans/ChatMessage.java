@@ -3,6 +3,8 @@ package com.george.memoshareapp.beans;
 
 import org.litepal.crud.LitePalSupport;
 
+import java.util.Date;
+
 /**
  * @projectName: MemoShare
  * @package: com.george.memoshare.bean
@@ -16,17 +18,26 @@ import org.litepal.crud.LitePalSupport;
 public class ChatMessage extends LitePalSupport {
     private int id;
     private int chatRoomId;
+    private String ChatRoomName;
     private String senderId;
     private String content;
     private String messageType;
-    private String createdAt;
-    private String updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
     private ChatAttachment attachment;
+
+    public String getChatRoomName() {
+        return ChatRoomName;
+    }
+
+    public void setChatRoomName(String chatRoomName) {
+        ChatRoomName = chatRoomName;
+    }
 
     public ChatMessage() {
     }
 
-    public ChatMessage(int id, int chatRoomId, String senderId, String content, String messageType, String createdAt, String updatedAt, ChatAttachment attachment) {
+    public ChatMessage(int id, int chatRoomId, String senderId, String content, String messageType, Date createdAt, Date updatedAt, ChatAttachment attachment) {
         this.id = id;
         this.chatRoomId = chatRoomId;
         this.senderId = senderId;
@@ -37,6 +48,14 @@ public class ChatMessage extends LitePalSupport {
         this.attachment = attachment;
     }
 
+    public ChatMessage(Date createdAt, String ChatRoomName, int chatRoomId, String senderId, String content, String messageType) {
+        this.chatRoomId = chatRoomId;
+        this.ChatRoomName=ChatRoomName;
+        this.createdAt=createdAt;
+        this.senderId = senderId;
+        this.content = content;
+        this.messageType = messageType;
+    }
     public ChatMessage(int chatRoomId, String senderId, String content, String messageType) {
         this.chatRoomId = chatRoomId;
         this.senderId = senderId;
@@ -91,19 +110,19 @@ public class ChatMessage extends LitePalSupport {
         this.messageType = messageType;
     }
 
-    public String getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 

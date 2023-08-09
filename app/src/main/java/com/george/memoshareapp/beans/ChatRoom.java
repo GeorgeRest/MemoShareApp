@@ -1,24 +1,22 @@
 package com.george.memoshareapp.beans;
 
 
-import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
 import java.util.Date;
 
 public class ChatRoom extends LitePalSupport {
 
-    @Column(unique = true, defaultValue = "unknown")
     private int id;
-//    private int IDEChatRoomId;
-//
-//    public int getIDEChatRoomId() {
-//        return IDEChatRoomId;
-//    }
-//
-//    public void setIDEChatRoomId(int IDEChatRoomId) {
-//        this.IDEChatRoomId = IDEChatRoomId;
-//    }
+    private int IDEChatRoomId;
+
+    public int getIDEChatRoomId() {
+        return IDEChatRoomId;
+    }
+
+    public void setIDEChatRoomId(int IDEChatRoomId) {
+        this.IDEChatRoomId = IDEChatRoomId;
+    }
 
     private String type;
 

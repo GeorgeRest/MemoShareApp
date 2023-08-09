@@ -86,6 +86,7 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
     private List<User> newAddList=new ArrayList<>();
     private int chatRoomID;
     private String phoneNumber;
+    private String chatRoomName;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -117,6 +118,7 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
             friendList = (List<User>) intent.getSerializableExtra("FriendList");
             photoChatName = intent.getStringExtra("photo_chat_name");
             chatRoomID = intent.getIntExtra("ChatRoomID", -1);
+            chatRoomName = intent.getStringExtra("ChatRoomName");
         }
 
 
@@ -259,7 +261,10 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
         chatAdapter.notifyDataSetChanged();
         switch (multiItem.getItemShowType()) {
             case MessageType.TEXT:
-                EventBus.getDefault().post(new SendMessageEvent(new ChatMessage(chatRoomID,phoneNumber , multiItem.getItemContent(), "文本")));
+                Date currentDate = new Date();
+                EventBus.getDefault().post(new SendMessageEvent(new ChatMessage(currentDate,chatRoomName,chatRoomID,phoneNumber , multiItem.getItemContent(), "文本")));
+                ChatMessage message = new ChatMessage(currentDate,chatRoomName, chatRoomID, phoneNumber, multiItem.getItemContent(), "文本");
+                message.save();
                 break;
             case MessageType.VOICE:
                 Logger.d("发送语音");

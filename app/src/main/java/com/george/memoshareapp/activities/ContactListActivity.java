@@ -11,7 +11,6 @@ import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -98,7 +97,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     private Intent intent;
     private ImageView back;
     private String phoneNumber;
-    private int chatRoomId;
+
     private int chatRoomID;
 
     @Override
@@ -367,8 +366,12 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                              Intent intent1 = new Intent(ContactListActivity.this, ChatService.class);
                              startService(intent1);
                              bindService(intent1, connection, Context.BIND_AUTO_CREATE);
-
-                             String input = etCustomInput.getText().toString();
+                             Date currentDate = new Date();
+                             // 定义时间格式
+                             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+                             // 格式化时间为字符串
+                             String formattedTime = sdf.format(currentDate);
+                             String input = etCustomInput.getText().toString()+formattedTime;
                              List<User> alreadyCheckedUserList = new ArrayList<User>();
                              alreadyCheckedUserList = horizontalAdapter.getContacts();
 
@@ -377,11 +380,9 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                              Intent intent = new Intent(getBaseContext(), ChatGroupActivity.class);
                              intent.putExtra("contact_list", (Serializable) alreadyCheckedUserList);
                              intent.putExtra("FriendList", (Serializable) userList);
-                             intent.putExtra("photo_chat_name", input);
+                             intent.putExtra("photo_chat_name", etCustomInput.getText().toString());
                              intent.putExtra("ChatRoomID", chatRoom.getId());
-
-
-
+                             intent.putExtra("ChatRoomName",input);
                              startActivity(intent);
 
                              finish();
@@ -416,19 +417,15 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         }else {
             chatRoom.setType("单人");
         }
-        Date currentDate = new Date();
-        // 定义时间格式
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        // 格式化时间为字符串
-        String formattedTime = sdf.format(currentDate);
-        chatRoom.setName(input+formattedTime);
+
+        chatRoom.setName(input);
 //        chatRoom.setAvatar();//设置拼接头像
         List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
         for (User u:alreadyCheckedUserList) {
-            ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomId,u.getPhoneNumber(),0);
+            ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoom.getId(),u.getPhoneNumber(),0);
             chatRoomMemberList.add(chatRoomMember);
         }
-        ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomId,phoneNumber,1);
+        ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoom.getId(),phoneNumber,1);
         chatRoomMemberList.add(chatRoomMember);
         // 获取ChatRoomController实例
         ChatRoomRequest chatRoomRequest = new ChatRoomRequest(chatRoom, chatRoomMemberList);
@@ -441,9 +438,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                 if (response.isSuccessful()) {
                     ChatRoom createdChatRoom = response.body();
                     if (createdChatRoom != null) {
-                        Log.d("createdChatRoom",createdChatRoom.getName());
-//                        createdChatRoom.save();
-//                        LitePal.saveAll(chatRoomMemberList);
+
                         SaveData(createdChatRoom,chatRoomMemberList);
                     }
                 } else {
@@ -460,8 +455,8 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
 
     public void SaveData(ChatRoom chat,List<ChatRoomMember> chatRoomMemberList) {
         ChatRoom chatRoom = new ChatRoom();
-        chatRoom.setId(chat.getId());//可不用这个IDn.setTitle("这里是标题");
         chatRoom.setName(chat.getName());
+        chatRoom.setIDEChatRoomId(chat.getId());
         chatRoom.setType(chat.getType()); ;
         chatRoom.setCreatedAt(chat.getCreatedAt());
         chatRoom.setUpdatedAt(chat.getUpdatedAt());
