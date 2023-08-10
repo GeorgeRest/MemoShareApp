@@ -1,12 +1,16 @@
 package com.george.memoshareapp.activities;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -37,11 +41,13 @@ import com.george.memoshareapp.events.ChatMessageEvent;
 import com.george.memoshareapp.events.SendMessageEvent;
 import com.george.memoshareapp.http.ProgressRequestBody;
 import com.george.memoshareapp.http.api.ChatServiceApi;
+import com.george.memoshareapp.interfaces.ChatMessageListener;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.interfaces.SendListener;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.properties.MessageType;
+import com.george.memoshareapp.service.ChatService;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -67,8 +73,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChatGroupActivity extends AppCompatActivity implements SendListener {
-
+public class ChatGroupActivity extends AppCompatActivity implements SendListener , ChatMessageListener {
+    private ChatService mService;
+    private boolean mBound = false;
     private FragmentManager manager;
     private Fragment myChatBar;
     private final int CHOOSE_PIC_REQUEST_CODE = 3;
@@ -94,6 +101,10 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_group);
+        Intent intent1 = new Intent(ChatGroupActivity.this, ChatService.class);
+        startService(intent1);
+        bindService(intent1, connection, Context.BIND_AUTO_CREATE);
+
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
         phoneNumber = sp.getString("phoneNumber", "");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
@@ -170,6 +181,10 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mBound) {
+                    unbindService(connection);
+                    mBound = false;
+                }
                 finish();
             }
         });
@@ -248,6 +263,20 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
         }
         chatAdapter.notifyDataSetChanged();
     }
+    private final ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            ChatService.LocalBinder binder = (ChatService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 
     /**
      * 发送消息给service->服务器并更新UI
@@ -352,22 +381,65 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
     /**
      * 接收服务器消息
      */
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onChatMessageEvent(ChatMessageEvent event) {
+//        ChatMessage chatMessage = event.chatMessage;
+//        String filePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+//        MultiItemEntity multiItem = null;
+//        Logger.d("onChatMessageEvent==========调用啦哈哈哈哈");
+//
+//        switch (chatMessage.getMessageType()) {
+//            case "文本":
+//                multiItem = new TextMessageItem(chatMessage.getContent(), new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+//                break;
+//            case "图片":
+//                Logger.d(filePath);
+//                multiItem = new ImageMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+//                break;
+//            case "语音":
+//                multiItem = new VoiceMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+//                Logger.d(filePath);
+//                break;
+//            case "视频":
+//
+//                break;
+//            default:
+//                break;
+//        }
+//        if (multiItem != null) {
+//            multiItemEntityList.add(multiItem);
+//            chatAdapter.notifyDataSetChanged();
+//        }
+//    }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChatMessageEvent(ChatMessageEvent event) {
         ChatMessage chatMessage = event.chatMessage;
-        String filePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+        // 处理接收到的消息
+        ChatMessageListener(chatMessage);
+    }
+
+
+    @Override
+    public void ChatMessageListener(ChatMessage chatMessage) {
+        chatMessage.save();
+        String filePath="";
+        if (chatMessage != null && chatMessage.getAttachment() != null) {
+             filePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+
+        }
         MultiItemEntity multiItem = null;
+        Logger.d("onChatMessageEvent=接口=========调用啦哈哈哈哈");
 
         switch (chatMessage.getMessageType()) {
             case "文本":
-                multiItem = new TextMessageItem(chatMessage.getContent(), new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+                multiItem = new TextMessageItem(chatMessage.getContent(), new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getSenderId());
                 break;
             case "图片":
                 Logger.d(filePath);
-                multiItem = new ImageMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+                multiItem = new ImageMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getSenderId());
                 break;
             case "语音":
-                multiItem = new VoiceMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+                multiItem = new VoiceMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getSenderId());
                 Logger.d(filePath);
                 break;
             case "视频":
@@ -381,7 +453,4 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
             chatAdapter.notifyDataSetChanged();
         }
     }
-
-
-
 }

@@ -1,13 +1,10 @@
 package com.george.memoshareapp.activities;
 
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -49,7 +46,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.orhanobut.logger.Logger;
 
-import org.greenrobot.eventbus.EventBus;
 import org.litepal.LitePal;
 
 import java.io.Serializable;
@@ -200,20 +196,20 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         });
         setupSearchView();
     }
-    private final ServiceConnection connection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            ChatService.LocalBinder binder = (ChatService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
+//    private final ServiceConnection connection = new ServiceConnection() {
+//
+//        @Override
+//        public void onServiceConnected(ComponentName className, IBinder service) {
+//            ChatService.LocalBinder binder = (ChatService.LocalBinder) service;
+//            mService = binder.getService();
+//            mBound = true;
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName arg0) {
+//            mBound = false;
+//        }
+//    };
 
     private void initView() {
         photo_chat_name_dialog_iv = (ImageView) findViewById(R.id.photo_chat_name_dialog_iv);
@@ -251,10 +247,10 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                     finish();
 
                 }else {
-                    if (mBound) {
-                        unbindService(connection);
-                        mBound = false;
-                    }
+//                    if (mBound) {
+//                        unbindService(connection);
+//                        mBound = false;
+//                    }
                     finish();
                 }
             }
@@ -294,11 +290,11 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
             }
         });
     }
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        EventBus.getDefault().unregister(this);
+//        super.onDestroy();
+//    }
 
     private void addContactListToIDE(List<User> addedContactList) {
         ChatRoomApi chatRoomApi = RetrofitManager.getInstance().create(ChatRoomApi.class);
@@ -363,9 +359,9 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                      btnSubmit.setOnClickListener(new View.OnClickListener() {
                          @Override
                          public void onClick(View v) {
-                             Intent intent1 = new Intent(ContactListActivity.this, ChatService.class);
-                             startService(intent1);
-                             bindService(intent1, connection, Context.BIND_AUTO_CREATE);
+//                             Intent intent1 = new Intent(ContactListActivity.this, ChatService.class);
+//                             startService(intent1);
+//                             bindService(intent1, connection, Context.BIND_AUTO_CREATE);
                              Date currentDate = new Date();
                              // 定义时间格式
                              SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
