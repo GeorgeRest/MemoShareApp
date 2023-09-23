@@ -22,8 +22,8 @@ import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.activities.ContactListActivity;
 import com.george.memoshareapp.activities.RemindActivity;
+import com.george.memoshareapp.activities.TestContactListActivity;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
@@ -241,8 +241,8 @@ public class CalendarTripFragment extends Fragment implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_blue:
-                Intent intent1 = new Intent(getContext(), ContactListActivity.class);
-                intent1.putExtra("ComeFromCalendarTripFragment",true);
+                Intent intent1 = new Intent(getContext(), TestContactListActivity.class);
+//                intent1.putExtra("ComeFromCalendarTripFragment",true);
                 startActivity(intent1);
                 break;
             case R.id.add_red:

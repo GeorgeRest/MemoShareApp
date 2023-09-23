@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.activities.ChatGroupMoreActivity;
-import com.george.memoshareapp.activities.ContactListActivity;
 import com.george.memoshareapp.activities.NewPersonPageActivity;
+import com.george.memoshareapp.activities.TestChatGroupMoreActivity;
+import com.george.memoshareapp.activities.TestContactListActivity;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.properties.AppProperties;
+
+import org.litepal.LitePal;
 
 import java.io.Serializable;
 import java.util.List;
@@ -83,20 +85,21 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             // 处理显示用户头像和姓名的逻辑
 
             User contact = contacts.get(position);
-            String imagePath = AppProperties.SERVER_MEDIA_URL + contact.getHeadPortraitPath();
+            User user = LitePal.where("phoneNumber = ?", contact.getPhoneNumber()).findFirst(User.class);
+            String imagePath = AppProperties.SERVER_MEDIA_URL + user.getHeadPortraitPath();
             int cornerRadius = 20;
             Glide.with(context)
                     .load(imagePath)
                     .transform(new RoundedCorners(cornerRadius)) // 设置圆角
                     .into(((ViewHolder) holder).ivPhoto);
-            ((ViewHolder) holder).name.setText(contact.getName());
+            ((ViewHolder) holder).name.setText(user.getName());
             ((ViewHolder) holder).ivPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = holder.getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         Intent intent = new Intent(context, NewPersonPageActivity.class);
-                        intent.putExtra("user", contact);
+                        intent.putExtra("user", user);
                         context.startActivity(intent);
                     }
                 }
@@ -108,13 +111,13 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             customImageViewHolder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, ContactListActivity.class);
+                    Intent intent = new Intent(context, TestContactListActivity.class);
                     intent.putExtra("alreadyExitContacts", (Serializable) contacts);//包括我自己，和已经存在的朋友
-                    intent.putExtra("chatTitleName",photoChatTitleName);
-                    intent.putExtra("FriendList", (Serializable) FriendList);
+                    intent.putExtra("chatRoomName",photoChatTitleName);
+//                    intent.putExtra("FriendUser", (Serializable) FriendList);
                     intent.putExtra("comeFromChatGroupMoreActivity",true);
                     intent.putExtra("ChatRoomID",ChatRoomID);
-                    ((ChatGroupMoreActivity)context).startActivityForResult(intent, 2);
+                    ((TestChatGroupMoreActivity)context).startActivityForResult(intent, 2);
 
                 }
             });

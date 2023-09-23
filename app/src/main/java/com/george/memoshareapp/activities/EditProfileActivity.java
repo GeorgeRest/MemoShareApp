@@ -49,7 +49,6 @@ import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.GetJsonDataUtil;
 import com.george.memoshareapp.utils.GlideEngine;
-import com.george.memoshareapp.utils.ImageUtil;
 import com.google.gson.Gson;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
@@ -328,7 +327,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 String region = tv_edit_region.getText().toString();
                 String gender = tv_edit_gender.getText().toString();
                 String birthday = tv_edit_birthday.getText().toString();
-                User updateUser = new User(phoneNumber, name, signature, gender, birthday, region);
+                User updateUser = new User(phoneNumber, name, signature, gender, birthday, region, user.getBackGroundPath(), user.getHeadPortraitPath());
                 Logger.d(updateUser);
 
 //                new UserManager(this).updateUserInfo(updateUser,phoneNumber);

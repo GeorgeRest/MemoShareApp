@@ -120,13 +120,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             case 2:
                 icon_three.setImageResource(R.drawable.bottom_icon_three_click);
                 if (messageFragment == null) {
-
                     messageFragment = new MessageFragment();
                     transaction.add(R.id.content, messageFragment);
                 } else {
 
                     transaction.show(messageFragment);
                 }
+
                 break;
             case 3:
             default:

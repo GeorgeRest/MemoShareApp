@@ -33,6 +33,7 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ChatAdapter;
 import com.george.memoshareapp.beans.ChatAttachment;
 import com.george.memoshareapp.beans.ChatMessage;
+import com.george.memoshareapp.beans.ChatRoom;
 import com.george.memoshareapp.beans.ImageMessageItem;
 import com.george.memoshareapp.beans.TextMessageItem;
 import com.george.memoshareapp.beans.User;
@@ -44,6 +45,7 @@ import com.george.memoshareapp.http.api.ChatServiceApi;
 import com.george.memoshareapp.interfaces.ChatMessageListener;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.interfaces.SendListener;
+import com.george.memoshareapp.manager.ChatRoomManager;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.properties.AppProperties;
@@ -61,7 +63,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,7 +75,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChatGroupActivity extends AppCompatActivity implements SendListener , ChatMessageListener {
+public class TestChatGroupActivity extends AppCompatActivity implements SendListener, ChatMessageListener {
+
     private ChatService mService;
     private boolean mBound = false;
     private FragmentManager manager;
@@ -88,6 +90,8 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
     private List<User> contactList;
     private String photoChatName;
     private ImageView more;
+    List<ChatMessage> chatRoomMessagesList = new ArrayList<>();
+
     private TextView tv_title;
     private ImageView back;
     private List<User> friendList;
@@ -95,6 +99,7 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
     private int chatRoomID;
     private String phoneNumber;
     private String chatRoomName;
+    private RecyclerView rl;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -102,55 +107,57 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_group);
-        Intent intent1 = new Intent(ChatGroupActivity.this, ChatService.class);
+        Intent intent1 = new Intent(TestChatGroupActivity.this, ChatService.class);
         startService(intent1);
         bindService(intent1, connection, Context.BIND_AUTO_CREATE);
-
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
         phoneNumber = sp.getString("phoneNumber", "");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
         }
-
         manager = getSupportFragmentManager();
-
         if (myChatBar == null) {
             myChatBar = new MyChatBarFragment(chatRoomID);
         }
         Intent intent = getIntent();
-        if (intent.getBooleanExtra("comeFromChatGroupMoreActivity",false)){
-            contactList = (List<User>) intent.getSerializableExtra("addedContactList");
-            friendList = (List<User>) intent.getSerializableExtra("FriendUser");
-            chatRoomID = intent.getIntExtra("ChatRoomID", -1);
-            photoChatName = intent.getStringExtra("photoChatTitleName");
-
-        }else {//来自ContactListActivity
-            contactList = (List<User>) intent.getSerializableExtra("contact_list");
-            friendList = (List<User>) intent.getSerializableExtra("FriendUser");
-            photoChatName = intent.getStringExtra("photo_chat_name");
-            chatRoomID = intent.getIntExtra("ChatRoomID", -1);
-            chatRoomName = intent.getStringExtra("ChatRoomName");
-        }
-
-
+        chatRoomName = intent.getStringExtra("ChatRoomName");
+        friendList = new UserManager(TestChatGroupActivity.this).getAllUsersFromFriendUser();
+        ChatRoom room = new ChatRoomManager().getChatRoomByChatRoomName(chatRoomName);//带时间
+        photoChatName = chatRoomName;
+        chatRoomID = room.getId();
+        contactList = new ChatRoomManager().getMembersByChatRoomNameId(chatRoomID);
         initView();
+        initData();
         EventBus.getDefault().register(this);
     }
+
+    private void initData() {
+        chatRoomMessagesList = new ChatRoomManager().getChatRoomMessages(chatRoomName);
+        User user = new UserManager(this).findUserByPhoneNumber(phoneNumber);
+        for (ChatMessage chatMessage:chatRoomMessagesList) {
+            if (chatMessage.getMessageType().equals("文本")){
+                TextMessageItem textMessageItem = new TextMessageItem(chatMessage.getContent(), chatMessage.getCreatedAt(), MultiItemEntity.SELF, user.getName());
+                multiItemEntityList.add(textMessageItem);
+            }
+        }
+        // 创建 ChatAdapter 的实例并传递消息列表
+        ChatAdapter chatAdapter = new ChatAdapter(this, multiItemEntityList,user);
+        // 设置 RecyclerView 的适配器
+        rl.setAdapter(chatAdapter);
+    }
+
+
 
     private void initView() {
         ImageButton ibtn_group_chat_back = (ImageButton) findViewById(R.id.ibtn_group_chat_back);
         ImageButton ibtn_group_chat_menu = (ImageButton) findViewById(R.id.ibtn_group_chat_menu);
+        rl = (RecyclerView) findViewById(R.id.rcl_group_chat_detail);
         TextView tv_group_chat_name = (TextView) findViewById(R.id.tv_group_chat_name);
-
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fl_group_chat_detail_bar, myChatBar);
         transaction.commit();
         Date date = new Date(System.currentTimeMillis());
-        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉", date, MultiItemEntity.OTHER, "鲨鱼辣椒"));
-        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉巴拉巴拉巴拉", date, MultiItemEntity.OTHER, "鲨鱼辣椒"));
-        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉", date, MultiItemEntity.OTHER, "鲨鱼辣椒"));
-
         RecyclerView rcl_group_chat_detail = (RecyclerView) findViewById(R.id.rcl_group_chat_detail);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         chatAdapter = new ChatAdapter(this, multiItemEntityList,new UserManager(this).findUserByPhoneNumber(phoneNumber));
@@ -163,20 +170,9 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
         more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ChatGroupActivity.this, ChatGroupMoreActivity.class);
-
-                intent.putExtra("contact_list",(Serializable) contactList);
-
-//                if (!intent.getBooleanExtra("comeFromChatGroupMoreActivity",false)){
-                    intent.putExtra("FriendUser",(Serializable) friendList);
-//                }
-
-                intent.putExtra("photo_chat_name",photoChatName);
-                intent.putExtra("comeFromChatGroupActivity",true);
-                intent.putExtra("ChatRoomID",chatRoomID);
-
+                Intent intent = new Intent(TestChatGroupActivity.this, TestChatGroupMoreActivity.class);
+                intent.putExtra("ChatRoomName",chatRoomName);
                 startActivityForResult(intent,1);
-                finish();
             }
         });
         back.setOnClickListener(new View.OnClickListener() {
@@ -218,7 +214,6 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
                 break;
             default:
                 break;
-
         }
     }
     private void analyticalSelectResults(ArrayList<LocalMedia> result) {
@@ -254,8 +249,8 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
             Date date = new Date(System.currentTimeMillis());
             mImageList.add(path); // 接收已选图片地址，用于接口上传图片
             //需要进行上传图片或视频
-
-            ImageMessageItem imageMessageItem = new ImageMessageItem(path, date, MultiItemEntity.SELF, "user");
+            User user = new UserManager(this).findUserByPhoneNumber(phoneNumber);
+            ImageMessageItem imageMessageItem = new ImageMessageItem(path, date, MultiItemEntity.SELF, user.getName());
             imageMessageItem.setFileName(media.getFileName());
             Logger.d(imageMessageItem.getFileName());
             multiItemEntityList.add(imageMessageItem);
@@ -382,36 +377,7 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
     /**
      * 接收服务器消息
      */
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onChatMessageEvent(ChatMessageEvent event) {
-//        ChatMessage chatMessage = event.chatMessage;
-//        String filePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
-//        MultiItemEntity multiItem = null;
-//        Logger.d("onChatMessageEvent==========调用啦哈哈哈哈");
-//
-//        switch (chatMessage.getMessageType()) {
-//            case "文本":
-//                multiItem = new TextMessageItem(chatMessage.getContent(), new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
-//                break;
-//            case "图片":
-//                Logger.d(filePath);
-//                multiItem = new ImageMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
-//                break;
-//            case "语音":
-//                multiItem = new VoiceMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
-//                Logger.d(filePath);
-//                break;
-//            case "视频":
-//
-//                break;
-//            default:
-//                break;
-//        }
-//        if (multiItem != null) {
-//            multiItemEntityList.add(multiItem);
-//            chatAdapter.notifyDataSetChanged();
-//        }
-//    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChatMessageEvent(ChatMessageEvent event) {
         ChatMessage chatMessage = event.chatMessage;
@@ -425,7 +391,7 @@ public class ChatGroupActivity extends AppCompatActivity implements SendListener
         chatMessage.save();
         String filePath="";
         if (chatMessage != null && chatMessage.getAttachment() != null) {
-             filePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+            filePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
 
         }
         MultiItemEntity multiItem = null;

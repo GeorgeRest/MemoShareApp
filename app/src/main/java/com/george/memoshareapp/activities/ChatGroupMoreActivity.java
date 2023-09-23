@@ -42,10 +42,9 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_chat_group_more);
         intent = getIntent();
         initView();
-
         if (intent.getBooleanExtra("comeFromContactListActivity",false)){
             addedContactList = (List<User>) intent.getSerializableExtra("addedContactList");
-            friendList = (List<User>) intent.getSerializableExtra("FriendList");
+            friendList = (List<User>) intent.getSerializableExtra("FriendUser");
             chatRoomID = intent.getIntExtra("ChatRoomID", -1);
             chatTitleName = intent.getStringExtra("chatTitleName");
             photo_chat_title_name.setText(chatTitleName);
@@ -53,7 +52,7 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
             recyclerView.setAdapter(chatGroupMemberImageAdapter) ;
         }else {
             contactList = (List<User>) intent.getSerializableExtra("contact_list");
-            friendList = (List<User>) intent.getSerializableExtra("FriendList");
+            friendList = (List<User>) intent.getSerializableExtra("FriendUser");
             chatTitleName = intent.getStringExtra("photo_chat_name");
             chatRoomID = intent.getIntExtra("ChatRoomID", -1);
             photo_chat_title_name.setText(chatTitleName);
@@ -66,31 +65,16 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
                     break;
                 }
             }
-
             if (!userMeExitInContectList){
                 contactList.add(userMe);
             }
-
             chatGroupMemberImageAdapter = new ChatGroupMemberAdapter(this, contactList,friendList,chatTitleName,chatRoomID);
             recyclerView.setAdapter(chatGroupMemberImageAdapter) ;
-
         }
-
-
-
-
-
         int spanCount = 5; // 设置网格的列数
         GridLayoutManager layoutManager = new GridLayoutManager(this, spanCount);
         recyclerView.setLayoutManager(layoutManager);
-
-
-
-
-
-
     }
-
     private void initView() {
         recyclerView = (RecyclerView) findViewById(R.id.chat_more_member_rv_image);
         photo_chat_title_name = (TextView) findViewById(R.id.photo_chat_name);
@@ -100,7 +84,7 @@ public class ChatGroupMoreActivity extends AppCompatActivity  {
             public void onClick(View v) {
                     Intent resultIntent = new Intent(ChatGroupMoreActivity.this, ChatGroupActivity.class);
                     resultIntent.putExtra("addedContactList", (Serializable) chatGroupMemberImageAdapter.getContacts());
-                    resultIntent.putExtra("FriendList",(Serializable) friendList);
+                    resultIntent.putExtra("FriendUser",(Serializable) friendList);
                     System.out.println("============--"+chatGroupMemberImageAdapter.getContacts());
                     resultIntent.putExtra("comeFromChatGroupMoreActivity",true);
                     resultIntent.putExtra("ChatRoomID",chatRoomID);

@@ -2,7 +2,6 @@ package com.george.memoshareapp.manager;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -461,4 +460,10 @@ public void countFollowing(User user, OnSaveUserListener onSaveUserListener) {
             }
         });
     }
+    public List<User> getAllUsersFromFriendUser() {
+        List<User> friendList = LitePal.where("isFriend = ?", "1").find(User.class);
+
+        return friendList;
+    }
+
 }

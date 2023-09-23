@@ -46,26 +46,27 @@
         <service
             android:name=".service.ChatService"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true"></service>
 
         <activity
-            android:name=".activities.test.ChatActivity"
-            android:exported="true" />
+            android:name=".activities.ContactListActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.ChatGroupMoreActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask" />
         <activity
             android:name=".activities.ChatGroupActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.GroupChatActivity"
-            android:exported="true" >
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.DEFAULT" />-->
-            <!--            </intent-filter>-->
-        </activity>
+            android:exported="false"
+            android:launchMode="singleTask" />
+
         <activity
             android:name=".activities.NewPersonPageActivity"
             android:exported="true" />
@@ -74,10 +75,9 @@
             android:exported="true" />
 
 
-
         <activity
             android:name=".activities.RemindNoteActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -130,15 +130,7 @@
             android:name="ScopedStorage"
             android:value="true" />
 
-        <activity
-            android:name=".activities.ContactListActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".activities.DetailActivity"
             android:exported="true" />
@@ -191,6 +183,16 @@
         <activity
             android:name=".activities.EditNameActivity"
             android:exported="true" />
+        <activity
+            android:name=".activities.TestContactListActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.TestChatGroupActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.TestChatGroupMoreActivity"
+            android:exported="true" />
+
     </application>
 
 </manifest>

@@ -26,14 +26,22 @@ public class User extends LitePalSupport implements Serializable {
     private String birthday;
     private String region; //中国
     private String BackGroundPath; //默认背景
+    private int  isFriend;
 
+    public int getIsFriend() {
+        return isFriend;
+    }
+
+    public void setIsFriend(int isFriend) {
+        this.isFriend = isFriend;
+    }
 
     private List<Post> likePosts = new ArrayList<>();
     private List<Relationship> user1 = new ArrayList<>();
     private List<Relationship> user2 = new ArrayList<>();
 
 
-    public User(String phoneNumber, String name, String signature, String gender, String birthday, String region) {
+    public User(String phoneNumber, String name, String signature, String gender, String birthday, String region, String backGroundPath, String headPortraitPath) {
         this.phoneNumber=phoneNumber;
         this.name = name;
         this.signature = signature;

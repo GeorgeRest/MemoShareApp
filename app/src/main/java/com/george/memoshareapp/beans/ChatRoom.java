@@ -10,6 +10,14 @@ public class ChatRoom extends LitePalSupport {
     private int id;
     private int IDEChatRoomId;
 
+    public ChatRoom(int id, Date createdAt) {
+        this.id=id;
+        this.createdAt=createdAt;
+    }
+    public ChatRoom(){
+
+    }
+
     public int getIDEChatRoomId() {
         return IDEChatRoomId;
     }
