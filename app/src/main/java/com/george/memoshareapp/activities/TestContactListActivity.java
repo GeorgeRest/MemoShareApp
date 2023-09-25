@@ -97,6 +97,7 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
     private int chatRoomID;
     private String input;
     private String chatRoomName;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,7 +292,7 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
         EditText etCustomInput = dialogView.findViewById(R.id.et_custom_input);
         Button btnSubmit = dialogView.findViewById(R.id.btn_submit);
 
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
 
         ChatRoom chatRoom = new ChatRoom();
         ChatRoom lastChatRoom = LitePal.findLast(ChatRoom.class);
@@ -326,11 +327,12 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
 
                             createChatRoom(chatRoom,alreadyCheckedUserList, input);
 
-                            Intent intent = new Intent(getBaseContext(), TestChatGroupActivity.class);
-                            intent.putExtra("ChatRoomName", input);
-                            startActivity(intent);
-                            finish();
-                            dialog.dismiss();  // Close the dialog
+//                            Intent intent = new Intent(getBaseContext(), TestChatGroupActivity.class);
+//                            intent.putExtra("ChatRoomName", input);
+//                            startActivity(intent);
+//
+//                            dialog.dismiss();  // Close the dialog
+//                            finish();
                         }
                     });
 
@@ -381,8 +383,12 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
                 if (response.isSuccessful()) {
                     ChatRoom createdChatRoom = response.body();
                     if (createdChatRoom != null) {
-
                         SaveData(createdChatRoom,chatRoomMemberList);
+                        Intent intent = new Intent(getBaseContext(), TestChatGroupActivity.class);
+                        intent.putExtra("ChatRoomName", input);
+                        startActivity(intent);
+                        dialog.dismiss();  // Close the dialog
+                        finish();
                     }
                 } else {
                     System.out.println("=======没响应成功=====");
