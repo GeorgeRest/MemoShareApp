@@ -25,7 +25,7 @@ public class ChatRoomManager {
         if (latestMessage != null) {
             return latestMessage.getContent();
         } else {
-            return "无消息"; // 或者您可以根据需要返回其他默认值
+            return "创建群聊成功，快来发一条消息吧~"; // 或者您可以根据需要返回其他默认值
         }
     }
     public Date getLatestMessageTimeByChatRoomName(String chatRoomName) {

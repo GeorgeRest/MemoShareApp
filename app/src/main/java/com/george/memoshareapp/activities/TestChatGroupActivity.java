@@ -142,7 +142,8 @@ public class TestChatGroupActivity extends AppCompatActivity implements SendList
             }
         }
         // 创建 ChatAdapter 的实例并传递消息列表
-        ChatAdapter chatAdapter = new ChatAdapter(this, multiItemEntityList,user);
+//        ChatAdapter chatAdapter = new ChatAdapter(this, multiItemEntityList,user);
+        chatAdapter = new ChatAdapter(this, multiItemEntityList,user);
         // 设置 RecyclerView 的适配器
         rl.setAdapter(chatAdapter);
     }

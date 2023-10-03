@@ -24,8 +24,10 @@
             android:id="@+id/btn_add_contacts_complete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:text="完成"
-            android:layout_toRightOf="@id/tv_title"
+            android:backgroundTint="#957ED8"
+
             />
     </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView

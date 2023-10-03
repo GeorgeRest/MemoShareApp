@@ -109,39 +109,45 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
         phoneNumber = sp.getString("phoneNumber", "");
         getFriendUserList(phoneNumber);
-//        if (intent.getBooleanExtra("ComeFromCalendarTripFragment",false)){
-//            state.setEmptyLayout(R.layout.layout_empty);
-//            state.setErrorLayout(R.layout.layout_error);
-//            state.setLoadingLayout(R.layout.layout_loading);
-//            state.showLoading(null, false, false);
-//        }
-
-
         if (comeFromChatGroupMoreActivity){
             chatRoomName = intent.getStringExtra("chatRoomName");
             ChatRoom room = new ChatRoomManager().getChatRoomByChatRoomName(chatRoomName);//带时间
             chatRoomID = room.getId();
             alreadyExitContactsList = (List<User>) intent.getSerializableExtra("alreadyExitContacts");
             friendList = new UserManager(TestContactListActivity.this).getAllUsersFromFriendUser();
-            System.out.println("===comeFromChatGroupMoreActivity到conatctlist"+ friendList);
+            
             List<User> usersNotInAlreadyExitContactsList = new ArrayList<>();
-            for (User u: friendList) {
-                boolean userExists = false;
-                for (User existingUser : alreadyExitContactsList) {
-                    if (u.getPhoneNumber().equals(existingUser.getPhoneNumber())) {
-                        userExists = true;
-                        break;
-                    }
-                }
-                if (!userExists) {
-                    usersNotInAlreadyExitContactsList.add(u);
+            for (User u:alreadyExitContactsList) {
+                if ((u.getPhoneNumber()).equals(phoneNumber)){
+                    alreadyExitContactsList.remove(u);
                 }
             }
+            for (User u: friendList) {
+                for (User existingUser : alreadyExitContactsList) {
+                    if (!u.getPhoneNumber().equals(existingUser.getPhoneNumber())) {
+                        usersNotInAlreadyExitContactsList.add(u);
+                    }
+                }
+            }
+//            System.out.println("=======all=======");
+//            for (User u:friendList) {
+//                System.out.println(u);
+//            }
+//            System.out.println("=======存在=======");
+//
+//            for (User u:alreadyExitContactsList) {
+//                System.out.println(u);
+//            }
+//            System.out.println("=======不存在=======");
+//            for (User u:usersNotInAlreadyExitContactsList) {
+//                System.out.println(u);
+//            }
             horizontalAdapter = new HorizontalAdapter(userList,this);
             contactListAdapter = new ContactListAdapter(this, usersNotInAlreadyExitContactsList, horizontalAdapter, horizontal_recycler_view);
             contactListAdapter.setOnContactsSelectedListener(this);
             lv_contact_list.setAdapter(contactListAdapter);
             horizontal_recycler_view.setAdapter(horizontalAdapter);
+
         }else {
             horizontalAdapter = new HorizontalAdapter(userList,this);
             contactListAdapter = new ContactListAdapter(this, userList, horizontalAdapter, horizontal_recycler_view);
@@ -209,23 +215,6 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (comeFromChatGroupMoreActivity){
-//                    Intent intent1 = new Intent(ContactListActivity.this, ChatGroupMoreActivity.class);
-//                    intent1.putExtra("addedContactList",(Serializable) alreadyExitContactsList);
-//                    intent1.putExtra("chatTitleName",chatTitleName);
-//                    intent1.putExtra("ChatRoomID",chatRoomID);
-//                    intent1.putExtra("comeFromContactListActivity",true);
-//                    intent1.putExtra("FriendUser",(Serializable) friendList);
-//                    startActivity(intent1);
-//                    finish();
-//
-//                }else {
-////                    if (mBound) {
-////                        unbindService(connection);
-////                        mBound = false;
-////                    }
-//                    finish();
-//                }
                 finish();
             }
         });
@@ -326,13 +315,6 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
                             alreadyCheckedUserList = horizontalAdapter.getContacts();
 
                             createChatRoom(chatRoom,alreadyCheckedUserList, input);
-
-//                            Intent intent = new Intent(getBaseContext(), TestChatGroupActivity.class);
-//                            intent.putExtra("ChatRoomName", input);
-//                            startActivity(intent);
-//
-//                            dialog.dismiss();  // Close the dialog
-//                            finish();
                         }
                     });
 

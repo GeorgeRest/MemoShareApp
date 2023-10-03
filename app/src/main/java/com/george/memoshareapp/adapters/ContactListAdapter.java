@@ -29,6 +29,7 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
 
     private Context context;
     private List<User> contactList;
+    private List<User> alreadyExitUserList;
     private HorizontalAdapter horizontalAdapter;
     private boolean[] checkedItems;
     private RecyclerView horizontalRecyclerView;
@@ -47,7 +48,7 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
         this.checkedItems = new boolean[contactList.size()];
         Arrays.fill(checkedItems, false);
         this.horizontalAdapter = horizontalAdapter;
-        this.horizontalRecyclerView = horizontalRecyclerView;  // 添加这一行
+        this.horizontalRecyclerView = horizontalRecyclerView;
     }
 
 
@@ -160,6 +161,21 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
         horizontalAdapter.setContacts(getSelectedContacts());
         horizontalAdapter.notifyDataSetChanged();
     }
+    public void checkUsers(List<User> userList) {
+        for (User u:contactList) {
+            for (User exit:userList) {
+                if ((u.getPhoneNumber()).equals(exit.getPhoneNumber())){
+                    int index = contactList.indexOf(userList);
+                    if (index != -1) {
+                        checkedItems[index] = true;
+                    }
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+
 
     private List<User> getSelectedContacts() {
         List<User> selectedContacts = new ArrayList<>();
