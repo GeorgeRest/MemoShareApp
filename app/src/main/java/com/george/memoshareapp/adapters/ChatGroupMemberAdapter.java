@@ -52,7 +52,6 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public int getItemCount() {
         return contacts.size() + 1; // 加上一个位置用于显示自定义图片
     }
-
     @Override
     public int getItemViewType(int position) {
         if (position == contacts.size()) {
@@ -64,7 +63,6 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public List<User> getContacts(){
         return contacts;
     }
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_USER) {
@@ -114,7 +112,6 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     Intent intent = new Intent(context, TestContactListActivity.class);
                     intent.putExtra("alreadyExitContacts", (Serializable) contacts);//包括我自己，和已经存在的朋友
                     intent.putExtra("chatRoomName",photoChatTitleName);
-//                    intent.putExtra("FriendUser", (Serializable) FriendList);
                     intent.putExtra("comeFromChatGroupMoreActivity",true);
                     intent.putExtra("ChatRoomID",ChatRoomID);
                     ((TestChatGroupMoreActivity)context).startActivityForResult(intent, 2);

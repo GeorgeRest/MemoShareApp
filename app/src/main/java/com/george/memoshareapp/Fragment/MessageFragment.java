@@ -43,7 +43,4 @@ public class MessageFragment extends Fragment {
         chatroomlist.setAdapter(adapter);
         return view;
     }
-
-
-
 }

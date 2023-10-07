@@ -90,8 +90,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                 phoneNumber = sp.getString("phoneNumber", "");
             }
         }
-
-
         Bundle args = getArguments();
         Logger.d(args);
     }
@@ -180,7 +178,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                                 // 通知 adapter 更新列表
                                 likeAdapter.notifyDataSetChanged(); // 通知整个列表数据变化，重绘视图
                                 likeSmartRefreshLayout.finishRefresh(); //结束刷新
-
                                 if (data.isLastPage()) {
                                     likeSmartRefreshLayout.setNoMoreData(true);
                                 } else {
@@ -188,18 +185,15 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                                     likeSmartRefreshLayout.setNoMoreData(false); // 允许加载更多数据
                                 }
                             }
-
                             @Override
                             public void onPostLikeSuccessError(String errorMessage) {
                                 refreshlayout.finishRefresh(false); // 结束刷新，但没有收到数据
-
                             }
                         }, "点赞");
                     }
                 });
                 break;
             case "相册":
-
                 break;
 
             default:
@@ -209,7 +203,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
     }
 
     private void refreshData(HttpListData<Post> newPostData, @NonNull RefreshLayout refreshLayout) {
-
     }
 
 

@@ -315,11 +315,9 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
                             input = etCustomInput.getText().toString()+formattedTime;
                             List<User> alreadyCheckedUserList = new ArrayList<User>();
                             alreadyCheckedUserList = horizontalAdapter.getContacts();
-
                             createChatRoom(chatRoom,alreadyCheckedUserList, input);
                         }
                     });
-
                 }
                 if (etCustomInput.getText().toString().length()==0){
                     photo_chat_name_dialog_iv.setImageResource(R.mipmap.photo_chat_name);
@@ -331,22 +329,18 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
             @Override
             public void afterTextChanged(Editable s) {}
         });
-
-
         dialog.show();
     }
 
 
     private void createChatRoom(ChatRoom chatRoom,List<User> alreadyCheckedUserList, String input) {
         // 创建一个聊天室对象，填充需要的数据
-
         System.out.println("==============chatroom的最后一个id："+chatRoom.getId());
         if (alreadyCheckedUserList.size()>1){
             chatRoom.setType("多人");
         }else {
             chatRoom.setType("单人");
         }
-
         chatRoom.setName(input);
 //        chatRoom.setAvatar();//设置拼接头像
         List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
@@ -394,8 +388,6 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
         chatRoom.setCreatedAt(chat.getCreatedAt());
         chatRoom.setUpdatedAt(chat.getUpdatedAt());
         chatRoom.save();
-
-
         for (ChatRoomMember c:chatRoomMemberList) {
             c.save();
         }
@@ -420,7 +412,6 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // Intentionally left blank
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String newText = s.toString();
@@ -462,7 +453,6 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
         if(!filteredList.isEmpty()) {
             contactListAdapter.setData(filteredList);
             contactListAdapter.notifyDataSetChanged();
-
             lv_contact_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -476,7 +466,6 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
             Toasty.warning(this, "没有找到"+"'"+query+"'"+"相关结果", Toast.LENGTH_SHORT,true).show();
         }
     }
-
     private void getFriendUserList(String phoneNumber) {
         UserServiceApi serviceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
         Call<HttpListData<User>> friendUserCall = serviceApi.getFriendUser(phoneNumber);
@@ -493,7 +482,6 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
                     contactListAdapter.setData(userList);
                     contactListAdapter.notifyDataSetChanged();
                 }
-
             }
             @Override
             public void onFailure(Call<HttpListData<User>> call, Throwable t) {
@@ -510,23 +498,17 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
         for (User user : userList) {
             // 检查用户是否已存在
             User existingUser = LitePal.where("phoneNumber = ?", String.valueOf(user.getPhoneNumber())).findFirst(User.class);
-
             if (existingUser == null) {
                 // 用户不存在，保存并将isFriend设置为1
                 user.setIsFriend(1);
                 user.save();
             } else {
-                // 用户已存在，更新isFriend属性为1
                 existingUser.setIsFriend(1); // 假设有一个setIsFriend方法用于设置isFriend属性
                 existingUser.save();
             }
         }
     }
-
-
-
     @Override
     public void onContactsSelected(boolean[] selectedItems) {
-
     }
 }
