@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -154,16 +155,23 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
             friendList = new UserManager(TestContactListActivity.this).getAllUsersFromFriendUser();
 
             List<User> usersNotInAlreadyExitContactsList = new ArrayList<>();
-            for (User u:alreadyExitContactsList) {
+            Iterator<User> iterator = alreadyExitContactsList.iterator();//comeFromWhere() 方法用于根据条件初始化 contactListAdapter。但根据堆栈跟踪信息，ConcurrentModificationException 异常可能是在这个方法中触发的，通常是由于对集合进行遍历的同时修改了集合。
+            while (iterator.hasNext()) {
+                User u = iterator.next();
                 if ((u.getPhoneNumber()).equals(phoneNumber)){
-                    alreadyExitContactsList.remove(u);
+                    iterator.remove();
                 }
             }
-            for (User u: friendList) {
+            for (User u : friendList) {
+                boolean userFound = false;
                 for (User existingUser : alreadyExitContactsList) {
-                    if (!u.getPhoneNumber().equals(existingUser.getPhoneNumber())) {
-                        usersNotInAlreadyExitContactsList.add(u);
+                    if (u.getPhoneNumber().equals(existingUser.getPhoneNumber())) {
+                        userFound = true;
+                        break; // 一旦找到匹配项，就跳出内层循环
                     }
+                }
+                if (!userFound) {
+                    usersNotInAlreadyExitContactsList.add(u);
                 }
             }
 
