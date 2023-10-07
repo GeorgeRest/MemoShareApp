@@ -1,11 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -21,6 +15,12 @@ import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.R;
 
@@ -102,7 +102,7 @@ public class RemindActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.rl_contact:
-                Intent intent1 = new Intent(this, ContactListActivity.class);
+                Intent intent1 = new Intent(this, TestContactListActivity.class);
                 activityResultLauncher.launch(intent1);
                 break;
             case R.id.rl_content:

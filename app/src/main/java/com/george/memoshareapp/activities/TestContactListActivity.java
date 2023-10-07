@@ -109,53 +109,7 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
         phoneNumber = sp.getString("phoneNumber", "");
         getFriendUserList(phoneNumber);
-        if (comeFromChatGroupMoreActivity){
-            chatRoomName = intent.getStringExtra("chatRoomName");
-            ChatRoom room = new ChatRoomManager().getChatRoomByChatRoomName(chatRoomName);//带时间
-            chatRoomID = room.getId();
-            alreadyExitContactsList = (List<User>) intent.getSerializableExtra("alreadyExitContacts");
-            friendList = new UserManager(TestContactListActivity.this).getAllUsersFromFriendUser();
-            
-            List<User> usersNotInAlreadyExitContactsList = new ArrayList<>();
-            for (User u:alreadyExitContactsList) {
-                if ((u.getPhoneNumber()).equals(phoneNumber)){
-                    alreadyExitContactsList.remove(u);
-                }
-            }
-            for (User u: friendList) {
-                for (User existingUser : alreadyExitContactsList) {
-                    if (!u.getPhoneNumber().equals(existingUser.getPhoneNumber())) {
-                        usersNotInAlreadyExitContactsList.add(u);
-                    }
-                }
-            }
-//            System.out.println("=======all=======");
-//            for (User u:friendList) {
-//                System.out.println(u);
-//            }
-//            System.out.println("=======存在=======");
-//
-//            for (User u:alreadyExitContactsList) {
-//                System.out.println(u);
-//            }
-//            System.out.println("=======不存在=======");
-//            for (User u:usersNotInAlreadyExitContactsList) {
-//                System.out.println(u);
-//            }
-            horizontalAdapter = new HorizontalAdapter(userList,this);
-            contactListAdapter = new ContactListAdapter(this, usersNotInAlreadyExitContactsList, horizontalAdapter, horizontal_recycler_view);
-            contactListAdapter.setOnContactsSelectedListener(this);
-            lv_contact_list.setAdapter(contactListAdapter);
-            horizontal_recycler_view.setAdapter(horizontalAdapter);
-
-        }else {
-            horizontalAdapter = new HorizontalAdapter(userList,this);
-            contactListAdapter = new ContactListAdapter(this, userList, horizontalAdapter, horizontal_recycler_view);
-            contactListAdapter.setOnContactsSelectedListener(this);
-            lv_contact_list.setAdapter(contactListAdapter);
-            horizontal_recycler_view.setAdapter(horizontalAdapter);
-        }
-
+        comeFromWhere();
 
 
         lv_contact_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -190,6 +144,46 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
         });
         setupSearchView();
     }
+
+    private void comeFromWhere() {
+        if (comeFromChatGroupMoreActivity){
+            chatRoomName = intent.getStringExtra("chatRoomName");
+            ChatRoom room = new ChatRoomManager().getChatRoomByChatRoomName(chatRoomName);//带时间
+            chatRoomID = room.getId();
+            alreadyExitContactsList = (List<User>) intent.getSerializableExtra("alreadyExitContacts");
+            friendList = new UserManager(TestContactListActivity.this).getAllUsersFromFriendUser();
+
+            List<User> usersNotInAlreadyExitContactsList = new ArrayList<>();
+            for (User u:alreadyExitContactsList) {
+                if ((u.getPhoneNumber()).equals(phoneNumber)){
+                    alreadyExitContactsList.remove(u);
+                }
+            }
+            for (User u: friendList) {
+                for (User existingUser : alreadyExitContactsList) {
+                    if (!u.getPhoneNumber().equals(existingUser.getPhoneNumber())) {
+                        usersNotInAlreadyExitContactsList.add(u);
+                    }
+                }
+            }
+
+            horizontalAdapter = new HorizontalAdapter(userList,this);
+            contactListAdapter = new ContactListAdapter(this, usersNotInAlreadyExitContactsList, horizontalAdapter, horizontal_recycler_view);
+            contactListAdapter.setOnContactsSelectedListener(this);
+            lv_contact_list.setAdapter(contactListAdapter);
+            horizontal_recycler_view.setAdapter(horizontalAdapter);
+            contactListAdapter.setData(usersNotInAlreadyExitContactsList);
+            contactListAdapter.notifyDataSetChanged();
+
+        }else {
+            horizontalAdapter = new HorizontalAdapter(userList,this);
+            contactListAdapter = new ContactListAdapter(this, userList, horizontalAdapter, horizontal_recycler_view);
+            contactListAdapter.setOnContactsSelectedListener(this);
+            lv_contact_list.setAdapter(contactListAdapter);
+            horizontal_recycler_view.setAdapter(horizontalAdapter);
+        }
+    }
+
     private void initView() {
         photo_chat_name_dialog_iv = (ImageView) findViewById(R.id.photo_chat_name_dialog_iv);
         btn_submit = (Button) findViewById(R.id.btn_submit);
@@ -487,8 +481,10 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
                 System.out.println(userList.size()+"-=============");
                 sortContacts(userList); // 按拼音首字母排序
                 // 设置数据给 contactListAdapter 对象
-                contactListAdapter.setData(userList);
-                contactListAdapter.notifyDataSetChanged();
+                if (!comeFromChatGroupMoreActivity){
+                    contactListAdapter.setData(userList);
+                    contactListAdapter.notifyDataSetChanged();
+                }
 
             }
             @Override
