@@ -51,7 +51,7 @@ public class ChatService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String url = "ws://192.168.1.3:6028/websocket/17";
+        String url = "ws://192.168.1.5:6028/websocket/17";
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()

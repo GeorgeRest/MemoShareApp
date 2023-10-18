@@ -461,4 +461,9 @@ public void countFollowing(User user, OnSaveUserListener onSaveUserListener) {
             }
         });
     }
+    public List<User> getAllUsersFromFriendUser() {
+        List<User> friendList = LitePal.where("isFriend = ?", "1").find(User.class);
+
+        return friendList;
+    }
 }

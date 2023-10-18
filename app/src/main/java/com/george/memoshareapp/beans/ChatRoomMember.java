@@ -1,6 +1,8 @@
 package com.george.memoshareapp.beans;
 
 
+import org.litepal.crud.LitePalSupport;
+
 import java.util.Date;
 
 
@@ -14,9 +16,9 @@ import java.util.Date;
  * @version: 1.0
  */
 
-public class ChatRoomMember {
+public class ChatRoomMember extends LitePalSupport {
     private int chatRoomId;
-    private int userId;
+    private long userId;
     private Date lastReadAt;
     private int isAdmin;
     private Date createdAt;

@@ -255,7 +255,9 @@ public class CalendarTripFragment extends Fragment implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_blue:
-
+                Intent intent1 = new Intent(getContext(), TestContactListActivity.class);
+//                intent1.putExtra("ComeFromCalendarTripFragment",true);
+                startActivity(intent1);
                 break;
             case R.id.add_red:
                 Intent intent = new Intent(getContext(), RemindActivity.class);
