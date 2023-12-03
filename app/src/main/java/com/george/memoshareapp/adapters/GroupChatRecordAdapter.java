@@ -70,8 +70,6 @@ public class GroupChatRecordAdapter extends RecyclerView.Adapter<GroupChatRecord
     }
 
 
-
-
     class RecordViewHolder extends RecyclerView.ViewHolder {
         Button playButton;
         TextView record_time;

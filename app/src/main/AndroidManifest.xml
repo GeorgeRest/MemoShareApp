@@ -43,13 +43,23 @@
         android:theme="@style/Theme.MemoShareApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.CoverPhotoSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ChoosePhotoActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CreatedAlbumActivity"
+            android:exported="false" />
+
         <service
             android:name=".service.ChatService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
-            android:name=".activities.ContactListActivity"
+            android:name=".activities.TestContactListActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
@@ -59,27 +69,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ChatGroupMoreActivity"
+            android:name=".activities.TestChatGroupMoreActivity"
             android:exported="true"
             android:launchMode="singleTask" />
         <activity
-            android:name=".activities.ChatGroupActivity"
+            android:name=".activities.TestChatGroupActivity"
             android:exported="false"
             android:launchMode="singleTask" />
-
         <activity
             android:name=".activities.NewPersonPageActivity"
             android:exported="true" />
         <activity
+            android:name=".activities.AlbumActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.ChangePasswordActivity"
             android:exported="true" />
-
-
         <activity
             android:name=".activities.RemindNoteActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -130,11 +141,9 @@
             android:name="ScopedStorage"
             android:value="true" />
 
-
         <activity
             android:name=".activities.DetailActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.MapLocationActivity"
             android:exported="true" />
@@ -183,16 +192,6 @@
         <activity
             android:name=".activities.EditNameActivity"
             android:exported="true" />
-        <activity
-            android:name=".activities.TestContactListActivity"
-            android:exported="true" />
-        <activity
-            android:name=".activities.TestChatGroupActivity"
-            android:exported="true" />
-        <activity
-            android:name=".activities.TestChatGroupMoreActivity"
-            android:exported="true" />
-
     </application>
 
 </manifest>

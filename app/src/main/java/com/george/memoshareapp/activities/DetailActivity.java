@@ -323,7 +323,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                             like.setImageResource(R.mipmap.like_press);
                             has_like = true;
                         }
-
                         editor1.putBoolean(post.getId() + ":" + phoneNumber, has_like);
                         editor1.apply();
                         EventBus.getDefault().post(new updateLikeState(post.getId(), has_like));
@@ -334,7 +333,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                             detail_tv_like_number.setText(String.valueOf(likeCount));
                         }
                     }
-
                 });
                 break;
             default:
@@ -379,18 +377,15 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         dialog.findViewById(R.id.detail_link).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 dialog.dismiss();
             }
         });
-
         dialog.findViewById(R.id.detail_tv_share_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
             }
         });
-
     }
 
     /**
@@ -398,7 +393,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      */
     private List<CommentBean> getCommentData() {
         list = new ArrayList<CommentBean>();
-
         List<CommentBean> commentBeans = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(CommentBean.class);
         for (CommentBean commentBean : commentBeans) {
             List<ReplyBean> replyBeans = LitePal.where("commentbean_id = ?", String.valueOf(commentBean.getId())).find(ReplyBean.class);

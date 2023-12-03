@@ -16,9 +16,11 @@ import java.util.List;
 public class ViewPager2Adapter extends RecyclerView.Adapter<ViewPager2Adapter.ViewHolder> {
     private List<String> mData;
 
+
     public ViewPager2Adapter(List<String> photoPath) {
         mData = photoPath;
     }
+
 
     @NonNull
     @Override

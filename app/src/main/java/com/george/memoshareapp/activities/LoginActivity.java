@@ -172,6 +172,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+
+
     private void initView() {
         tv_pw_login = (TextView) findViewById(R.id.tv_pw_login);
         tv_code_login = (TextView) findViewById(R.id.tv_code_login);

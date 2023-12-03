@@ -7,6 +7,6 @@
         android:id="@+id/fullscreen_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerInside" />
+         />
 
 </FrameLayout>
