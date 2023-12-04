@@ -1,6 +1,7 @@
 package com.george.memoshareapp.beans;
 
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
 import java.util.Date;
@@ -19,12 +20,18 @@ import java.util.List;
 public class ChatMessage extends LitePalSupport {
     private int id;
     private int chatRoomId;
+    private int ChatMessageId;
     private String senderId;
     private String content;
     private String messageType;
     private String createdAt;
     private String updatedAt;
+    @Column(ignore = true)
+    private User user;
     private ChatAttachment attachment;
+
+    @Column(ignore = true)
+    private ChatRoom chatRoom;
 
     public ChatMessage() {
     }
@@ -118,17 +125,45 @@ public class ChatMessage extends LitePalSupport {
         this.attachment = attachment;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
+
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+    }
+
+    public int getChatMessageId() {
+        return ChatMessageId;
+    }
+
+    public void setChatMessageId(int chatMessageId) {
+        ChatMessageId = chatMessageId;
+    }
+
+
     @Override
     public String toString() {
         return "ChatMessage{" +
                 "id=" + id +
                 ", chatRoomId=" + chatRoomId +
+                ", ChatMessageId=" + ChatMessageId +
                 ", senderId='" + senderId + '\'' +
                 ", content='" + content + '\'' +
                 ", messageType='" + messageType + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
+                ", user=" + user +
                 ", attachment=" + attachment +
+                ", chatRoom=" + chatRoom +
                 '}';
     }
 }

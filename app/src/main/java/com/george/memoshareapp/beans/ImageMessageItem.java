@@ -12,9 +12,9 @@ public class ImageMessageItem extends MultiItemEntity {
     private String ImagePath;
     private Date date;
     private int UserSide;
-    private String name;
     private int progress;
     private String fileName;
+    private User user;
 
     @Override
     public int getItemShowType() {
@@ -38,14 +38,15 @@ public class ImageMessageItem extends MultiItemEntity {
     }
 
     @Override
-    public void setUserName(String name) {
-        this.name = name;
+    public void setUserInfo(User user) {
+        this.user = user;
     }
 
     @Override
-    public String getUserName() {
-        return name;
+    public User getUserInfo() {
+        return user;
     }
+
 
     @Override
     public void setItemContent(String imagePath) {
@@ -85,10 +86,22 @@ public class ImageMessageItem extends MultiItemEntity {
     }
 
 
-    public ImageMessageItem(String imagePath, Date date, int userSide, String name) {
+    public ImageMessageItem(String imagePath, Date date, int userSide, User user) {
         ImagePath = imagePath;
         this.date = date;
         UserSide = userSide;
-        this.name = name;
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "ImageMessageItem{" +
+                "ImagePath='" + ImagePath + '\'' +
+                ", date=" + date +
+                ", UserSide=" + UserSide +
+                ", progress=" + progress +
+                ", fileName='" + fileName + '\'' +
+                ", user=" + user +
+                '}';
     }
 }

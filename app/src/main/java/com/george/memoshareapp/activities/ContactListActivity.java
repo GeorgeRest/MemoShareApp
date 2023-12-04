@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.drake.statelayout.StateLayout;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ContactListAdapter;
-import com.george.memoshareapp.beans.ContactInfo;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpListData;
@@ -34,7 +33,6 @@ import com.george.memoshareapp.view.LetterIndexView;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -93,7 +91,7 @@ public class ContactListActivity extends AppCompatActivity {
         letterIndexView.setUpdateListView(new LetterIndexView.UpdateListView() {
             @Override
             public void updateListView(String currentChar) {
-                int positionForSection =contactListAdapter.getPositionForSection(currentChar.charAt(0));
+                int positionForSection = contactListAdapter.getPositionForSection(currentChar.charAt(0));
                 lv_contact_list.setSelection(positionForSection);
             }
         });

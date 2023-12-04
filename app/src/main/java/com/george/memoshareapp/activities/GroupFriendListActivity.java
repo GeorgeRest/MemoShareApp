@@ -21,13 +21,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.drake.statelayout.StateLayout;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.adapters.ContactListAdapter;
+import com.george.memoshareapp.adapters.FriendListAdapter;
 import com.george.memoshareapp.adapters.HorizontalAdapter;
 import com.george.memoshareapp.beans.ChatRoom;
 import com.george.memoshareapp.beans.ChatRoomMember;
@@ -35,9 +36,8 @@ import com.george.memoshareapp.beans.ChatRoomRequest;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.http.api.ChatRoomApi;
 import com.george.memoshareapp.http.api.UserServiceApi;
-import com.george.memoshareapp.http.response.HttpData;
 import com.george.memoshareapp.http.response.HttpListData;
-import com.george.memoshareapp.manager.ChatRoomManager;
+import com.george.memoshareapp.manager.ChatManager;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.service.ChatService;
@@ -47,14 +47,9 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.orhanobut.logger.Logger;
 
-import org.litepal.LitePal;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -62,14 +57,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TestContactListActivity extends AppCompatActivity implements ContactListAdapter.OnContactsSelectedListener{
+public class GroupFriendListActivity extends AppCompatActivity implements FriendListAdapter.OnContactsSelectedListener{
+    private String TAG = "ContactListActivity";
     private ChatService mService;
     private boolean mBound = false;
     private ListView listview;
     private List<String> MessageList = new ArrayList<>();
     private CircularProgressBar circularProgressBar;
     private ListView lv_contact_list;
-    private ContactListAdapter contactListAdapter;
+    private FriendListAdapter friendListAdapter;
     private LetterIndexView letterIndexView;
     private TextView tv_show_letter_toast;
     private List<User> userList = new ArrayList<>();
@@ -93,12 +89,13 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
     private List<User> friendList;
     private Intent intent;
     private ImageView back;
-    private String phoneNumber;
+    private String selfPhoneNumber;
 
     private int chatRoomID;
     private String input;
     private String chatRoomName;
     private AlertDialog dialog;
+    private ChatManager chatManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,14 +105,15 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
         intent = getIntent();
         comeFromChatGroupMoreActivity = intent.getBooleanExtra("comeFromChatGroupMoreActivity", false);
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
-        phoneNumber = sp.getString("phoneNumber", "");
-        getFriendUserList(phoneNumber);
+        selfPhoneNumber = sp.getString("phoneNumber", "");
+        getFriendUserList(selfPhoneNumber);
         comeFromWhere();
 
 
         lv_contact_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
 
             }
         });
@@ -124,7 +122,7 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
         letterIndexView.setUpdateListView(new LetterIndexView.UpdateListView() {
             @Override
             public void updateListView(String currentChar) {
-                int positionForSection =contactListAdapter.getPositionForSection(currentChar.charAt(0));
+                int positionForSection = friendListAdapter.getPositionForSection(currentChar.charAt(0));
                 lv_contact_list.setSelection(positionForSection);
             }
         });
@@ -137,8 +135,8 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem < contactListAdapter.getCount()) {
-                    int sectionForPosition = contactListAdapter.getSectionForPosition(firstVisibleItem);
+                if (firstVisibleItem < friendListAdapter.getCount()) {
+                    int sectionForPosition = friendListAdapter.getSectionForPosition(firstVisibleItem);
                     letterIndexView.updateLetterIndexView(sectionForPosition);
                 }
             }
@@ -148,46 +146,46 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
 
     private void comeFromWhere() {
         if (comeFromChatGroupMoreActivity){
-            chatRoomName = intent.getStringExtra("chatRoomName");
-//            ChatRoom room = new ChatRoomManager().getChatRoomByChatRoomName(chatRoomName);//带时间
-//            chatRoomID = room.getId();
-            alreadyExitContactsList = (List<User>) intent.getSerializableExtra("alreadyExitContacts");
-            friendList = new UserManager(TestContactListActivity.this).getAllUsersFromFriendUser();
-
-            List<User> usersNotInAlreadyExitContactsList = new ArrayList<>();
-            Iterator<User> iterator = alreadyExitContactsList.iterator();//comeFromWhere() 方法用于根据条件初始化 contactListAdapter。但根据堆栈跟踪信息，ConcurrentModificationException 异常可能是在这个方法中触发的，通常是由于对集合进行遍历的同时修改了集合。
-            while (iterator.hasNext()) {
-                User u = iterator.next();
-                if ((u.getPhoneNumber()).equals(phoneNumber)){
-                    iterator.remove();
-                }
-            }
-            for (User u : friendList) {
-                boolean userFound = false;
-                for (User existingUser : alreadyExitContactsList) {
-                    if (u.getPhoneNumber().equals(existingUser.getPhoneNumber())) {
-                        userFound = true;
-                        break; // 一旦找到匹配项，就跳出内层循环
-                    }
-                }
-                if (!userFound) {
-                    usersNotInAlreadyExitContactsList.add(u);
-                }
-            }
-
-            horizontalAdapter = new HorizontalAdapter(userList,this);
-            contactListAdapter = new ContactListAdapter(this, usersNotInAlreadyExitContactsList, horizontalAdapter, horizontal_recycler_view);
-            contactListAdapter.setOnContactsSelectedListener(this);
-            lv_contact_list.setAdapter(contactListAdapter);
-            horizontal_recycler_view.setAdapter(horizontalAdapter);
-            contactListAdapter.setData(usersNotInAlreadyExitContactsList);
-            contactListAdapter.notifyDataSetChanged();
+//            chatRoomName = intent.getStringExtra("chatRoomName");
+////            ChatRoom room = new ChatRoomManager().getChatRoomByChatRoomName(chatRoomName);//带时间
+////            chatRoomID = room.getId();
+//            alreadyExitContactsList = (List<User>) intent.getSerializableExtra("alreadyExitContacts");
+//            friendList = new UserManager(TestContactListActivity.this).getAllUsersFromFriendUser();
+//
+//            List<User> usersNotInAlreadyExitContactsList = new ArrayList<>();
+//            Iterator<User> iterator = alreadyExitContactsList.iterator();//comeFromWhere() 方法用于根据条件初始化 contactListAdapter。但根据堆栈跟踪信息，ConcurrentModificationException 异常可能是在这个方法中触发的，通常是由于对集合进行遍历的同时修改了集合。
+//            while (iterator.hasNext()) {
+//                User u = iterator.next();
+//                if ((u.getPhoneNumber()).equals(phoneNumber)){
+//                    iterator.remove();
+//                }
+//            }
+//            for (User u : friendList) {
+//                boolean userFound = false;
+//                for (User existingUser : alreadyExitContactsList) {
+//                    if (u.getPhoneNumber().equals(existingUser.getPhoneNumber())) {
+//                        userFound = true;
+//                        break; // 一旦找到匹配项，就跳出内层循环
+//                    }
+//                }
+//                if (!userFound) {
+//                    usersNotInAlreadyExitContactsList.add(u);
+//                }
+//            }
+//
+//            horizontalAdapter = new HorizontalAdapter(userList,this);
+//            contactListAdapter = new ContactListAdapter(this, usersNotInAlreadyExitContactsList, horizontalAdapter, horizontal_recycler_view);
+//            contactListAdapter.setOnContactsSelectedListener(this);
+//            lv_contact_list.setAdapter(contactListAdapter);
+//            horizontal_recycler_view.setAdapter(horizontalAdapter);
+//            contactListAdapter.setData(usersNotInAlreadyExitContactsList);
+//            contactListAdapter.notifyDataSetChanged();
 
         }else {
             horizontalAdapter = new HorizontalAdapter(userList,this);
-            contactListAdapter = new ContactListAdapter(this, userList, horizontalAdapter, horizontal_recycler_view);
-            contactListAdapter.setOnContactsSelectedListener(this);
-            lv_contact_list.setAdapter(contactListAdapter);
+            friendListAdapter = new FriendListAdapter(this, userList, horizontalAdapter, horizontal_recycler_view);
+            friendListAdapter.setOnContactsSelectedListener(this);
+            lv_contact_list.setAdapter(friendListAdapter);
             horizontal_recycler_view.setAdapter(horizontalAdapter);
         }
     }
@@ -207,7 +205,7 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
         tvCsSearch = customSearchView.findViewById(R.id.tv_cs_search);
         etSearch = customSearchView.findViewById(R.id.et_search);
         rl_text_before_layout = customSearchView.findViewById(R.id.rl_text_before_layout);
-
+        chatManager = new ChatManager();
         searchLayout.addView(customSearchView);
 
         // 先初始化搜索框的可见性
@@ -285,14 +283,6 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
 
         dialog = builder.create();
 
-        ChatRoom chatRoom = new ChatRoom();
-        ChatRoom lastChatRoom = LitePal.findLast(ChatRoom.class);
-        if (lastChatRoom != null) {
-            chatRoom.setId( lastChatRoom.getId()+1);
-        }else {
-            chatRoom.setId(1);
-        }
-
         etCustomInput.addTextChangedListener(new TextWatcher() {
 
             private ImageView photo_chat_name_dialog_iv;
@@ -307,15 +297,9 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
                     btnSubmit.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Date currentDate = new Date();
-                            // 定义时间格式
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-                            // 格式化时间为字符串
-                            String formattedTime = sdf.format(currentDate);
-                            input = etCustomInput.getText().toString()+formattedTime;
-                            List<User> alreadyCheckedUserList = new ArrayList<User>();
-                            alreadyCheckedUserList = horizontalAdapter.getContacts();
-                            createChatRoom(chatRoom,alreadyCheckedUserList, input);
+                            input = etCustomInput.getText().toString();
+                            List<User> alreadyCheckedUserList = horizontalAdapter.getContacts();
+                            createChatRoom(alreadyCheckedUserList, input);
                         }
                     });
                 }
@@ -323,7 +307,7 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
                     photo_chat_name_dialog_iv.setImageResource(R.mipmap.photo_chat_name);
                 }
                 if (etCustomInput.getText().toString().length()>12){
-                    Toasty.warning(TestContactListActivity.this,"名称不能超过11个字");
+                    Toasty.warning(GroupFriendListActivity.this,"名称不能超过11个字");
                 }
             }
             @Override
@@ -333,66 +317,81 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
     }
 
 
-    private void createChatRoom(ChatRoom chatRoom,List<User> alreadyCheckedUserList, String input) {
-        // 创建一个聊天室对象，填充需要的数据
-        System.out.println("==============chatroom的最后一个id："+chatRoom.getId());
-        if (alreadyCheckedUserList.size()>1){
-            chatRoom.setType("多人");
-        }else {
-            chatRoom.setType("单人");
-        }
+    private void createChatRoom(List<User> alreadyCheckedUserList, String input) {
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setType("多人");
         chatRoom.setName(input);
-//        chatRoom.setAvatar();//设置拼接头像
-        List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
-        for (User u:alreadyCheckedUserList) {
-            ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoom.getId(),u.getPhoneNumber(),0);
-            chatRoomMemberList.add(chatRoomMember);
-        }
-        ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoom.getId(),phoneNumber,1);
-        chatRoomMemberList.add(chatRoomMember);
-        // 获取ChatRoomController实例
-        ChatRoomRequest chatRoomRequest = new ChatRoomRequest(chatRoom, chatRoomMemberList);
+
+        String avatarUrl = concatenateAvatarUrls(alreadyCheckedUserList);
+        chatRoom.setAvatar(avatarUrl);
+
+        List<ChatRoomMember> chatRoomMemberList = addChatMember(alreadyCheckedUserList);
+        ArrayList<ChatRoom> chatRooms = new ArrayList<>();
+        chatRooms.add(chatRoom);
+        ChatRoomRequest chatRoomRequest = new ChatRoomRequest(chatRooms, chatRoomMemberList);
 
         ChatRoomApi chatRoomApi = RetrofitManager.getInstance().create(ChatRoomApi.class);
-        Call<ChatRoom> call = chatRoomApi.createChatRoom(chatRoomRequest);
-        call.enqueue(new Callback<ChatRoom>() {
+        Call<ChatRoomRequest> apiChatRoom = chatRoomApi.createChatRoom(chatRoomRequest);
+        apiChatRoom.enqueue(new Callback<ChatRoomRequest>() {
             @Override
-            public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
+            public void onResponse(Call<ChatRoomRequest> call, Response<ChatRoomRequest> response) {
                 if (response.isSuccessful()) {
-                    ChatRoom createdChatRoom = response.body();
+                    ChatRoomRequest createdChatRoom = response.body();
                     if (createdChatRoom != null) {
-                        SaveData(createdChatRoom,chatRoomMemberList);
-                        Intent intent = new Intent(getBaseContext(), TestChatGroupActivity.class);
-                        intent.putExtra("ChatRoomName", input);
-                        startActivity(intent);
-                        dialog.dismiss();  // Close the dialog
+                        Logger.d(TAG,createdChatRoom.toString());
+                      chatManager.saveOrUpdateChatRoomAndMember(createdChatRoom); // 保存到本地数据库
+                        Toasty.success(GroupFriendListActivity.this, "创建成功", Toast.LENGTH_SHORT, true).show();
+                        GroupChatActivity.openGroupChatActivity(GroupFriendListActivity.this,createdChatRoom.getChatRooms().get(0).getChatRoomId(),input);
                         finish();
+                        dialog.dismiss();
                     }
                 } else {
-                    System.out.println("=======没响应成功=====");
+                    Toasty.error(GroupFriendListActivity.this, "创建失败", Toast.LENGTH_SHORT, true).show();
                 }
             }
+
             @Override
-            public void onFailure(Call<ChatRoom> call, Throwable t) {
-                Logger.d(t.getMessage()) ;
+            public void onFailure(Call<ChatRoomRequest> call, Throwable t) {
+                Toasty.error(GroupFriendListActivity.this, "创建失败", Toast.LENGTH_SHORT, true).show();
             }
         });
+
     }
 
-
-    public void SaveData(ChatRoom chat,List<ChatRoomMember> chatRoomMemberList) {
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.setName(chat.getName());
-        chatRoom.setIDEChatRoomId(chat.getId());
-        chatRoom.setType(chat.getType()); ;
-        chatRoom.setCreatedAt(chat.getCreatedAt());
-        chatRoom.setUpdatedAt(chat.getUpdatedAt());
-        chatRoom.save();
-        for (ChatRoomMember c:chatRoomMemberList) {
-            c.save();
+    @NonNull
+    private List<ChatRoomMember> addChatMember(List<User> alreadyCheckedUserList) {
+        List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
+        for (User otherUser: alreadyCheckedUserList) {
+            ChatRoomMember chatRoomMember = new ChatRoomMember();
+            chatRoomMember.setUserId(Long.parseLong(otherUser.getPhoneNumber()));
+            chatRoomMemberList.add(chatRoomMember);
         }
-
+        ChatRoomMember chatRoomMember = new ChatRoomMember();
+        chatRoomMember.setUserId(Long.parseLong(selfPhoneNumber));
+        chatRoomMember.setIsAdmin(1);
+        chatRoomMemberList.add(chatRoomMember);
+        return chatRoomMemberList;
     }
+
+    private  String concatenateAvatarUrls(List<User> alreadyCheckedUserList) {
+        StringBuilder urlBuilder = new StringBuilder();
+        User userSelf = new UserManager(this).findUserByPhoneNumber(selfPhoneNumber);
+        urlBuilder.append(userSelf.getHeadPortraitPath());
+        urlBuilder.append("+");
+        for (int i = 0; i < alreadyCheckedUserList.size(); i++) {
+            User user = alreadyCheckedUserList.get(i);
+            String avatarUrl = user.getHeadPortraitPath();
+            if (avatarUrl != null) {
+                urlBuilder.append(avatarUrl);
+                if (i < alreadyCheckedUserList.size() - 1) {
+                    urlBuilder.append("+");
+                }
+            }
+        }
+        return urlBuilder.toString();
+    }
+
+
 
 
     private void sortContacts(List<User> users){
@@ -451,8 +450,8 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
             }
         }
         if(!filteredList.isEmpty()) {
-            contactListAdapter.setData(filteredList);
-            contactListAdapter.notifyDataSetChanged();
+            friendListAdapter.setData(filteredList);
+            friendListAdapter.notifyDataSetChanged();
             lv_contact_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -475,12 +474,11 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
                 state.showContent(null);
                 userList = response.body().getItems();
                 saveFriendList(userList);
-                System.out.println(userList.size()+"-=============");
                 sortContacts(userList); // 按拼音首字母排序
                 // 设置数据给 contactListAdapter 对象
                 if (!comeFromChatGroupMoreActivity){
-                    contactListAdapter.setData(userList);
-                    contactListAdapter.notifyDataSetChanged();
+                    friendListAdapter.setData(userList);
+                    friendListAdapter.notifyDataSetChanged();
                 }
             }
             @Override
@@ -495,18 +493,18 @@ public class TestContactListActivity extends AppCompatActivity implements Contac
     }
 
     private void saveFriendList(List<User> userList) {
-        for (User user : userList) {
-            // 检查用户是否已存在
-            User existingUser = LitePal.where("phoneNumber = ?", String.valueOf(user.getPhoneNumber())).findFirst(User.class);
-            if (existingUser == null) {
-                // 用户不存在，保存并将isFriend设置为1
-                user.setIsFriend(1);
-                user.save();
-            } else {
-                existingUser.setIsFriend(1); // 假设有一个setIsFriend方法用于设置isFriend属性
-                existingUser.save();
-            }
-        }
+//        for (User user : userList) {
+//            // 检查用户是否已存在
+//            User existingUser = LitePal.where("phoneNumber = ?", String.valueOf(user.getPhoneNumber())).findFirst(User.class);
+//            if (existingUser == null) {
+//                // 用户不存在，保存并将isFriend设置为1
+//                user.setIsFriend(1);
+//                user.save();
+//            } else {
+//                existingUser.setIsFriend(1); // 假设有一个setIsFriend方法用于设置isFriend属性
+//                existingUser.save();
+//            }
+//        }
     }
     @Override
     public void onContactsSelected(boolean[] selectedItems) {

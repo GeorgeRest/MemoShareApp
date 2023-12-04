@@ -111,7 +111,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
 
     implementation 'com.github.angcyo:CalendarView:3.7.1.37'
-    implementation 'com.github.liangjingkanji:StateLayout:1.4.1'
+    implementation 'com.github.liangjingkanji:StateLayout:1.4.2'
 
     implementation 'com.google.android.material:material:1.9.0'//搜索框
     implementation 'io.github.lapism:search:2.0.1'//搜索框(放弃)
@@ -130,4 +130,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
     implementation 'com.github.liangjingkanji:StateLayout:1.4.1'
     implementation 'com.mikhaellopez:circularprogressbar:3.1.0'
+    implementation 'com.github.Othershe:CombineBitmap:1.0.5'
+    implementation 'com.github.li-xiaojun:XPopup:2.9.19'
+    implementation 'com.github.SheHuan:NiceImageView:1.0.5'
+    implementation 'com.github.mtjsoft:GroupAvatars:1.3.0'
+
 }

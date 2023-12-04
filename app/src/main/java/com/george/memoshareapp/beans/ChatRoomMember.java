@@ -17,6 +17,7 @@ import java.util.Date;
  */
 
 public class ChatRoomMember extends LitePalSupport {
+    private int id;
     private int chatRoomId;
     private long userId;
     private Date lastReadAt;
@@ -45,16 +46,25 @@ public class ChatRoomMember extends LitePalSupport {
         this.chatRoomId = chatRoomId;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 
-    public void setUserId(int userId) {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
+
     public Date getLastReadAt() {
         return lastReadAt;
+    }
+
+    public long getUserId() {
+        return userId;
     }
 
     public void setLastReadAt(Date lastReadAt) {
@@ -83,5 +93,18 @@ public class ChatRoomMember extends LitePalSupport {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatRoomMember{" +
+                "id=" + id +
+                ", chatRoomId=" + chatRoomId +
+                ", userId=" + userId +
+                ", lastReadAt=" + lastReadAt +
+                ", isAdmin=" + isAdmin +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
