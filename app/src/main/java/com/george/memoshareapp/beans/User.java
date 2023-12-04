@@ -26,10 +26,10 @@ public class User extends LitePalSupport implements Serializable {
     private String birthday;
     private String region; //中国
     private String BackGroundPath; //默认背景
+    private ChatMessage ChatMessage;
 
     private List<Post> likePosts = new ArrayList<>();
-    private List<Relationship> user1 = new ArrayList<>();
-    private List<Relationship> user2 = new ArrayList<>();
+
 
 
     public User(String phoneNumber, String name, String signature, String gender, String birthday, String region) {
@@ -156,5 +156,13 @@ public class User extends LitePalSupport implements Serializable {
                 ", BackGroundPath='" + BackGroundPath + '\'' +
                 ", likePosts=" + likePosts +
                 '}';
+    }
+
+    public com.george.memoshareapp.beans.ChatMessage getChatMessage() {
+        return ChatMessage;
+    }
+
+    public void setChatMessage(com.george.memoshareapp.beans.ChatMessage chatMessage) {
+        ChatMessage = chatMessage;
     }
 }

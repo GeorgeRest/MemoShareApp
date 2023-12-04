@@ -30,6 +30,7 @@ import com.bigkoo.pickerview.view.TimePickerView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.activities.RemindActivity;
+import com.george.memoshareapp.activities.GroupFriendListActivity;
 import com.george.memoshareapp.adapters.CalendarMultiTypeAdapter;
 import com.george.memoshareapp.beans.Remind;
 import com.george.memoshareapp.http.api.RemindServiceApi;
@@ -42,7 +43,6 @@ import com.haibin.calendarview.CalendarView;
 import java.text.SimpleDateFormat;
 import java.time.Month;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -297,6 +297,7 @@ public class CalendarTripFragment extends Fragment implements
 
     }
 
+
     private Calendar getSchemeCalendar(int year, int month, int day, int color) {
         Calendar calendar = new Calendar();
         calendar.setYear(year);
@@ -344,7 +345,9 @@ public class CalendarTripFragment extends Fragment implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_blue:
-
+                Intent intent1 = new Intent(getContext(), GroupFriendListActivity.class);
+                intent1.putExtra("ComeFromCalendarTripFragment",true);
+                startActivity(intent1);
                 break;
             case R.id.add_red:
                 Intent intent = new Intent(getContext(), RemindActivity.class);

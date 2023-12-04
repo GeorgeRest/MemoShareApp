@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:id="@+id/rl_group_chat_press_2_rec"
+        android:layout_width="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/group_chat_press_send_voice"
+        android:layout_marginRight="5dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="#F8F4FA"
+        android:textSize="15dp"
+        android:text="按住说话" />
+
+    </RelativeLayout>
+
+
+
+    <ImageView
+        android:id="@+id/iv_group_chat_send"
+        android:layout_marginTop="10dp"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:src="@drawable/group_chat_send_pic" />
+
+</LinearLayout>

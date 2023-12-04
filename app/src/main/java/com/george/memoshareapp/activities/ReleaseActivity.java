@@ -427,7 +427,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) ll_move_add.getLayoutParams();
             layoutParams.topMargin = (int) getResources().getDimension(R.dimen.release_threeLines_margin);
             ll_move_add.setLayoutParams(layoutParams);
-
         }
 
     }

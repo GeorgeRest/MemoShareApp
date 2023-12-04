@@ -1,15 +1,12 @@
 package com.george.memoshareapp.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,18 +19,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.activities.ChangePasswordActivity;
+import com.george.memoshareapp.activities.GroupChatActivity;
 import com.george.memoshareapp.activities.NewPersonPageActivity;
+import com.george.memoshareapp.beans.ChatRoom;
+import com.george.memoshareapp.beans.ChatRoomMember;
+import com.george.memoshareapp.beans.ChatRoomRequest;
 import com.george.memoshareapp.beans.Relationship;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.http.api.ChatRoomApi;
 import com.george.memoshareapp.http.api.RelationshipServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
+import com.george.memoshareapp.manager.ChatManager;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.view.NiceImageView;
 
-import org.litepal.LitePal;
+import java.util.ArrayList;
+import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
@@ -47,6 +50,7 @@ public class FriendBaseQuickAdapter extends BaseQuickAdapter<User, FriendBaseQui
     private UserManager manager;
     private boolean isMe;
     private User userMe;
+    private final ChatManager chatManager;
 
 
     public FriendBaseQuickAdapter(Context context, int choice, String target_phoneNumber,boolean isMe){
@@ -54,6 +58,7 @@ public class FriendBaseQuickAdapter extends BaseQuickAdapter<User, FriendBaseQui
         this.choice = choice;
         this.target_number = target_phoneNumber;
         this.isMe = isMe;
+        chatManager = new ChatManager(context);
     }
 
     @Override
@@ -216,7 +221,18 @@ public class FriendBaseQuickAdapter extends BaseQuickAdapter<User, FriendBaseQui
                 viewHolder.iv_follow_state.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //todo 弹出聊天框
+                        ChatRoom chatRoom =chatManager.areUsersInSameSingleChatRoom(userMe.getPhoneNumber(), otherUser.getPhoneNumber());
+                       if(chatRoom != null) {
+                           Intent intent = new Intent(context, GroupChatActivity.class);
+                           intent.putExtra("chatRoomId", chatRoom.getChatRoomId() + "");
+                            intent.putExtra("chatRoomName", otherUser.getName());
+                           context.startActivity(intent);
+                       }else{
+                           ArrayList<User> users = new ArrayList<>();
+                           users.add(userMe);
+                            users.add(otherUser);
+                            createChatRoom(users);
+                       }
                     }
                 });
             }
@@ -260,6 +276,46 @@ public class FriendBaseQuickAdapter extends BaseQuickAdapter<User, FriendBaseQui
 
         return false;
     }
+    private void createChatRoom(List<User> alreadyCheckedUserList) {
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setType("单人");
+        List<ChatRoomMember> chatRoomMemberList = addChatMember(alreadyCheckedUserList);
+        ArrayList<ChatRoom> chatRooms = new ArrayList<>();
+        chatRooms.add(chatRoom);
+        ChatRoomRequest chatRoomRequest = new ChatRoomRequest(chatRooms, chatRoomMemberList);
 
+        ChatRoomApi chatRoomApi = RetrofitManager.getInstance().create(ChatRoomApi.class);
+        Call<ChatRoomRequest> apiChatRoom = chatRoomApi.createChatRoom(chatRoomRequest);
+        apiChatRoom.enqueue(new Callback<ChatRoomRequest>() {
+            @Override
+            public void onResponse(Call<ChatRoomRequest> call, Response<ChatRoomRequest> response) {
+                if (response.isSuccessful()) {
+                    ChatRoomRequest createdChatRoom = response.body();
+                    if (createdChatRoom != null) {
+                        chatManager.saveOrUpdateChatRoomAndMember(createdChatRoom); // 保存到本地数据库
+                        GroupChatActivity.openGroupChatActivity(context,createdChatRoom.getChatRooms().get(0).getChatRoomId(),alreadyCheckedUserList.get(1).getName());
+                    }
+                } else {
+                    Toasty.error(context, "创建失败", Toast.LENGTH_SHORT, true).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChatRoomRequest> call, Throwable t) {
+                Toasty.error(context, "创建失败", Toast.LENGTH_SHORT, true).show();
+            }
+        });
+
+    }
+
+        private List<ChatRoomMember> addChatMember(List<User> alreadyCheckedUserList) {
+            List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
+            for (User otherUser: alreadyCheckedUserList) {
+                ChatRoomMember chatRoomMember = new ChatRoomMember();
+                chatRoomMember.setUserId(Long.parseLong(otherUser.getPhoneNumber()));
+                chatRoomMemberList.add(chatRoomMember);
+            }
+            return chatRoomMemberList;
+        }
 
 }
