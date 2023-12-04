@@ -12,9 +12,9 @@ public class VoiceMessageItem extends MultiItemEntity {
     private String VoiceMsgPath;
     private Date date;
     private int UserSide;
-    private String name;
     private int progress;
     private String fileName;
+    private User user;
     // 语音消息内容等相关属性和方法
 
     @Override
@@ -28,22 +28,14 @@ public class VoiceMessageItem extends MultiItemEntity {
         return VoiceMsgPath;
     }
 
-    @Override
-    public void setUserName(String name) {
-        this.name = name;
-    }
 
-    public VoiceMessageItem(String voiceMsgPath, Date date, int userSide, String name) {
+    public VoiceMessageItem(String voiceMsgPath, Date date, int userSide, User user) {
         VoiceMsgPath = voiceMsgPath;
         this.date = date;
         UserSide = userSide;
-        this.name = name;
+        this.user = user;
     }
 
-    @Override
-    public String getUserName() {
-        return name;
-    }
 
     @Override
     public void setItemContent(String voiceMsgPath) {
@@ -92,4 +84,13 @@ public class VoiceMessageItem extends MultiItemEntity {
         return UserSide;
     }
 
+    @Override
+    public void setUserInfo(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public User getUserInfo() {
+        return user;
+    }
 }

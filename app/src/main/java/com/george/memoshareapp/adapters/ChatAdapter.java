@@ -19,8 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseMultiItemAdapter;
+import com.facebook.imagepipeline.common.SourceUriType;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.properties.MessageType;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.orhanobut.logger.Logger;
@@ -33,7 +35,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
-
+    private static final String TAG="ChatAdapter";
     private Context context;
     private List<MultiItemEntity> multiItemEntities;
     private TextChatViewHolder textChatViewHolder;
@@ -62,8 +64,10 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                         textChatViewHolder.ll_hold_other_text_chat.setVisibility(View.VISIBLE);
                         textChatViewHolder.ll_hold_self_text_chat.setVisibility(View.VISIBLE);
                         textChatViewHolder.ll_hold_other_text_chat.setVisibility(View.GONE);
-                        textChatViewHolder.tv_text_chat_self_name.setText(multiItemEntity.getUserName());
+                        textChatViewHolder.tv_text_chat_self_name.setText(multiItemEntity.getUserInfo().getName());
                         textChatViewHolder.tv_text_chat_self_content.setText(multiItemEntity.getItemContent());
+                        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+multiItemEntity.getUserInfo().getHeadPortraitPath()).into(textChatViewHolder.iv_text_chat_self_profile);
+
                         Date date = multiItemEntity.getItemDate();
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                         format.setTimeZone(TimeZone.getDefault());
@@ -77,8 +81,9 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                         textChatViewHolder.ll_hold_self_text_chat.setVisibility(View.VISIBLE);
 
                         textChatViewHolder.ll_hold_self_text_chat.setVisibility(View.GONE);
-                        textChatViewHolder.tv_text_chat_other_name.setText(multiItemEntity.getUserName());
+                        textChatViewHolder.tv_text_chat_other_name.setText(multiItemEntity.getUserInfo().getName());
                         textChatViewHolder.tv_text_chat_other_content.setText(multiItemEntity.getItemContent());
+                        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+multiItemEntity.getUserInfo().getHeadPortraitPath()).into(textChatViewHolder.iv_text_chat_other_profile);
                         Date date1 = multiItemEntity.getItemDate();
                         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                         format1.setTimeZone(TimeZone.getDefault());
@@ -107,8 +112,9 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                         picChatViewHolder.ll_hold_other_pic_chat.setVisibility(View.VISIBLE);
                         picChatViewHolder.ll_hold_other_pic_chat.setVisibility(View.GONE);
 
-                        picChatViewHolder.tv_pic_chat_self_name.setText(multiItem.getUserName());
+                        picChatViewHolder.tv_pic_chat_self_name.setText(multiItem.getUserInfo().getName());
                         Date date = multiItem.getItemDate();
+                        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+multiItem.getUserInfo().getHeadPortraitPath()).into(picChatViewHolder.iv_text_chat_self_profile);
 
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                         format.setTimeZone(TimeZone.getDefault());
@@ -116,10 +122,9 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                         picChatViewHolder.tv_pic_chat_self_time.setText(time);
                         setSelfImage(multiItem.getItemContent());
                         picChatViewHolder.circularProgressBar.setProgress(multiItem.getProgress());
-                        if (multiItem.getProgress() < 100) {
+                        if (multiItem.getProgress() < 100 && multiItem.getProgress() > 0) {
                             picChatViewHolder.image_gray.setVisibility(View.VISIBLE);
                             picChatViewHolder.circularProgressBar.setVisibility(View.VISIBLE);
-                            Logger.d(multiItem.getProgress());
                         } else {
                             picChatViewHolder.image_gray.setVisibility(View.GONE);
                             picChatViewHolder.circularProgressBar.setVisibility(View.GONE);
@@ -130,16 +135,14 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                         picChatViewHolder.ll_hold_self_pic_chat.setVisibility(View.VISIBLE);
                         picChatViewHolder.ll_hold_other_pic_chat.setVisibility(View.VISIBLE);
                         picChatViewHolder.ll_hold_self_pic_chat.setVisibility(View.GONE);
-
-                        picChatViewHolder.tv_pic_chat_self_name.setText(multiItem.getUserName());
+                        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+multiItem.getUserInfo().getHeadPortraitPath()).into(picChatViewHolder.iv_pic_chat_other_profile);
+                        picChatViewHolder.tv_pic_chat_other_name.setText(multiItem.getUserInfo().getName());
                         Date date1 = multiItem.getItemDate();
                         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                         format1.setTimeZone(TimeZone.getDefault());
                         String time1 = format1.format(date1);
-                        picChatViewHolder.tv_pic_chat_self_time.setText(time1);
+                        picChatViewHolder.tv_pic_chat_other_time.setText(time1);
                         setOtherImage(multiItem.getItemContent());
-
-
                         break;
                 }
 
@@ -171,7 +174,8 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
 
                         voiceChatViewHolder.ll_hold_other_voice_chat.setVisibility(View.GONE);
 
-                        voiceChatViewHolder.tv_voice_chat_self_name.setText(multiItem.getUserName());
+                        voiceChatViewHolder.tv_voice_chat_self_name.setText(multiItem.getUserInfo().getName());
+                       Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+multiItem.getUserInfo().getHeadPortraitPath()).into(voiceChatViewHolder.iv_voice_chat_self_profile);
                         Date date = multiItem.getItemDate();
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                         format.setTimeZone(TimeZone.getDefault());
@@ -181,13 +185,11 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                         String voicePath = multiItem.getItemContent();
                         int durationInSeconds = getAudioTime(voicePath);
 
-                        Toast.makeText(context, "时间是" + durationInSeconds, Toast.LENGTH_SHORT).show();
                         voiceChatViewHolder.chat_self_voice_count.setText(durationInSeconds + "“");
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) voiceChatViewHolder.rl_self_chat_rec_voice_bg.getLayoutParams();
 
-                        if (multiItem.getProgress() < 100) {
+                        if (multiItem.getProgress() < 100&&multiItem.getProgress()>0) {
                             voiceChatViewHolder.circularProgressBar.setVisibility(View.VISIBLE);
-                            Logger.d(multiItem.getProgress());
                         } else {
                             voiceChatViewHolder.circularProgressBar.setVisibility(View.GONE);
                         }
@@ -227,7 +229,8 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
 
                         voiceChatViewHolder.ll_hold_self_voice_chat.setVisibility(View.GONE);
 
-                        voiceChatViewHolder.tv_voice_chat_other_name.setText(multiItem.getUserName());
+                        voiceChatViewHolder.tv_voice_chat_other_name.setText(multiItem.getUserInfo().getName());
+                        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+multiItem.getUserInfo().getHeadPortraitPath()).into(voiceChatViewHolder.iv_voice_chat_other_profile);
                         Date date1 = multiItem.getItemDate();
                         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                         format1.setTimeZone(TimeZone.getDefault());

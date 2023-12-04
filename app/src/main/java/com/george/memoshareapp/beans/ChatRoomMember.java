@@ -1,6 +1,8 @@
 package com.george.memoshareapp.beans;
 
 
+import org.litepal.crud.LitePalSupport;
+
 import java.util.Date;
 
 
@@ -14,9 +16,10 @@ import java.util.Date;
  * @version: 1.0
  */
 
-public class ChatRoomMember {
+public class ChatRoomMember extends LitePalSupport {
+    private int id;
     private int chatRoomId;
-    private int userId;
+    private long userId;
     private Date lastReadAt;
     private int isAdmin;
     private Date createdAt;
@@ -43,16 +46,25 @@ public class ChatRoomMember {
         this.chatRoomId = chatRoomId;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 
-    public void setUserId(int userId) {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
+
     public Date getLastReadAt() {
         return lastReadAt;
+    }
+
+    public long getUserId() {
+        return userId;
     }
 
     public void setLastReadAt(Date lastReadAt) {
@@ -81,5 +93,18 @@ public class ChatRoomMember {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatRoomMember{" +
+                "id=" + id +
+                ", chatRoomId=" + chatRoomId +
+                ", userId=" + userId +
+                ", lastReadAt=" + lastReadAt +
+                ", isAdmin=" + isAdmin +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

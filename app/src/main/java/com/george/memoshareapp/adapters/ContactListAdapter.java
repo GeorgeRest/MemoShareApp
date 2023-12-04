@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.beans.ContactInfo;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.ChinesetoPinyin;

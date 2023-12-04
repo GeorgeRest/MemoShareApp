@@ -1,7 +1,12 @@
 package com.george.memoshareapp.beans;
 
 
+import org.litepal.LitePal;
+import org.litepal.annotation.Column;
+import org.litepal.crud.LitePalSupport;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * @projectName: MemoShare
@@ -13,17 +18,26 @@ import java.util.Date;
  * @version: 1.0
  */
 
-public class ChatRoom {
+public class ChatRoom extends LitePalSupport {
     private int id;
+    private int chatRoomId;
     private String type;
     private String name;
     private String avatar;
-    private Date createdAt;
-    private Date updatedAt;
+    private String createdAt;
+    private String updatedAt;
+
+    private String lastMessageType;
+    private String lastMessage;
+
+    private String lastMessageTime;
+    @Column(ignore = true)
+    private ChatRoomMember chatRoomMember;
+
     public ChatRoom() {
     }
 
-    public ChatRoom(int id, String type, String name, String avatar, Date createdAt, Date updatedAt) {
+    public ChatRoom(int id, String type, String name, String avatar, String createdAt, String updatedAt) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -38,6 +52,14 @@ public class ChatRoom {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getChatRoomId() {
+        return chatRoomId;
+    }
+
+    public void setChatRoomId(int chatRoomId) {
+        this.chatRoomId = chatRoomId;
     }
 
     public String getType() {
@@ -64,19 +86,67 @@ public class ChatRoom {
         this.avatar = avatar;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public String getLastMessageTime() {
+        return lastMessageTime;
+    }
+
+    public void setLastMessageTime(String lastMessageTime) {
+        this.lastMessageTime = lastMessageTime;
+    }
+
+    public String getLastMessageType() {
+        return lastMessageType;
+    }
+
+    public void setLastMessageType(String lastMessageType) {
+        this.lastMessageType = lastMessageType;
+    }
+
+    public ChatRoomMember getChatRoomMember() {
+        return chatRoomMember;
+    }
+
+    public void setChatRoomMember(ChatRoomMember chatRoomMember) {
+        this.chatRoomMember = chatRoomMember;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatRoom{" +
+                "id=" + id +
+                ", chatRoomId=" + chatRoomId +
+                ", type='" + type + '\'' +
+                ", name='" + name + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", lastMessageType='" + lastMessageType + '\'' +
+                ", lastMessage='" + lastMessage + '\'' +
+                ", lastMessageTime='" + lastMessageTime + '\'' +
+                '}';
     }
 }

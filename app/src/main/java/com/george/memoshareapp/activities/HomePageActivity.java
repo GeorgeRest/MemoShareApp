@@ -1,8 +1,12 @@
 package com.george.memoshareapp.activities;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -15,7 +19,9 @@ import com.george.memoshareapp.Fragment.HomeFragment;
 import com.george.memoshareapp.Fragment.MessageFragment;
 import com.george.memoshareapp.Fragment.NewPersonPageFragment;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.manager.ChatManager;
 import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.service.ChatService;
 
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -41,7 +47,20 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private FragmentManager fragmentManager;
     private ImageView capsuleButton;
     private SharedPreferences sp;
+    private ChatService mService;
 
+    private final ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            ChatService.LocalBinder binder = (ChatService.LocalBinder) service;
+            mService = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +72,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
         String phoneNumber = sp.getString("phoneNumber", "");
         new UserManager(this).saveUserToLocal(phoneNumber);
+        new ChatManager(this).saveOrUpdateUserChatData();
+
+        Intent intent = new Intent(this, ChatService.class);
+        startService(intent);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
     private void initViews() {

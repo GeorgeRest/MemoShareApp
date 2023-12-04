@@ -43,15 +43,15 @@
         android:theme="@style/Theme.MemoShareApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.GroupMoreActivity"
+            android:exported="false" />
+
         <service
             android:name=".service.ChatService"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true"></service>
 
-        <activity
-            android:name=".activities.test.ChatActivity"
-            android:exported="true" />
         <activity
             android:name=".activities.NewPersonPageActivity"
             android:exported="true" />
@@ -63,15 +63,16 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.RemindNoteActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -134,7 +135,6 @@
         <activity
             android:name=".activities.DetailActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.MapLocationActivity"
             android:exported="true" />
@@ -168,20 +168,15 @@
         <activity
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true" />
-        <activity
-            android:name=".activities.test.TestUserPublishActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".activities.EditSignatureActivity"
             android:exported="true" />
         <activity
             android:name=".activities.EditNameActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.GroupFriendListActivity"
             android:exported="true" />
     </application>
 

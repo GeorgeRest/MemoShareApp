@@ -18,9 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.beans.VoiceMessageItem;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.interfaces.SendListener;
+import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.GlideEngine;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
@@ -150,7 +152,9 @@ public class MyVoiceRecordFragment extends Fragment {
                                 stopRecording();
                                 SendListener listener = (SendListener) getActivity();
                                 Date date = new Date(System.currentTimeMillis());
-                                VoiceMessageItem voiceMessageItem = new VoiceMessageItem(audioFile.getAbsolutePath(), date, MultiItemEntity.SELF, "user");
+                                UserManager userManager = new UserManager(getContext());
+                                User user = userManager.findUserByPhoneNumber(UserManager.getSelfPhoneNumber(getContext()));
+                                VoiceMessageItem voiceMessageItem = new VoiceMessageItem(audioFile.getAbsolutePath(), date, MultiItemEntity.SELF, user);
                                 voiceMessageItem.setFileName(fileName);
                                 listener.sendContent(voiceMessageItem);
                                 Toast.makeText(getContext(), "已发送语音", Toast.LENGTH_SHORT).show();

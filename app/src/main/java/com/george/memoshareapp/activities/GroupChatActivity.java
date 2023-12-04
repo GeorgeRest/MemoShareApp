@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +31,7 @@ import com.george.memoshareapp.beans.ChatAttachment;
 import com.george.memoshareapp.beans.ChatMessage;
 import com.george.memoshareapp.beans.ImageMessageItem;
 import com.george.memoshareapp.beans.TextMessageItem;
+import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.beans.VoiceMessageItem;
 import com.george.memoshareapp.events.ChatMessageEvent;
 import com.george.memoshareapp.events.SendMessageEvent;
@@ -36,7 +39,9 @@ import com.george.memoshareapp.http.ProgressRequestBody;
 import com.george.memoshareapp.http.api.ChatServiceApi;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.interfaces.SendListener;
+import com.george.memoshareapp.manager.ChatManager;
 import com.george.memoshareapp.manager.RetrofitManager;
+import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.properties.MessageType;
 import com.luck.picture.lib.basic.PictureSelector;
@@ -44,6 +49,7 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.entity.MediaExtraInfo;
 import com.luck.picture.lib.utils.MediaUtils;
+import com.lxj.xpopup.util.KeyboardUtils;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
@@ -63,16 +69,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GroupChatActivity extends AppCompatActivity implements SendListener {
+public class GroupChatActivity extends AppCompatActivity implements SendListener, View.OnClickListener {
 
+    private static final String TAG = "GroupChatActivity";
     private FragmentManager manager;
     private Fragment myChatBar;
     private final int CHOOSE_PIC_REQUEST_CODE = 3;
     private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
     private List<String> mImageList = new ArrayList<>();
-    private List<MultiItemEntity> multiItemEntityList = new ArrayList<>();
+    private List<MultiItemEntity> multiItemEntityList;
     private ChatAdapter chatAdapter;
+    private UserManager userManager;
+    private String chatRoomId;
+    private User selfUser;
+    private ChatManager chatManager;
+    private RecyclerView rv_chat;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -92,7 +104,6 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
         }
 
         initView();
-        EventBus.getDefault().register(this);
     }
 
     private void initView() {
@@ -100,22 +111,30 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
         ImageButton ibtn_group_chat_back = (ImageButton) findViewById(R.id.ibtn_group_chat_back);
         ImageButton ibtn_group_chat_menu = (ImageButton) findViewById(R.id.ibtn_group_chat_menu);
         TextView tv_group_chat_name = (TextView) findViewById(R.id.tv_group_chat_name);
-
+        ibtn_group_chat_back.setOnClickListener(this);
+        ibtn_group_chat_menu.setOnClickListener(this);
+        userManager = new UserManager(this);
+        selfUser = userManager.findUserByPhoneNumber(UserManager.getSelfPhoneNumber(this));
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fl_group_chat_detail_bar, myChatBar);
         transaction.commit();
-        Date date = new Date(System.currentTimeMillis());
-        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉", date, MultiItemEntity.OTHER, "鲨鱼辣椒"));
-        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉巴拉巴拉巴拉", date, MultiItemEntity.OTHER, "鲨鱼辣椒"));
-        multiItemEntityList.add(new TextMessageItem("巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉巴拉", date, MultiItemEntity.OTHER, "鲨鱼辣椒"));
-
-        RecyclerView rcl_group_chat_detail = (RecyclerView) findViewById(R.id.rcl_group_chat_detail);
+        chatManager = new ChatManager(this);
+        Intent intent = getIntent();
+        chatRoomId = intent.getStringExtra("chatRoomId");
+        String chatRoomName = intent.getStringExtra("chatRoomName");
+        System.out.println("---------------"+chatRoomName);
+        tv_group_chat_name.setText(chatRoomName);
+        multiItemEntityList= chatManager.getMessageFromDB(chatRoomId,0);
+        for (MultiItemEntity m :multiItemEntityList) {
+            System.out.println(m.getItemContent()+"---------");
+        }
+        rv_chat = (RecyclerView) findViewById(R.id.rcl_group_chat_detail);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         chatAdapter = new ChatAdapter(this, multiItemEntityList);
-        rcl_group_chat_detail.setLayoutManager(layoutManager);
-        rcl_group_chat_detail.setAdapter(chatAdapter);
 
-
+        rv_chat.setLayoutManager(layoutManager);
+        rv_chat.setAdapter(chatAdapter);
+        rv_chat.scrollToPosition(multiItemEntityList.size()-1);
     }
 
 
@@ -174,7 +193,7 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
             mImageList.add(path); // 接收已选图片地址，用于接口上传图片
             //需要进行上传图片或视频
 
-            ImageMessageItem imageMessageItem = new ImageMessageItem(path, date, MultiItemEntity.SELF, "user");
+            ImageMessageItem imageMessageItem = new ImageMessageItem(path, date, MultiItemEntity.SELF, selfUser);
             imageMessageItem.setFileName(media.getFileName());
             Logger.d(imageMessageItem.getFileName());
             multiItemEntityList.add(imageMessageItem);
@@ -191,12 +210,12 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
      */
     @Override
     public void sendContent(MultiItemEntity multiItem) {
-
         multiItemEntityList.add(multiItem);
         chatAdapter.notifyDataSetChanged();
+
         switch (multiItem.getItemShowType()) {
             case MessageType.TEXT:
-                EventBus.getDefault().post(new SendMessageEvent(new ChatMessage(13, "17", multiItem.getItemContent(), "文本")));
+                EventBus.getDefault().post(new SendMessageEvent(new ChatMessage(Integer.parseInt(chatRoomId), selfUser.getPhoneNumber(), multiItem.getItemContent(), "文本")));
                 break;
             case MessageType.VOICE:
                 Logger.d("发送语音");
@@ -205,7 +224,8 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
             default:
                 break;
         }
-
+        rv_chat.smoothScrollToPosition(multiItemEntityList.size()-1);
+        KeyboardUtils.hideSoftInput(getWindow());
     }
 
     private void uploadFile(String filePath, MultiItemEntity multiItem) {
@@ -263,7 +283,7 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
                         default:
                             return;
                     }
-                    ChatMessage message = new ChatMessage(13, "17", "", type);
+                    ChatMessage message = new ChatMessage(Integer.parseInt(chatRoomId), UserManager.getSelfPhoneNumber(GroupChatActivity.this), "", type);
                     ChatAttachment attachment = new ChatAttachment(multiItem.getFileName(), type);
                     message.setAttachment(attachment);
                     EventBus.getDefault().post(new SendMessageEvent(message));
@@ -279,7 +299,7 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
 
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        chatManager.setLastViewTime(-1);
         super.onDestroy();
     }
 
@@ -289,24 +309,24 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChatMessageEvent(ChatMessageEvent event) {
         ChatMessage chatMessage = event.chatMessage;
-        String filePath=null;
-        if(chatMessage.getAttachment() != null) {
-            filePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+        if (chatMessage.getChatRoomId() != Integer.parseInt(chatRoomId)) {
+            return;
         }
         MultiItemEntity multiItem = null;
 
         switch (chatMessage.getMessageType()) {
             case "文本":
-                multiItem = new TextMessageItem(chatMessage.getContent(), new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
-
+                multiItem = new TextMessageItem(chatMessage.getContent(), new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getUser());
                 break;
             case "图片":
-                Logger.d(filePath);
-                multiItem = new ImageMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
+                String pictureFilePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+                Logger.d(pictureFilePath);
+                multiItem = new ImageMessageItem(pictureFilePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getUser());
                 break;
             case "语音":
-                multiItem = new VoiceMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, "6666");
-                Logger.d(filePath);
+                String RecordFilePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+                multiItem = new VoiceMessageItem(RecordFilePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getUser());
+                Logger.d(RecordFilePath);
                 break;
             case "视频":
 
@@ -317,6 +337,55 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
         if (multiItem != null) {
             multiItemEntityList.add(multiItem);
             chatAdapter.notifyDataSetChanged();
+            rv_chat.scrollToPosition(multiItemEntityList.size()-1);
         }
     }
+
+    public static void openGroupChatActivity(Context context, int chatRoomId,String chatRoomName) {
+        Intent intent = new Intent(context, GroupChatActivity.class);
+        intent.putExtra("chatRoomId", chatRoomId + "");
+        intent.putExtra("chatRoomName", chatRoomName);
+        context.startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+        long lastViewTime = chatManager.getLastViewTime();
+        if(lastViewTime==-1){
+            return;
+        }
+        List<MultiItemEntity> multiItemEntities = chatManager.getMessageFromDB(chatRoomId, lastViewTime);
+        if(multiItemEntities!=null&&!multiItemEntities.isEmpty()){
+            chatAdapter.addAll(multiItemEntities);
+            chatAdapter.notifyDataSetChanged();
+        }
+        rv_chat.scrollToPosition(multiItemEntityList.size()-1);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+        chatManager.setLastViewTime(System.currentTimeMillis());
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ibtn_group_chat_back:
+                finish();
+                break;
+            case R.id.ibtn_group_chat_menu:
+                Intent intent = new Intent(this, GroupMoreActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+    }
+
+
 }

@@ -1,7 +1,11 @@
 package com.george.memoshareapp.manager;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +20,7 @@ import com.george.memoshareapp.interfaces.UpdateUserListener;
 import com.orhanobut.logger.Logger;
 
 import org.litepal.LitePal;
+import org.litepal.LitePalDB;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +44,7 @@ import retrofit2.Response;
 public class UserManager {
     private Context context;
     private UserServiceApi apiService;
+    private int DATABASE_VERSION=100;
 
     public UserManager(Context context) {
         this.context = context;
@@ -461,4 +467,22 @@ public void countFollowing(User user, OnSaveUserListener onSaveUserListener) {
             }
         });
     }
+    public List<User> getAllUsersFromFriendUser() {
+        List<User> friendList = LitePal.where("isFriend = ?", "1").find(User.class);
+
+        return friendList;
+    }
+    public static String getSelfPhoneNumber(Context context){
+        SharedPreferences sp =context.getSharedPreferences("User", MODE_PRIVATE);
+        return sp.getString("phoneNumber", "");
+    }
+
+//    public void switchDatabaseForUser(String userId) {
+//        String dbName = "database_" + userId;  // 为每个用户创建一个唯一的数据库名称
+//        LitePalDB litePalDB = new LitePalDB(dbName, DATABASE_VERSION);
+//        litePalDB.addClassName(...);  // 添加你的数据模型类名
+//        // 可以添加更多配置，如设置编码等
+//
+//        LitePal.use(litePalDB);  // 切换到新的数据库配置
+//    }
 }
