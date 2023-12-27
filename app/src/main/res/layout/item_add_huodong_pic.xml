@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="3dp">
+
+    <ImageView
+        android:id="@+id/iv_huodong_pic"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:background="@drawable/add_huodong_item_bg"
+        android:scaleType="centerCrop"
+        android:src="@drawable/iv_add_huodong_item" />
+</RelativeLayout>

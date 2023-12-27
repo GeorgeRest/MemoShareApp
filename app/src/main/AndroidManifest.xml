@@ -44,13 +44,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.AddHuoDongActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.GroupMoreActivity"
             android:exported="false" />
 
         <service
             android:name=".service.ChatService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".activities.NewPersonPageActivity"
@@ -168,7 +171,6 @@
         <activity
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.EditSignatureActivity"
             android:exported="true" />
