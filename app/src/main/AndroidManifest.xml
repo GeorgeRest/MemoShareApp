@@ -44,13 +44,25 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.test.TestMainActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.ChatPictureActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.GroupMoreActivity"
             android:exported="false" />
 
         <service
             android:name=".service.ChatService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".activities.NewPersonPageActivity"
@@ -168,7 +180,6 @@
         <activity
             android:name=".activities.ReleasePhotoImageDetailActivity"
             android:exported="true" />
-
         <activity
             android:name=".activities.EditSignatureActivity"
             android:exported="true" />

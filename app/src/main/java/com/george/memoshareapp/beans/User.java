@@ -165,4 +165,20 @@ public class User extends LitePalSupport implements Serializable {
     public void setChatMessage(com.george.memoshareapp.beans.ChatMessage chatMessage) {
         ChatMessage = chatMessage;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        User user = (User) obj;
+        return phoneNumber != null ? phoneNumber.equals(user.phoneNumber) : user.phoneNumber == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return phoneNumber != null ? phoneNumber.hashCode() : 0;
+    }
 }

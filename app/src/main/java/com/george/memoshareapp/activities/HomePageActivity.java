@@ -14,14 +14,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.george.memoshareapp.Fragment.CalendarTripFragment;
 import com.george.memoshareapp.Fragment.HomeFragment;
 import com.george.memoshareapp.Fragment.MessageFragment;
 import com.george.memoshareapp.Fragment.NewPersonPageFragment;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.ImageParameters;
+import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.http.api.PostServiceApi;
 import com.george.memoshareapp.manager.ChatManager;
+import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.service.ChatService;
+import com.kongzue.dialogx.dialogs.CustomDialog;
+import com.kongzue.dialogx.interfaces.OnBindView;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -77,7 +89,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = new Intent(this, ChatService.class);
         startService(intent);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
+        showMemoCard();
+
     }
+
 
     private void initViews() {
         icon_one = (ImageView) findViewById(R.id.bottom_icon_one);
@@ -193,4 +209,51 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
+    private void showMemoCard() {
+        PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
+        Call<Post> memoPost = postServiceApi.getMemoPost(UserManager.getSelfPhoneNumber(this));
+        memoPost.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                if(response.isSuccessful()){
+                    Post post = response.body();
+                    if(post!=null){
+                        CustomDialog.show(new OnBindView<CustomDialog>(R.layout.card_dialog) {
+                            @Override
+                            public void onBind(CustomDialog dialog, View v) {
+                                ImageView iv_close = v.findViewById(R.id.iv_close);
+                                ImageView imageInsideCardView = v.findViewById(R.id.imageInsideCardView);
+
+                                Glide.with(HomePageActivity.this).load(AppProperties.SERVER_MEDIA_URL+post.getImageParameters().get(0).getPhotoCachePath()).into(imageInsideCardView);
+                                iv_close.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                imageInsideCardView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Intent intent1 = new Intent(HomePageActivity.this, DetailActivity.class);
+                                        for (ImageParameters imageParameters : post.getImageParameters()) {
+                                            imageParameters.setPhotoCachePath(AppProperties.SERVER_MEDIA_URL + imageParameters.getPhotoCachePath());
+                                        }
+                                        intent1.putExtra("post", post);
+                                        startActivity(intent1);
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
+                        }) .setMaskColor(getResources().getColor(com.kongzue.dialogx.iostheme.R.color.black60))
+                        ;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+
+            }
+        });
+    }
 }

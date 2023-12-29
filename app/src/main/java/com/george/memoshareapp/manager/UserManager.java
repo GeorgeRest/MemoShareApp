@@ -2,11 +2,9 @@ package com.george.memoshareapp.manager;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -20,7 +18,6 @@ import com.george.memoshareapp.interfaces.UpdateUserListener;
 import com.orhanobut.logger.Logger;
 
 import org.litepal.LitePal;
-import org.litepal.LitePalDB;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -430,9 +427,9 @@ public void countFollowing(User user, OnSaveUserListener onSaveUserListener) {
         values.put("region", user.getRegion());
         values.put("birthday", user.getBirthday());
         values.put("headPortraitPath", user.getHeadPortraitPath());
-        values.put("id", userId);  // 设置更新条件
+        values.put("id", userId);
 
-        int updateCount = LitePal.update(User.class, values, 1);
+        int updateCount = LitePal.update(User.class, values, userId);
         Logger.d("Update count: " + updateCount);
         Logger.d(user);
 

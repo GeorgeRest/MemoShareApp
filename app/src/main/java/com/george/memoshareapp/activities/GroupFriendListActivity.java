@@ -47,6 +47,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.orhanobut.logger.Logger;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -57,7 +58,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GroupFriendListActivity extends AppCompatActivity implements FriendListAdapter.OnContactsSelectedListener{
+public class GroupFriendListActivity extends AppCompatActivity implements FriendListAdapter.OnContactsSelectedListener {
     private String TAG = "ContactListActivity";
     private ChatService mService;
     private boolean mBound = false;
@@ -91,7 +92,7 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
     private ImageView back;
     private String selfPhoneNumber;
 
-    private int chatRoomID;
+    private String chatRoomID;
     private String input;
     private String chatRoomName;
     private AlertDialog dialog;
@@ -104,6 +105,7 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
         initView();
         intent = getIntent();
         comeFromChatGroupMoreActivity = intent.getBooleanExtra("comeFromChatGroupMoreActivity", false);
+        chatRoomID = intent.getStringExtra("ChatRoomID");
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
         selfPhoneNumber = sp.getString("phoneNumber", "");
         getFriendUserList(selfPhoneNumber);
@@ -145,49 +147,11 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
     }
 
     private void comeFromWhere() {
-        if (comeFromChatGroupMoreActivity){
-//            chatRoomName = intent.getStringExtra("chatRoomName");
-////            ChatRoom room = new ChatRoomManager().getChatRoomByChatRoomName(chatRoomName);//带时间
-////            chatRoomID = room.getId();
-//            alreadyExitContactsList = (List<User>) intent.getSerializableExtra("alreadyExitContacts");
-//            friendList = new UserManager(TestContactListActivity.this).getAllUsersFromFriendUser();
-//
-//            List<User> usersNotInAlreadyExitContactsList = new ArrayList<>();
-//            Iterator<User> iterator = alreadyExitContactsList.iterator();//comeFromWhere() 方法用于根据条件初始化 contactListAdapter。但根据堆栈跟踪信息，ConcurrentModificationException 异常可能是在这个方法中触发的，通常是由于对集合进行遍历的同时修改了集合。
-//            while (iterator.hasNext()) {
-//                User u = iterator.next();
-//                if ((u.getPhoneNumber()).equals(phoneNumber)){
-//                    iterator.remove();
-//                }
-//            }
-//            for (User u : friendList) {
-//                boolean userFound = false;
-//                for (User existingUser : alreadyExitContactsList) {
-//                    if (u.getPhoneNumber().equals(existingUser.getPhoneNumber())) {
-//                        userFound = true;
-//                        break; // 一旦找到匹配项，就跳出内层循环
-//                    }
-//                }
-//                if (!userFound) {
-//                    usersNotInAlreadyExitContactsList.add(u);
-//                }
-//            }
-//
-//            horizontalAdapter = new HorizontalAdapter(userList,this);
-//            contactListAdapter = new ContactListAdapter(this, usersNotInAlreadyExitContactsList, horizontalAdapter, horizontal_recycler_view);
-//            contactListAdapter.setOnContactsSelectedListener(this);
-//            lv_contact_list.setAdapter(contactListAdapter);
-//            horizontal_recycler_view.setAdapter(horizontalAdapter);
-//            contactListAdapter.setData(usersNotInAlreadyExitContactsList);
-//            contactListAdapter.notifyDataSetChanged();
-
-        }else {
-            horizontalAdapter = new HorizontalAdapter(userList,this);
-            friendListAdapter = new FriendListAdapter(this, userList, horizontalAdapter, horizontal_recycler_view);
-            friendListAdapter.setOnContactsSelectedListener(this);
-            lv_contact_list.setAdapter(friendListAdapter);
-            horizontal_recycler_view.setAdapter(horizontalAdapter);
-        }
+        horizontalAdapter = new HorizontalAdapter(userList, this);
+        friendListAdapter = new FriendListAdapter(this, userList, horizontalAdapter, horizontal_recycler_view);
+        friendListAdapter.setOnContactsSelectedListener(this);
+        lv_contact_list.setAdapter(friendListAdapter);
+        horizontal_recycler_view.setAdapter(horizontalAdapter);
     }
 
     private void initView() {
@@ -219,58 +183,24 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
             }
         });
         rootLayout = findViewById(android.R.id.content);
-        state = (StateLayout)findViewById(R.id.state);
+        state = (StateLayout) findViewById(R.id.state);
         btn_add_contacts_complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (comeFromChatGroupMoreActivity){
-//                    List<User> addedContactList = horizontalAdapter.getContacts();//点击添加好友选的
-//                    for (User user : addedContactList) {
-//                        ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomID,user.getPhoneNumber(),0);
-//                        Date date = new Date();
-//                        chatRoomMember.setCreatedAt(date);
-//                        chatRoomMember.setUpdatedAt(date);
-//                        chatRoomMember.setLastReadAt(date);
-//                        chatRoomMember.save();
-//                    }
-//                    addContactListToIDE(addedContactList);
-//                    finish();
-                }else {
+                if(horizontalAdapter.getContacts().size()==0){
+                    return;
+                }
+                if (comeFromChatGroupMoreActivity) {
+                    List<User> addedContactList = horizontalAdapter.getContacts();//点击添加好友选的
+                    inviteUsers(addedContactList);
+
+                } else {
                     onCompletionClicked(v);
                 }
             }
         });
     }
 
-
-//    private void addContactListToIDE(List<User> addedContactList) {
-//        ChatRoomApi chatRoomApi = RetrofitManager.getInstance().create(ChatRoomApi.class);
-//        List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
-//        for (User u: addedContactList) {
-//            ChatRoomMember chatRoomMember = new ChatRoomMember(chatRoomID, u.getPhoneNumber(),0);
-//            chatRoomMemberList.add(chatRoomMember);
-//
-//        }
-//        Call<HttpData<ChatRoom>> call = chatRoomApi.AddChatRoomMember(chatRoomMemberList);
-//        call.enqueue(new Callback<HttpData<ChatRoom>>() {
-//            @Override
-//            public void onResponse(Call<HttpData<ChatRoom>> call, Response<HttpData<ChatRoom>> response) {
-//                // 请求成功的处理逻辑
-//                if (response.isSuccessful()) {
-//
-//                } else {
-//                    // 请求失败的处理逻辑
-//                    // ... 处理错误 ...
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<HttpData<ChatRoom>> call, Throwable t) {
-//                // 请求失败的处理逻辑
-//                // ... 处理错误 ...
-//            }
-//        });
-//    }
 
     public void onCompletionClicked(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -288,11 +218,13 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
             private ImageView photo_chat_name_dialog_iv;
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 photo_chat_name_dialog_iv = dialogView.findViewById(R.id.photo_chat_name_dialog_iv);
-                if (etCustomInput.getText().toString().length()>0){
+                if (etCustomInput.getText().toString().length() > 0) {
                     photo_chat_name_dialog_iv.setImageResource(R.mipmap.photo_chat_name_ok);
                     btnSubmit.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -303,15 +235,17 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
                         }
                     });
                 }
-                if (etCustomInput.getText().toString().length()==0){
+                if (etCustomInput.getText().toString().length() == 0) {
                     photo_chat_name_dialog_iv.setImageResource(R.mipmap.photo_chat_name);
                 }
-                if (etCustomInput.getText().toString().length()>12){
-                    Toasty.warning(GroupFriendListActivity.this,"名称不能超过11个字");
+                if (etCustomInput.getText().toString().length() > 12) {
+                    Toasty.warning(GroupFriendListActivity.this, "名称不能超过11个字");
                 }
             }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
         dialog.show();
     }
@@ -338,10 +272,10 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
                 if (response.isSuccessful()) {
                     ChatRoomRequest createdChatRoom = response.body();
                     if (createdChatRoom != null) {
-                        Logger.d(TAG,createdChatRoom.toString());
-                      chatManager.saveOrUpdateChatRoomAndMember(createdChatRoom); // 保存到本地数据库
+                        Logger.d(TAG, createdChatRoom.toString());
+                        chatManager.saveOrUpdateChatRoomAndMember(createdChatRoom); // 保存到本地数据库
                         Toasty.success(GroupFriendListActivity.this, "创建成功", Toast.LENGTH_SHORT, true).show();
-                        GroupChatActivity.openGroupChatActivity(GroupFriendListActivity.this,createdChatRoom.getChatRooms().get(0).getChatRoomId(),input);
+                        GroupChatActivity.openGroupChatActivity(GroupFriendListActivity.this, createdChatRoom.getChatRooms().get(0).getId(), input);
                         finish();
                         dialog.dismiss();
                     }
@@ -358,10 +292,40 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
 
     }
 
+    private void inviteUsers(List<User> users) {
+        ChatRoomApi chatRoomApi = RetrofitManager.getInstance().create(ChatRoomApi.class);
+        List<ChatRoomMember> chatRoomMembers = ConvertToChatRoomMember(users);
+
+        chatRoomApi.addChatRoomMember(chatRoomMembers).enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful()) {
+                    List<User> invitedUsers = response.body();
+                    if (invitedUsers!= null) {
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("invitedUsers", (Serializable)invitedUsers);
+                        setResult(RESULT_OK, returnIntent);
+                        finish();
+                        Toasty.success(GroupFriendListActivity.this, "邀请成功", Toast.LENGTH_SHORT, true).show();
+                    }
+                }else{
+                    finish();
+                    Toasty.error(GroupFriendListActivity.this, "邀请失败", Toast.LENGTH_SHORT, true).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                finish();
+                Toasty.error(GroupFriendListActivity.this, "邀请失败: "+t.getMessage(), Toast.LENGTH_SHORT, true).show();
+            }
+        });
+    }
+
     @NonNull
     private List<ChatRoomMember> addChatMember(List<User> alreadyCheckedUserList) {
         List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
-        for (User otherUser: alreadyCheckedUserList) {
+        for (User otherUser : alreadyCheckedUserList) {
             ChatRoomMember chatRoomMember = new ChatRoomMember();
             chatRoomMember.setUserId(Long.parseLong(otherUser.getPhoneNumber()));
             chatRoomMemberList.add(chatRoomMember);
@@ -373,7 +337,18 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
         return chatRoomMemberList;
     }
 
-    private  String concatenateAvatarUrls(List<User> alreadyCheckedUserList) {
+    private List<ChatRoomMember> ConvertToChatRoomMember(List<User> alreadyCheckedUserList) {
+        List<ChatRoomMember> chatRoomMemberList = new ArrayList<>();
+        for (User otherUser : alreadyCheckedUserList) {
+            ChatRoomMember chatRoomMember = new ChatRoomMember();
+            chatRoomMember.setUserId(Long.parseLong(otherUser.getPhoneNumber()));
+            chatRoomMember.setChatRoomId(Integer.parseInt(chatRoomID));
+            chatRoomMemberList.add(chatRoomMember);
+        }
+        return chatRoomMemberList;
+    }
+
+    private String concatenateAvatarUrls(List<User> alreadyCheckedUserList) {
         StringBuilder urlBuilder = new StringBuilder();
         User userSelf = new UserManager(this).findUserByPhoneNumber(selfPhoneNumber);
         urlBuilder.append(userSelf.getHeadPortraitPath());
@@ -392,9 +367,7 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
     }
 
 
-
-
-    private void sortContacts(List<User> users){
+    private void sortContacts(List<User> users) {
         Collections.sort(users, new Comparator<User>() {
             @Override
             public int compare(User u1, User u2) {
@@ -405,18 +378,20 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
             }
         });
     }
+
     private void setupSearchView() {
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Intentionally left blank
+
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String newText = s.toString();
-                if(!TextUtils.isEmpty(newText)){
+                if (!TextUtils.isEmpty(newText)) {
                     letterIndexView.setVisibility(View.GONE);
-                } else{
+                } else {
                     letterIndexView.setVisibility(View.VISIBLE);
                 }
                 filterContacts(newText);
@@ -424,7 +399,7 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Intentionally left blank
+
             }
         });
 
@@ -442,6 +417,7 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
 
 
     }
+
     private void filterContacts(String query) {
         List<User> filteredList = new ArrayList<>();
         for (User contact : userList) {
@@ -449,22 +425,23 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
                 filteredList.add(contact);
             }
         }
-        if(!filteredList.isEmpty()) {
+        if (!filteredList.isEmpty()) {
             friendListAdapter.setData(filteredList);
             friendListAdapter.notifyDataSetChanged();
             lv_contact_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent();
-                    intent.putExtra("name",filteredList.get(position).getName());
-                    setResult(ReleaseActivity.RESULT_CODE_CONTACT,intent);
+                    intent.putExtra("name", filteredList.get(position).getName());
+                    setResult(ReleaseActivity.RESULT_CODE_CONTACT, intent);
                     finish();
                 }
             });
-        }else{
-            Toasty.warning(this, "没有找到"+"'"+query+"'"+"相关结果", Toast.LENGTH_SHORT,true).show();
+        } else {
+            Toasty.warning(this, "没有找到" + "'" + query + "'" + "相关结果", Toast.LENGTH_SHORT, true).show();
         }
     }
+
     private void getFriendUserList(String phoneNumber) {
         UserServiceApi serviceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
         Call<HttpListData<User>> friendUserCall = serviceApi.getFriendUser(phoneNumber);
@@ -473,14 +450,16 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
             public void onResponse(Call<HttpListData<User>> call, Response<HttpListData<User>> response) {
                 state.showContent(null);
                 userList = response.body().getItems();
-                saveFriendList(userList);
-                sortContacts(userList); // 按拼音首字母排序
-                // 设置数据给 contactListAdapter 对象
-                if (!comeFromChatGroupMoreActivity){
-                    friendListAdapter.setData(userList);
-                    friendListAdapter.notifyDataSetChanged();
+                sortContacts(userList);
+                if (comeFromChatGroupMoreActivity) {
+                    alreadyExitContactsList = (List<User>) intent.getSerializableExtra("alreadyExitContacts");
+                    userList.removeAll(alreadyExitContactsList);
                 }
+
+                friendListAdapter.setData(userList);
+                friendListAdapter.notifyDataSetChanged();
             }
+
             @Override
             public void onFailure(Call<HttpListData<User>> call, Throwable t) {
                 Toast.makeText(getBaseContext(), "获取数据失败", Toast.LENGTH_SHORT).show();
@@ -492,21 +471,8 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
         state.showLoading(null, false, false);
     }
 
-    private void saveFriendList(List<User> userList) {
-//        for (User user : userList) {
-//            // 检查用户是否已存在
-//            User existingUser = LitePal.where("phoneNumber = ?", String.valueOf(user.getPhoneNumber())).findFirst(User.class);
-//            if (existingUser == null) {
-//                // 用户不存在，保存并将isFriend设置为1
-//                user.setIsFriend(1);
-//                user.save();
-//            } else {
-//                existingUser.setIsFriend(1); // 假设有一个setIsFriend方法用于设置isFriend属性
-//                existingUser.save();
-//            }
-//        }
-    }
     @Override
     public void onContactsSelected(boolean[] selectedItems) {
+
     }
 }

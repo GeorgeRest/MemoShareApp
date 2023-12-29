@@ -2,12 +2,15 @@ package com.george.memoshareapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -18,12 +21,10 @@ import com.george.memoshareapp.beans.ChatRoom;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.properties.AppProperties;
+import com.george.memoshareapp.utils.TimeUtil;
 import com.george.memoshareapp.view.NiceImageView;
-import com.othershe.combinebitmap.CombineBitmap;
-import com.othershe.combinebitmap.listener.OnSubItemClickListener;
 
 import java.util.Arrays;
-import java.util.List;
 
 import cn.mtjsoft.groupavatarslib.GroupAvatarsLib;
 import cn.mtjsoft.groupavatarslib.layout.DingLayoutManager;
@@ -50,9 +51,10 @@ public class ChatRoomListAdapter extends BaseQuickAdapter<ChatRoom, ChatRoomList
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onBindViewHolder(@NonNull ViewHolder viewHolder, int position, @Nullable ChatRoom chatRoom) {
-        viewHolder.tv_chatroom_last_message_time.setText(chatRoom.getLastMessageTime());
+        viewHolder.tv_chatroom_last_message_time.setText(TimeUtil.convertWXTime(chatRoom.getLastMessageTime()));
         String type = chatRoom.getType();
         if (chatRoom.getLastMessageType() != null) {
             if (chatRoom.getLastMessageType().equals("图片")) {
@@ -69,10 +71,12 @@ public class ChatRoomListAdapter extends BaseQuickAdapter<ChatRoom, ChatRoomList
             String userId = chatRoom.getChatRoomMember().getUserId() + "";
             User user = userManager.findUserByPhoneNumber(userId);
             chatRoom.setName(user.getName());
+            viewHolder.iv_group.setVisibility(View.GONE);
             viewHolder.tv_chatroom_name.setText(user.getName());
             String headPortraitPath = user.getHeadPortraitPath();
             Glide.with(context).load(AppProperties.SERVER_MEDIA_URL + headPortraitPath).into(viewHolder.iv_chatroom_photo);
         } else {
+            viewHolder.iv_group.setVisibility(View.VISIBLE);
             String[] avatarArray = splitIntoArray(chatRoom.getAvatar());
             viewHolder.tv_chatroom_name.setText(chatRoom.getName());
             GroupAvatarsLib.init(context)
@@ -105,6 +109,7 @@ public class ChatRoomListAdapter extends BaseQuickAdapter<ChatRoom, ChatRoomList
         private TextView tv_chatroom_name;
         private TextView tv_chatroom_last_message;
         private TextView tv_chatroom_last_message_time;
+        private ImageView iv_group;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -112,6 +117,7 @@ public class ChatRoomListAdapter extends BaseQuickAdapter<ChatRoom, ChatRoomList
             tv_chatroom_name = itemView.findViewById(R.id.tv_chatroom_name);
             tv_chatroom_last_message = itemView.findViewById(R.id.tv_chatroom_last_message);
             tv_chatroom_last_message_time = itemView.findViewById(R.id.tv_chatroom_last_message_time);
+            iv_group = itemView.findViewById(R.id.iv_group);
         }
 
     }

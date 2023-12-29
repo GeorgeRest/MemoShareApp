@@ -4,6 +4,7 @@ package com.george.memoshareapp.http.api;
 import com.george.memoshareapp.beans.ChatRoom;
 import com.george.memoshareapp.beans.ChatRoomMember;
 import com.george.memoshareapp.beans.ChatRoomRequest;
+import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.http.response.HttpData;
 
 import java.util.List;
@@ -26,4 +27,7 @@ public interface ChatRoomApi {
 
     @PUT("chat/user/{userId}/chatrooms/{chatRoomId}/read")
     Call<Void> updateLastReadAt(@Path("userId") String userId, @Path("chatRoomId") Integer chatRoomId);
+
+    @POST("chat/addChatRoomMember")
+    Call<List<User>> addChatRoomMember(@Body List<ChatRoomMember> chatRoomMember);
 }

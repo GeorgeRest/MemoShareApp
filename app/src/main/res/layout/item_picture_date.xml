@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_chat_picture_date"
+        android:layout_width="wrap_content"
+        android:layout_height="17dp"
+        android:textSize="12dp"
+        android:textColor="#81848A"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="13dp"/>
+
+</RelativeLayout>

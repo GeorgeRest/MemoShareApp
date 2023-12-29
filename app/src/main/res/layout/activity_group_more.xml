@@ -1,14 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_release"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.GroupMoreActivity">
+    android:background="#F8F4FA"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/rl_release"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@mipmap/release_bg">
+
+        <ImageView
+            android:id="@+id/chat_group_back"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/back" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="群聊信息"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_more_member_rv_image"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        tools:ignore="MissingConstraints" />
-</RelativeLayout>
+        android:background="@color/divider" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_move_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/rv_image"
+        android:orientation="vertical">
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30dp"
+
+                android:text="群聊名称"
+                android:textColor="#504F4F"
+                android:textSize="14dp" />
+
+            <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="240dp"
+                android:layout_marginRight="30dp"
+                android:text=""
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/photo_chat_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="250dp"
+                android:layout_marginRight="15dp"
+
+                android:text="毕业旅行-广州站"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="360dp"
+                android:layout_marginRight="15dp"
+                android:text=">"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_addLocation"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/white">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30dp"
+                android:text="查看图片及视频"
+                android:textColor="#504F4F"
+                android:textSize="14dp" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/RL_permission"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/white">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30dp"
+                android:text="生成相册"
+                android:textColor="#504F4F"
+                android:textSize="14dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_exit"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30dp"
+                android:gravity="center"
+                android:text="退出群聊"
+                android:textColor="#DC1756"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

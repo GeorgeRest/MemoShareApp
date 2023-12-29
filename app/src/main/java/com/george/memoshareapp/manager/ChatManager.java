@@ -14,6 +14,7 @@ import com.george.memoshareapp.beans.VoiceMessageItem;
 import com.george.memoshareapp.http.api.ChatRoomApi;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.properties.AppProperties;
+import com.george.memoshareapp.utils.TimeUtil;
 import com.orhanobut.logger.Logger;
 
 import org.litepal.LitePal;
@@ -119,8 +120,8 @@ public class ChatManager {
             chatAttachment.setMessageId(serverChatMessage.getId());
             chatAttachment.setFileType(serverChatMessage.getAttachment().getFileType());
             chatAttachment.setFilePath(serverChatMessage.getAttachment().getFilePath());
-            chatAttachment.setCreatedAt(serverChatMessage.getAttachment().getCreatedAt());
-            chatAttachment.setUpdatedAt(serverChatMessage.getAttachment().getUpdatedAt());
+            chatAttachment.setCreatedAt(serverChatMessage.getCreatedAt());
+            chatAttachment.setUpdatedAt(serverChatMessage.getUpdatedAt());
             chatAttachment.save();
             chatMessage.setAttachment(chatAttachment);
         }
@@ -307,6 +308,18 @@ public class ChatManager {
                 }
             }
         }.start();
+    }
+
+    public List<ChatAttachment> getChatPictureList(String chatRoomId) {
+        List<ChatAttachment> chatPictureList = new ArrayList<>();
+        List<ChatMessage> chatMessageList = LitePal.where("chatRoomId = ? and messageType = ?", chatRoomId, "图片").find(ChatMessage.class,true);
+        for (ChatMessage chatMessage : chatMessageList) {
+            if(chatMessage.getAttachment()!= null) {
+                chatMessage.getAttachment().setCreatedAt(TimeUtil.convertToTimestamp(chatMessage.getAttachment().getCreatedAt()) + "");
+                chatPictureList.add(chatMessage.getAttachment());
+            }
+        }
+        return chatPictureList;
     }
 
 }

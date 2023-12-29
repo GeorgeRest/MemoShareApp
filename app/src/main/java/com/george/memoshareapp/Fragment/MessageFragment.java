@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ChatRoomListAdapter;
@@ -47,7 +46,6 @@ public class MessageFragment extends Fragment {
         rv_chat_room_list = view.findViewById(R.id.rv_chat_room_list);
         rv_chat_room_list.setLayoutManager(new LinearLayoutManager(view.getContext()));
         chatManager = new ChatManager(view.getContext());
-
         chatRoomListAdapter = new ChatRoomListAdapter(view.getContext());
         rv_chat_room_list.setAdapter(chatRoomListAdapter);
 

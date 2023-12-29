@@ -4,6 +4,7 @@ package com.george.memoshareapp.adapters;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,24 +16,28 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseMultiItemAdapter;
-import com.facebook.imagepipeline.common.SourceUriType;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
+import com.george.memoshareapp.manager.ChatManager;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.properties.MessageType;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
-import com.orhanobut.logger.Logger;
 
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+
+import cc.shinichi.library.ImagePreview;
 
 public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
     private static final String TAG="ChatAdapter";
@@ -43,11 +48,18 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
     private VoiceChatViewHolder voiceChatViewHolder;
     private MediaPlayer mediaPlayer;
     private CountDownTimer countDownTimer;
+    private RecyclerView recyclerView;
+    private ChatManager chatManager;
+    private String chatRoomId;
+    private List<MultiItemEntity> pictureLists;
 
-    public ChatAdapter(Context context, List<MultiItemEntity> multiItemEntities) {
+    public ChatAdapter(Context context, List<MultiItemEntity> multiItemEntities,RecyclerView recyclerView, String chatRoomId) {
         super(multiItemEntities);
         this.context = context;
         this.multiItemEntities = multiItemEntities;
+        this.recyclerView=recyclerView;
+        this.chatRoomId=chatRoomId;
+        this.chatManager = new ChatManager(context);
         addItemType(MessageType.TEXT, new OnMultiItemAdapterListener<MultiItemEntity, RecyclerView.ViewHolder>() {
             @NonNull
             @Override
@@ -145,8 +157,43 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
                         setOtherImage(multiItem.getItemContent());
                         break;
                 }
+                picChatViewHolder.iv_chat_self_image.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onClick(View view) {
+                        pictureLists = multiItemEntities.stream()
+                                .filter(item -> item.getItemShowType() == MessageType.IMAGE)
+                                .collect(Collectors.toList());
 
+                        int position = findPicturePosition(multiItem.getItemContent());
+                        List<String> pictureList = setChatPictureList(pictureLists);
+                        ImagePreview
+                                .getInstance()
+                                .setContext(context)
+                                .setIndex(position)
+                                .setImageList(pictureList)
+                                .start();
+                    }
+                });
 
+                picChatViewHolder.iv_chat_other_image.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onClick(View view) {
+                        pictureLists = multiItemEntities.stream()
+                                .filter(item -> item.getItemShowType() == MessageType.IMAGE)
+                                .collect(Collectors.toList());
+
+                        int position = findPicturePosition(multiItem.getItemContent());
+                        List<String> pictureList = setChatPictureList(pictureLists);
+                        ImagePreview
+                                .getInstance()
+                                .setContext(context)
+                                .setIndex(position)
+                                .setImageList(pictureList)
+                                .start();
+                    }
+                });
             }
         });
         addItemType(MessageType.VOICE, new OnMultiItemAdapterListener<MultiItemEntity, RecyclerView.ViewHolder>() {
@@ -514,5 +561,30 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
         }
         return durationInSeconds;
     }
+    private List<String> setChatPictureList(List<MultiItemEntity> multiItemEntities){
+        List<String> pictureUrl = new ArrayList<>();
+        for (MultiItemEntity multiItemEntity:multiItemEntities) {
+            pictureUrl.add(multiItemEntity.getItemContent());
+        }
+        return pictureUrl;
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private int findPicturePosition(String photoUrl) {
+        int j = -1;
+        for (int i = 0; i < pictureLists.size(); i++) {
+            if (pictureLists.get(i).getItemContent().equals(photoUrl)) {
+                j = i;
+                break;
+            }
+        }
+        return j;
+    }
+    public void addData(MultiItemEntity multiItem){
+        this.multiItemEntities.add(multiItem);
+    }
+
+    public List<MultiItemEntity> getData(){
+        return multiItemEntities;
+    }
 }

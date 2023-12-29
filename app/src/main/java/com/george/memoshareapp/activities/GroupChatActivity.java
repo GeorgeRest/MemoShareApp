@@ -81,10 +81,12 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
     private List<MultiItemEntity> multiItemEntityList;
     private ChatAdapter chatAdapter;
     private UserManager userManager;
-    private String chatRoomId;
+    public String chatRoomId;
     private User selfUser;
     private ChatManager chatManager;
     private RecyclerView rv_chat;
+    private String chatRoomName;
+    public static boolean isInGroupChatActivity;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -110,9 +112,11 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
 
         ImageButton ibtn_group_chat_back = (ImageButton) findViewById(R.id.ibtn_group_chat_back);
         ImageButton ibtn_group_chat_menu = (ImageButton) findViewById(R.id.ibtn_group_chat_menu);
+        TextView ibtn_group_chat = (TextView) findViewById(R.id.ibtn_group_chat);
         TextView tv_group_chat_name = (TextView) findViewById(R.id.tv_group_chat_name);
         ibtn_group_chat_back.setOnClickListener(this);
         ibtn_group_chat_menu.setOnClickListener(this);
+        ibtn_group_chat.setOnClickListener(this);
         userManager = new UserManager(this);
         selfUser = userManager.findUserByPhoneNumber(UserManager.getSelfPhoneNumber(this));
         FragmentTransaction transaction = manager.beginTransaction();
@@ -121,20 +125,15 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
         chatManager = new ChatManager(this);
         Intent intent = getIntent();
         chatRoomId = intent.getStringExtra("chatRoomId");
-        String chatRoomName = intent.getStringExtra("chatRoomName");
-        System.out.println("---------------"+chatRoomName);
+        chatRoomName = intent.getStringExtra("chatRoomName");
         tv_group_chat_name.setText(chatRoomName);
-        multiItemEntityList= chatManager.getMessageFromDB(chatRoomId,0);
-        for (MultiItemEntity m :multiItemEntityList) {
-            System.out.println(m.getItemContent()+"---------");
-        }
+        multiItemEntityList = chatManager.getMessageFromDB(chatRoomId, 0);
         rv_chat = (RecyclerView) findViewById(R.id.rcl_group_chat_detail);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        chatAdapter = new ChatAdapter(this, multiItemEntityList);
-
+        chatAdapter = new ChatAdapter(this, multiItemEntityList,rv_chat,chatRoomId);
         rv_chat.setLayoutManager(layoutManager);
         rv_chat.setAdapter(chatAdapter);
-        rv_chat.scrollToPosition(multiItemEntityList.size()-1);
+        rv_chat.scrollToPosition(multiItemEntityList.size() - 1);
     }
 
 
@@ -196,7 +195,8 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
             ImageMessageItem imageMessageItem = new ImageMessageItem(path, date, MultiItemEntity.SELF, selfUser);
             imageMessageItem.setFileName(media.getFileName());
             Logger.d(imageMessageItem.getFileName());
-            multiItemEntityList.add(imageMessageItem);
+//            multiItemEntityList.add(imageMessageItem);
+            chatAdapter.addData(imageMessageItem);
             uploadFile(path, imageMessageItem);
 
         }
@@ -210,7 +210,8 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
      */
     @Override
     public void sendContent(MultiItemEntity multiItem) {
-        multiItemEntityList.add(multiItem);
+//        multiItemEntityList.add(multiItem);
+        chatAdapter.addData(multiItem);
         chatAdapter.notifyDataSetChanged();
 
         switch (multiItem.getItemShowType()) {
@@ -224,7 +225,7 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
             default:
                 break;
         }
-        rv_chat.smoothScrollToPosition(multiItemEntityList.size()-1);
+        rv_chat.smoothScrollToPosition(chatAdapter.getData().size() - 1);
         KeyboardUtils.hideSoftInput(getWindow());
     }
 
@@ -335,13 +336,14 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
                 break;
         }
         if (multiItem != null) {
-            multiItemEntityList.add(multiItem);
+//            multiItemEntityList.add(multiItem);
+            chatAdapter.addData(multiItem);
             chatAdapter.notifyDataSetChanged();
-            rv_chat.scrollToPosition(multiItemEntityList.size()-1);
+            rv_chat.scrollToPosition(chatAdapter.getData().size() - 1);
         }
     }
 
-    public static void openGroupChatActivity(Context context, int chatRoomId,String chatRoomName) {
+    public static void openGroupChatActivity(Context context, int chatRoomId, String chatRoomName) {
         Intent intent = new Intent(context, GroupChatActivity.class);
         intent.putExtra("chatRoomId", chatRoomId + "");
         intent.putExtra("chatRoomName", chatRoomName);
@@ -349,24 +351,31 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        isInGroupChatActivity = true;
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
         long lastViewTime = chatManager.getLastViewTime();
-        if(lastViewTime==-1){
+        if (lastViewTime == -1) {
             return;
         }
         List<MultiItemEntity> multiItemEntities = chatManager.getMessageFromDB(chatRoomId, lastViewTime);
-        if(multiItemEntities!=null&&!multiItemEntities.isEmpty()){
+        if (multiItemEntities != null && !multiItemEntities.isEmpty()) {
             chatAdapter.addAll(multiItemEntities);
             chatAdapter.notifyDataSetChanged();
+            rv_chat.scrollToPosition(multiItemEntityList.size() - 1);
         }
-        rv_chat.scrollToPosition(multiItemEntityList.size()-1);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        isInGroupChatActivity = false;
         EventBus.getDefault().unregister(this);
         chatManager.setLastViewTime(System.currentTimeMillis());
     }
@@ -378,10 +387,14 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
             case R.id.ibtn_group_chat_back:
                 finish();
                 break;
+            case R.id.ibtn_group_chat:
             case R.id.ibtn_group_chat_menu:
                 Intent intent = new Intent(this, GroupMoreActivity.class);
+                intent.putExtra("chatRoomId", chatRoomId);
+                intent.putExtra("ChatRoomName", chatRoomName);
                 startActivity(intent);
                 break;
+
             default:
                 break;
         }
