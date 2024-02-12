@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingHorizontal="10dp"
-    android:paddingVertical="5dp">
+    android:paddingHorizontal="25dp"
+    android:paddingVertical="10dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -17,11 +17,10 @@
             android:id="@+id/cl_zone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <ImageView
                 android:id="@+id/iv_image"
                 android:layout_width="match_parent"
-                android:layout_height="600dp"
+                android:layout_height="430dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:scaleType="centerCrop"
@@ -36,54 +35,64 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cdv_avator"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:cardCornerRadius="10dp"
-                    android:elevation="40dp">
-
-                    <ImageView
-                        android:id="@+id/iv_avatar"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        android:src="@drawable/activity_avator_default"
-                        android:scaleType="centerCrop"
-                        android:background="#436C706F"/>
-
-                </androidx.cardview.widget.CardView>
-
                 <TextView
-                    android:id="@+id/tv_name"
+                    android:id="@+id/tv_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/cdv_avator"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    android:textSize="15dp"
-                    android:textColor="@color/activity_text_color"
-                    android:text="用户名"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:text="中国大连"
                     android:singleLine="true"
-                    android:maxWidth="200dp"
-                    android:ellipsize="end"/>
+                    android:maxWidth="250dp"/>
 
                 <TextView
                     android:id="@+id/tv_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="@id/cdv_avator"
-                    app:layout_constraintBottom_toBottomOf="@id/cdv_avator"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_location"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     android:textSize="15dp"
-                    android:textColor="@color/activity_text_color"
-                    android:text="2023/12/24 12:00"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/white"
+                    android:text="2023/12/24"
                     android:singleLine="true"
-                    android:maxWidth="200dp"/>
+                    android:maxWidth="250dp"/>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <ImageView
+                android:id="@+id/iv_check_btn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:padding="5dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/iv_activtity_edit_choose_default"
+                android:visibility="gone"
+                android:clickable="true"/>
+
+            <ImageView
+                android:id="@+id/iv_checked_btn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:padding="5dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/iv_activtity_edit_choose_checked"
+                android:visibility="gone"
+                android:clickable="true"/>
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

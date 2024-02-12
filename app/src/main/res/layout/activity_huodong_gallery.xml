@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.HuodongGalleryActivity">
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/iv_activity_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+<!--    <ImageView-->
+<!--        android:id="@+id/iv_activity_image"-->
+<!--        android:layout_below="@+id/tv_publish_text"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginBottom="110dp"-->
+<!--        android:layout_marginHorizontal="30dp"-->
+<!--        android:scaleType="centerCrop"/>-->
+    
+    <Gallery
+        android:id="@+id/gallery_activitys"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center_vertical"
+        android:layout_alignParentBottom="true"
+        android:clickable="false"
+        android:spacing="5dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        app:fabSize="normal"
+        app:borderWidth="0dp"
+        android:elevation="20dp"
+        app:pressedTranslationZ="0dp"
+        app:rippleColor="#04DDFA"
+        android:backgroundTint="@color/white"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="点此发布活动，记录精彩瞬间"
+        android:src="@drawable/iv_activity_add"/>
+
+</RelativeLayout>

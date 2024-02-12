@@ -9,6 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -18,14 +21,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.drake.statelayout.StateLayout;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.AddHuoDongActivity;
+import com.george.memoshareapp.activities.HuoDongDetailActivity;
+import com.george.memoshareapp.activities.HuodongGalleryActivity;
+import com.george.memoshareapp.activities.PersonalHuodDongActivity;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.adapters.HuoDongAdapter;
-import com.george.memoshareapp.beans.OutterActivityBean;
+import com.george.memoshareapp.beans.InnerActivityBean;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.events.updateLikeState;
 import com.george.memoshareapp.events.ScrollToTopEvent;
 import com.george.memoshareapp.http.response.HttpListData;
-import com.george.memoshareapp.interfaces.OutHuodongDataListener;
+import com.george.memoshareapp.interfaces.HuoDongItemClickListener;
+import com.george.memoshareapp.interfaces.HuodongDataListener;
 import com.george.memoshareapp.interfaces.PostDataListener;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.manager.HuodongManager;
@@ -54,7 +61,7 @@ import java.util.List;
  * @date: 2023/5/14 23:09
  * @version: 1.0
  */
-public class HomePageFragment extends Fragment implements PostDataListener<List<Post>>,OutHuodongDataListener<List<OutterActivityBean>> {//内部
+public class HomePageFragment extends Fragment implements PostDataListener<List<Post>>, HuodongDataListener<List<InnerActivityBean>> {//内部
 
     private static final String ARG_PARAM1 = "param1";
     private static final int PAGE_SIZE = 10;
@@ -72,13 +79,17 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
     private int huodongPageNum = 1;
     private int pageSize = 10;
     private List<Post> posts;
-    private List<OutterActivityBean> huodongList;
+    private List<InnerActivityBean> huodongList;
     private int likePostId;
     private String phoneNumber;
     private MMKV kv;
-    private FloatingActionButton btn_add_activity;
+    private ImageView btn_add_activity;
     private HuodongManager huodongManager;
     private HuoDongAdapter huoDongAdapter;
+    private ImageView btn_my_activity;
+    private boolean isEntryBtnVisible = true;;
+    private LinearLayout ll_activity_ctrl_entry_zone;
+    private ImageView btn_back_to_top;
 
     public HomePageFragment() {
 
@@ -211,36 +222,56 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                 state.showLoading(null, false, false);
                 huodongManager = new HuodongManager(getContext());
                 outerRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_recycler);
-                outerRecyclerView.addItemDecoration(new MyBottomDecoration(outerRecyclerView));
+//                outerRecyclerView.addItemDecoration(new MyBottomDecoration(outerRecyclerView));
+                ll_activity_ctrl_entry_zone = (LinearLayout) rootView.findViewById(R.id.ll_activity_ctrl_entry_zone);
+                outerRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        Log.d(TAG, "onScrolled: dy打印结果：" + dy);
+                        if(dy>0&&isEntryBtnVisible){
+//                            上滑不可见
+                            ll_activity_ctrl_entry_zone.setVisibility(View.GONE);
+                            ll_activity_ctrl_entry_zone.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.anim_detail_photo_exit));
+                            isEntryBtnVisible = false;
+                        } else if(dy<0&&!isEntryBtnVisible){
+//                            下滑可见
+                            ll_activity_ctrl_entry_zone.setVisibility(View.VISIBLE);
+                            ll_activity_ctrl_entry_zone.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.anim_detail_photo_enter));
+                            isEntryBtnVisible = true;
+                        }
+                    }
+                });
 
-                List<OutterActivityBean> emptyList2 = new ArrayList<>();
+                List<InnerActivityBean> emptyList2 = new ArrayList<>();
                 huoDongAdapter = new HuoDongAdapter(getActivity(), emptyList2);
+                outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                outerRecyclerView.setAdapter(huoDongAdapter);
+
                 huodongManager.getHuoDongListByPage(huodongPageNum, pageSize, huoDongAdapter.getItemCount(),this);
-//                huodongManager.();
                 smartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
                 smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
                 smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
                 smartRefreshLayout.setEnableAutoLoadMore(true);
                 smartRefreshLayout.setFooterHeight(80);
+
                 smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
                     @Override
                     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                         huodongPageNum = 1;
-                        huodongManager.getHuoDongListByPage(huodongPageNum, pageSize,huoDongAdapter.getItemCount(), new OutHuodongDataListener<List<OutterActivityBean>>() {
+                        huodongManager.getHuoDongListByPage(huodongPageNum, pageSize,huoDongAdapter.getItemCount(), new HuodongDataListener<List<InnerActivityBean>>() {
                             @Override
-                            public void onLoadSuccess(HttpListData<OutterActivityBean> newHuodongData, String type) {
+                            public void onLoadSuccess(HttpListData<InnerActivityBean> newHuodongData, String type) {
                                 kv.clearAll();
                                 huodongList.clear();
-                                List<OutterActivityBean> newActivitys = newHuodongData.getItems();
+                                List<InnerActivityBean> newActivitys = newHuodongData.getItems();
                                 huodongList.addAll(newActivitys);
-
                                 huoDongAdapter.notifyDataSetChanged();
                                 refreshLayout.finishRefresh();
-                                if (newHuodongData.isLastPage()) {
-                                    refreshLayout.setNoMoreData(true);
-                                } else {
+
+                                refreshLayout.setNoMoreData(newHuodongData.isLastPage());
+                                if (!newHuodongData.isLastPage()) {
                                     huodongPageNum++;
-                                    refreshLayout.setNoMoreData(false);
                                 }
                             }
                             @Override
@@ -251,13 +282,40 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                     }
                 });
 
-                btn_add_activity = (FloatingActionButton) rootView.findViewById(R.id.btn_add_activity);
+                //TODO  在这里接收通知刷新
+
+
+                btn_add_activity = (ImageView) rootView.findViewById(R.id.btn_add_activity);
+
+                btn_my_activity = (ImageView) rootView.findViewById(R.id.btn_my_activity);
+
+                btn_back_to_top = (ImageView) rootView.findViewById(R.id.btn_back_to_top);
+
                 btn_add_activity.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(), AddHuoDongActivity.class);
                         intent.putExtra("phoneNumber",phoneNumber);
+                        intent.putExtra("isFollowing",false);
                         getContext().startActivity(intent);
+                    }
+                });
+
+                btn_my_activity.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), PersonalHuodDongActivity.class);
+                        intent.putExtra("phoneNumber",phoneNumber);
+                        getContext().startActivity(intent);
+                    }
+                });
+
+                btn_back_to_top.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(outerRecyclerView.getChildCount()>0){
+                            outerRecyclerView.scrollToPosition(0);
+                        }
                     }
                 });
 
@@ -351,50 +409,53 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
     }
 
     @Override
-    public void onLoadSuccess(HttpListData<OutterActivityBean> data, String type) {
+    public void onLoadSuccess(HttpListData<InnerActivityBean> data, String type) {
         state.showContent(null);
-
+        huodongPageNum++;
         huodongList = data.getItems();
 
         if (huodongList.size()==0) {
             state.showEmpty(null);
         } else {
             huoDongAdapter = new HuoDongAdapter(getActivity(), huodongList);
+//            Log.d(TAG, "zxtest onLoadSuccess: huodongList:" + huodongList.size());
             outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             outerRecyclerView.setAdapter(huoDongAdapter);
+            huoDongAdapter.setOnHuodongClickListener(new HuoDongItemClickListener() {
+                @Override
+                public void onHuoDongClick(int position, InnerActivityBean huoDong) {
+                    Intent intent = new Intent(getContext(), HuodongGalleryActivity.class);
+                    intent.putExtra("phoneNumber",phoneNumber);
+                    intent.putExtra("firstHuoDong",huoDong);
+                    startActivity(intent);//后期尝试用共享控件
+                }
+            });
         }
+        Log.d(TAG, "onLoadSuccess: isLastPage = " + data.isLastPage());
         if (data.isLastPage()) {
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.setNoMoreData(data.isLastPage());
         } else {
-            huodongPageNum++;
             smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
                 @Override
                 public void onLoadMore(RefreshLayout refreshlayout) {
-                    huodongManager.getHuoDongListByPage(huodongPageNum, pageSize, outerAdapter.getItemCount(), new OutHuodongDataListener<List<OutterActivityBean>>() {
+                    huodongManager.getHuoDongListByPage(huodongPageNum, pageSize, huoDongAdapter.getItemCount(), new HuodongDataListener<List<InnerActivityBean>>() {
                         @Override
-                        public void onLoadSuccess(HttpListData<OutterActivityBean> data, String type) {
-                            System.out.println(data.isLastPage() + "data.isLastPage()-------------");
-                            System.out.println(huodongPageNum + "huodongPageNum-------------");
+                        public void onLoadSuccess(HttpListData<InnerActivityBean> data, String type) {
                             huodongPageNum++;
-                            List<OutterActivityBean> newActivitys = data.getItems();
+                            List<InnerActivityBean> newActivitys = data.getItems();
                             huodongList.addAll(newActivitys);
                             int startInsertPosition = huodongList.size();
                             huoDongAdapter.notifyItemRangeInserted(startInsertPosition, newActivitys.size());
                             refreshlayout.finishLoadMore();
-
-                            if (data.isLastPage()) {
-                                refreshlayout.setNoMoreData(true);
-                                System.out.println(data.isLastPage() + "----------------");
-                            }
+                            refreshlayout.setNoMoreData(data.isLastPage());
                         }
 
                         @Override
                         public void onLoadError(String errorMessage) {
                             refreshlayout.finishLoadMore(false);
-                            Log.e(TAG, "onLoadError: "+errorMessage +"#380");
+                            Log.e(TAG, "onLoadError: "+errorMessage +"#492");
                         }
                     });
-
                 }
             });
         }
@@ -408,19 +469,19 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
 
 }
 
-class MyBottomDecoration extends RecyclerView.ItemDecoration {
-    RecyclerView recyclerView;
-    public MyBottomDecoration(RecyclerView recyclerView) {
-        this.recyclerView = recyclerView;
-    }
-
-    @Override
-    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        super.getItemOffsets(outRect, view, parent, state);
-        if(parent.getChildCount()>0){
-            if(parent.getChildAdapterPosition(view) == recyclerView.getAdapter().getItemCount() - 1){
-                outRect.bottom = 200;
-            }
-        }
-    }
-}
+//class MyBottomDecoration extends RecyclerView.ItemDecoration {
+//    RecyclerView recyclerView;
+//    public MyBottomDecoration(RecyclerView recyclerView) {
+//        this.recyclerView = recyclerView;
+//    }
+//
+//    @Override
+//    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+//        super.getItemOffsets(outRect, view, parent, state);
+//        if(parent.getChildCount()>0){
+//            if(parent.getChildAdapterPosition(view) == recyclerView.getAdapter().getItemCount() - 1){
+//                outRect.bottom = 200;
+//            }
+//        }
+//    }
+//}

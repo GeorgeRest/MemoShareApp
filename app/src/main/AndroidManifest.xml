@@ -44,6 +44,18 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.WebSearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.PersonalHuodDongActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.HuoDongDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.HuodongGalleryActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.AddHuoDongActivity"
             android:exported="false" />
         <activity

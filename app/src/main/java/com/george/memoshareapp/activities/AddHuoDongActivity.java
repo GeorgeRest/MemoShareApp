@@ -3,22 +3,12 @@ package com.george.memoshareapp.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,13 +22,11 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps2d.model.LatLng;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.AddActivityPicAdapter;
-import com.george.memoshareapp.application.MyApplication;
+import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.interfaces.OnDelPicClickListener;
 import com.george.memoshareapp.manager.HuodongManager;
-import com.george.memoshareapp.utils.LocationUtil;
 import com.george.memoshareapp.utils.SHA1Output;
 import com.hjq.permissions.OnPermissionCallback;
 import com.hjq.permissions.Permission;
@@ -47,7 +35,6 @@ import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.orhanobut.logger.Logger;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,21 +51,23 @@ public class AddHuoDongActivity extends AppCompatActivity {
     private TextView tv_location;
     private TextView tv_publish;
     private HuodongManager huodongManager;
-    private double altitude;
+    private double latitude;
     private double longtitude;
-    private String aoiName;
+
     private String address;
-    private String district;
-    private LocationManager manager;
-    private String provider;
-    private Location location;
-    private StringBuilder sb;
-    private String countryName;
-    private String cityName;
+    private String location;
+    private boolean isFollowing;
+    private TextView tv_add_huodong_title;
+    private int followId;
+    private ConstraintLayout cl_loc_zone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        AMapLocationClient.updatePrivacyShow(this.getApplicationContext(),true,true);
+        AMapLocationClient.updatePrivacyAgree(this.getApplicationContext(),true);
+
         setContentView(R.layout.activity_add_huo_dong);
 
         XXPermissions.with(this)
@@ -105,176 +94,95 @@ public class AddHuoDongActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         phoneNumber = intent.getStringExtra("phoneNumber");
+        isFollowing = intent.getBooleanExtra("isFollowing", false);
+        followId = intent.getIntExtra("followId", 0);
+
 
 //        initData();
         tv_location = (TextView) findViewById(R.id.tv_location);
-        initMyData();
+
+        initData();
+
         initView();
 
     }
 
-    @SuppressLint("MissingPermission")
-    private void initMyData() {
+    private void initData() {
         huodongManager = new HuodongManager(this);
-        manager = (LocationManager) getSystemService(LOCATION_SERVICE);
-//        altitude = currentLatLng.latitude;
-//        longtitude = currentLatLng.longitude;
-        if(!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
-                !manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            askLocationSettings();
-        }
-        provider = LocationManager.GPS_PROVIDER;
-
-        location = manager.getLastKnownLocation(provider);
-        if(location !=null){
-            //显示当前设备的位置信息
-            Log.d("lidu---", "location!=null");
-            showLocation(location);
-            getPositionName(location);
-        }
-
-        Log.d("lidu---", "location==null");
-        manager.requestLocationUpdates(provider, 10000, 5, locationListener);
-    }
-    LocationListener locationListener=new LocationListener(){
-
-        @Override
-        public void onLocationChanged(Location location) {
-            // TODO Auto-generated method stub
-            Log.d("test", "onLocationChanged");
-            //更新当前设备的位置信息
-            showLocation(location);
-            getPositionName(location);
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            // TODO Auto-generated method stub
-
-        }
-
-    };
-
-    private void getPositionName(Location location) {
-        List<Address> addsList = new ArrayList<>();
-        Geocoder geocoder = new Geocoder(this);
         try {
-            addsList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);//得到的位置可能有多个当前只取其中一个
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
-        if (addsList != null && addsList.size() > 0) {
-            for (int i = 0; i < addsList.size(); i++) {
-                Address ads = addsList.get(i);
-                countryName = ads.getCountryName();
-                //拿到城市
-                cityName = ads.getLocality();
-            }
-        }
-        if(countryName == null || cityName == null){
-            Log.d(TAG, "initView: SHA1Output = "+SHA1Output.sHA1(this));
-            tv_location.setText("请重新进入以获取位置信息");
-        }else {
-            tv_location.setText(countryName + "/" + cityName);
+            AMapLocationClient mLocationClient = new AMapLocationClient(getApplicationContext());
+            AMapLocationClientOption mLocationClientOption = new AMapLocationClientOption();
+            mLocationClientOption.setNeedAddress(true);
+            mLocationClientOption.isNeedAddress();
+            mLocationClientOption.setOnceLocation(true);
+            mLocationClient.setLocationOption(mLocationClientOption);
+            mLocationClient.startLocation();
+            mLocationClient.setLocationListener(new AMapLocationListener() {
+                @Override
+                public void onLocationChanged(AMapLocation aMapLocation) {
+                    Log.d(TAG, "onLocationChanged: SHA1 : "+SHA1Output.sHA1(AddHuoDongActivity.this).toString());
+                    Log.d(TAG, "onLocationChanged: 执行到这里");
+                    if (aMapLocation != null) {
+                        Log.d(TAG, "onLocationChanged: 执行到大if这里");
+                        if (aMapLocation.getErrorCode() == 0) {
+                            //可在其中解析amapLocation获取相应内容。
+                            Log.d(TAG, "onLocationChanged: 执行到if这里");
+                            aMapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
+                            //获取纬度
+                            latitude = aMapLocation.getLatitude();
+                            //获取经度
+                            longtitude = aMapLocation.getLongitude();
+                            aMapLocation.getAccuracy();//获取精度信息
+                            //地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
+                            address = aMapLocation.getAddress();
+                            String province = aMapLocation.getProvince();//省信息
+                            String city = aMapLocation.getCity();//城市信息
+                            String street = aMapLocation.getStreet();//街道信息
+                            aMapLocation.getStreetNum();//街道门牌号信息
+                            //获取当前定位点的AOI信息
+                            String aoiName = aMapLocation.getAoiName();
+                            location = province + city + street + aoiName;
+                            tv_location.setText(location == null || location.isEmpty() ? "请选择位置" : location);
+                            Log.d(TAG, "onLocationChanged: location : " + location);
+                        }else {
+                            //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+                            Log.e("地图错误","定位失败, 错误码:" + aMapLocation.getErrorCode() + ", 错误信息:"
+                                    + aMapLocation.getErrorInfo());
+                        }
+                    }
+                }
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void showLocation(final Location location){
-        altitude = location.getLatitude();
-        longtitude = location.getLongitude();
-    }
-
-    private void askLocationSettings(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("开启位置服务");
-        builder.setMessage("本应用需要开启位置服务，是否去设置界面开启位置服务？");
-        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
-                Intent intent = new Intent(
-                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                AddHuoDongActivity.this.startActivity(intent);
-            }
-        });
-        builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(AddHuoDongActivity.this, "No location provider to use",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-        builder.show();
-    }
-
-//    private void initData() {
-//        huodongManager = new HuodongManager(this);
-//        try {
-//            AMapLocationClient mLocationClient = new AMapLocationClient(getApplicationContext());
-//            AMapLocationClientOption mLocationClientOption = new AMapLocationClientOption();
-//            mLocationClientOption.setNeedAddress(true);
-//            mLocationClientOption.isNeedAddress();
-//            mLocationClientOption.setOnceLocation(true);
-//            mLocationClient.setLocationOption(mLocationClientOption);
-//            mLocationClient.startLocation();
-//            mLocationClient.setLocationListener(new AMapLocationListener() {
-//                @Override
-//                public void onLocationChanged(AMapLocation aMapLocation) {
-//                    Log.d(TAG, "onLocationChanged: 执行到这里");
-//                    if (aMapLocation != null) {
-//                        Log.d(TAG, "onLocationChanged: 执行到大if这里");
-//                        if (aMapLocation.getErrorCode() == 0) {
-//                            //可在其中解析amapLocation获取相应内容。
-//                            Log.d(TAG, "onLocationChanged: 执行到if这里");
-//                            aMapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
-//                            //获取纬度
-//                            altitude = aMapLocation.getLatitude();
-//                            //获取经度
-//                            longtitude = aMapLocation.getLongitude();
-//                            aMapLocation.getAccuracy();//获取精度信息
-//                            //地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
-//                            address = aMapLocation.getAddress();
-//                            aMapLocation.getCountry();//国家信息
-//                            aMapLocation.getProvince();//省信息
-//                            aMapLocation.getCity();//城市信息
-//                            //城区信息
-//                            district = aMapLocation.getDistrict();
-//                            aMapLocation.getStreet();//街道信息
-//                            aMapLocation.getStreetNum();//街道门牌号信息
-//                            aMapLocation.getCityCode();//城市编码
-//                            aMapLocation.getAdCode();//地区编码
-//                            //获取当前定位点的AOI信息
-//                            aoiName = aMapLocation.getAoiName();
-//                            Log.d(TAG, "onLocationChanged: aoiName : " + aoiName);
-//                        }else {
-//                            //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
-//                            Log.e("地图错误","定位失败, 错误码:" + aMapLocation.getErrorCode() + ", 错误信息:"
-//                                    + aMapLocation.getErrorInfo());
-//                        }
-//                    }
+//mLocationClient.setLocationListener(new
+//
+//    AMapLocationListener() {
+//        @Override
+//        public void onLocationChanged (AMapLocation aMapLocation){
+//            if (aMapLocation != null) {
+//                if (aMapLocation.getErrorCode() == 0) {
+//                    altitude = aMapLocation.getLatitude();
+//                    longtitude = aMapLocation.getLongitude();
+//                    address = aMapLocation.getAddress();
+//                } else {
+//                    Log.e("地图错误", "定位失败, 错误码:" + aMapLocation.getErrorCode() + ", 错误信息:"
+//                            + aMapLocation.getErrorInfo());
 //                }
-//            });
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
+//            }
 //        }
-//    }
+//});论文用
 
 
 
     private void initView() {
         et_huodong_content = (EditText) findViewById(R.id.et_huodong_content);
         tv_publish = (TextView) findViewById(R.id.tv_publish);
+        cl_loc_zone = (ConstraintLayout) findViewById(R.id.cl_loc_zone);
+        tv_add_huodong_title = (TextView) findViewById(R.id.tv_add_huodong_title);
+        tv_add_huodong_title.setText(isFollowing ? "活动跟拍" : "活动发布");
         rcy_activity_pic = (RecyclerView) findViewById(R.id.rcy_activity_pic);
         imageUriList = new ArrayList<>();
         adapter = new AddActivityPicAdapter(this,imageUriList);
@@ -298,8 +206,14 @@ public class AddHuoDongActivity extends AppCompatActivity {
                 Date date = new Date(System.currentTimeMillis());
                 Log.d(TAG, "onClick: imageUriList" + imageUriList.size());
                 huodongManager.uploadHuodong(AddHuoDongActivity.this,imageUriList,phoneNumber,et_huodong_content.getText().toString().trim(),
-                        countryName == null || countryName.isEmpty() || cityName == null || cityName.isEmpty() ?
-                                "非洲/阿拉巴马州":countryName + "/" + cityName,longtitude,altitude,date,false,0);
+                        location == null || location.isEmpty() ? "非洲阿拉巴马州" : location,longtitude, latitude,date,isFollowing,followId);
+            }
+        });
+
+        cl_loc_zone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(AddHuoDongActivity.this, MapLocationActivity.class), 1);
             }
         });
 
@@ -314,6 +228,14 @@ public class AddHuoDongActivity extends AppCompatActivity {
                     case AddActivityPicAdapter.REQUEST_CODE_CHOOSE:
                         getPhotoFromAlbum(data);
                         adapter.notifyDataSetChanged();
+                        break;
+                    case 1:
+                        Post post = (Post) data.getSerializableExtra("publishContent");
+                        latitude = post.getLatitude();
+                        longtitude = post.getLongitude();
+                        location = post.getLocation();
+                        tv_location.setText(location);
+//                        Log.d(TAG, "onActivityResult: ");
                         break;
                 }
                 break;

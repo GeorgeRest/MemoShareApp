@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@drawable/activitys_bg">
+    android:orientation="vertical">
     <com.drake.statelayout.StateLayout
         android:id="@+id/state"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:empty_layout="@layout/layout_empty"
         app:error_layout="@layout/layout_error"
-        app:loading_layout="@layout/layout_loading">
+        app:loading_layout="@layout/layout_loading"
+        android:layout_marginBottom="50dp">
 
         <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:id="@+id/refreshLayout"
@@ -43,21 +43,50 @@
         </com.scwang.smart.refresh.layout.SmartRefreshLayout>
     </com.drake.statelayout.StateLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_add_activity"
+    <LinearLayout
+        android:id="@+id/ll_activity_ctrl_entry_zone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        app:fabSize="normal"
-        app:borderWidth="0dp"
-        android:elevation="20dp"
-        app:pressedTranslationZ="0dp"
-        app:rippleColor="#F9F871"
-        android:backgroundTint="#FD73D2"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="80dp"
-        android:contentDescription="点此发布活动，记录精彩瞬间"
-        android:src="@drawable/iv_activity_add"/>
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="70dp"
+        android:visibility="visible">
+
+
+        <ImageView
+            android:id="@+id/btn_back_to_top"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/huodong_top_button_bg"
+            android:background="@drawable/huodong_home_button_bg"
+            android:scaleType="centerCrop"
+            android:padding="6dp"/>
+
+
+        <ImageView
+            android:id="@+id/btn_my_activity"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/iv_activity_ctrl"
+            android:background="@drawable/huodong_home_button_bg"
+            android:scaleType="centerCrop"
+            android:padding="6dp"
+            android:layout_marginTop="20dp"/>
+
+
+        <ImageView
+            android:id="@+id/btn_add_activity"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/iv_activity_add"
+            android:background="@drawable/huodong_home_button_bg"
+            android:scaleType="centerCrop"
+            android:padding="6dp"
+            android:layout_marginTop="20dp"/>
+
+    </LinearLayout>
+
 
 </RelativeLayout>

@@ -1,8 +1,7 @@
 package com.george.memoshareapp.interfaces;
 
-import com.george.memoshareapp.beans.HuoDong;
-import com.george.memoshareapp.beans.OutterActivityBean;
+import com.george.memoshareapp.beans.InnerActivityBean;
 
 public interface HuoDongItemClickListener {
-    void onItemClick(int position, OutterActivityBean huoDong);
+    void onHuoDongClick(int position, InnerActivityBean huoDong);
 }

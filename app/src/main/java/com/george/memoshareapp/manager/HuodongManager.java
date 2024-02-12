@@ -13,18 +13,19 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import com.george.memoshareapp.activities.AddHuoDongActivity;
-import com.george.memoshareapp.beans.OutterActivityBean;
-import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.beans.InnerActivityBean;
 import com.george.memoshareapp.dialog.LoadingDialog;
+import com.george.memoshareapp.events.UpdateEvent;
 import com.george.memoshareapp.http.api.HuodongServiceApi;
-import com.george.memoshareapp.http.api.PostServiceApi;
 import com.george.memoshareapp.http.response.HttpListData;
-import com.george.memoshareapp.interfaces.OutHuodongDataListener;
-import com.george.memoshareapp.interfaces.PostDataListener;
-import com.george.memoshareapp.properties.AppProperties;
+import com.george.memoshareapp.interfaces.HuoDongImageDataListener;
+import com.george.memoshareapp.interfaces.HuodongDataListener;
+import com.george.memoshareapp.interfaces.HuodongDelListener;
 import com.george.memoshareapp.runnable.SavePhotoRunnable;
 import com.orhanobut.logger.Logger;
 import com.tencent.mmkv.MMKV;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -60,32 +61,25 @@ public class HuodongManager {
         phoneNumber = sp.getString("phoneNumber", "");
     }
 
-    public void getHuoDongListByPage(int pageNum,int pageSize,int count, OutHuodongDataListener<List<OutterActivityBean>> listener){
+    public void getHuoDongListByPage(int pageNum,int pageSize,int count, HuodongDataListener<List<InnerActivityBean>> listener){
         kv = MMKV.defaultMMKV();
         HuodongServiceApi huodongServiceApi = RetrofitManager.getInstance().create(HuodongServiceApi.class);
         Log.d(TAG, "getHuoDongListByPage: 执行到这里");
-        Call<HttpListData<OutterActivityBean>> call = huodongServiceApi.getActivitys(pageNum, pageSize);
-        call.enqueue(new Callback<HttpListData<OutterActivityBean>>() {
+        Call<HttpListData<InnerActivityBean>> call = huodongServiceApi.getActivitys(pageNum, pageSize);
+        call.enqueue(new Callback<HttpListData<InnerActivityBean>>() {
             @Override
-            public void onResponse(Call<HttpListData<OutterActivityBean>> call, Response<HttpListData<OutterActivityBean>> response) {
+            public void onResponse(Call<HttpListData<InnerActivityBean>> call, Response<HttpListData<InnerActivityBean>> response) {
                 if (response.isSuccessful()) {
                     Log.d(TAG, "onResponse: 执行到success中的Success");
-                    HttpListData<OutterActivityBean> outterActivityListData = response.body();
+                    HttpListData<InnerActivityBean> outterActivityListData = response.body();
                     Log.d(TAG, "onResponse: isLastPage: "+String.valueOf(outterActivityListData.isLastPage()));
-                    List<OutterActivityBean> activityBeans = outterActivityListData.getItems();
-                    for (OutterActivityBean outterActivityBean:activityBeans){//每次只返回分页的数据，还是返回分页以及以前的数据
-                        String key = "activity_position_"+outterActivityBean.getActivity_id();
+                    List<InnerActivityBean> activityBeans = outterActivityListData.getItems();
+                    for (InnerActivityBean outterActivityBean:activityBeans){//每次只返回分页的数据，还是返回分页以及以前的数据
+                        String key = "activity_position_"+outterActivityBean.getActivityId();
                         int index = activityBeans.indexOf(outterActivityBean);
                         if(count > 0){
                             index += count;
                             kv.encode(key, index);
-//                            int nowIndex = activityBeans.indexOf(outterActivityBean);
-//                            String photoCachePath = outterActivityBean.getFirstImagePath();
-//                            String avatarCachePath = outterActivityBean.getHeadPortraitPath();
-//                            String photoDetailPath = AppProperties.SERVER_MEDIA_URL + photoCachePath;
-//                            String avatarDetailPath = AppProperties.SERVER_MEDIA_URL + avatarCachePath;
-//                            activityBeans.get(nowIndex).setFirstImagePath(photoDetailPath);
-//                            activityBeans.get(nowIndex).setHeadPortraitPath(avatarDetailPath);
                         }
                     }
                     outterActivityListData.setItems(activityBeans);
@@ -97,9 +91,106 @@ public class HuodongManager {
             }
 
             @Override
-            public void onFailure(Call<HttpListData<OutterActivityBean>> call, Throwable t) {
+            public void onFailure(Call<HttpListData<InnerActivityBean>> call, Throwable t) {
                 Log.d(TAG, "onResponse: 执行到error中的Error");
                 listener.onLoadError(t.getMessage());
+            }
+        });
+    }
+
+    public void getPersonalHuoDongListByPage(String phoneNumber,int pageNum,int pageSize,int count, HuodongDataListener<List<InnerActivityBean>> listener){
+        kv = MMKV.defaultMMKV();
+        HuodongServiceApi huodongServiceApi = RetrofitManager.getInstance().create(HuodongServiceApi.class);
+        Log.d(TAG, "getHuoDongListByPage: 执行到这里");
+        Call<HttpListData<InnerActivityBean>> call = huodongServiceApi.getPersonalActivitys(phoneNumber,pageNum, pageSize);
+        call.enqueue(new Callback<HttpListData<InnerActivityBean>>() {
+            @Override
+            public void onResponse(Call<HttpListData<InnerActivityBean>> call, Response<HttpListData<InnerActivityBean>> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "onResponse: 执行到success中的Success");
+                    HttpListData<InnerActivityBean> outterActivityListData = response.body();
+                    Log.d(TAG, "onResponse: isLastPage: "+String.valueOf(outterActivityListData.isLastPage()));
+                    List<InnerActivityBean> activityBeans = outterActivityListData.getItems();
+                    for (InnerActivityBean outterActivityBean:activityBeans){//每次只返回分页的数据，还是返回分页以及以前的数据
+                        String key = "activity_position_"+outterActivityBean.getActivityId();
+                        int index = activityBeans.indexOf(outterActivityBean);
+                        if(count > 0){
+                            index += count;
+                            kv.encode(key, index);
+                        }
+                    }
+                    outterActivityListData.setItems(activityBeans);
+                    listener.onLoadSuccess(outterActivityListData,"活动");
+                }else {
+                    Log.d(TAG, "onResponse: 执行到success中的Error");
+                    listener.onLoadError("Huodong Request failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpListData<InnerActivityBean>> call, Throwable t) {
+                Log.d(TAG, "onResponse: 执行到error中的Error");
+                listener.onLoadError(t.getMessage());
+            }
+        });
+    }
+
+    public void getInnerHuoDongListByPage(int followId,int pageNum,int pageSize,int count, HuodongDataListener<List<InnerActivityBean>> listener){
+        kv = MMKV.defaultMMKV();
+        HuodongServiceApi huodongServiceApi = RetrofitManager.getInstance().create(HuodongServiceApi.class);
+        Log.d(TAG, "getHuoDongListByPage: 执行到这里");
+        Call<HttpListData<InnerActivityBean>> call = huodongServiceApi.getInnerActivitys(followId,pageNum, pageSize);
+        call.enqueue(new Callback<HttpListData<InnerActivityBean>>() {
+            @Override
+            public void onResponse(Call<HttpListData<InnerActivityBean>> call, Response<HttpListData<InnerActivityBean>> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "onResponse: 执行到success中的Success");
+                    HttpListData<InnerActivityBean> outterActivityListData = response.body();
+                    Log.d(TAG, "onResponse: isLastPage: "+String.valueOf(outterActivityListData.isLastPage()));
+                    List<InnerActivityBean> activityBeans = outterActivityListData.getItems();
+                    for (InnerActivityBean outterActivityBean:activityBeans){//每次只返回分页的数据，还是返回分页以及以前的数据
+                        String key = "activity_position_"+outterActivityBean.getActivityId();
+                        int index = activityBeans.indexOf(outterActivityBean);
+                        if(count > 0){
+                            index += count;
+                            kv.encode(key, index);
+                        }
+                    }
+                    outterActivityListData.setItems(activityBeans);
+                    listener.onLoadSuccess(outterActivityListData,"活动");
+                }else {
+                    Log.d(TAG, "onResponse: 执行到success中的Error");
+                    listener.onLoadError("Huodong Request failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpListData<InnerActivityBean>> call, Throwable t) {
+                Log.d(TAG, "onResponse: 执行到error中的Error");
+                listener.onLoadError(t.getMessage());
+            }
+        });
+    }
+
+    public void getImagesByActivityId(int activityId, HuoDongImageDataListener listener) {
+        HuodongServiceApi huodongServiceApi = RetrofitManager.getInstance().create(HuodongServiceApi.class);
+        Call<List<String>> call = huodongServiceApi.getImagesById(activityId);
+
+        call.enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                if (response.isSuccessful()) {
+                    listener.onImageLoadSuccess(response.body());
+                    Log.d(TAG, "onResponse: ImageName: " + response.body().toString());
+                } else {
+                    listener.onImageLoadFailed();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<String>> call, Throwable t) {
+                Log.d(TAG, "onResponse: 执行到error中的Error");
+                listener.onImageLoadFailed();
             }
         });
     }
@@ -180,20 +271,19 @@ public class HuodongManager {
         HuodongServiceApi huodongServiceApi = RetrofitManager.getInstance().create(HuodongServiceApi.class);
         Call<ResponseBody> call = huodongServiceApi.publishActivity(files,fields);
         call.enqueue(new Callback<ResponseBody>() {
-
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 loadingDialog.endAnim();
                 loadingDialog.dismiss();
                 if (response.isSuccessful()) {
                     Toasty.info(context, "活动发布成功", Toast.LENGTH_SHORT, true).show();
+                    EventBus.getDefault().post(new UpdateEvent());
+                    ((AddHuoDongActivity)context).finish();
                 } else {
                     Toasty.info(context, "活动发布失败，请重试", Toast.LENGTH_SHORT, true).show();
 //                    Logger.d("Upload upload fail");
                 }
-                ((AddHuoDongActivity)context).finish();
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Logger.d("Upload upload fail" + t.getMessage());
@@ -228,4 +318,33 @@ public class HuodongManager {
         return RequestBody.create(MediaType.parse("text/plain"), value);
     }
 
+    public void delPersonalHuoDongs(List<Integer> delList , HuodongDelListener huodongDelListener) {
+        LoadingDialog loadingDialog = new LoadingDialog(context);
+        loadingDialog.show();
+        HuodongServiceApi huodongServiceApi = RetrofitManager.getInstance().create(HuodongServiceApi.class);
+        Call<ResponseBody> call = huodongServiceApi.deletePersonalHuoDong(delList);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
+                if (response.isSuccessful()) {
+                    Toasty.info(context, "活动删除成功", Toast.LENGTH_SHORT, true).show();
+                    huodongDelListener.onDeleteResult(true);
+                } else {
+                    Toasty.info(context, "活动删除失败，请重试", Toast.LENGTH_SHORT, true).show();
+                    huodongDelListener.onDeleteResult(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
+                Toasty.info(context, "发生错误，请重试：" + t.getMessage(), Toast.LENGTH_SHORT, true).show();
+                huodongDelListener.onDeleteResult(false);
+            }
+        });
+
+    }
 }
