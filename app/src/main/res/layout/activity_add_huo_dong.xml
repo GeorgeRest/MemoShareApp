@@ -84,6 +84,37 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_tag_zone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/add_huodong_item_bg"
+            android:padding="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="活动标签"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_huodong_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"
+                android:maxLines="2"
+                android:text="无标签"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
             android:id="@+id/tv_publish"
             android:layout_width="match_parent"

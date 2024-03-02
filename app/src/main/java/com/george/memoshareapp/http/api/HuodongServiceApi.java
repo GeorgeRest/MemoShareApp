@@ -1,7 +1,7 @@
 package com.george.memoshareapp.http.api;
 
+import com.george.memoshareapp.beans.Danmu;
 import com.george.memoshareapp.beans.InnerActivityBean;
-import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.http.response.HttpListData;
 
 import java.util.List;
@@ -11,7 +11,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -40,5 +39,19 @@ public interface HuodongServiceApi {
 
     @GET("api/deleteActivitys")
     Call<ResponseBody> deletePersonalHuoDong(@Query("activityIds") List<Integer> activityIds);
+
+    @Multipart
+    @POST("api/uploadDanmu")
+    Call<ResponseBody> uploadDanmu(@PartMap Map<String, RequestBody> fields);
+
+    @GET("api/getDanmus")
+    Call<List<Danmu>> getDanmuList(@Query("activityId")int activityId);
+    @GET("api/getHuoDonglike")
+    Call<Boolean> getLikeByActivityId(@Query("activityId")int activityId,@Query("phoneNumber")String phoneNumber);
+    @GET("api/updateHuoDonglikestate")
+    Call<Boolean> updataLikeState(@Query("activityId")int activityId,@Query("phoneNumber")String phoneNumber);
+
+//    @POST("api/uploadDanmu")
+//    Call<String> uploadDanmu(@Field("userId") String userId, @Field("content") String content, @Field("activityId") int activityId);
 
 }

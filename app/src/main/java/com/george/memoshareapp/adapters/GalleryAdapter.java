@@ -69,9 +69,9 @@ public class GalleryAdapter extends BaseAdapter {
 
 
         if(selectItem == position){
-            imageView.setLayoutParams(new Gallery.LayoutParams(140, 210));
+            imageView.setLayoutParams(new Gallery.LayoutParams(180, 250));
         }else {
-            imageView.setLayoutParams(new Gallery.LayoutParams(80, 120));
+            imageView.setLayoutParams(new Gallery.LayoutParams(120, 180));
         }
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 

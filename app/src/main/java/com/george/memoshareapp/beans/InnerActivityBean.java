@@ -18,6 +18,15 @@ public class InnerActivityBean implements Serializable {
     private String firstImagePath;
     private String publishedTime;
 
+    private String tag;
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 
     public InnerActivityBean(String name, String headPortraitPath, String firstImagePath, String publishedText, int id, String location, String publishedTime, double longitude, double latitude) {
         this.name = name;
@@ -102,5 +111,13 @@ public class InnerActivityBean implements Serializable {
 
     public void setPublishedTime(String publishedTime) {
         this.publishedTime = publishedTime;
+    }
+
+    public int getLike() {
+        return like;
+    }
+
+    public void setLike(int like) {
+        this.like = like;
     }
 }

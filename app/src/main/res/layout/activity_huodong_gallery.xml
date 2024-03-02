@@ -4,13 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.HuodongGalleryActivity">
-
+    tools:context=".activities.HuodongGalleryActivity"
+    android:background="@drawable/activitys_bg">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/iv_activity_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/gallery_activity_back"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="15dp"/>
+
+    <ImageView
+        android:id="@+id/iv_left"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/gallery_activity_left"
+        android:layout_marginLeft="5dp"/>
+
+    <ImageView
+        android:id="@+id/iv_right"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/gallery_activity_right"
+        android:layout_marginRight="5dp"/>
 
 
 <!--    <ImageView-->
@@ -26,11 +51,12 @@
     <Gallery
         android:id="@+id/gallery_activitys"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:gravity="center_vertical"
         android:layout_alignParentBottom="true"
         android:clickable="false"
-        android:spacing="5dp"/>
+        android:spacing="5dp"
+        android:layout_marginBottom="20dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add_activity"
@@ -45,7 +71,7 @@
         app:rippleColor="#04DDFA"
         android:backgroundTint="@color/white"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="40dp"
         android:contentDescription="点此发布活动，记录精彩瞬间"
         android:src="@drawable/iv_activity_add"/>
 

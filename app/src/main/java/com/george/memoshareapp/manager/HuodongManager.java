@@ -13,14 +13,17 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import com.george.memoshareapp.activities.AddHuoDongActivity;
+import com.george.memoshareapp.beans.Danmu;
 import com.george.memoshareapp.beans.InnerActivityBean;
 import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.events.UpdateEvent;
 import com.george.memoshareapp.http.api.HuodongServiceApi;
 import com.george.memoshareapp.http.response.HttpListData;
+import com.george.memoshareapp.interfaces.DanmuUploadListener;
 import com.george.memoshareapp.interfaces.HuoDongImageDataListener;
 import com.george.memoshareapp.interfaces.HuodongDataListener;
 import com.george.memoshareapp.interfaces.HuodongDelListener;
+import com.george.memoshareapp.interfaces.HuodongLikeListener;
 import com.george.memoshareapp.runnable.SavePhotoRunnable;
 import com.orhanobut.logger.Logger;
 import com.tencent.mmkv.MMKV;
@@ -96,6 +99,37 @@ public class HuodongManager {
                 listener.onLoadError(t.getMessage());
             }
         });
+    }
+
+    public void uploadDanmu(int activityId, String content, String userId, DanmuUploadListener listener){
+        HuodongServiceApi huodongServiceApi = RetrofitManager.getInstance().create(HuodongServiceApi.class);
+
+        Map<String, RequestBody> fields = new HashMap<>();
+        fields.put("userId", toRequestBody(userId));
+        fields.put("content", toRequestBody(content));
+        fields.put("activityId", toRequestBody(String.valueOf(activityId)));
+
+        Call<ResponseBody> call = huodongServiceApi.uploadDanmu(fields);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    if(listener != null){
+                        listener.danmuUploadSuccess(content);
+                    }
+                }else {
+                    if(listener != null){
+                        listener.danmuUploadFail("fail");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+
     }
 
     public void getPersonalHuoDongListByPage(String phoneNumber,int pageNum,int pageSize,int count, HuodongDataListener<List<InnerActivityBean>> listener){
@@ -196,7 +230,7 @@ public class HuodongManager {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void uploadHuodong(Context context, List<Uri> activityImagePaths, String phoneNumber, String activityPublishContent, String location, double longitude, double latitude, Date publishedDate , boolean isFollowing , int followId){
+    public void uploadHuodong(Context context, List<Uri> activityImagePaths, String phoneNumber, String activityPublishContent, String location, double longitude, double latitude, Date publishedDate , boolean isFollowing , int followId,String tag){
         Uri uri;
         String uriStringPath;
         File file;
@@ -260,6 +294,7 @@ public class HuodongManager {
         fields.put("publishedTime", toRequestBody(dateTimeString));
         fields.put("isFollowing", toRequestBody(String.valueOf(isFollowing)));
         fields.put("followId", toRequestBody(String.valueOf(followId)));
+        fields.put("tag", toRequestBody(tag));
         List<MultipartBody.Part> files = new ArrayList<>();
         for (File mediaFile : MediaFileList) {
             RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), mediaFile);
@@ -345,6 +380,87 @@ public class HuodongManager {
                 huodongDelListener.onDeleteResult(false);
             }
         });
+
+    }
+
+    public void getDanmuList(int activityId,DanmuLoadListener danmuLoadListener) {
+
+        HuodongServiceApi huodongServiceApi = RetrofitManager.getInstance().create(HuodongServiceApi.class);
+        Call<List<Danmu>> call = huodongServiceApi.getDanmuList(activityId);
+        call.enqueue(new Callback<List<Danmu>>() {
+            @Override
+            public void onResponse(Call<List<Danmu>> call, Response<List<Danmu>> response) {
+                if(response.isSuccessful()){
+                    List<Danmu> danmuList = response.body();
+                    if(danmuLoadListener != null){
+                        for(Danmu danmu : danmuList){
+                            Log.d("zxtextdanmu1", "onResponse: danmu : "+danmu.toString());
+                        }
+                        danmuLoadListener.onDanmuListLoadSuccess(danmuList);
+                    }
+                }else {
+                    if(danmuLoadListener != null){
+                        danmuLoadListener.onDanmuListLoadFail("fail");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Danmu>> call, Throwable t) {
+                if(danmuLoadListener != null){
+                    danmuLoadListener.onDanmuListLoadFail(t.getMessage());
+                }
+            }
+        });
+
+    }
+
+    public void getLikeByActivityId(int activityId,String phoneNumber, HuodongLikeListener huodongLikeListener) {
+        HuodongServiceApi huodongServiceApi = RetrofitManager.getInstance().create(HuodongServiceApi.class);
+        huodongServiceApi.getLikeByActivityId(activityId,phoneNumber).enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if(huodongLikeListener != null){
+                    if(response.isSuccessful()){
+                        huodongLikeListener.onLikeSuccess(response.body());
+                    }else {
+                        huodongLikeListener.onLikeFail("fail");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                if (huodongLikeListener != null){
+                    huodongLikeListener.onLikeFail(t.getMessage());
+                }
+            }
+        });
+
+    }
+
+    public void updateLikeState(int activityId,String phoneNumber, HuodongLikeListener huodongLikeListener) {
+        HuodongServiceApi huodongServiceApi = RetrofitManager.getInstance().create(HuodongServiceApi.class);
+        huodongServiceApi.updataLikeState(activityId,phoneNumber).enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if(huodongLikeListener != null){
+                    if(response.isSuccessful()){
+                        huodongLikeListener.onLikeSuccess(response.body());
+                    }else {
+                        huodongLikeListener.onLikeFail("fail");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                if (huodongLikeListener != null){
+                    huodongLikeListener.onLikeFail(t.getMessage());
+                }
+            }
+        });
+
 
     }
 }

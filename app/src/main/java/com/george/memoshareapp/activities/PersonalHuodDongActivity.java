@@ -178,22 +178,17 @@ public class PersonalHuodDongActivity extends AppCompatActivity implements Huodo
                 @Override
                 public void onSelectClick(boolean isSelected, int position, int huoDongId) {
                     Boolean check = mapList.get(position).get(huoDongId);
-//                    Toasty.info(PersonalHuodDongActivity.this, "点击， check = " + check + "; isSelected = " + isSelected).show();
                     if (check != isSelected) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            Boolean replace = mapList.get(position).replace(huoDongId, isSelected);
-                            Log.d("zxtest02", "onSelectClick: mapList.get(position) = " + mapList.get(position).toString());
+                            mapList.get(position).replace(huoDongId, isSelected);
                         }
                         if(isSelected){
                             delList.add(huoDongId);
                         }else {
                             delList.remove(delList.indexOf(huoDongId));
                         }
-                        Log.d("zxtest02", "onSelectClick: "+"isSelected = "  + (isSelected ? "选中" : "取消") + "\nposition = " + position + "\nhuoDongId = " + huoDongId);
                         huoDongAdapter.notifyItemRangeChanged(0,huoDongAdapter.getItemCount());
-//                        Toasty.info(PersonalHuodDongActivity.this,"你选中了"+position+"项，其中有:"+delList+"这些内容" + "\nmapList.size = " + mapList.size()).show();
                     }
-
                 }
             });
 

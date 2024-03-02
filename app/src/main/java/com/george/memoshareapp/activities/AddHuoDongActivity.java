@@ -60,6 +60,10 @@ public class AddHuoDongActivity extends AppCompatActivity {
     private TextView tv_add_huodong_title;
     private int followId;
     private ConstraintLayout cl_loc_zone;
+    private ConstraintLayout cl_tag_zone;
+    public static final int TAG_REQUES_CODE = 5;
+    private String tagResult = "";
+    private TextView tv_huodong_tag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +191,28 @@ public class AddHuoDongActivity extends AppCompatActivity {
         imageUriList = new ArrayList<>();
         adapter = new AddActivityPicAdapter(this,imageUriList);
         rcy_activity_pic.setAdapter(adapter);
+        tv_huodong_tag = (TextView) findViewById(R.id.tv_huodong_tag);
+
+        cl_tag_zone = (ConstraintLayout) findViewById(R.id.cl_tag_zone);
+
+        cl_tag_zone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(AddHuoDongActivity.this, TageActivity.class);
+                startActivityForResult(intent, TAG_REQUES_CODE);
+            }
+        });
+        cl_loc_zone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(AddHuoDongActivity.this, MapLocationActivity.class);
+                startActivityForResult(intent, 1);
+
+            }
+        });
+
         rcy_activity_pic.setLayoutManager(new GridLayoutManager(this,3,GridLayoutManager.VERTICAL,false));
         adapter.setOnDelPicClickListener(new OnDelPicClickListener() {
             @Override
@@ -206,7 +232,7 @@ public class AddHuoDongActivity extends AppCompatActivity {
                 Date date = new Date(System.currentTimeMillis());
                 Log.d(TAG, "onClick: imageUriList" + imageUriList.size());
                 huodongManager.uploadHuodong(AddHuoDongActivity.this,imageUriList,phoneNumber,et_huodong_content.getText().toString().trim(),
-                        location == null || location.isEmpty() ? "非洲阿拉巴马州" : location,longtitude, latitude,date,isFollowing,followId);
+                        location == null || location.isEmpty() ? "非洲阿拉巴马州" : location,longtitude, latitude,date,isFollowing,followId,tagResult);
             }
         });
 
@@ -235,7 +261,16 @@ public class AddHuoDongActivity extends AppCompatActivity {
                         longtitude = post.getLongitude();
                         location = post.getLocation();
                         tv_location.setText(location);
-//                        Log.d(TAG, "onActivityResult: ");
+                        break;
+                    case TAG_REQUES_CODE:
+                        if(data != null){
+                            tagResult = data.getStringExtra("tagResult");
+                            if(tagResult.isEmpty()){
+                                tv_huodong_tag.setText("无标签");
+                            }else {
+                                tv_huodong_tag.setText(tagResult);
+                            }
+                        }
                         break;
                 }
                 break;

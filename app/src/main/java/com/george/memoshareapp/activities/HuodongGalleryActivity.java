@@ -131,6 +131,14 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
 
     private void initView() {
 
+        ImageView iv_back = (ImageView) findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         view_pager_activity = (ViewPager2) findViewById(R.id.iv_activity_image);
 //        iv_activity_image.setImageResource(images[0]);//测试
 

@@ -9,9 +9,13 @@ import android.widget.LinearLayout;
 import com.george.memoshareapp.R;
 import com.just.agentweb.AgentWeb;
 
+import es.dmoral.toasty.Toasty;
+
 public class WebSearchActivity extends AppCompatActivity {
 
     private AgentWeb agentWeb;
+    private static String uri = "https://www.baidu.com/s?wd=" ;
+    private static String errorToast = "搜索内容获取失败，请于跳转后手动搜索" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,16 +23,22 @@ public class WebSearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_web_search);
 
         Intent intent = getIntent();
-        String searchcontent = intent.getStringExtra("searchcontent");
+        String searchContent = intent.getStringExtra("searchcontent");
 
         LinearLayout ll_web_search_root = (LinearLayout) findViewById(R.id.ll_web_search_root);
 
+        if(searchContent == null || searchContent.equals("")){
+            Toasty.info(this,errorToast);
+        }
+        searchContent = searchContent == null || searchContent.equals("") ? "" : searchContent;
+
         agentWeb = AgentWeb.with(this)
-                .setAgentWebParent(ll_web_search_root, new LinearLayout.LayoutParams(-1, -1))
+                .setAgentWebParent(ll_web_search_root,
+                        new LinearLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
                 .createAgentWeb()
                 .ready()
-                .go("https://www.baidu.com/s?wd=" + searchcontent);
+                .go(uri + searchContent);
 
     }
 
