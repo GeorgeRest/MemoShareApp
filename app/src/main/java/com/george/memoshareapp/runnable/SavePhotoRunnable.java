@@ -22,7 +22,8 @@ public class SavePhotoRunnable implements Runnable {
     private final Handler handler;
     private final File photoFolder;
     private final File file;
-    private final Uri uri;
+    private  Uri uri;
+    private String uriPath;
     private List<Uri> photoPath;
     private Context context;
     private String photoAbsolutePath;
@@ -37,6 +38,14 @@ public class SavePhotoRunnable implements Runnable {
         this.photoFolder = photoFolder;
         this.file = file;
         this.uri = uri;
+    }
+    public SavePhotoRunnable(String uri, File file, File photoFolder, List<String> photoPath, Context context) {
+        handler = new Handler();
+        this.context = context;
+        this.photoPathList = photoPath;
+        this.photoFolder = photoFolder;
+        this.file = file;
+        this.uriPath = uri;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

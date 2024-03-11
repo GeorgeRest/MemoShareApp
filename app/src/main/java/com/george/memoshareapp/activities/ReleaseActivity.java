@@ -180,48 +180,36 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
     public void showDatePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
-        // 直接创建一个DatePickerDialog对话框实例，并将它显示出来
         new DatePickerDialog(activity, themeResId, new DatePickerDialog.OnDateSetListener() {
-            // 绑定监听器(How the parent is notified that the date is set.)
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                // 此处得到选择的时间，可以进行你想要的操作
                 getYearMonthDay(year, monthOfYear + 1, dayOfMonth);
                 tv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
-
-                showTimePickerDialog(ReleaseActivity.this, StyleType, release_time_hour, calendar);
-
-            }
-        }, calendar.get(Calendar.YEAR)
-                , calendar.get(Calendar.MONTH)
-                , calendar.get(Calendar.DAY_OF_MONTH)).show();
+                showTimePickerDialog(ReleaseActivity.this, StyleType, release_time_hour, calendar);}
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    private String getYearMonthDay(int year, int month, int dayOfMonth) {
+    public String getYearMonthDay(int year, int month, int dayOfMonth) {
         memoireTimeYear = year + "/" + month + "/" + dayOfMonth;
         return memoireTimeYear;
 
     }
 
     public void showTimePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
-        // Calendar c = Calendar.getInstance();
-        // 创建一个TimePickerDialog实例，并把它显示出来
-        // Activity是context的子类
         new TimePickerDialog(activity, themeResId,
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         getTime(hourOfDay, minute);
                         tv.setText(hourOfDay + ":" + minute);
-
                     }
                 }
-                // 设置初始时间
                 , calendar.get(Calendar.HOUR_OF_DAY)
                 , calendar.get(Calendar.MINUTE)
-                // true表示采用24小时制
                 , true).show();
-    }
+    }// Calendar c = Calendar.getInstance();
+    // 创建一个TimePickerDialog实例，并把它显示出来
+    // Activity是context的子类 // 设置初始时间// true表示采用24小时制
 
     private String getTime(int hourOfDay, int minute) {
         timeHourMinute = hourOfDay + ":" + minute;

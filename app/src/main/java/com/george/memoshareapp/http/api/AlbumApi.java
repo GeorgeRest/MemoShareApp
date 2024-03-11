@@ -15,4 +15,5 @@ public interface AlbumApi {
     Call<HttpData<Album>> saveAlbum(@Body Album album);
     @POST("album/savePhotoInAlbum")
     Call<HttpData<PhotoInAlbum>> savePhotoInAlbum(@Body List<PhotoInAlbum> photoInAlbumList);
+
 }

@@ -2,6 +2,7 @@ package com.george.memoshareapp.Fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
@@ -278,8 +280,28 @@ public class CalendarTripFragment extends Fragment implements
         dialog.findViewById(R.id.tv_pc_public).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    Intent intent = new Intent(getContext(), CreatedAlbumActivity.class);
-                startActivity(intent);
+
+                AlertDialog innerDialog = new AlertDialog.Builder(getContext())
+                        .setMessage("确定要新建一个相册么？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 点击确定按钮后执行的操作
+                                Intent intent = new Intent(getContext(), CreatedAlbumActivity.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 点击取消按钮后执行的操作
+                                dialog.dismiss();
+                            }
+                        })
+                        .create();
+
+                // 显示内部对话框
+                innerDialog.show();
 
                 dialog.dismiss();
             }

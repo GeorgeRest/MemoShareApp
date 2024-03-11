@@ -217,8 +217,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     transaction.show(CodeFragment);
                 }
                 break;
-
-
         }
         transaction.commit();
     }

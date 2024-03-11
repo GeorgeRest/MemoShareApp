@@ -12,7 +12,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.george.memoshareapp.activities.ReleaseActivity;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
@@ -23,8 +22,6 @@ import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.events.ScrollToTopEvent;
 import com.george.memoshareapp.http.api.PostServiceApi;
-import com.george.memoshareapp.http.response.HttpListData;
-import com.george.memoshareapp.interfaces.PostDataListener;
 import com.george.memoshareapp.runnable.SavePhotoRunnable;
 import com.george.memoshareapp.utils.ImageUtil;
 import com.google.gson.Gson;
@@ -32,7 +29,6 @@ import com.orhanobut.logger.Logger;
 import com.tencent.mmkv.MMKV;
 
 import org.greenrobot.eventbus.EventBus;
-import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -181,6 +177,8 @@ public class PostManager {
         fields.put("contacts", toRequestBody(new Gson().toJson(contactPhoneNumberList)));
         fields.put("imageParameters", toRequestBody(new Gson().toJson(imageParametersList)));
         fields.put("recordings", toRequestBody(new Gson().toJson(record)));
+
+
 
         PostServiceApi postServiceApi = RetrofitManager.getInstance().create(PostServiceApi.class);
         Call<ResponseBody> call = postServiceApi.publishData(files, fields);

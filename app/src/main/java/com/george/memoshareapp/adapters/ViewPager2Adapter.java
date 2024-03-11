@@ -1,9 +1,11 @@
 package com.george.memoshareapp.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,10 +17,12 @@ import java.util.List;
 
 public class ViewPager2Adapter extends RecyclerView.Adapter<ViewPager2Adapter.ViewHolder> {
     private List<String> mData;
+    private Context context;
 
 
-    public ViewPager2Adapter(List<String> photoPath) {
+    public ViewPager2Adapter(List<String> photoPath,Context context) {
         mData = photoPath;
+        this.context=context;
     }
 
 
@@ -35,6 +39,10 @@ public class ViewPager2Adapter extends RecyclerView.Adapter<ViewPager2Adapter.Vi
         Glide.with(holder.imageView.getContext())
                 .load(imagePath)
                 .into(holder.imageView);
+        if (position == 0) {
+            Toast.makeText(context, "请横划查看照片", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override

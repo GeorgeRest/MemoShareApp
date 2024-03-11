@@ -1,10 +1,12 @@
 package com.george.memoshareapp.adapters;
 
+import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,10 +18,12 @@ import java.util.List;
 
 public class UriViewPager2Adapter extends RecyclerView.Adapter<UriViewPager2Adapter.ViewHolder> {
     private List<Uri> mData;
+    private Context context;
 
 
-    public UriViewPager2Adapter(List<Uri> photoPath) {
+    public UriViewPager2Adapter(List<Uri> photoPath,Context context) {
         mData = photoPath;
+        this.context=context;
     }
     @NonNull
     @Override
@@ -34,6 +38,10 @@ public class UriViewPager2Adapter extends RecyclerView.Adapter<UriViewPager2Adap
         Glide.with(holder.imageView.getContext())
                 .load(uri)
                 .into(holder.imageView);
+        if (position == mData.size() - 1) {
+            Toast.makeText(context, "已滑动到最后一张", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 

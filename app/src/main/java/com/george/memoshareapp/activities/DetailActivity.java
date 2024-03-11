@@ -189,8 +189,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void putParameter2View() {
-
-
         postUser = post.getUser().get(0);
         userName.setText(postUser.getName());
         if(postUser.getHeadPortraitPath()!=null){
@@ -201,16 +199,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         }else{
             userIcon.setImageResource(R.mipmap.app_icon);
         }
-
         publishTime.setText(DateFormat.getCurrentDateTime(post.getPublishedTime()));
-
         location.setText(post.getLocation());
         content.setText(post.getPublishedText());
         imageParameters = post.getImageParameters();
-
         displayManager.showPhoto(recyclerView, imageParameters, DetailActivity.this);
-
-
     }
 
 

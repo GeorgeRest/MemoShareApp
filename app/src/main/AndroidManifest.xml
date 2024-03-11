@@ -46,9 +46,7 @@
         <activity
             android:name=".activities.CoverPhotoSelectionActivity"
             android:exported="false" />
-        <activity
-            android:name=".activities.ChoosePhotoActivity2"
-            android:exported="false" />
+
         <activity
             android:name=".activities.CreatedAlbumActivity"
             android:exported="false" />

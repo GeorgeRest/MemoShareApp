@@ -1,9 +1,13 @@
 package com.george.memoshareapp.activities;
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -31,6 +35,7 @@ import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.interfaces.OnResultCallbackListener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +52,7 @@ public class CreatedAlbumActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_SELECT_COVER_PHOTO = 102;
     private UriListDialog uriListDialog;
     private SharedPreferences sharedPreferences;
+    private String realFilePathFromUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +112,7 @@ public class CreatedAlbumActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(album_name.getText().toString())){
-                    Toast.makeText(CreatedAlbumActivity.this, "请选择一张作为相册封面", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreatedAlbumActivity.this, "请选择一张作为相册封面", Toast.LENGTH_SHORT).show();
                     setAlbumFirstPhoto();//设置封皮
                 }else {
                     Toast.makeText(CreatedAlbumActivity.this, "请填入相册名称", Toast.LENGTH_SHORT).show();
@@ -137,8 +143,53 @@ public class CreatedAlbumActivity extends AppCompatActivity {
         String albumDescription = description.getText().toString();
 
         AlbumManager albumManager = new AlbumManager(this);
-        albumManager.saveAlbumAndPhoto2DB(phoneNumber,albumName,albumDescription,uriPathList,uri);
+        List<String> AlbumRealPathName = new ArrayList<>();
+        List<String> AlbumRealPath = new ArrayList<>();
+        for (int i = 0; i < uriPathList.size(); i++) {
+            realFilePathFromUri = getRealFilePathFromUri(this, uriPathList.get(i));
+            AlbumRealPath.add(realFilePathFromUri);
+            String filePath = realFilePathFromUri;
+            File file = new File(filePath);
+            String fileName = file.getName();
+            AlbumRealPathName.add(fileName);
+        }
+        //System.out.println("111111111"+AlbumRealPath);
+        String realFilePathFirstPhoto = getRealFilePathFromUri(this, uri);
+        String firstPhotoFilePath = realFilePathFirstPhoto;
+        File firstPhotoFile = new File(firstPhotoFilePath);
+        String firstPhotoFileName = firstPhotoFile.getName();
+        albumManager.saveAlbumAndPhoto2DB(AlbumRealPath,phoneNumber,albumName,albumDescription,AlbumRealPathName,firstPhotoFileName);
+        //System.out.println("000000000000000"+"电话号："+phoneNumber+"选择的照片"+AlbumRealPath+"相册名称："+albumName+"相册描述："+albumDescription+"封面照片："+firstPhotoFileName);
+        // 000000000000000电话号：15242089476选择的照片[Screenshot_20240308_175558_com.ss.android.ugc.aweme.jpg, IMG_20240308_210653.jpg]相册名称：哈哈哈相册描述：okok封面照片：IMG_20240308_210653.jpg
+    }
 
+
+    /**
+     * 根据Uri返回文件绝对路径
+     * 兼容了file:///开头的 和 content://开头的情况
+     */
+    public static String getRealFilePathFromUri(final Context context, final Uri uri) {
+        if (null == uri) return null;
+        final String scheme = uri.getScheme();
+        String data = null;
+        if (scheme == null) {
+            data = uri.getPath();
+        }
+        else if (ContentResolver.SCHEME_FILE.equalsIgnoreCase(scheme)) {
+            data = uri.getPath();
+        } else if (ContentResolver.SCHEME_CONTENT.equalsIgnoreCase(scheme)) {
+            Cursor cursor = context.getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
+            if (null != cursor) {
+                if (cursor.moveToFirst()) {
+                    int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                    if (index > -1) {
+                        data = cursor.getString(index);
+                    }
+                }
+                cursor.close();
+            }
+        }
+        return data;
     }
 
     private void jumpToPictureSelector() {
@@ -151,22 +202,17 @@ public class CreatedAlbumActivity extends AppCompatActivity {
                 .forResult(new OnResultCallbackListener<LocalMedia>() {
                     @Override
                     public void onResult(ArrayList<LocalMedia> arrayList) {
-
                         for (int i = 0; i < arrayList.size(); i++) {
                             Uri uri = Uri.parse(arrayList.get(i).getPath());
                             uriPathList.add(uri);
-                            System.out.println("7777777777777--"+ uriPathList);
+//                            System.out.println("7777777777777--"+ uriPathList);
                         }
                         pictureAdapter.notifyDataSetChanged(); // 通知适配器数据发生了变化
-
                     }
-
                     @Override
                     public void onCancel() {
-
                     }
                 });
-
     }
 
 

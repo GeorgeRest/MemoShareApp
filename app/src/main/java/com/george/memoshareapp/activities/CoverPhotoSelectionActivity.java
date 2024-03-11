@@ -10,12 +10,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.beans.User;
 
 import java.util.ArrayList;
 
 public class CoverPhotoSelectionActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_PICK_IMAGE = 101;
     private TextView ok;
+    private ArrayList<Parcelable> uriList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,11 @@ public class CoverPhotoSelectionActivity extends AppCompatActivity {
         });
         ArrayList<Parcelable> uriList = getIntent().getParcelableArrayListExtra("uriList");
 
+
+    }
+    public int getListCount(ArrayList<User> uriList){
+        int count =uriList.size();
+        return count;
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

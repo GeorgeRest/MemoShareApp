@@ -125,11 +125,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-
         initView();
-
-
-
         String headPortraitPath = sp.getString("headPortraitPath", AppProperties.DEFAULT_AVATAR);
         Glide.with(this).load(headPortraitPath).into(head_portrait);
         edit = sp.edit();
@@ -393,6 +389,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                             public void onClick(View v) {
                                 pvCustomTime.returnData();
                                 pvCustomTime.dismiss();
+                                Toast.makeText(EditProfileActivity.this, "生日设置成功~", Toast.LENGTH_SHORT).show();
                             }
                         });
                         ivCancel.setOnClickListener(new View.OnClickListener() {
@@ -479,10 +476,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 getTime2view(year, month, day);
             }
         })
-                .setDate(selectedDate)
-                .setRangDate(startDate, endDate)
+                .setDate(selectedDate).setRangDate(startDate, endDate)
                 .setLayoutRes(R.layout.pickerview_custom_lunar, new CustomListener() {
-
                     @Override
                     public void customLayout(final View v) {
                         final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
@@ -491,7 +486,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                             @Override
                             public void onClick(View v) {
                                 pvCustomLunar.returnData();
-
                                 pvCustomLunar.dismiss();
                             }
                         });
@@ -565,7 +559,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void initCustomTimePicker() {
-
         Calendar selectedDate = Calendar.getInstance();//系统当前时间
         Calendar startDate = Calendar.getInstance();
         startDate.set(2014, 1, 23);
@@ -577,12 +570,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 tv_edit_birthday.setText(getTime(date));
             }
-        })
-
-                .setDate(selectedDate)
-                .setRangDate(startDate, endDate)
+        }).setDate(selectedDate).setRangDate(startDate, endDate)
                 .setLayoutRes(R.layout.pickerview_custom_time, new CustomListener() {
-
                     @Override
                     public void customLayout(View v) {
                         final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
