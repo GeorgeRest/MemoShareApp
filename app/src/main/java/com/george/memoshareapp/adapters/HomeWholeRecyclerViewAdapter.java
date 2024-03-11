@@ -30,7 +30,6 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.activities.HomePageActivity;
 import com.george.memoshareapp.activities.NewPersonPageActivity;
-import com.george.memoshareapp.beans.ContactInfo;
 import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
@@ -41,7 +40,6 @@ import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.DateFormat;
 import com.orhanobut.logger.Logger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +57,6 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
     private boolean isLike;
     private String phoneNumber;
     private Post post;
-    private List<Post> treePosition;
     private User postUser;
 
     public HomeWholeRecyclerViewAdapter(Context context, List<Post> data) {
@@ -309,12 +306,12 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
     private void adjustLayout(ViewHolder holder, int position) {
         holder.bind(post);
-        treePosition = new DisplayManager(mContext).showMemoryTree(post.getLatitude(), post.getLongitude());
+//        treePosition = new DisplayManager(mContext).showMemoryTree(post.getLatitude(), post.getLongitude());
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) holder.cv_layout.getLayoutParams();
         layoutParams.bottomMargin = 0;
         holder.cv_layout.setLayoutParams(layoutParams);
 
-        if (treePosition != null && treePosition.size() > 0) {
+        if (post.getNearbyPosts()!=null&&post.getNearbyPosts().size() > 0) {
             setUpMemoryTree(holder, position, layoutParams);
         } else {
             holder.rl_layout.setBackgroundColor(Color.WHITE);
@@ -334,12 +331,12 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
 
     private void setUpMemoryTree(ViewHolder holder, int position, ViewGroup.MarginLayoutParams layoutParams) {
         holder.bind(post);
-        if (post.getPhoneNumber().equals(phoneNumber)) {
+//        if (post.getPhoneNumber().equals(phoneNumber)) {
             layoutParams.bottomMargin = 0;
             holder.cv_layout.setLayoutParams(layoutParams);
             holder.rl_layout.setBackgroundResource(R.drawable.cardview_bg);
             holder.rv_myself_image.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-            HomePageBottomAdapter homePageBottomAdapter = new HomePageBottomAdapter(mContext, treePosition);
+            HomePageBottomAdapter homePageBottomAdapter = new HomePageBottomAdapter(mContext, post.getNearbyPosts());
             holder.rv_myself_image.setAdapter(homePageBottomAdapter);
             holder.image_view1.setVisibility(View.VISIBLE);
             holder.image_view1.setOnClickListener(new View.OnClickListener() {
@@ -354,13 +351,13 @@ public class HomeWholeRecyclerViewAdapter extends RecyclerView.Adapter<HomeWhole
                     }
                 }
             });
-        } else {
-            holder.rl_layout.setBackgroundColor(Color.WHITE);
-            holder.image_view1.setVisibility(View.GONE);
-            holder.rv_myself_image.setVisibility(View.GONE);
-            layoutParams.bottomMargin = 5;
-            holder.cv_layout.setLayoutParams(layoutParams);
-        }
+//        } else {
+//            holder.rl_layout.setBackgroundColor(Color.WHITE);
+//            holder.image_view1.setVisibility(View.GONE);
+//            holder.rv_myself_image.setVisibility(View.GONE);
+//            layoutParams.bottomMargin = 5;
+//            holder.cv_layout.setLayoutParams(layoutParams);
+//        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

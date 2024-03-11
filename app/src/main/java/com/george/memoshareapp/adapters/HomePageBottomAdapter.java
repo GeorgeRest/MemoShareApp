@@ -3,12 +3,10 @@ package com.george.memoshareapp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,11 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
+import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.DateFormat;
-import com.scwang.smart.refresh.header.material.CircleImageView;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class HomePageBottomAdapter extends RecyclerView.Adapter<HomePageBottomAdapter.ViewHolder> {
@@ -58,6 +59,10 @@ public class HomePageBottomAdapter extends RecyclerView.Adapter<HomePageBottomAd
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailActivity.class);
+                List<ImageParameters> photoCachePath = post.getImageParameters();
+                for (ImageParameters imageParameters:photoCachePath) {
+                    imageParameters.setPhotoCachePath(AppProperties.SERVER_MEDIA_URL+imageParameters.getPhotoCachePath());
+                }
                 intent.putExtra("post", post);
                 context.startActivity(intent);
             }

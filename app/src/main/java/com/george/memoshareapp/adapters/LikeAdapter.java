@@ -16,7 +16,6 @@ import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseDifferAdapter;
-import com.chad.library.adapter.base.dragswipe.listener.DragAndSwipeDataCallback;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.beans.ImageParameters;
@@ -26,7 +25,6 @@ import com.george.memoshareapp.view.ProportionalImageView;
 import com.orhanobut.logger.Logger;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -70,7 +68,6 @@ public class LikeAdapter extends BaseDifferAdapter<Post, LikeAdapter.ViewHolder>
         String photoCachePath = imageParameters.getPhotoCachePath();
         int width = imageParameters.getWidth();
         int height = imageParameters.getHeight();
-        System.out.println("--------------width:" + width + "height:" + height);
         String title = post.getPublishedText();
         double latitude = post.getLatitude();
         double longitude = post.getLongitude();

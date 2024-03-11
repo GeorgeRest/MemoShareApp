@@ -30,8 +30,6 @@ import com.george.memoshareapp.interfaces.PostDataListener;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.SpacesItemDecoration;
 import com.orhanobut.logger.Logger;
-import com.scwang.smart.refresh.footer.ClassicsFooter;
-import com.scwang.smart.refresh.header.ClassicsHeader;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
@@ -175,25 +173,23 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                         displayManager.getLikePostsByPhoneNumber(pageNum, pageSize, phoneNumber, new LikePostDataListener<List<Post>>() {
                             @Override
                             public void onPostLikeSuccess(HttpListData<Post> data) {
-                                posts.clear(); // 清除原有数据
+                                posts.clear();
                                 List<Post> newPosts = data.getItems();
-                                // 将新数据添加到列表中
                                 posts.addAll(newPosts);
-                                // 通知 adapter 更新列表
-                                likeAdapter.notifyDataSetChanged(); // 通知整个列表数据变化，重绘视图
-                                likeSmartRefreshLayout.finishRefresh(); //结束刷新
+                                likeAdapter.notifyDataSetChanged();
+                                likeSmartRefreshLayout.finishRefresh();
 
                                 if (data.isLastPage()) {
                                     likeSmartRefreshLayout.setNoMoreData(true);
                                 } else {
                                     pageNum++;
-                                    likeSmartRefreshLayout.setNoMoreData(false); // 允许加载更多数据
+                                    likeSmartRefreshLayout.setNoMoreData(false);
                                 }
                             }
 
                             @Override
                             public void onPostLikeSuccessError(String errorMessage) {
-                                refreshlayout.finishRefresh(false); // 结束刷新，但没有收到数据
+                                refreshlayout.finishRefresh(false);
 
                             }
                         }, "点赞");

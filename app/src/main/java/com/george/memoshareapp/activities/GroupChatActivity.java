@@ -195,7 +195,6 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
             ImageMessageItem imageMessageItem = new ImageMessageItem(path, date, MultiItemEntity.SELF, selfUser);
             imageMessageItem.setFileName(media.getFileName());
             Logger.d(imageMessageItem.getFileName());
-//            multiItemEntityList.add(imageMessageItem);
             chatAdapter.addData(imageMessageItem);
             uploadFile(path, imageMessageItem);
 
@@ -210,7 +209,6 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
      */
     @Override
     public void sendContent(MultiItemEntity multiItem) {
-//        multiItemEntityList.add(multiItem);
         chatAdapter.addData(multiItem);
         chatAdapter.notifyDataSetChanged();
 
@@ -219,7 +217,6 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
                 EventBus.getDefault().post(new SendMessageEvent(new ChatMessage(Integer.parseInt(chatRoomId), selfUser.getPhoneNumber(), multiItem.getItemContent(), "文本")));
                 break;
             case MessageType.VOICE:
-                Logger.d("发送语音");
                 uploadFile(multiItem.getItemContent(), multiItem);
                 break;
             default:
@@ -314,7 +311,6 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
             return;
         }
         MultiItemEntity multiItem = null;
-
         switch (chatMessage.getMessageType()) {
             case "文本":
                 multiItem = new TextMessageItem(chatMessage.getContent(), new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getUser());
@@ -330,13 +326,11 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
                 Logger.d(RecordFilePath);
                 break;
             case "视频":
-
                 break;
             default:
                 break;
         }
         if (multiItem != null) {
-//            multiItemEntityList.add(multiItem);
             chatAdapter.addData(multiItem);
             chatAdapter.notifyDataSetChanged();
             rv_chat.scrollToPosition(chatAdapter.getData().size() - 1);

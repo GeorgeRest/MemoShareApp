@@ -27,8 +27,6 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.dmoral.toasty.Toasty;
-
 public class GroupMoreActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE_ADD_MEMBER = 1;
@@ -99,16 +97,14 @@ public class GroupMoreActivity extends AppCompatActivity {
         tv_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new XPopup.Builder(GroupMoreActivity.this)
-                        .hasBlurBg(true)
-                        .asConfirm("退出", "确定退出群聊么",
-                                new OnConfirmListener() {
-                                    @Override
-                                    public void onConfirm() {
-                                        Toasty.success(GroupMoreActivity.this, "退出成功");
-                                    }
-                                })
-                        .show();
+                new XPopup.Builder(GroupMoreActivity.this).hasBlurBg(true).asConfirm("退出", "确定退出群聊么", new OnConfirmListener() {
+                            @Override
+                            public void onConfirm() {
+                                Intent intent = new Intent(GroupMoreActivity.this, HomePageActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                startActivity(intent);
+                            }
+                        }).show();
             }
         });
 

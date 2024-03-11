@@ -47,8 +47,6 @@ public class ChatManager {
     private User selfUser;
     private ChatRoomApi chatRoomApi;
 
-    public ChatManager() {
-    }
 
     public ChatManager(Context context) {
         this.context = context;

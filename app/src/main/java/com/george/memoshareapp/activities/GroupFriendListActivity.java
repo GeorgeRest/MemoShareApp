@@ -169,7 +169,7 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
         tvCsSearch = customSearchView.findViewById(R.id.tv_cs_search);
         etSearch = customSearchView.findViewById(R.id.et_search);
         rl_text_before_layout = customSearchView.findViewById(R.id.rl_text_before_layout);
-        chatManager = new ChatManager();
+        chatManager = new ChatManager(this);
         searchLayout.addView(customSearchView);
 
         // 先初始化搜索框的可见性
@@ -273,7 +273,7 @@ public class GroupFriendListActivity extends AppCompatActivity implements Friend
                     ChatRoomRequest createdChatRoom = response.body();
                     if (createdChatRoom != null) {
                         Logger.d(TAG, createdChatRoom.toString());
-                        chatManager.saveOrUpdateChatRoomAndMember(createdChatRoom); // 保存到本地数据库
+                        chatManager.saveOrUpdateChatRoomAndMember(createdChatRoom);
                         Toasty.success(GroupFriendListActivity.this, "创建成功", Toast.LENGTH_SHORT, true).show();
                         GroupChatActivity.openGroupChatActivity(GroupFriendListActivity.this, createdChatRoom.getChatRooms().get(0).getId(), input);
                         finish();

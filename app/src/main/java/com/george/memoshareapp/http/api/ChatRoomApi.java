@@ -11,6 +11,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -30,4 +31,7 @@ public interface ChatRoomApi {
 
     @POST("chat/addChatRoomMember")
     Call<List<User>> addChatRoomMember(@Body List<ChatRoomMember> chatRoomMember);
+
+    @DELETE("chat/deleteChatRoomMember/{chatRoomId}/{userId}")
+    Call<Void> deleteChatRoomMember(@Path("chatRoomId") int chatRoomId, @Path("userId") String userId);
 }

@@ -62,8 +62,6 @@ public class EditNameActivity extends AppCompatActivity implements View.OnClickL
                 }else {
                     tv_number.setText(s.length() + "/20");
                 }
-                // 更新TextView的显示
-
                 if(s.toString().trim().length()==0){
                     tv_complete.setEnabled(false);
                     tv_complete.setTextColor(getResources().getColor(R.color.complete_normal));
@@ -73,11 +71,9 @@ public class EditNameActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
 
-
-
             @Override
-            public void afterTextChanged(Editable s) {
-                // 输入后的监听，此处不需要做任何操作
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 

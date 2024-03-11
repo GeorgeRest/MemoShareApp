@@ -1,6 +1,7 @@
 package com.george.memoshareapp.Fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class MessageFragment extends Fragment {
     private ChatManager chatManager;
     private ChatRoomListAdapter chatRoomListAdapter;
     private View view;
+    private Handler handler= new Handler();
 
     @Nullable
     @Override
@@ -48,7 +50,7 @@ public class MessageFragment extends Fragment {
         chatManager = new ChatManager(view.getContext());
         chatRoomListAdapter = new ChatRoomListAdapter(view.getContext());
         rv_chat_room_list.setAdapter(chatRoomListAdapter);
-
+        EventBus.getDefault().register(this);
         return view;
     }
 
@@ -82,4 +84,5 @@ public class MessageFragment extends Fragment {
         chatRoomListAdapter.submitList(chatRoomList);
         chatRoomListAdapter.notifyDataSetChanged();
     }
+
 }

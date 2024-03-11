@@ -140,7 +140,7 @@ public class TimeUtil {
         if (input == null || input.isEmpty()) {
             return "";
         }
-
+        input = input.split("\\.")[0];
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd");

@@ -131,10 +131,8 @@ public class MapLocationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         locationOption = new AMapLocationClientOption();
-
         locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         locationOption.setOnceLocation(true);
-
         locationClient.setLocationOption(locationOption);
         locationClient.setLocationListener(new AMapLocationListener() {
 
@@ -147,12 +145,11 @@ public class MapLocationActivity extends AppCompatActivity {
                         aMap.setMyLocationEnabled(true);
                         aMap.setMyLocationEnabled(true);
                         // 搜索周边地点
-                        searchNearbyPlaces(currentLocation)  ;
+                        searchNearbyPlaces(currentLocation);
                     }
                 }
             }
         });
-
         locationClient.startLocation();
     }
 

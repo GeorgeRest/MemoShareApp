@@ -36,6 +36,7 @@ public class Post extends LitePalSupport implements Serializable {
     private List<User> userList =new ArrayList<>();
     private List<ImageParameters> imageParameters;
     private List<User> user;
+    private List<Post> nearbyPosts;
     public Post() {
         commentBeans = new ArrayList<>();
     }
@@ -228,6 +229,14 @@ public class Post extends LitePalSupport implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, phoneNumber, publishedText, photoCachePath, recordings, contactsPhoneNumber, location, longitude, latitude, isPublic, publishedTime, memoryTime, like, share, commentBeans, userList);
+    }
+
+    public List<Post> getNearbyPosts() {
+        return nearbyPosts;
+    }
+
+    public void setNearbyPosts(List<Post> nearbyPosts) {
+        this.nearbyPosts = nearbyPosts;
     }
 
     @Override
