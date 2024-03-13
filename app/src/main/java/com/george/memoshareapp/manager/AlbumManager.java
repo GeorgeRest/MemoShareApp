@@ -1,16 +1,27 @@
 package com.george.memoshareapp.manager;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.george.memoshareapp.activities.CreatedAlbumActivity;
+import com.george.memoshareapp.adapters.AlbumAdapter;
 import com.george.memoshareapp.beans.Album;
 import com.george.memoshareapp.beans.PhotoInAlbum;
 import com.george.memoshareapp.dialog.LoadingDialog;
 import com.george.memoshareapp.http.api.AlbumApi;
 import com.george.memoshareapp.http.api.AlbumServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
+import com.george.memoshareapp.http.response.HttpListData;
+import com.george.memoshareapp.interfaces.AlbumDataListener;
 import com.orhanobut.logger.Logger;
 
 import org.litepal.LitePal;
@@ -21,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -31,6 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AlbumManager {
+    private int count=0;
     private List<File> MediaFileList = new ArrayList<>();
     private PhotoInAlbum photoInAlbum;
     private Context context;
@@ -39,11 +50,18 @@ public class AlbumManager {
     private Album album;
     private LoadingDialog loadingDialog;
     private CreatedAlbumActivity createdAlbumActivity;
+    private List<Album> albumList=new ArrayList<>();
+
+    private List<PhotoInAlbum> photoInAlbumList1=new ArrayList<>();
+    private String userPhoneNumber;
+
     public AlbumManager(Context context) {
         this.context = context;
     }
 
-    public void saveAlbumAndPhoto2DB(List<String> realPhotoPath,String phoneNumber, String albumName, String albumDescription, List<String> UriPhotoPathList, String firstPhotoUri){
+    public void saveAlbumAndPhoto2DB(List<String> realPhotoPath,String phoneNumber, String albumName, String albumDescription, List<String> PhotoRealPathName, String firstPhotoName){
+        SharedPreferences preferences = context.getSharedPreferences("User", MODE_PRIVATE);
+        userPhoneNumber = preferences.getString("phoneNumber", "");
         Date currentTime = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String formattedDate = format.format(currentTime);
@@ -51,18 +69,18 @@ public class AlbumManager {
         album.save();
         long count = LitePal.count(Album.class);
         photoInAlbumList = new ArrayList<>();
-        for (String uri:UriPhotoPathList) {//只有照片名
-            if (uri.equals(firstPhotoUri)){
-                photoInAlbum = new PhotoInAlbum(count, uri, 1);
+        for (String photoPathName:PhotoRealPathName) {//只有照片名
+            if (photoPathName.equals(firstPhotoName)){
+                photoInAlbum = new PhotoInAlbum(count, userPhoneNumber, photoPathName, 1);
             }else {
-                photoInAlbum= new PhotoInAlbum(count, uri, 0);
+                photoInAlbum= new PhotoInAlbum(count, userPhoneNumber, photoPathName, 0);
             }
             photoInAlbum.save();
             photoInAlbumList.add(photoInAlbum);
         }
         createdAlbumActivity = (CreatedAlbumActivity) context;
         upload2file(realPhotoPath);//这个是照片地址全的，不只是名字，连前面的Stroy/。。。/XXXX.jpg
-        saveAlbum2IDE(album);
+        saveAlbum2IDE(album,photoInAlbumList);
     }
     public void upload2file( List<String> imageUriList) {
         loadingDialog = new LoadingDialog(context);
@@ -85,7 +103,7 @@ public class AlbumManager {
                 if(response.isSuccessful()){
                     Logger.d("Upload upload success");
                     System.out.println("77777777777777"+"到file了"+"----response:"+response);
-                    Toasty.info(context, "到file成功", Toast.LENGTH_SHORT, true).show();
+                    //Toasty.info(context, "到file成功", Toast.LENGTH_SHORT, true).show();
                 }else{
                     System.out.println("77777777777777"+"没到file");
                     Logger.d("Upload upload fail");
@@ -97,14 +115,14 @@ public class AlbumManager {
             }
         });
     }
-    public void saveAlbum2IDE(Album album){
+    public void saveAlbum2IDE(Album album,List<PhotoInAlbum> photoInAlbumList1){
         AlbumApi albumApi = RetrofitManager.getInstance().create(AlbumApi.class);
         Call<HttpData<Album>> call = albumApi.saveAlbum(album);
         call.enqueue(new Callback<HttpData<Album>>() {
             @Override
             public void onResponse(Call<HttpData<Album>> call, Response<HttpData<Album>> response) {
                 if (response.isSuccessful()){
-                    saveAlbumPhoto2IDE(photoInAlbumList);
+                    saveAlbumPhoto2IDE(photoInAlbumList1);
                 }else {
                     Log.d("isFollowing", "onResponse: " + response.code());
                 }
@@ -140,4 +158,70 @@ public class AlbumManager {
             }
         });
     }
+    public List<Album> getAlbumsByPhoneNumber(String phoneNumber, TextView createdalbumText, ImageView pleaseCreatedAlbum, RecyclerView albumsRecyclerView, Context context, AlbumDataListener<List<Album>> listener, String type){
+        AlbumApi albumApi = RetrofitManager.getInstance().create(AlbumApi.class);
+        Call<HttpListData<Album>> call = albumApi.getAlbumByPhoneNumber(phoneNumber);
+        call.enqueue(new Callback<HttpListData<Album>>() {
+            @Override
+            public void onResponse(Call<HttpListData<Album>> call, Response<HttpListData<Album>> response) {
+                albumList = response.body().getItems();
+                HttpListData<Album> ListAlbum = response.body();
+//                for (Album a:albumList) {
+//                    System.out.println("从服务器获取AlbumList成功"+a.toString());
+//                }
+//                count++;
+                getPhotoInAlbum(listener,ListAlbum,albumList,createdalbumText,pleaseCreatedAlbum,phoneNumber,loadingDialog,albumsRecyclerView,context);
+                //listener.onSuccess(ListAlbum);
+            }
+            @Override
+            public void onFailure(Call<HttpListData<Album>> call, Throwable t) {
+                System.out.println("从服务器获取AlbumList失败");
+                loadingDialog.dismiss();
+                count++;
+                //listener.onError("request Failed");
+            }
+        });
+        return albumList;
+    }
+    public List<PhotoInAlbum> getPhotoInAlbum(AlbumDataListener listener,HttpListData<Album> ListAlbum,List<Album> albumList,TextView createdalbumText,ImageView pleaseCreatedAlbum,String phoneNumber,LoadingDialog loadingDialog, RecyclerView albumsRecyclerView,Context context){
+        AlbumApi albumApi = RetrofitManager.getInstance().create(AlbumApi.class);
+        Call<HttpListData<PhotoInAlbum>> call = albumApi.getPhotoInAlbum(phoneNumber);
+        call.enqueue(new Callback<HttpListData<PhotoInAlbum>>() {
+            @Override
+            public void onResponse(Call<HttpListData<PhotoInAlbum>> call, Response<HttpListData<PhotoInAlbum>> response) {
+                photoInAlbumList1 = response.body().getItems();
+                //loadingDialog.dismiss();
+                for (PhotoInAlbum p:photoInAlbumList1) {
+                    System.out.println("从服务器获取PhotoInAlbumList成功"+p.toString());
+                }
+
+                if(albumList.size()!=0){
+                    AlbumAdapter albumAdapter = new AlbumAdapter(albumList,photoInAlbumList1,context);
+                    albumsRecyclerView.setAdapter(albumAdapter);
+                    System.out.println("`````````````````"+photoInAlbumList1);
+                }else {
+                    System.out.println("````````````````1");
+                    Toast.makeText(context,"albumList,photoList都为空",Toast.LENGTH_LONG);
+                    pleaseCreatedAlbum.setVisibility(View.VISIBLE);
+                    createdalbumText.setVisibility(View.VISIBLE);
+                }
+                listener.onSuccess(ListAlbum);
+
+                count++;
+            }
+            @Override
+            public void onFailure(Call<HttpListData<PhotoInAlbum>> call, Throwable t) {
+                System.out.println("从服务器获取PhotoInAlbumList失败");
+                //loadingDialog.dismiss();
+                listener.onError("request Failed");
+                count++;
+            }
+        });
+        return photoInAlbumList1;
+
+    }
+    public int getCount(){
+        return count;
+    }
+
 }

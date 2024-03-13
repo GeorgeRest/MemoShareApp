@@ -58,8 +58,9 @@ public class CreatedAlbumActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_created_album);
-        initView();
         jumpToPictureSelector();
+        initView();
+
     }
 
     private void initView() {
@@ -130,7 +131,7 @@ public class CreatedAlbumActivity extends AppCompatActivity {
                         // 处理选中的Uri，firstAlbumPhoto=1
 //                        Toast.makeText(CreatedAlbumActivity.this, uri+"", Toast.LENGTH_SHORT).show();
                         getData2AlbumManager(uri);
-                        uriListDialog.dismiss();
+//                        uriListDialog.dismiss();
                     }
                 });
         uriListDialog.show();
@@ -211,6 +212,7 @@ public class CreatedAlbumActivity extends AppCompatActivity {
                     }
                     @Override
                     public void onCancel() {
+                        finish();
                     }
                 });
     }

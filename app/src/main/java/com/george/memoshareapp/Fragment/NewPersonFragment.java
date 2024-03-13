@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
@@ -19,14 +22,18 @@ import com.amap.api.maps2d.model.LatLng;
 import com.chad.library.adapter.base.QuickAdapterHelper;
 import com.drake.statelayout.StateLayout;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.adapters.AlbumAdapter;
 import com.george.memoshareapp.adapters.LikeAdapter;
 import com.george.memoshareapp.adapters.UserPublishRecyclerAdapter;
 import com.george.memoshareapp.application.MyApplication;
+import com.george.memoshareapp.beans.Album;
 import com.george.memoshareapp.beans.ImageParameters;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.http.response.HttpListData;
+import com.george.memoshareapp.interfaces.AlbumDataListener;
 import com.george.memoshareapp.interfaces.LikePostDataListener;
 import com.george.memoshareapp.interfaces.PostDataListener;
+import com.george.memoshareapp.manager.AlbumManager;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.utils.SpacesItemDecoration;
 import com.orhanobut.logger.Logger;
@@ -96,7 +103,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View rootView = null;
         switch (mParam1) {
             case "发布":
@@ -194,8 +200,78 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                 });
                 break;
             case "相册":
-                break;
+                rootView = inflater.inflate(R.layout.personalpage_pagefragment_album, container, false);
+                RecyclerView albumsRecyclerView = (RecyclerView) rootView.findViewById(R.id.albums_recycler_view);
+                SmartRefreshLayout albumsSmartRefreshLayout = (SmartRefreshLayout) rootView.findViewById(R.id.refreshLayout);
+                ImageView pleaseCreatedAlbum = rootView.findViewById(R.id.pleaseCreatedAlbum);
+                TextView createdalbumText = rootView.findViewById(R.id.createdalbumText);
+                pleaseCreatedAlbum.setVisibility(View.INVISIBLE);
+                createdalbumText.setVisibility(View.INVISIBLE);
+                int numberOfColumns = 2;
+                albumsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
+                AlbumManager albumManager = new AlbumManager(getContext());
+                AlbumAdapter albumAdapter = new AlbumAdapter(getContext());
+                albumsRecyclerView.setAdapter(albumAdapter);
+                albumsRecyclerView.setHasFixedSize(true);
+                ((SimpleItemAnimator) albumsRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
+                albumsRecyclerView.getItemAnimator().setChangeDuration(0);
+                albumsSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+                    @Override
+                    public void onRefresh(@NonNull RefreshLayout refreshlayout) {
+                        albumManager.getAlbumsByPhoneNumber(phoneNumber,createdalbumText,pleaseCreatedAlbum,albumsRecyclerView,getContext(),new AlbumDataListener<List<Album>>(){
+                            @Override
+                            public void onSuccess(HttpListData<Album> data) {
+                                albumsSmartRefreshLayout.finishRefresh(); //结束刷新
+                            }
+                            @Override
+                            public void onError(String errorMessage) {
+                                albumsSmartRefreshLayout.finishRefresh(); //结束刷新
+                            }
+                        },"相册");
+                    }
+                });
+                break;
+                //                rootView = inflater.inflate(R.layout.personalpage_pagefragment_album, container, false);
+//                RecyclerView albumsRecyclerView = (RecyclerView) rootView.findViewById(R.id.albums_recycler_view);
+//                ImageView pleaseCreatedAlbum = rootView.findViewById(R.id.pleaseCreatedAlbum);
+//                TextView createdalbumText = rootView.findViewById(R.id.createdalbumText);
+//                pleaseCreatedAlbum.setVisibility(View.INVISIBLE);
+//                createdalbumText.setVisibility(View.INVISIBLE);
+//                int numberOfColumns = 2;
+//                albumsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
+//                AlbumManager albumManager = new AlbumManager(getContext());
+//                LoadingDialog loadingDialog = new LoadingDialog(getContext());
+//                loadingDialog.show();
+//                albumManager.getAlbumsByPhoneNumber(phoneNumber,createdalbumText,loadingDialog,pleaseCreatedAlbum,albumsRecyclerView,getContext());
+//                break;
+
+
+//                rootView = inflater.inflate(R.layout.personalpage_pagefragment_album, container, false);
+//                RecyclerView albumsRecyclerView = rootView.findViewById(R.id.albums_recycler_view);
+//                SmartRefreshLayout smartRefreshLayout = rootView.findViewById(R.id.album_refresh_layout);
+//                ImageView pleaseCreatedAlbum = rootView.findViewById(R.id.pleaseCreatedAlbum);
+//                TextView createdalbumText = rootView.findViewById(R.id.createdalbumText);
+//                pleaseCreatedAlbum.setVisibility(View.INVISIBLE);
+//                createdalbumText.setVisibility(View.INVISIBLE);
+//                // 配置RecyclerView
+//                int numberOfColumns = 2;
+//                albumsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
+//
+//                // 数据加载与展示逻辑
+//                AlbumManager albumManager = new AlbumManager(getContext());
+//                LoadingDialog loadingDialog = new LoadingDialog(getContext());
+//                loadingDialog.show();
+//                albumManager.getAlbumsByPhoneNumber(phoneNumber, createdalbumText, loadingDialog, pleaseCreatedAlbum, albumsRecyclerView, getContext());
+//
+//                // 设置SmartRefreshLayout的刷新监听
+//                smartRefreshLayout.setOnRefreshListener(refreshLayout -> {
+//                    // 在这里实现你的刷新逻辑，比如重新从服务器获取数据
+//                    System.out.println("-------刷新啦");
+//                    albumManager.getAlbumsByPhoneNumber(phoneNumber, createdalbumText, loadingDialog, pleaseCreatedAlbum, albumsRecyclerView, getContext());
+//                    // 数据加载完毕后，调用下面的方法来完成刷新并恢复视图
+//                    refreshLayout.finishRefresh();
+//                });
             default:
                 break;
         }

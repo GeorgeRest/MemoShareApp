@@ -5,6 +5,10 @@ import org.litepal.crud.LitePalSupport;
 import java.io.Serializable;
 
 public class Album extends LitePalSupport implements Serializable {
+    private int id;
+
+
+
     private String phoneNumber;
     private String albumName;
     private  String albumDescription;
@@ -14,6 +18,20 @@ public class Album extends LitePalSupport implements Serializable {
         this.phoneNumber=phoneNumber;
         this.createdTime=createdTime;
         this.albumDescription=albumDescription;
+    }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    public Album(int id,String phoneNumber, String albumName,String albumDescription,String createdTime) {
+        this.albumName =albumName;
+        this.phoneNumber=phoneNumber;
+        this.createdTime=createdTime;
+        this.albumDescription=albumDescription;
+        this.id=id;
     }
     public String getAlbumDescription() {
         return albumDescription;
@@ -46,5 +64,15 @@ public class Album extends LitePalSupport implements Serializable {
 
     public void setAlbumName(String albumName) {
         this.albumName = albumName;
+    }
+    @Override
+    public String toString() {
+        return "Album{" +
+                "id=" + id +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", albumName='" + albumName + '\'' +
+                ", albumDescription='" + albumDescription + '\'' +
+                ", createdTime='" + createdTime + '\'' +
+                '}';
     }
 }

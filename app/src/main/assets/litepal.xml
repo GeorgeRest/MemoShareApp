@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="MemoShare" />
-    <version value="69" />
+    <version value="71" />
     <list>
         <list>
             <mapping class="com.george.memoshareapp.beans.User"></mapping>
