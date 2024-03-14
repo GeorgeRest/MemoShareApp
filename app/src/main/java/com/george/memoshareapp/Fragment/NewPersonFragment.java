@@ -61,6 +61,7 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
     private StaggeredGridLayoutManager layoutManager;
     private QuickAdapterHelper helper;
     private RecyclerView test_publish_recycler;
+    int count=0;
     private List<Post> postList;
     private UserPublishRecyclerAdapter userPublishRecyclerAdapter;
     private StateLayout state;
@@ -216,6 +217,11 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                 ((SimpleItemAnimator) albumsRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
                 albumsRecyclerView.getItemAnimator().setChangeDuration(0);
+
+                if (count==0){
+                    albumManager.getAlbumsByPhoneNumber(phoneNumber,createdalbumText,pleaseCreatedAlbum,albumsRecyclerView,getContext());
+                    count++;
+                }
                 albumsSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
                     @Override
                     public void onRefresh(@NonNull RefreshLayout refreshlayout) {
@@ -231,47 +237,9 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                         },"相册");
                     }
                 });
+
                 break;
-                //                rootView = inflater.inflate(R.layout.personalpage_pagefragment_album, container, false);
-//                RecyclerView albumsRecyclerView = (RecyclerView) rootView.findViewById(R.id.albums_recycler_view);
-//                ImageView pleaseCreatedAlbum = rootView.findViewById(R.id.pleaseCreatedAlbum);
-//                TextView createdalbumText = rootView.findViewById(R.id.createdalbumText);
-//                pleaseCreatedAlbum.setVisibility(View.INVISIBLE);
-//                createdalbumText.setVisibility(View.INVISIBLE);
-//                int numberOfColumns = 2;
-//                albumsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
-//                AlbumManager albumManager = new AlbumManager(getContext());
-//                LoadingDialog loadingDialog = new LoadingDialog(getContext());
-//                loadingDialog.show();
-//                albumManager.getAlbumsByPhoneNumber(phoneNumber,createdalbumText,loadingDialog,pleaseCreatedAlbum,albumsRecyclerView,getContext());
-//                break;
 
-
-//                rootView = inflater.inflate(R.layout.personalpage_pagefragment_album, container, false);
-//                RecyclerView albumsRecyclerView = rootView.findViewById(R.id.albums_recycler_view);
-//                SmartRefreshLayout smartRefreshLayout = rootView.findViewById(R.id.album_refresh_layout);
-//                ImageView pleaseCreatedAlbum = rootView.findViewById(R.id.pleaseCreatedAlbum);
-//                TextView createdalbumText = rootView.findViewById(R.id.createdalbumText);
-//                pleaseCreatedAlbum.setVisibility(View.INVISIBLE);
-//                createdalbumText.setVisibility(View.INVISIBLE);
-//                // 配置RecyclerView
-//                int numberOfColumns = 2;
-//                albumsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
-//
-//                // 数据加载与展示逻辑
-//                AlbumManager albumManager = new AlbumManager(getContext());
-//                LoadingDialog loadingDialog = new LoadingDialog(getContext());
-//                loadingDialog.show();
-//                albumManager.getAlbumsByPhoneNumber(phoneNumber, createdalbumText, loadingDialog, pleaseCreatedAlbum, albumsRecyclerView, getContext());
-//
-//                // 设置SmartRefreshLayout的刷新监听
-//                smartRefreshLayout.setOnRefreshListener(refreshLayout -> {
-//                    // 在这里实现你的刷新逻辑，比如重新从服务器获取数据
-//                    System.out.println("-------刷新啦");
-//                    albumManager.getAlbumsByPhoneNumber(phoneNumber, createdalbumText, loadingDialog, pleaseCreatedAlbum, albumsRecyclerView, getContext());
-//                    // 数据加载完毕后，调用下面的方法来完成刷新并恢复视图
-//                    refreshLayout.finishRefresh();
-//                });
             default:
                 break;
         }

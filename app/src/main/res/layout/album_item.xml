@@ -1,34 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    android:layout_width="160dp"-->
+<!--    android:layout_height="180dp"-->
+<!--    android:layout_margin="4dp"-->
+
+<!--    app:cardCornerRadius="15dp"-->
+<!--    app:cardElevation="4dp">-->
+
+<!--&lt;!&ndash;    <RelativeLayout&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:orientation="vertical">&ndash;&gt;-->
+
+<!--&lt;!&ndash;        <ImageView&ndash;&gt;-->
+<!--&lt;!&ndash;            android:id="@+id/album_cover_image"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_gravity="center"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:scaleType="centerCrop"&ndash;&gt;-->
+<!--&lt;!&ndash;             android:src="@drawable/bg_code_register"/> &lt;!&ndash; Replace with your placeholder image resource &ndash;&gt;&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;    </RelativeLayout>&ndash;&gt;-->
+<!--&lt;!&ndash;    <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;        android:id="@+id/album_name"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_alignParentBottom="true"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:gravity="center"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:maxLines="1"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:padding="8dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:text="Album Name"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />-->
+<!--&ndash;&gt;-->
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"> &lt;!&ndash; Change this to match_parent to ensure the RelativeLayout fills the CardView &ndash;&gt;-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/album_cover_image"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="140dp"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/bg_code_register"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/album_name"-->
+<!--            android:layout_below="@id/album_cover_image"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:gravity="center"-->
+<!--        android:maxLines="1"-->
+<!--        android:text="Album Name"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />-->
+<!--    </RelativeLayout>-->
+<!--</androidx.cardview.widget.CardView>-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="150dp"
-    android:layout_height="250dp"
-    android:layout_margin="4dp"
-    app:cardCornerRadius="15dp"
-    app:cardElevation="4dp">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="4dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+<androidx.cardview.widget.CardView
+android:layout_width="160dp"
+android:layout_height="160dp"
+app:cardCornerRadius="15dp"
+app:cardElevation="4dp">
 
-        <ImageView
-            android:id="@+id/album_cover_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-             android:src="@drawable/app_icon"/> <!-- Replace with your placeholder image resource -->
-
-        <TextView
-            android:id="@+id/album_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:maxLines="1"
-            android:padding="8dp"
-            android:text="Album Name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-    </LinearLayout>
-
+<ImageView
+    android:id="@+id/album_cover_image"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+android:scaleType="centerCrop"
+android:src="@drawable/bg_code_register"/>
 </androidx.cardview.widget.CardView>
+
+<TextView
+android:id="@+id/album_name"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:gravity="center"
+android:maxLines="1"
+android:padding="3dp"
+android:text="Album Name"
+    android:textSize="15dp"
+android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+    </LinearLayout>

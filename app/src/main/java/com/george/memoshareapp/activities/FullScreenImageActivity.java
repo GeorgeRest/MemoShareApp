@@ -38,7 +38,14 @@ public class FullScreenImageActivity extends AppCompatActivity {
             ViewPager2Adapter adapter = new ViewPager2Adapter(photoPath,FullScreenImageActivity.this);
             viewPager.setAdapter(adapter);
             viewPager.setCurrentItem(position, false);
-        }else {
+        } else if (getIntent().getBooleanExtra("comeFromAlbum",false)) {
+            ArrayList<String> photoPath = getIntent().getStringArrayListExtra("imagePathFromAlbum");
+            int position = getIntent().getIntExtra("position", 0);
+            ViewPager2Adapter adapter = new ViewPager2Adapter(photoPath,FullScreenImageActivity.this);
+            viewPager.setAdapter(adapter);
+            viewPager.setCurrentItem(position, false);
+
+        } else {
             ArrayList<Uri> photoPath = getIntent().getParcelableArrayListExtra("photoPath");
             int position = getIntent().getIntExtra("position", 0);
             UriViewPager2Adapter adapter = new UriViewPager2Adapter(photoPath,FullScreenImageActivity.this);

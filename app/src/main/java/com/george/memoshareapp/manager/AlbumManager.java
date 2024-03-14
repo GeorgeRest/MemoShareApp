@@ -220,6 +220,67 @@ public class AlbumManager {
         return photoInAlbumList1;
 
     }
+    public List<Album> getAlbumsByPhoneNumber(String phoneNumber, TextView createdalbumText, ImageView pleaseCreatedAlbum, RecyclerView albumsRecyclerView, Context context){
+        AlbumApi albumApi = RetrofitManager.getInstance().create(AlbumApi.class);
+        Call<HttpListData<Album>> call = albumApi.getAlbumByPhoneNumber(phoneNumber);
+        call.enqueue(new Callback<HttpListData<Album>>() {
+            @Override
+            public void onResponse(Call<HttpListData<Album>> call, Response<HttpListData<Album>> response) {
+                albumList = response.body().getItems();
+                HttpListData<Album> ListAlbum = response.body();
+//                for (Album a:albumList) {
+//                    System.out.println("从服务器获取AlbumList成功"+a.toString());
+//                }
+//                count++;
+                getPhotoInAlbum(ListAlbum,albumList,createdalbumText,pleaseCreatedAlbum,phoneNumber,loadingDialog,albumsRecyclerView,context);
+                //listener.onSuccess(ListAlbum);
+            }
+            @Override
+            public void onFailure(Call<HttpListData<Album>> call, Throwable t) {
+                System.out.println("从服务器获取AlbumList失败");
+                loadingDialog.dismiss();
+                count++;
+                //listener.onError("request Failed");
+            }
+        });
+        return albumList;
+    }
+    public List<PhotoInAlbum> getPhotoInAlbum(HttpListData<Album> ListAlbum,List<Album> albumList,TextView createdalbumText,ImageView pleaseCreatedAlbum,String phoneNumber,LoadingDialog loadingDialog, RecyclerView albumsRecyclerView,Context context){
+        AlbumApi albumApi = RetrofitManager.getInstance().create(AlbumApi.class);
+        Call<HttpListData<PhotoInAlbum>> call = albumApi.getPhotoInAlbum(phoneNumber);
+        call.enqueue(new Callback<HttpListData<PhotoInAlbum>>() {
+            @Override
+            public void onResponse(Call<HttpListData<PhotoInAlbum>> call, Response<HttpListData<PhotoInAlbum>> response) {
+                photoInAlbumList1 = response.body().getItems();
+                //loadingDialog.dismiss();
+                for (PhotoInAlbum p:photoInAlbumList1) {
+                    System.out.println("从服务器获取PhotoInAlbumList成功"+p.toString());
+                }
+
+                if(albumList.size()!=0){
+                    AlbumAdapter albumAdapter = new AlbumAdapter(albumList,photoInAlbumList1,context);
+                    albumsRecyclerView.setAdapter(albumAdapter);
+                    System.out.println("`````````````````"+photoInAlbumList1);
+                }else {
+                    System.out.println("````````````````1");
+                    Toast.makeText(context,"albumList,photoList都为空",Toast.LENGTH_LONG);
+                    pleaseCreatedAlbum.setVisibility(View.VISIBLE);
+                    createdalbumText.setVisibility(View.VISIBLE);
+                }
+
+                count++;
+            }
+            @Override
+            public void onFailure(Call<HttpListData<PhotoInAlbum>> call, Throwable t) {
+                System.out.println("从服务器获取PhotoInAlbumList失败");
+                //loadingDialog.dismiss();
+
+                count++;
+            }
+        });
+        return photoInAlbumList1;
+
+    }
     public int getCount(){
         return count;
     }

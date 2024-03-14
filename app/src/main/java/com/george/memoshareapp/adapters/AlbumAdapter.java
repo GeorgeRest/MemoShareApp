@@ -1,6 +1,7 @@
 package com.george.memoshareapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.activities.FullScreenImageActivity;
 import com.george.memoshareapp.beans.Album;
 import com.george.memoshareapp.beans.PhotoInAlbum;
 import com.george.memoshareapp.properties.AppProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> {
@@ -48,29 +51,34 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         System.out.println("============="+album);
         System.out.println("============="+photoInAlbumList);
         holder.bind(album);
-
+        //album.setAlbumName("zxp");
+        //photoInAlbumList.get(1).setPhoto_path("https://www.bing.com/images/search?view=detailV2&ccid=CyWwrhal&id=9A2DDEB11531D9E97D27536D6FAC47EF8F243750&thid=OIP.CyWwrhallMLQ754v0CBXNgHaF8&mediaurl=https%3a%2f%2fkfwimg.kafan.cn%2fuploadx%2f7a899e510fb30f2443ee0e7dc795d143ad4b0353.jpg&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.0b25b0ae16a594c2d0ef9e2fd0205736%3frik%3dUDckj%252b9HrG9tUw%26pid%3dImgRaw%26r%3d0%26sres%3d1%26sresct%3d1%26srh%3d799%26srw%3d997&exph=401&expw=500&q=ImageView%e5%8f%af%e4%bb%a5%e6%b7%bb%e5%8a%a0%e6%96%87%e5%ad%97%e5%90%97&simid=607997104423330084&FORM=IRPRST&ck=5AA200BB5955FDC0E17652A777FB9C6A&selectedIndex=0&itb=0&ajaxhist=0&ajaxserp=0");
+        //Glide.with(context).load("https://www.bing.com/images/search?view=detailV2&ccid=CyWwrhal&id=9A2DDEB11531D9E97D27536D6FAC47EF8F243750&thid=OIP.CyWwrhallMLQ754v0CBXNgHaF8&mediaurl=https%3a%2f%2fkfwimg.kafan.cn%2fuploadx%2f7a899e510fb30f2443ee0e7dc795d143ad4b0353.jpg&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.0b25b0ae16a594c2d0ef9e2fd0205736%3frik%3dUDckj%252b9HrG9tUw%26pid%3dImgRaw%26r%3d0%26sres%3d1%26sresct%3d1%26srh%3d799%26srw%3d997&exph=401&expw=500&q=ImageView%e5%8f%af%e4%bb%a5%e6%b7%bb%e5%8a%a0%e6%96%87%e5%ad%97%e5%90%97&simid=607997104423330084&FORM=IRPRST&ck=5AA200BB5955FDC0E17652A777FB9C6A&selectedIndex=0&itb=0&ajaxhist=0&ajaxserp=0").into(holder.album_cover_image);
         for (PhotoInAlbum p:photoInAlbumList) {
             if (album.getId()==p.getAlbum_id()){
                 if(p.getFirstPhoto()==1){
+
                     Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+p.getPhoto_path()).into(holder.album_cover_image);
 
                     System.out.println("图片地址："+AppProperties.SERVER_MEDIA_URL+p.getPhoto_path());
-                    System.out.println("图片地址1："+p.getPhoto_path());
+//                    System.out.println("图片地址1："+p.getPhoto_path());
                 }
             }
         }
-//        holder.itemView.setOnClickListener(v -> {
-//            Intent intent = new Intent(context, FullScreenImageActivity.class);
-//            //把Albumid对应的PhotoInAlbum的photoPath，拼接好之后传递给FullScreenImageActivity
-//            ArrayList<String> photoInAlbumPathList = new ArrayList<>();
-//            for (PhotoInAlbum p : photoInAlbumList) {
-//                if (album.getId() == p.getAlbum_id()) {
-//                    photoInAlbumPathList.add(AppProperties.SERVER_MEDIA_URL + p.getPhoto_path());
-//                }
-//            }
-//            intent.putStringArrayListExtra("imagePathFromAlbum", photoInAlbumPathList);
-//            context.startActivity(intent);
-//        });
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, FullScreenImageActivity.class);
+            //把Albumid对应的PhotoInAlbum的photoPath，拼接好之后传递给FullScreenImageActivity
+            List<String> photoInAlbumPathList = new ArrayList<>();
+            for (PhotoInAlbum p : photoInAlbumList) {
+                if (album.getId() == p.getAlbum_id()) {
+                    photoInAlbumPathList.add(AppProperties.SERVER_MEDIA_URL + p.getPhoto_path());
+                }
+            }
+            intent.putExtra("comeFromAlbum",true);
+            intent.putExtra("position",position);
+            intent.putStringArrayListExtra("imagePathFromAlbum", (ArrayList<String>) photoInAlbumPathList);
+            context.startActivity(intent);
+        });
     }
 
     @Override
