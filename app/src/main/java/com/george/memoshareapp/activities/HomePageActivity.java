@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -17,7 +16,7 @@ import com.george.memoshareapp.Fragment.NewPersonPageFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.manager.UserManager;
 
-public class HomePageActivity extends AppCompatActivity implements View.OnClickListener {
+public class HomePageActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
 
     private HomeFragment homeFragment;

@@ -75,7 +75,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditProfileActivity extends BaseActivity implements View.OnClickListener {
     public static final String EXTRA_EDITED_GENDER = "edited_gender";
     public static final String EXTRA_EDITED_BIRTHDAY = "edited_birthday";
     public static final String EXTRA_EDITED_REGION = "edited_region";

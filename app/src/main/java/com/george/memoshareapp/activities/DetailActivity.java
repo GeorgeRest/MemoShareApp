@@ -48,7 +48,7 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class DetailActivity extends BaseActivity implements View.OnClickListener {
 
 
     private int like_number;

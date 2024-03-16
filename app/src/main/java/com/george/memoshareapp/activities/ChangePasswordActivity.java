@@ -8,8 +8,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.dialog.LoadingDialog;
@@ -27,7 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChangePasswordActivity extends AppCompatActivity implements View.OnClickListener {
+public class ChangePasswordActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText et_phone;
     private EditText et_pw;

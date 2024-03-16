@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,7 +38,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreatedAlbumActivity extends AppCompatActivity {
+public class CreatedAlbumActivity extends BaseActivity {
     private List<Uri> uriPathList=new ArrayList<>();
     private RecyclerView recyclerView;
     private PictureAdapter pictureAdapter;

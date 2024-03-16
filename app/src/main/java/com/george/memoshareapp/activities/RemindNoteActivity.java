@@ -1,7 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,7 +11,7 @@ import android.widget.TextView;
 
 import com.george.memoshareapp.R;
 
-public class RemindNoteActivity extends AppCompatActivity implements View.OnClickListener{
+public class RemindNoteActivity extends BaseActivity implements View.OnClickListener{
     private ImageView iv_back;
     private EditText et_note;
     private TextView tv_complete;

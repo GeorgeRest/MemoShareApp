@@ -65,7 +65,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener, RecordingDataListener, PhotoChangedListener {
+public class ReleaseActivity extends BaseActivity implements View.OnClickListener, RecordingDataListener, PhotoChangedListener {
 
     private static final String TAG = "ReleaseActivity";
     private static String timeHourMinute;

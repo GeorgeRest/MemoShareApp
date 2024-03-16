@@ -15,7 +15,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -43,7 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener , OnCodeReceiverListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener , OnCodeReceiverListener {
     private EventHandler eventHandler;
     private TextView tv_pw_login;
     private TextView tv_code_login;

@@ -5,14 +5,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.MyAdapter;
 import com.george.memoshareapp.utils.ZoomOutPageTransformer;
 
-public class AlbumActivity extends AppCompatActivity {
+public class AlbumActivity extends BaseActivity {
     private ViewPager mViewPager;
     private LinearLayout ll_layout;
 

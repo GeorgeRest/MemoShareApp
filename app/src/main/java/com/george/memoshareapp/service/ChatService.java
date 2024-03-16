@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.george.memoshareapp.beans.ChatMessage;
 import com.george.memoshareapp.events.ChatMessageEvent;
+import com.george.memoshareapp.events.ForceLogoutEvent;
 import com.george.memoshareapp.events.SendMessageEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -74,6 +75,7 @@ public class ChatService extends Service {
                         .setDateFormat("yyyy-MM-dd HH:mm:ss")
                         .create();
                 ChatMessage message = gson.fromJson(text, ChatMessage.class);
+
                 EventBus.getDefault().post(new ChatMessageEvent(message)); //接收到的消息给到ChatActivity
                 // 现在你可以操作message对象，例如显示消息内容
                 Logger.d("WebSocket 收到消息"+message);
@@ -83,6 +85,11 @@ public class ChatService extends Service {
             public void onClosed(WebSocket webSocket, int code, String reason) {
                 super.onClosed(webSocket, code, reason);
                 Logger.d("WebSocket 连接关闭"+"reason"+reason+"code"+code);
+                // 评估关闭的原因
+                if ("New session opened！！！".equals(reason)) {
+                    // 如果原因是新会话已经打开，则处理强制注销逻辑
+                    handleForceLogout();
+                }
             }
 
             @Override
@@ -116,4 +123,40 @@ public class ChatService extends Service {
         ChatMessage message = event.message;
         sendMessage(new Gson().toJson(message));
     }
+//    private void handleForceLogout() {
+//        Intent intent = new Intent(this, LoginActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+//
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "YOUR_CHANNEL_ID")
+//                .setSmallIcon(R.drawable.app_icon) // 设置通知图标
+//                .setContentTitle("账号异常")
+//                .setContentText("您的账号在另一设备登录了。您已被强制下线。")
+//                .setContentIntent(pendingIntent)
+//                .setPriority(NotificationCompat.PRIORITY_MAX);
+//
+//        notificationManager.notify(0, builder.build());
+//
+//        // 关闭WebSocket连接
+//        if (mWebSocket != null) {
+//            mWebSocket.close(1000, "Logged in from another device");
+//        }
+//
+//        // 结束服务
+//        stopSelf();
+//    }
+private void handleForceLogout() {
+    // 发送EventBus事件通知UI层显示强制注销的Dialog
+    EventBus.getDefault().post(new ForceLogoutEvent());
+
+    // 关闭WebSocket连接
+    if (mWebSocket != null) {
+        mWebSocket.close(1000, "Logged in from another device");
+    }
+
+    // 结束服务
+    stopSelf();
+}
+
 }

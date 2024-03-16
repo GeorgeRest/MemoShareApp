@@ -7,14 +7,12 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
 
 import java.util.ArrayList;
 
-public class CoverPhotoSelectionActivity extends AppCompatActivity {
+public class CoverPhotoSelectionActivity extends BaseActivity {
     private static final int REQUEST_CODE_PICK_IMAGE = 101;
     private TextView ok;
     private ArrayList<Parcelable> uriList;

@@ -1,7 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,7 +14,7 @@ import com.george.memoshareapp.beans.User;
 
 import org.litepal.LitePal;
 
-public class EditNameActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditNameActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private EditText et_edit_name;

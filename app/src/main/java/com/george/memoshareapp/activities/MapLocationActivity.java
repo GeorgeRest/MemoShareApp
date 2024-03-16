@@ -1,7 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -28,11 +26,10 @@ import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
-
+import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.george.memoshareapp.R;
-import com.amap.api.services.core.PoiItem;
 import com.george.memoshareapp.beans.Post;
 
 import java.io.IOException;
@@ -41,7 +38,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class MapLocationActivity extends AppCompatActivity {
+public class MapLocationActivity extends BaseActivity {
 
     private static final String TAG = "MapLocationActivity";
     private AMap aMap;

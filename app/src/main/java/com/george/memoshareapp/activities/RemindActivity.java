@@ -27,7 +27,7 @@ import com.george.memoshareapp.R;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class RemindActivity extends AppCompatActivity implements View.OnClickListener{
+public class RemindActivity extends BaseActivity implements View.OnClickListener{
 
     private RelativeLayout rl_contact;
     private RelativeLayout rl_content;

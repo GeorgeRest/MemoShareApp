@@ -6,13 +6,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.george.memoshareapp.R;
 
-public class ReleasePhotoImageDetailActivity extends AppCompatActivity {
+public class ReleasePhotoImageDetailActivity extends BaseActivity {
 
     private ImageView release_detail_back;
     private ImageView release_detail_button;

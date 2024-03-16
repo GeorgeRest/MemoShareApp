@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.george.memoshareapp.R;
@@ -14,7 +13,7 @@ import com.george.memoshareapp.adapters.ViewPager2Adapter;
 
 import java.util.ArrayList;
 
-public class FullScreenImageActivity extends AppCompatActivity {
+public class FullScreenImageActivity extends BaseActivity {
 
     private TextView tv_setFirstPhoto;
     private ViewPager2 viewPager;

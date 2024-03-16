@@ -1,11 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -22,18 +16,21 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
+
 import com.george.memoshareapp.Fragment.FriendFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.FriendListPagerAdapter;
-import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.manager.UserManager;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendActivity extends AppCompatActivity implements View.OnClickListener {
+public class FriendActivity extends BaseActivity implements View.OnClickListener {
 
     private ImageView iv_back;
     private LinearLayout ll_mine;
