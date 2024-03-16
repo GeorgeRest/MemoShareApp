@@ -23,11 +23,14 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.GalleryAdapter;
 import com.george.memoshareapp.adapters.OutHuodongViewPagerAdapter;
 import com.george.memoshareapp.beans.InnerActivityBean;
+import com.george.memoshareapp.events.HuoDongReleaseEvent;
 import com.george.memoshareapp.http.response.HttpListData;
 import com.george.memoshareapp.interfaces.HuodongDataListener;
 import com.george.memoshareapp.interfaces.OuterHuodongClickListener;
 import com.george.memoshareapp.manager.HuodongManager;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +67,7 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
     private ViewPager2.OnPageChangeCallback onPageChangeCallback;
     private TextView tv_publish_time;
     private boolean timeFirstShow = true;
+    private InnerActivityBean firstHuoDong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,13 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+
+        Intent intent = getIntent();
+        firstHuoDong = (InnerActivityBean) intent.getSerializableExtra("firstHuoDong");
+        phoneNumber = intent.getStringExtra("phoneNumber");
+        followId = firstHuoDong.getActivityId();
+        Log.d("zxtest", " initData: followId = " + followId);
+        EventBus.getDefault().register(this);
 
 //        initTestData();
 
@@ -114,14 +125,11 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
 
     private void initData() {
         huodongManager = new HuodongManager(this);
+        timeFirstShow = true;
+        isNoMore = false;
         //TODO
         //给Inner赋值
-        Intent intent = getIntent();
-        InnerActivityBean firstHuoDong = (InnerActivityBean) intent.getSerializableExtra("firstHuoDong");
-        phoneNumber = intent.getStringExtra("phoneNumber");
-        followId = firstHuoDong.getActivityId();
-        Log.d("zxtest", " initData: followId = " + followId);
-
+        innerActivityBeans = new ArrayList<>();
         innerActivityBeans.add(firstHuoDong);
 
         //测试
@@ -130,7 +138,8 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
         galleryAdapter = new GalleryAdapter(innerActivityBeans,this);
         outHuodongViewPagerAdapter = new OutHuodongViewPagerAdapter(this,innerActivityBeans);
 //        正式
-        huodongManager.getInnerHuoDongListByPage(followId,1,8,galleryAdapter.getCount()-1,this);
+        huodongPageNum = 1;
+        huodongManager.getInnerHuoDongListByPage(followId,huodongPageNum,8,galleryAdapter.getCount()-1,this);
 
 
 
@@ -306,6 +315,7 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
     @Override
     protected void onDestroy() {
         view_pager_activity.unregisterOnPageChangeCallback(onPageChangeCallback);
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -329,6 +339,14 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
     @Override
     public void onLoadError(String errorMessage) {
         Toasty.info(this, "出错了", Toast.LENGTH_SHORT, true).show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onHuoDongReleaseEvent(HuoDongReleaseEvent event) {
+        if(event.getHuoDongEvent()){
+            initData();
+            initView();
+        }
     }
 
 }
