@@ -16,11 +16,13 @@ import com.george.memoshareapp.activities.AddHuoDongActivity;
 import com.george.memoshareapp.beans.Danmu;
 import com.george.memoshareapp.beans.InnerActivityBean;
 import com.george.memoshareapp.dialog.LoadingDialog;
+import com.george.memoshareapp.events.HuoDongReleaseEvent;
 import com.george.memoshareapp.events.UpdateEvent;
 import com.george.memoshareapp.http.api.HuodongServiceApi;
 import com.george.memoshareapp.http.response.HttpListData;
 import com.george.memoshareapp.interfaces.DanmuUploadListener;
 import com.george.memoshareapp.interfaces.HuoDongImageDataListener;
+import com.george.memoshareapp.interfaces.HuoDongReleaseListener;
 import com.george.memoshareapp.interfaces.HuodongDataListener;
 import com.george.memoshareapp.interfaces.HuodongDelListener;
 import com.george.memoshareapp.interfaces.HuodongLikeListener;
@@ -64,7 +66,8 @@ public class HuodongManager {
         phoneNumber = sp.getString("phoneNumber", "");
     }
 
-    public void getHuoDongListByPage(int pageNum,int pageSize,int count, HuodongDataListener<List<InnerActivityBean>> listener){
+
+    public void getHuoDongListByPage(int pageNum, int pageSize, int count, HuodongDataListener<List<InnerActivityBean>> listener){
         kv = MMKV.defaultMMKV();
         HuodongServiceApi huodongServiceApi = RetrofitManager.getInstance().create(HuodongServiceApi.class);
         Log.d(TAG, "getHuoDongListByPage: 执行到这里");
@@ -311,10 +314,14 @@ public class HuodongManager {
                 loadingDialog.endAnim();
                 loadingDialog.dismiss();
                 if (response.isSuccessful()) {
+
                     Toasty.info(context, "活动发布成功", Toast.LENGTH_SHORT, true).show();
-                    EventBus.getDefault().post(new UpdateEvent());
+                    Log.d("zxrelease", "onResponse: EventBus1");
+                    EventBus.getDefault().post(new HuoDongReleaseEvent(isFollowing));
+                    Log.d("zxrelease", "onResponse: EventBus2");
                     ((AddHuoDongActivity)context).finish();
                 } else {
+
                     Toasty.info(context, "活动发布失败，请重试", Toast.LENGTH_SHORT, true).show();
 //                    Logger.d("Upload upload fail");
                 }

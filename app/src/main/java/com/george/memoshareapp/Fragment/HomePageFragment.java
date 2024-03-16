@@ -2,6 +2,7 @@ package com.george.memoshareapp.Fragment;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.adapters.HuoDongAdapter;
 import com.george.memoshareapp.beans.InnerActivityBean;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.events.HuoDongReleaseEvent;
 import com.george.memoshareapp.events.updateLikeState;
 import com.george.memoshareapp.events.ScrollToTopEvent;
 import com.george.memoshareapp.http.response.HttpListData;
@@ -36,7 +38,6 @@ import com.george.memoshareapp.interfaces.HuodongDataListener;
 import com.george.memoshareapp.interfaces.PostDataListener;
 import com.george.memoshareapp.manager.DisplayManager;
 import com.george.memoshareapp.manager.HuodongManager;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.scwang.smart.refresh.footer.ClassicsFooter;
 import com.scwang.smart.refresh.header.ClassicsHeader;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
@@ -243,47 +244,7 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                     }
                 });
 
-                List<InnerActivityBean> emptyList2 = new ArrayList<>();
-                huoDongAdapter = new HuoDongAdapter(getActivity(), emptyList2);
-                outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                outerRecyclerView.setAdapter(huoDongAdapter);
-
-                huodongManager.getHuoDongListByPage(huodongPageNum, pageSize, huoDongAdapter.getItemCount(),this);
-                smartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
-                smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
-                smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
-                smartRefreshLayout.setEnableAutoLoadMore(true);
-                smartRefreshLayout.setFooterHeight(80);
-
-                smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-                    @Override
-                    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                        huodongPageNum = 1;
-                        huodongManager.getHuoDongListByPage(huodongPageNum, pageSize,huoDongAdapter.getItemCount(), new HuodongDataListener<List<InnerActivityBean>>() {
-                            @Override
-                            public void onLoadSuccess(HttpListData<InnerActivityBean> newHuodongData, String type) {
-                                kv.clearAll();
-                                huodongList.clear();
-                                List<InnerActivityBean> newActivitys = newHuodongData.getItems();
-                                huodongList.addAll(newActivitys);
-                                huoDongAdapter.notifyDataSetChanged();
-                                refreshLayout.finishRefresh();
-
-                                refreshLayout.setNoMoreData(newHuodongData.isLastPage());
-                                if (!newHuodongData.isLastPage()) {
-                                    huodongPageNum++;
-                                }
-                            }
-                            @Override
-                            public void onLoadError(String error) {
-                                refreshLayout.finishRefresh(false); // 结束刷新，但没有收到数据
-                            }
-                        });
-                    }
-                });
-
-                //TODO  在这里接收通知刷新
-
+                initHuoDongData();
 
                 btn_add_activity = (ImageView) rootView.findViewById(R.id.btn_add_activity);
 
@@ -326,6 +287,47 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
         return rootView;
     }
 
+    private void initHuoDongData() {
+        List<InnerActivityBean> emptyList2 = new ArrayList<>();
+        huoDongAdapter = new HuoDongAdapter(getActivity(), emptyList2);
+        outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        outerRecyclerView.setAdapter(huoDongAdapter);
+        huodongPageNum = 1;
+        huodongManager.getHuoDongListByPage(huodongPageNum, pageSize, huoDongAdapter.getItemCount(),this);
+        smartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
+        smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
+        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
+        smartRefreshLayout.setEnableAutoLoadMore(true);
+        smartRefreshLayout.setFooterHeight(80);
+
+        smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                huodongPageNum = 1;
+                huodongManager.getHuoDongListByPage(huodongPageNum, pageSize,huoDongAdapter.getItemCount(), new HuodongDataListener<List<InnerActivityBean>>() {
+                    @Override
+                    public void onLoadSuccess(HttpListData<InnerActivityBean> newHuodongData, String type) {
+                        kv.clearAll();
+                        huodongList.clear();
+                        List<InnerActivityBean> newActivitys = newHuodongData.getItems();
+                        huodongList.addAll(newActivitys);
+                        huoDongAdapter.notifyDataSetChanged();
+                        refreshLayout.finishRefresh();
+
+                        refreshLayout.setNoMoreData(newHuodongData.isLastPage());
+                        if (!newHuodongData.isLastPage()) {
+                            huodongPageNum++;
+                        }
+                    }
+                    @Override
+                    public void onLoadError(String error) {
+                        refreshLayout.finishRefresh(false); // 结束刷新，但没有收到数据
+                    }
+                });
+            }
+        });
+    }
+
 
     @Override
     public void onDestroy() {
@@ -342,6 +344,13 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
         if (position != -1) {
             // 更新 Adapter 中对应位置的点赞状态
             outerAdapter.notifyItemChanged(position);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onHuoDongReleaseEvent(HuoDongReleaseEvent event) {
+        if(!event.getHuoDongEvent()){
+            initHuoDongData();
         }
     }
 
@@ -465,7 +474,6 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
     public void onLoadError(String errorMessage) {
         Log.e(TAG, "onLoadError: "+errorMessage);
     }
-
 
 }
 
