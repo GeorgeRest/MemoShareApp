@@ -19,8 +19,8 @@ public class ImageDragAndSwipe extends QuickDragAndSwipe {
         int viewType = imageAdapter.getItemViewType(viewHolder.getAdapterPosition());
         if (viewType == ImageAdapter.VIEW_TYPE_IMAGE) {
             // 对于 NEW_RECORD 类型的 itemView，允许拖拽和滑动
-            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-            int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+            int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;//拖拽方向
+            int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;//滑动删除方向
             return makeMovementFlags(dragFlags, swipeFlags);
         } else {
             // 对于 RECORD 类型的 itemView，禁止拖拽和滑动

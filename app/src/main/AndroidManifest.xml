@@ -44,16 +44,22 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activities.test.TestMainActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:name=".activities.TageActivity"
+            android:exported="false" />
         <activity
-            android:name=".activities.ChatPictureActivity"
+            android:name=".activities.WebSearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.PersonalHuodDongActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.HuoDongDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.HuodongGalleryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AddHuoDongActivity"
             android:exported="false" />
         <activity
             android:name=".activities.GroupMoreActivity"
@@ -63,7 +69,9 @@
             android:name=".service.ChatService"
             android:enabled="true"
             android:exported="true" />
-
+        <activity
+            android:name=".activities.ChatPictureActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.NewPersonPageActivity"
             android:exported="true" />

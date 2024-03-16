@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.TageActivity"
+    android:background="@drawable/activitys_bg">
+
+    <RelativeLayout
+        android:id="@+id/rl_tag_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#C1000000"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingHorizontal="5dp"
+        android:paddingVertical="10dp">
+
+        <RelativeLayout
+            android:id="@+id/rl_tag_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp">
+
+            <ImageView
+                android:id="@+id/iv_add_tag_back"
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:src="@drawable/back_white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="返回"
+                android:textSize="18dp"
+                android:layout_toRightOf="@+id/iv_add_tag_back"
+                android:layout_alignTop="@+id/iv_add_tag_back"
+                android:layout_alignBottom="@+id/iv_add_tag_back"
+                android:textColor="@color/white"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_tag_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/white"
+            android:text="完成"
+            android:textSize="18dp"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:id="@+id/tv_tag_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="添加标签"
+            android:textColor="@color/white"
+            android:textSize="18dp"/>
+
+    </RelativeLayout>
+
+
+    <EditText
+        android:id="@+id/et_tag_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rl_tag_title_bar"
+        android:hint="请输入十字以内标签"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
