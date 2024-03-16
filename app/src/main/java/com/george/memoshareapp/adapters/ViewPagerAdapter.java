@@ -40,6 +40,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         String imagePath = mData.get(position);
         Glide.with(holder.mPhotoView.getContext())
                 .load(AppProperties.SERVER_MEDIA_URL + imagePath)
+                .placeholder(R.drawable.huodong_pic_default)
                 .into(holder.mPhotoView);
         holder.mPhotoView.setOnClickListener(new View.OnClickListener() {
             @Override

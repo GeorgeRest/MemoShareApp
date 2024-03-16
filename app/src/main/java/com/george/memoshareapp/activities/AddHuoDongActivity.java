@@ -249,18 +249,18 @@ public class AddHuoDongActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode){
+            case 1:
+                Post post = (Post) data.getSerializableExtra("publishContent");
+                latitude = post.getLatitude();
+                longtitude = post.getLongitude();
+                location = post.getLocation();
+                tv_location.setText(location);
+                break;
             case RESULT_OK:
                 switch (requestCode){
                     case AddActivityPicAdapter.REQUEST_CODE_CHOOSE:
                         getPhotoFromAlbum(data);
                         adapter.notifyDataSetChanged();
-                        break;
-                    case 1:
-                        Post post = (Post) data.getSerializableExtra("publishContent");
-                        latitude = post.getLatitude();
-                        longtitude = post.getLongitude();
-                        location = post.getLocation();
-                        tv_location.setText(location);
                         break;
                     case TAG_REQUES_CODE:
                         if(data != null){
@@ -288,11 +288,7 @@ public class AddHuoDongActivity extends AppCompatActivity {
                 int count = selectList.size();
                 for (int i = 0; i < count; i++) {
                     Uri imageUri = Uri.parse(selectList.get(i).getPath());
-                    if(imageUriList.size() != 0){
-                        imageUriList.add(imageUriList.size() - 1, imageUri);
-                    }else {
-                        imageUriList.add(imageUri);
-                    }
+                    imageUriList.add(imageUri);
                 }
             } else {
                 return;

@@ -68,6 +68,7 @@
             android:id="@+id/et_danmu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:hint="请输入十五字以内弹幕"
             android:textSize="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="15dp"
@@ -161,7 +162,7 @@
             android:id="@+id/tv_publish_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_publisher"
+            android:layout_below="@+id/tv_publish_tag"
             android:layout_marginTop="8dp"
             android:paddingHorizontal="20dp"
             android:text="发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容"
@@ -185,16 +186,34 @@
 
         <TextView
             android:id="@+id/tv_publish_location"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_publish_time"
+            android:layout_toRightOf="@+id/cdv_avator"
+            android:layout_marginLeft="30dp"
+            android:gravity="right"
             android:layout_marginTop="8dp"
             android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
             android:textSize="15dp"
             android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="@color/white"
             android:text="中国大连"/>
+
+        <TextView
+            android:id="@+id/tv_publish_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_publish_location"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:text="#美景"/>
 
 
         <androidx.cardview.widget.CardView

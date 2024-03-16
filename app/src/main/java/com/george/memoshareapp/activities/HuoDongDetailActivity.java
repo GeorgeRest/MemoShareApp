@@ -67,7 +67,7 @@ public class HuoDongDetailActivity extends AppCompatActivity {
     private RelativeLayout rl_information;
     private BarrageView barrageView;
     private BarrageAdapter<DanmuData> mAdapter;
-    private String SEED[] = {"景色还不错啊", "小姐姐真好看～，", "又去哪里玩了？我也要去！带我去～", "门票多少啊？", "厉害啦！"};
+    private String SEED[] = {"景色还不错啊", "小姐姐真好看～，", "我也要去！带我去～", "门票多少啊？", "厉害啦！"};
     private String name[] = {"zx", "ds", "fe", "rg", "ny"};
     private boolean isInformationVisible = true;
     private ImageView iv_back;
@@ -78,6 +78,7 @@ public class HuoDongDetailActivity extends AppCompatActivity {
     private RelativeLayout rl_danmu;
     private EditText et_danmu;
     private TextView tv_danmu_send;
+    private TextView tv_publish_tag;
     private ConstraintLayout cl_et_zone;
     private String phoneNumber;
 
@@ -118,10 +119,11 @@ public class HuoDongDetailActivity extends AppCompatActivity {
             Toasty.error(this, "获取活动信息失败", Toasty.LENGTH_SHORT).show();
             finish();
         }
-
+        Log.d("zxactivityId", "initData: activityId = " + activityId);
         huodongManager.getLikeByActivityId(activityId,phoneNumber, new HuodongLikeListener() {
             @Override
             public void onLikeSuccess(boolean like) {
+                Log.d("zxactivityId", "onLikeSuccess: like = " + like);
                 iv_huodong_like.setImageResource(like ? R.drawable.like_press : R.drawable.like);
             }
 
@@ -156,9 +158,9 @@ public class HuoDongDetailActivity extends AppCompatActivity {
 
         if(null!=activityInfo.getHeadPortraitPath()){
             Glide.with(this).load(AppProperties.SERVER_MEDIA_URL + activityInfo
-                    .getHeadPortraitPath()).into(iv_avatar);
+                    .getHeadPortraitPath()).placeholder(R.drawable.huodong_pic_default).into(iv_avatar);
         }else {
-            Glide.with(this).load("https://lajiao.toodiancao.com/wp-content/uploads/2023/12/632.jpg").into(iv_avatar);
+            Glide.with(this).load("https://lajiao.toodiancao.com/wp-content/uploads/2023/12/632.jpg").placeholder(R.drawable.huodong_pic_default).into(iv_avatar);
         }
 
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +179,14 @@ public class HuoDongDetailActivity extends AppCompatActivity {
         }
 
         tv_publish_time.setText(activityInfo.getPublishedTime());
+
+        tv_publish_tag = (TextView) findViewById(R.id.tv_publish_tag);
+
+        if(activityInfo.getTag() != null && activityInfo.getTag().length() > 0){
+            tv_publish_tag.setText("#" + activityInfo.getTag());
+        } else {
+            tv_publish_tag.setText("#无标签");
+        }
 
         tv_publish_location.setText(activityInfo.getLocation());
 

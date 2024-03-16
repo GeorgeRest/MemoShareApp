@@ -7,11 +7,16 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.george.memoshareapp.R;
@@ -47,7 +52,7 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
     //测试数据
 
 //    private List<InnerActivityBean> list = new ArrayList<>();
-    private FloatingActionButton btn_add_activity;
+    private ImageView btn_add_activity;
     private String phoneNumber;
     private int followId;
     private int currentPosition;
@@ -57,6 +62,8 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
     private View view_click;
     private OutHuodongViewPagerAdapter outHuodongViewPagerAdapter;
     private ViewPager2.OnPageChangeCallback onPageChangeCallback;
+    private TextView tv_publish_time;
+    private boolean timeFirstShow = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +130,7 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
         galleryAdapter = new GalleryAdapter(innerActivityBeans,this);
         outHuodongViewPagerAdapter = new OutHuodongViewPagerAdapter(this,innerActivityBeans);
 //        正式
-        huodongManager.getInnerHuoDongListByPage(followId,1,8,galleryAdapter.getCount(),this);
+        huodongManager.getInnerHuoDongListByPage(followId,1,8,galleryAdapter.getCount()-1,this);
 
 
 
@@ -142,8 +149,9 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
         view_pager_activity = (ViewPager2) findViewById(R.id.iv_activity_image);
 //        iv_activity_image.setImageResource(images[0]);//测试
 
-        btn_add_activity = (FloatingActionButton) findViewById(R.id.btn_add_activity);
+        btn_add_activity = (ImageView) findViewById(R.id.btn_add_activity);
 
+        tv_publish_time = (TextView) findViewById(R.id.tv_publish_time);
 
         view_pager_activity.setAdapter(outHuodongViewPagerAdapter);
 
@@ -170,6 +178,36 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
 
         gallery.setClickable(true);
 
+        gallery.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action){
+                    case KeyEvent.ACTION_UP:
+                        Animation animation = AnimationUtils.loadAnimation(HuodongGalleryActivity.this, R.anim.time_out_alpha);
+                        tv_publish_time.startAnimation(animation);
+                        animation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                tv_publish_time.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                        break;
+                }
+                return false;
+            }
+        });
+
         gallery.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -181,6 +219,15 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
                     view_pager_activity.setCurrentItem(position);
                 }
 
+                String publishedTime = innerActivityBeans.get(position).getPublishedTime();
+
+                if(!timeFirstShow){
+                    tv_publish_time.setText(publishedTime);
+                    tv_publish_time.setVisibility(View.VISIBLE);
+                } else {
+                    timeFirstShow = false;
+                }
+
                 if(innerActivityBeans.size()>0&&innerActivityBeans.get(position)!=null){
 
 //                    正式
@@ -189,7 +236,7 @@ public class HuodongGalleryActivity extends AppCompatActivity implements Huodong
                         //TODO
                         //获取下一页数据
                         huodongPageNum++;
-                        huodongManager.getInnerHuoDongListByPage(innerActivityBeans.get(position).getActivityId(), huodongPageNum, 8, galleryAdapter.getCount(), new HuodongDataListener<List<InnerActivityBean>>() {
+                        huodongManager.getInnerHuoDongListByPage(followId, huodongPageNum, 8, galleryAdapter.getCount()-1, new HuodongDataListener<List<InnerActivityBean>>() {
                             @Override
                             public void onLoadSuccess(HttpListData<InnerActivityBean> data, String type) {
                                 List<InnerActivityBean> newList = data.getItems();

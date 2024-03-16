@@ -52,9 +52,9 @@ public class OutHuodongViewPagerAdapter extends RecyclerView.Adapter<OutHuodongV
         InnerActivityBean innerActivityBean = huodonglist.get(position);
 
         Glide.with(context).load(AppProperties.SERVER_MEDIA_URL + innerActivityBean
-                .getHeadPortraitPath()).into(holder.iv_avatar);
+                .getHeadPortraitPath()).placeholder(R.drawable.huodong_pic_default).into(holder.iv_avatar);
         Glide.with(context).load(AppProperties.SERVER_MEDIA_URL + innerActivityBean
-                .getFirstImagePath()).into(holder.iv_activity_image);
+                .getFirstImagePath()).placeholder(R.drawable.huodong_pic_default).into(holder.iv_activity_image);
 
         holder.tv_publisher.setText(innerActivityBean.getName());
 
@@ -67,6 +67,12 @@ public class OutHuodongViewPagerAdapter extends RecyclerView.Adapter<OutHuodongV
         holder.tv_publish_time.setText(innerActivityBean.getPublishedTime());
 
         holder.tv_publish_location.setText(innerActivityBean.getLocation());
+
+        if(innerActivityBean.getTag() != null && innerActivityBean.getTag().length() > 0){
+            holder.tv_publish_tag.setText("#" + innerActivityBean.getTag());
+        } else {
+            holder.tv_publish_tag.setText("#无标签");
+        }
 
         holder.iv_activity_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +102,7 @@ public class OutHuodongViewPagerAdapter extends RecyclerView.Adapter<OutHuodongV
         TextView tv_publish_text;
         TextView tv_publish_time;
         TextView tv_publish_location;
+        TextView tv_publish_tag;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -105,6 +112,7 @@ public class OutHuodongViewPagerAdapter extends RecyclerView.Adapter<OutHuodongV
             tv_publish_text = itemView.findViewById(R.id.tv_publish_text);
             tv_publish_time = itemView.findViewById(R.id.tv_publish_time);
             tv_publish_location = itemView.findViewById(R.id.tv_publish_location);
+            tv_publish_tag = itemView.findViewById(R.id.tv_publish_tag);
 
         }
     }

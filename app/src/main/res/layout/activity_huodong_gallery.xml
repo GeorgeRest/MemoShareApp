@@ -17,8 +17,17 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/gallery_activity_back"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         android:layout_marginLeft="15dp"/>
+
+    <ImageView
+        android:id="@+id/btn_add_activity"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/gallery_activity_add"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="20dp"/>
 
     <ImageView
         android:id="@+id/iv_left"
@@ -53,26 +62,25 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:gravity="center_vertical"
+        android:layout_marginHorizontal="10dp"
         android:layout_alignParentBottom="true"
         android:clickable="false"
         android:spacing="5dp"
         android:layout_marginBottom="20dp"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_add_activity"
+    <TextView
+        android:id="@+id/tv_publish_time"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        app:fabSize="normal"
-        app:borderWidth="0dp"
-        android:elevation="20dp"
-        app:pressedTranslationZ="0dp"
-        app:rippleColor="#04DDFA"
-        android:backgroundTint="@color/white"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="40dp"
-        android:contentDescription="点此发布活动，记录精彩瞬间"
-        android:src="@drawable/iv_activity_add"/>
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:textSize="18dp"
+        android:layout_centerHorizontal="true"
+        android:text="2020/7/26 14:33"
+        android:layout_above="@+id/gallery_activitys"
+        android:layout_marginBottom="25dp"
+        android:textColor="@color/white"
+        android:background="@drawable/gallery_time_bg"
+        android:visibility="gone"/>
 
 </RelativeLayout>

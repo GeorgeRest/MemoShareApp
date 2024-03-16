@@ -79,7 +79,7 @@ public class GalleryAdapter extends BaseAdapter {
 //        imageView.setImageResource(images[position]);//测试
 
 //        正式
-        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL + huodonglist.get(position).getFirstImagePath()).into(imageView);//测试
+        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL + huodonglist.get(position).getFirstImagePath()).placeholder(R.drawable.huodong_pic_default).into(imageView);//测试
 
 //          测试
 //        Glide.with(context).load(huodonglist.get(position).getFirstImagePath()).into(imageView);//测试
