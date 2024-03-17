@@ -71,10 +71,13 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
     private String mParam1;
     private HomeWholeRecyclerViewAdapter outerAdapter;
     private SmartRefreshLayout smartRefreshLayout;
+    private SmartRefreshLayout huodongSmartRefreshLayout;
     private DisplayManager displayManager;
     private RecyclerView outerRecyclerView;
+    private RecyclerView outerHuoDongRecyclerView;
     public static int lastClickedPosition = -1;
     private StateLayout state;
+    private StateLayout huoDongState;
     private View rootView;
     private int pageNum = 1;
     private int huodongPageNum = 1;
@@ -216,16 +219,16 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                 break;
             case "活动":
                 rootView = inflater.inflate(R.layout.fragment_home_activity, container, false);
-                state = (StateLayout) rootView.findViewById(R.id.state);
-                state.setEmptyLayout(R.layout.layout_empty);
-                state.setErrorLayout(R.layout.layout_error);
-                state.setLoadingLayout(R.layout.layout_loading);
-                state.showLoading(null, false, false);
+                huoDongState = (StateLayout) rootView.findViewById(R.id.state);
+                huoDongState.setEmptyLayout(R.layout.layout_empty);
+                huoDongState.setErrorLayout(R.layout.layout_error);
+                huoDongState.setLoadingLayout(R.layout.layout_loading);
+                huoDongState.showLoading(null, false, false);
                 huodongManager = new HuodongManager(getContext());
-                outerRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_recycler);
+                outerHuoDongRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_recycler);
 //                outerRecyclerView.addItemDecoration(new MyBottomDecoration(outerRecyclerView));
                 ll_activity_ctrl_entry_zone = (LinearLayout) rootView.findViewById(R.id.ll_activity_ctrl_entry_zone);
-                outerRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                outerHuoDongRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
                     public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                         super.onScrolled(recyclerView, dx, dy);
@@ -290,17 +293,18 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
     private void initHuoDongData() {
         List<InnerActivityBean> emptyList2 = new ArrayList<>();
         huoDongAdapter = new HuoDongAdapter(getActivity(), emptyList2);
-        outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        outerRecyclerView.setAdapter(huoDongAdapter);
+        outerHuoDongRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        outerHuoDongRecyclerView.setAdapter(huoDongAdapter);
         huodongPageNum = 1;
-        huodongManager.getHuoDongListByPage(huodongPageNum, pageSize, huoDongAdapter.getItemCount(),this);
-        smartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
-        smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
-        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
-        smartRefreshLayout.setEnableAutoLoadMore(true);
-        smartRefreshLayout.setFooterHeight(80);
 
-        smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+        huodongManager.getHuoDongListByPage(huodongPageNum, pageSize, huoDongAdapter.getItemCount(),this);
+        huodongSmartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
+        huodongSmartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
+        huodongSmartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
+        huodongSmartRefreshLayout.setEnableAutoLoadMore(true);
+        huodongSmartRefreshLayout.setFooterHeight(80);
+
+        huodongSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 huodongPageNum = 1;
@@ -350,7 +354,9 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onHuoDongReleaseEvent(HuoDongReleaseEvent event) {
         if(!event.getHuoDongEvent()){
-            initHuoDongData();
+            if(mParam1 == "活动"){
+                initHuoDongData();
+            }
         }
     }
 
@@ -419,17 +425,17 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
 
     @Override
     public void onLoadSuccess(HttpListData<InnerActivityBean> data, String type) {
-        state.showContent(null);
+        huoDongState.showContent(null);
         huodongPageNum++;
         huodongList = data.getItems();
 
         if (huodongList.size()==0) {
-            state.showEmpty(null);
+            huoDongState.showEmpty(null);
         } else {
             huoDongAdapter = new HuoDongAdapter(getActivity(), huodongList);
 //            Log.d(TAG, "zxtest onLoadSuccess: huodongList:" + huodongList.size());
-            outerRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            outerRecyclerView.setAdapter(huoDongAdapter);
+            outerHuoDongRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            outerHuoDongRecyclerView.setAdapter(huoDongAdapter);
             huoDongAdapter.setOnHuodongClickListener(new HuoDongItemClickListener() {
                 @Override
                 public void onHuoDongClick(int position, InnerActivityBean huoDong) {
@@ -442,9 +448,9 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
         }
         Log.d(TAG, "onLoadSuccess: isLastPage = " + data.isLastPage());
         if (data.isLastPage()) {
-            smartRefreshLayout.setNoMoreData(data.isLastPage());
+            huodongSmartRefreshLayout.setNoMoreData(data.isLastPage());
         } else {
-            smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            huodongSmartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
                 @Override
                 public void onLoadMore(RefreshLayout refreshlayout) {
                     huodongManager.getHuoDongListByPage(huodongPageNum, pageSize, huoDongAdapter.getItemCount(), new HuodongDataListener<List<InnerActivityBean>>() {
