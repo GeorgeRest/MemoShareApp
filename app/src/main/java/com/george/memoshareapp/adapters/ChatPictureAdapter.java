@@ -57,21 +57,6 @@ public class ChatPictureAdapter extends RecyclerView.Adapter {
             Glide.with(((PictureViewHolder) holder).iv_chat_photo.getContext()).load(AppProperties.SERVER_MEDIA_URL+photoFileName).into(((PictureViewHolder) holder).iv_chat_photo);
 
             ((PictureViewHolder) holder).setPosition(position);
-//            ((PictureViewHolder) holder).iv_chat_photo.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (mOnItemClickListener != null) {
-//                        List<String> pictureList = new ArrayList<>();
-//                        for (Object obj : mPhotoList) {
-//                            if (obj instanceof String) {
-//                                pictureList.add((String) obj);
-//                            }
-//                        }
-//                        int clickPhotoPosition = findPositionByName(pictureList, photoFileName);
-//                        mOnItemClickListener.onPhotoClick(v,pictureList, clickPhotoPosition);
-//                    }
-//                }
-//            });
         } else if (holder instanceof DateViewHolder) {
             Date date = new Date((long) mPhotoList.get(position));
             ((DateViewHolder) holder).tv_chat_picture_date.setText(TimeUtil.getTimeString(date, "yyyy/MM"));
