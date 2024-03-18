@@ -67,7 +67,7 @@ public class HuoDongDetailActivity extends AppCompatActivity {
     private RelativeLayout rl_information;
     private BarrageView barrageView;
     private BarrageAdapter<DanmuData> mAdapter;
-    private String SEED[] = {"景色还不错啊", "小姐姐真好看～，", "我也要去！带我去～", "门票多少啊？", "厉害啦！"};
+    private String SEED[] = {"景色还不错啊", "小姐姐真好看～", "我也要去！带我去～", "门票多少啊？", "厉害啦！"};
     private String name[] = {"zx", "ds", "fe", "rg", "ny"};
     private boolean isInformationVisible = true;
     private ImageView iv_back;

@@ -15,6 +15,7 @@ import com.drake.statelayout.StateLayout;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.HuoDongAdapter;
 import com.george.memoshareapp.beans.InnerActivityBean;
+import com.george.memoshareapp.events.HuoDongDeleteEvent;
 import com.george.memoshareapp.http.response.HttpListData;
 import com.george.memoshareapp.interfaces.HuoDongItemClickListener;
 import com.george.memoshareapp.interfaces.HuoDongSelectedListener;
@@ -27,6 +28,8 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,10 +102,6 @@ public class PersonalHuodDongActivity extends AppCompatActivity implements Huodo
             public void onClick(View v) {
 
                 if(delList.size()>0){
-
-//                    TODO
-//                    删除操作
-
                     new XPopup.Builder(PersonalHuodDongActivity.this).asConfirm("确定删除" + delList.size() + "项内容？", null, "取消", "确认", new OnConfirmListener() {
                         @Override
                         public void onConfirm() {
@@ -116,6 +115,7 @@ public class PersonalHuodDongActivity extends AppCompatActivity implements Huodo
                                 public void onDeleteResult(boolean result) {
                                     initView();
                                     delList.clear();
+                                    EventBus.getDefault().post(new HuoDongDeleteEvent());
                                 }
                             });
                         }
@@ -126,13 +126,13 @@ public class PersonalHuodDongActivity extends AppCompatActivity implements Huodo
                         }
                     },false).show();
                 }else {
-                    iv_my_activity_del.setVisibility(View.VISIBLE);
-                    iv_my_activity_edit.setVisibility(View.GONE);
-
+                    iv_my_activity_del.setVisibility(View.GONE);
+                    iv_my_activity_edit.setVisibility(View.VISIBLE);
+                    huoDongAdapter.setVisible(false);
+                    if(huoDongAdapter.getItemCount() > 0){
+                        huoDongAdapter.notifyItemRangeChanged(0,huoDongAdapter.getItemCount());
+                    }
                 }
-                //TODO
-//                转为非编辑状态，选择
-
             }
         });
 
@@ -239,4 +239,7 @@ public class PersonalHuodDongActivity extends AppCompatActivity implements Huodo
     public void onLoadError(String errorMessage) {
 
     }
+
+
+
 }

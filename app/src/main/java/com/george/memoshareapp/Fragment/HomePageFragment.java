@@ -29,6 +29,7 @@ import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
 import com.george.memoshareapp.adapters.HuoDongAdapter;
 import com.george.memoshareapp.beans.InnerActivityBean;
 import com.george.memoshareapp.beans.Post;
+import com.george.memoshareapp.events.HuoDongDeleteEvent;
 import com.george.memoshareapp.events.HuoDongReleaseEvent;
 import com.george.memoshareapp.events.updateLikeState;
 import com.george.memoshareapp.events.ScrollToTopEvent;
@@ -277,8 +278,8 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                 btn_back_to_top.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(outerRecyclerView.getChildCount()>0){
-                            outerRecyclerView.scrollToPosition(0);
+                        if(outerHuoDongRecyclerView.getChildCount()>0){
+                            outerHuoDongRecyclerView.scrollToPosition(0);
                         }
                     }
                 });
@@ -357,6 +358,13 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
             if(mParam1 == "活动"){
                 initHuoDongData();
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onHuoDongDeleteEvent(HuoDongDeleteEvent event) {
+        if (mParam1 == "活动") {
+            initHuoDongData();
         }
     }
 
