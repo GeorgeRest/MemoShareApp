@@ -32,7 +32,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -457,7 +456,7 @@ public class ReleaseActivity extends BaseActivity implements View.OnClickListene
                 startActivityForResult(new Intent(this, MapLocationActivity.class), 1);
                 break;
             case R.id.rl_addat:
-                startActivityForResult(new Intent(this, TestContactListActivity.class), RESULT_CODE_CONTACT);
+                startActivityForResult(new Intent(this, ContactListActivity.class), RESULT_CODE_CONTACT);
                 break;
         }
     }

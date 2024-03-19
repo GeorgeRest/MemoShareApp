@@ -24,7 +24,6 @@ import com.george.memoshareapp.events.ChatMessageEvent;
 import com.george.memoshareapp.events.ForceLogoutEvent;
 import com.george.memoshareapp.events.SendMessageEvent;
 import com.george.memoshareapp.manager.ChatManager;
-import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.properties.AppProperties;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -121,6 +120,7 @@ public class ChatService extends Service {
             public void onClosed(WebSocket webSocket, int code, String reason) {
                 super.onClosed(webSocket, code, reason);
                 Logger.d("WebSocket 连接关闭"+"reason"+reason+"code"+code);
+                System.out.println(code+reason+"====11111111111111111111111111");
                 // 评估关闭的原因
                 if ("New session opened！！！".equals(reason)) {
                     // 如果原因是新会话已经打开，则处理强制注销逻辑

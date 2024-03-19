@@ -2,8 +2,6 @@ package com.george.memoshareapp.manager;
 
 import com.george.memoshareapp.beans.ChatMessage;
 import com.george.memoshareapp.beans.ChatRoom;
-import com.george.memoshareapp.beans.ChatRoomMember;
-import com.george.memoshareapp.beans.User;
 
 import org.litepal.LitePal;
 
@@ -28,7 +26,7 @@ public class ChatRoomManager {
             return "创建群聊成功，快来发一条消息吧~"; // 或者您可以根据需要返回其他默认值
         }
     }
-    public Date getLatestMessageTimeByChatRoomName(String chatRoomName) {
+    public String getLatestMessageTimeByChatRoomName(String chatRoomName) {
         ChatMessage latestMessage = LitePal
                 .where("chatRoomName = ?",chatRoomName)
                 .order("createdAt desc")
@@ -38,7 +36,8 @@ public class ChatRoomManager {
             return latestMessage.getCreatedAt();
         } else {
             Date date = new Date();
-            return date; // 或者您可以根据需要返回其他默认值
+            String s = date.toString();
+            return s; // 或者您可以根据需要返回其他默认值
         }
     }
     public  List<ChatRoom> getLast20ChatRoom() {
@@ -72,17 +71,17 @@ public class ChatRoomManager {
         return LitePal.where("name = ?", chatRoomName)
                 .findFirst(ChatRoom.class);
     }
-    public List<User> getMembersByChatRoomNameId(int chatRoomId) {
-        List<ChatRoomMember> chatRoomMemberList = LitePal.where("chatRoomId = ?", String.valueOf(chatRoomId))
-                .find(ChatRoomMember.class);
-        List<User> userlist = new ArrayList<>();
-        for (ChatRoomMember c:chatRoomMemberList) {
-            User user = new User(c.getUserId());
-            userlist.add(user);
-        }
-        return userlist;
-
-    }
+//    public List<User> getMembersByChatRoomNameId(int chatRoomId) {
+//        List<ChatRoomMember> chatRoomMemberList = LitePal.where("chatRoomId = ?", String.valueOf(chatRoomId))
+//                .find(ChatRoomMember.class);
+//        List<User> userlist = new ArrayList<>();
+//        for (ChatRoomMember c:chatRoomMemberList) {
+//            User user = new User(c.getUserId());
+//            userlist.add(user);
+//        }
+//        return userlist;
+//
+//    }
     public List<ChatMessage> getChatRoomMessages(String chatroomName) {
         // 在这里查询数据库或从服务器获取聊天室的消息数据
         // 示例代码，您需要根据实际情况替换

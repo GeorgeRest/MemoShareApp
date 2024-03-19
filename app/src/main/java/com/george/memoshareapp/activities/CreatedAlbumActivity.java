@@ -57,8 +57,9 @@ public class CreatedAlbumActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_created_album);
-        jumpToPictureSelector();
         initView();
+        jumpToPictureSelector();
+
 
     }
 
@@ -205,8 +206,9 @@ public class CreatedAlbumActivity extends BaseActivity {
                         for (int i = 0; i < arrayList.size(); i++) {
                             Uri uri = Uri.parse(arrayList.get(i).getPath());
                             uriPathList.add(uri);
-//                            System.out.println("7777777777777--"+ uriPathList);
+                            System.out.println("7777777777777--"+ uriPathList);
                         }
+                       // pictureAdapter = new PictureAdapter(uriPathList);
                         pictureAdapter.notifyDataSetChanged(); // 通知适配器数据发生了变化
                     }
                     @Override
@@ -229,7 +231,7 @@ public class CreatedAlbumActivity extends BaseActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_picture, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_uri_list, parent, false);
             return new ViewHolder(view);
         }
         @Override

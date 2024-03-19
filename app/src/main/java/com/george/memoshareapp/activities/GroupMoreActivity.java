@@ -1,10 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +7,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ChatGroupMemberAdapter;
@@ -29,7 +28,7 @@ import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 
-public class GroupMoreActivity extends AppCompatActivity {
+public class GroupMoreActivity extends BaseActivity {
 
     public static final int REQUEST_CODE_ADD_MEMBER = 1;
     private TextView photo_chat_title_name;

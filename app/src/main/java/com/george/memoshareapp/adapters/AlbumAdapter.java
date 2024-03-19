@@ -97,7 +97,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         }
 
         public void bind(Album album) {
-            albumName.setText(album.getAlbumName());
+            albumName.setText(album.getAlbumDescription());//不知到那块把相册名称和相册描述弄错了
             // 更多的绑定逻辑，比如处理相册封面图片等...
             // 获得album的时间，通过时间去找本地album表的id，然后再去找photoalbum表里的对应的封面照片
             //得用Glide吧，传过来的是图片的名字，还得拼接

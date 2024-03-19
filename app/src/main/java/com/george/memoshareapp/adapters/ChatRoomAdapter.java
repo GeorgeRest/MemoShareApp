@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.activities.TestChatGroupActivity;
+import com.george.memoshareapp.activities.GroupChatActivity;
 import com.george.memoshareapp.beans.ChatRoom;
 import com.george.memoshareapp.manager.ChatRoomManager;
 
@@ -73,9 +73,9 @@ public class ChatRoomAdapter extends BaseAdapter {
         ChatRoomManager chatRoomManager = new ChatRoomManager();
         String latestMessage = chatRoomManager.getLatestMessageContentByChatRoomName(chatRoom.getName());
         viewHolder.messageTextView.setText(latestMessage);
-        Date lastTime = chatRoomManager.getLatestMessageTimeByChatRoomName(chatRoom.getName());
-        String s = formatMessageTime(lastTime);
-        viewHolder.timeTextView.setText(s);
+        String lastTime = chatRoomManager.getLatestMessageTimeByChatRoomName(chatRoom.getName());
+//        String s = formatMessageTime(lastTime);
+        viewHolder.timeTextView.setText(lastTime);
         // 设置点击事件
         viewHolder.rl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +84,7 @@ public class ChatRoomAdapter extends BaseAdapter {
                 ChatRoom chatRoom = dataList.get(position);
 
                 // 启动 ChatGroupActivity 并传递聊天室信息
-                Intent intent = new Intent(context, TestChatGroupActivity.class);
+                Intent intent = new Intent(context, GroupChatActivity.class);
                 intent.putExtra("ChatRoomName", chatRoom.getName());// 传递聊天室ID或其他需要的信息
 //                intent.putExtra("adapter",1);// 传递聊天室ID或其他需要的信息
                 context.startActivity(intent);

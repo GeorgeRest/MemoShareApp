@@ -29,7 +29,7 @@ import com.bigkoo.pickerview.view.TimePickerView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.CreatedAlbumActivity;
 import com.george.memoshareapp.activities.RemindActivity;
-import com.george.memoshareapp.activities.TestContactListActivity;
+
 import com.george.memoshareapp.activities.GroupFriendListActivity;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;

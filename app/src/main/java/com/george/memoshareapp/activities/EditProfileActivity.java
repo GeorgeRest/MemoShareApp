@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
@@ -323,7 +321,8 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
                 String region = tv_edit_region.getText().toString();
                 String gender = tv_edit_gender.getText().toString();
                 String birthday = tv_edit_birthday.getText().toString();
-                User updateUser = new User(phoneNumber, name, signature, gender, birthday, region, user.getBackGroundPath(), user.getHeadPortraitPath());
+                //User updateUser = new User(phoneNumber, name, signature, gender, birthday, region, user.getBackGroundPath(), user.getHeadPortraitPath());
+                User updateUser = new User(phoneNumber, name, signature, gender, birthday, region);
                 Logger.d(updateUser);
 
 //                new UserManager(this).updateUserInfo(updateUser,phoneNumber);

@@ -20,7 +20,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.george.memoshareapp.R;
 
@@ -102,7 +101,7 @@ public class RemindActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.rl_contact:
-                Intent intent1 = new Intent(this, TestContactListActivity.class);
+                Intent intent1 = new Intent(this, ContactListActivity.class);
                 activityResultLauncher.launch(intent1);
                 break;
             case R.id.rl_content:
