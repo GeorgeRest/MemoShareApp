@@ -20,6 +20,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.george.memoshareapp.activities.GroupChatActivity;
 import com.george.memoshareapp.beans.ChatMessage;
 import com.george.memoshareapp.beans.ChatRoom;
+import com.george.memoshareapp.beans.WebSocketMessage;
 import com.george.memoshareapp.events.ChatMessageEvent;
 import com.george.memoshareapp.events.ForceLogoutEvent;
 import com.george.memoshareapp.events.SendMessageEvent;
@@ -97,6 +98,17 @@ public class ChatService extends Service {
             @Override
             public void onMessage(WebSocket webSocket, String text) {
                 super.onMessage(webSocket, text);
+                Logger.d("WebSocket 收到消息" + text);
+                Gson gson = new Gson();
+                WebSocketMessage webSocketMessage = gson.fromJson(text, WebSocketMessage.class);
+                if("session_closed".equals(webSocketMessage.getType())){
+                    //处理logOut
+
+                    mWebSocket.close(1000, "session_closed");
+                    Logger.d("WebSocket 收到消息" + webSocketMessage.getMessage());
+                    return;
+                }
+
                 chatManager.updateLastReadTimeInThread();
                 new Thread(new Runnable() {
                     @Override
