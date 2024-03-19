@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import com.george.memoshareapp.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.just.agentweb.AgentWeb;
 
 import es.dmoral.toasty.Toasty;
@@ -21,6 +22,11 @@ public class WebSearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_search);
+
+        FloatingActionButton iv_back = (FloatingActionButton) findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(v->{
+            finish();
+        });
 
         Intent intent = getIntent();
         String searchContent = intent.getStringExtra("searchcontent");
