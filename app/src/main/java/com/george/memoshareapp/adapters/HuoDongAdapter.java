@@ -81,7 +81,8 @@ public class HuoDongAdapter extends RecyclerView.Adapter<HuoDongAdapter.ViewHold
             holder.tv_date.setText(timeString);
             holder.tv_location.setText(huoDong.getLocation());
             if (huoDong.getFirstImagePath() != null) {
-                Glide.with(context).load(AppProperties.SERVER_MEDIA_URL + huoDong.getFirstImagePath()).placeholder(R.drawable.huodong_pic_default).into(holder.iv_image);//正确地址
+                Glide.with(context).load(AppProperties.SERVER_MEDIA_URL + huoDong.getFirstImagePath())
+                        .placeholder(R.drawable.huodong_pic_default).into(holder.iv_image);//正确地址
                 Log.d(TAG, "onBindViewHolder: FirstImagePath: "+AppProperties.SERVER_MEDIA_URL + huoDong.getFirstImagePath());
             }
 

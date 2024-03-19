@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.interfaces.OnDelPicClickListener;
+import com.george.memoshareapp.interfaces.OnPicClickListener;
 import com.george.memoshareapp.utils.GlideEngine;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
@@ -25,9 +26,13 @@ public class AddActivityPicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static final int VIEW_TYPE_ADD = 1;
     public static final int REQUEST_CODE_CHOOSE = 2;
     private OnDelPicClickListener onDelPicClickListener;
+    private OnPicClickListener onPicClickListener;
 
     public void setOnDelPicClickListener(OnDelPicClickListener onDelPicClickListener) {
         this.onDelPicClickListener = onDelPicClickListener;
+    }
+    public void setOnPicClickListener(OnPicClickListener onPicClickListener) {
+        this.onPicClickListener = onPicClickListener;
     }
 
     public AddActivityPicAdapter(Context context, List<Uri> imagePaths) {
@@ -64,6 +69,8 @@ public class AddActivityPicAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     .centerCrop()
                     .into(((PicViewHolder)holder).iv_pic);
             ((PicViewHolder)holder).iv_del.setOnClickListener(v -> {onDelPicClickListener.onPicDelete(position);});
+            ((PicViewHolder)holder).iv_pic.setOnClickListener(v -> {onPicClickListener.onPicClick(imagePaths.get(position));});
+
         } else if (holder instanceof AddViewHolder) {
             if (imagePaths.size() >= 9) {
                 holder.itemView.setVisibility(View.GONE);
