@@ -2,25 +2,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
+
     <ImageView
         android:id="@+id/photo_chat_name_dialog_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/photo_chat_name"
-        />
+        android:src="@mipmap/photo_chat_name" />
+
     <EditText
         android:id="@+id/et_custom_input"
         android:layout_width="290dp"
         android:layout_height="100dp"
         android:layout_marginLeft="55dp"
-        android:layout_marginTop="100dp"
-        android:background="@color/ps_color_transparent"/>
+        android:layout_marginTop="60dp"
+        android:background="@color/ps_color_transparent" />
+
     <Button
         android:id="@+id/btn_submit"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="110dp"
         android:layout_below="@id/et_custom_input"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="5dp"
         android:background="@color/ps_color_transparent" />
 
 

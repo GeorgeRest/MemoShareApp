@@ -4,10 +4,10 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
-        <ImageView
-            android:id="@+id/horizontal_recycler_view_iv_photo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="centerCrop" />
+    <ImageView
+        android:id="@+id/horizontal_recycler_view_iv_photo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="centerCrop" />
 
 </RelativeLayout>

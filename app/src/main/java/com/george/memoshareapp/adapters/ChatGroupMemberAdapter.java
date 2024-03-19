@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.activities.GroupFriendListActivity;
+import com.george.memoshareapp.activities.GroupMoreActivity;
 import com.george.memoshareapp.activities.NewPersonPageActivity;
-import com.george.memoshareapp.activities.TestChatGroupMoreActivity;
-import com.george.memoshareapp.activities.TestContactListActivity;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.properties.AppProperties;
 
@@ -30,21 +30,18 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private Context context;
     private List<User> contacts;
-    private List<User> FriendList;
     private String photoChatTitleName;
-    private  int ChatRoomID;
+    private  String ChatRoomID;
 
-    public ChatGroupMemberAdapter(Context context, List<User> contacts,List<User> FriendList,String photoChatTitleName,int chatRoomID) {
+    public ChatGroupMemberAdapter(Context context, List<User> contacts,String photoChatTitleName,String chatRoomID) {
         this.context = context;
         this.contacts = contacts;
-        this.FriendList=FriendList;
         this.photoChatTitleName=photoChatTitleName;
         this.ChatRoomID=chatRoomID;
     }
-    public ChatGroupMemberAdapter(Context context, List<User> contacts,List<User> FriendList,String photoChatTitleName) {
+    public ChatGroupMemberAdapter(Context context, List<User> contacts,String photoChatTitleName) {
         this.context = context;
         this.contacts = contacts;
-        this.FriendList=FriendList;
         this.photoChatTitleName=photoChatTitleName;
     }
 
@@ -63,11 +60,18 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public List<User> getContacts(){
         return contacts;
     }
+
+    public void addAllUsers(List<User> newUsers) {
+        if (newUsers != null && !newUsers.isEmpty()) {
+            contacts.addAll(newUsers);
+            notifyDataSetChanged();
+        }
+    }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_USER) {
             // 返回用于显示用户头像和姓名的 ViewHolder 对象
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.release_photo_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_user_photo, parent, false);
             return new ViewHolder(view);
         } else if (viewType == VIEW_TYPE_CUSTOM_IMAGE) {
             // 返回用于显示自定义图片的 ViewHolder 对象
@@ -109,12 +113,11 @@ public class ChatGroupMemberAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             customImageViewHolder.add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, TestContactListActivity.class);
-                    intent.putExtra("alreadyExitContacts", (Serializable) contacts);//包括我自己，和已经存在的朋友
-                    intent.putExtra("chatRoomName",photoChatTitleName);
+                    Intent intent = new Intent(context, GroupFriendListActivity.class);
+                    intent.putExtra("alreadyExitContacts", (Serializable) contacts);
                     intent.putExtra("comeFromChatGroupMoreActivity",true);
                     intent.putExtra("ChatRoomID",ChatRoomID);
-                    ((TestChatGroupMoreActivity)context).startActivityForResult(intent, 2);
+                    ((GroupMoreActivity)context).startActivityForResult(intent, GroupMoreActivity.REQUEST_CODE_ADD_MEMBER);
 
                 }
             });

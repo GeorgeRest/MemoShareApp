@@ -1,39 +1,33 @@
 package com.george.memoshareapp.activities;
 
-import android.Manifest;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.george.memoshareapp.Fragment.MyChatBarFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ChatAdapter;
 import com.george.memoshareapp.beans.ChatAttachment;
 import com.george.memoshareapp.beans.ChatMessage;
-import com.george.memoshareapp.beans.ChatRoom;
 import com.george.memoshareapp.beans.ImageMessageItem;
 import com.george.memoshareapp.beans.TextMessageItem;
 import com.george.memoshareapp.beans.User;
@@ -42,20 +36,19 @@ import com.george.memoshareapp.events.ChatMessageEvent;
 import com.george.memoshareapp.events.SendMessageEvent;
 import com.george.memoshareapp.http.ProgressRequestBody;
 import com.george.memoshareapp.http.api.ChatServiceApi;
-import com.george.memoshareapp.interfaces.ChatMessageListener;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.interfaces.SendListener;
-import com.george.memoshareapp.manager.ChatRoomManager;
+import com.george.memoshareapp.manager.ChatManager;
 import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.properties.MessageType;
-import com.george.memoshareapp.service.ChatService;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.entity.MediaExtraInfo;
 import com.luck.picture.lib.utils.MediaUtils;
+import com.lxj.xpopup.util.KeyboardUtils;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
@@ -75,133 +68,78 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TestChatGroupActivity extends AppCompatActivity implements SendListener, ChatMessageListener {
+public class GroupChatActivity extends AppCompatActivity implements SendListener, View.OnClickListener {
 
-    private ChatService mService;
-    private boolean mBound = false;
+    private static final String TAG = "GroupChatActivity";
     private FragmentManager manager;
-    private Fragment myChatBar;
+    private MyChatBarFragment myChatBar;
     private final int CHOOSE_PIC_REQUEST_CODE = 3;
     private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
     private List<String> mImageList = new ArrayList<>();
-    private List<MultiItemEntity> multiItemEntityList = new ArrayList<>();
+    private List<MultiItemEntity> multiItemEntityList;
     private ChatAdapter chatAdapter;
-    private List<User> contactList;
-    private String photoChatName;
-    private ImageView more;
-    List<ChatMessage> chatRoomMessagesList = new ArrayList<>();
-
-    private TextView tv_title;
-    private ImageView back;
-    private List<User> friendList;
-    private List<User> newAddList=new ArrayList<>();
-    private int chatRoomID;
-    private String phoneNumber;
+    private UserManager userManager;
+    public String chatRoomId;
+    private User selfUser;
+    private ChatManager chatManager;
+    private RecyclerView rv_chat;
     private String chatRoomName;
-    private RecyclerView rl;
-
+    public static boolean isInGroupChatActivity;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_group);
-        Intent intent1 = new Intent(TestChatGroupActivity.this, ChatService.class);
-        startService(intent1);
-        bindService(intent1, connection, Context.BIND_AUTO_CREATE);
-        SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
-        phoneNumber = sp.getString("phoneNumber", "");
+        setContentView(R.layout.activity_group_chat);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
         }
+
         manager = getSupportFragmentManager();
+
         if (myChatBar == null) {
-            myChatBar = new MyChatBarFragment(chatRoomID);
+            myChatBar = new MyChatBarFragment();
         }
-        Intent intent = getIntent();
-        chatRoomName = intent.getStringExtra("ChatRoomName");
-        friendList = new UserManager(TestChatGroupActivity.this).getAllUsersFromFriendUser();
-        ChatRoom room = new ChatRoomManager().getChatRoomByChatRoomName(chatRoomName);//带时间
-        photoChatName = chatRoomName;
-        chatRoomID = room.getId();
-        contactList = new ChatRoomManager().getMembersByChatRoomNameId(chatRoomID);
+
         initView();
-        initData();
-        EventBus.getDefault().register(this);
     }
-
-    private void initData() {
-        chatRoomMessagesList = new ChatRoomManager().getChatRoomMessages(chatRoomName);
-        User user = new UserManager(this).findUserByPhoneNumber(phoneNumber);
-        for (ChatMessage chatMessage:chatRoomMessagesList) {
-            if (chatMessage.getMessageType().equals("文本")){
-                TextMessageItem textMessageItem = new TextMessageItem(chatMessage.getContent(), chatMessage.getCreatedAt(), MultiItemEntity.SELF, user.getName());
-                multiItemEntityList.add(textMessageItem);
-            }
-        }
-        // 创建 ChatAdapter 的实例并传递消息列表
-//        ChatAdapter chatAdapter = new ChatAdapter(this, multiItemEntityList,user);
-        chatAdapter = new ChatAdapter(this, multiItemEntityList,user);
-        // 设置 RecyclerView 的适配器
-        rl.setAdapter(chatAdapter);
-    }
-
-
 
     private void initView() {
+
         ImageButton ibtn_group_chat_back = (ImageButton) findViewById(R.id.ibtn_group_chat_back);
         ImageButton ibtn_group_chat_menu = (ImageButton) findViewById(R.id.ibtn_group_chat_menu);
-        rl = (RecyclerView) findViewById(R.id.rcl_group_chat_detail);
+        TextView ibtn_group_chat = (TextView) findViewById(R.id.ibtn_group_chat);
         TextView tv_group_chat_name = (TextView) findViewById(R.id.tv_group_chat_name);
+        ibtn_group_chat_back.setOnClickListener(this);
+        ibtn_group_chat_menu.setOnClickListener(this);
+        ibtn_group_chat.setOnClickListener(this);
+        userManager = new UserManager(this);
+        selfUser = userManager.findUserByPhoneNumber(UserManager.getSelfPhoneNumber(this));
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.fl_group_chat_detail_bar, myChatBar);
         transaction.commit();
-        Date date = new Date(System.currentTimeMillis());
-        RecyclerView rcl_group_chat_detail = (RecyclerView) findViewById(R.id.rcl_group_chat_detail);
+        chatManager = new ChatManager(this);
+        Intent intent = getIntent();
+        chatRoomId = intent.getStringExtra("chatRoomId");
+        chatRoomName = intent.getStringExtra("chatRoomName");
+        tv_group_chat_name.setText(chatRoomName);
+        multiItemEntityList = chatManager.getMessageFromDB(chatRoomId, 0);
+        rv_chat = (RecyclerView) findViewById(R.id.rcl_group_chat_detail);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        chatAdapter = new ChatAdapter(this, multiItemEntityList,new UserManager(this).findUserByPhoneNumber(phoneNumber));
-        rcl_group_chat_detail.setLayoutManager(layoutManager);
-        rcl_group_chat_detail.setAdapter(chatAdapter);
-        back = (ImageView) findViewById(R.id.chat_group_iv_back);
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_title.setText(photoChatName);
-        more = (ImageView) findViewById(R.id.more);
-        more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TestChatGroupActivity.this, TestChatGroupMoreActivity.class);
-                intent.putExtra("ChatRoomName",chatRoomName);
-                startActivityForResult(intent,1);
-            }
-        });
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBound) {
-                    unbindService(connection);
-                    mBound = false;
-                }
-                finish();
-            }
-        });
-
+        chatAdapter = new ChatAdapter(this, multiItemEntityList,rv_chat,chatRoomId);
+        rv_chat.setLayoutManager(layoutManager);
+        rv_chat.setAdapter(chatAdapter);
+        rv_chat.scrollToPosition(multiItemEntityList.size() - 1);
     }
+
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            // 处理从B页面返回的数据
-            List<User> contactListFromChatGroupMoreActivity = (List<User>) data.getSerializableExtra("addedContactList");
-            String photoChatTitleName = data.getStringExtra("photoChatTitleName");
-            photoChatName=photoChatTitleName;
-            System.out.println("-=-==-="+contactListFromChatGroupMoreActivity);
-            if (contactListFromChatGroupMoreActivity != null && !contactListFromChatGroupMoreActivity.isEmpty()) {
-                contactList=contactListFromChatGroupMoreActivity;
-                // 在这里可以刷新RecyclerView等视图，使新的列表数据生效
-            }
-        }
+
         switch (requestCode) {
             case CHOOSE_PIC_REQUEST_CODE:
                 Toast.makeText(this, "退出选择图片", Toast.LENGTH_SHORT).show();
@@ -215,8 +153,10 @@ public class TestChatGroupActivity extends AppCompatActivity implements SendList
                 break;
             default:
                 break;
+
         }
     }
+
     private void analyticalSelectResults(ArrayList<LocalMedia> result) {
         mImageList = new ArrayList<>();
         for (LocalMedia media : result) {
@@ -250,30 +190,17 @@ public class TestChatGroupActivity extends AppCompatActivity implements SendList
             Date date = new Date(System.currentTimeMillis());
             mImageList.add(path); // 接收已选图片地址，用于接口上传图片
             //需要进行上传图片或视频
-            User user = new UserManager(this).findUserByPhoneNumber(phoneNumber);
-            ImageMessageItem imageMessageItem = new ImageMessageItem(path, date, MultiItemEntity.SELF, user.getName());
+
+            ImageMessageItem imageMessageItem = new ImageMessageItem(path, date, MultiItemEntity.SELF, selfUser);
             imageMessageItem.setFileName(media.getFileName());
             Logger.d(imageMessageItem.getFileName());
-            multiItemEntityList.add(imageMessageItem);
+//            multiItemEntityList.add(imageMessageItem);
+            chatAdapter.addData(imageMessageItem);
             uploadFile(path, imageMessageItem);
 
         }
         chatAdapter.notifyDataSetChanged();
     }
-    private final ServiceConnection connection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            ChatService.LocalBinder binder = (ChatService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
 
     /**
      * 发送消息给service->服务器并更新UI
@@ -282,15 +209,13 @@ public class TestChatGroupActivity extends AppCompatActivity implements SendList
      */
     @Override
     public void sendContent(MultiItemEntity multiItem) {
-
-        multiItemEntityList.add(multiItem);
+//        multiItemEntityList.add(multiItem);
+        chatAdapter.addData(multiItem);
         chatAdapter.notifyDataSetChanged();
+
         switch (multiItem.getItemShowType()) {
             case MessageType.TEXT:
-                Date currentDate = new Date();
-                EventBus.getDefault().post(new SendMessageEvent(new ChatMessage(currentDate,chatRoomName,chatRoomID,phoneNumber , multiItem.getItemContent(), "文本")));
-                ChatMessage message = new ChatMessage(currentDate,chatRoomName, chatRoomID, phoneNumber, multiItem.getItemContent(), "文本");
-                message.save();
+                EventBus.getDefault().post(new SendMessageEvent(new ChatMessage(Integer.parseInt(chatRoomId), selfUser.getPhoneNumber(), multiItem.getItemContent(), "文本")));
                 break;
             case MessageType.VOICE:
                 Logger.d("发送语音");
@@ -299,12 +224,8 @@ public class TestChatGroupActivity extends AppCompatActivity implements SendList
             default:
                 break;
         }
-
-    }
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
+        rv_chat.smoothScrollToPosition(chatAdapter.getData().size() - 1);
+        KeyboardUtils.hideSoftInput(getWindow());
     }
 
     private void uploadFile(String filePath, MultiItemEntity multiItem) {
@@ -362,7 +283,7 @@ public class TestChatGroupActivity extends AppCompatActivity implements SendList
                         default:
                             return;
                     }
-                    ChatMessage message = new ChatMessage(chatRoomID, phoneNumber, "", type);
+                    ChatMessage message = new ChatMessage(Integer.parseInt(chatRoomId), UserManager.getSelfPhoneNumber(GroupChatActivity.this), "", type);
                     ChatAttachment attachment = new ChatAttachment(multiItem.getFileName(), type);
                     message.setAttachment(attachment);
                     EventBus.getDefault().post(new SendMessageEvent(message));
@@ -375,40 +296,37 @@ public class TestChatGroupActivity extends AppCompatActivity implements SendList
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        chatManager.setLastViewTime(-1);
+        super.onDestroy();
+    }
+
     /**
      * 接收服务器消息
      */
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onChatMessageEvent(ChatMessageEvent event) {
         ChatMessage chatMessage = event.chatMessage;
-        // 处理接收到的消息
-        ChatMessageListener(chatMessage);
-    }
-
-
-    @Override
-    public void ChatMessageListener(ChatMessage chatMessage) {
-        chatMessage.save();
-        String filePath="";
-        if (chatMessage != null && chatMessage.getAttachment() != null) {
-            filePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
-
+        if (chatMessage.getChatRoomId() != Integer.parseInt(chatRoomId)) {
+            return;
         }
         MultiItemEntity multiItem = null;
-        Logger.d("onChatMessageEvent=接口=========调用啦哈哈哈哈");
 
         switch (chatMessage.getMessageType()) {
             case "文本":
-                multiItem = new TextMessageItem(chatMessage.getContent(), new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getSenderId());
+                multiItem = new TextMessageItem(chatMessage.getContent(), new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getUser());
                 break;
             case "图片":
-                Logger.d(filePath);
-                multiItem = new ImageMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getSenderId());
+                String pictureFilePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+                Logger.d(pictureFilePath);
+                multiItem = new ImageMessageItem(pictureFilePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getUser());
                 break;
             case "语音":
-                multiItem = new VoiceMessageItem(filePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getSenderId());
-                Logger.d(filePath);
+                String RecordFilePath = AppProperties.SERVER_MEDIA_URL + chatMessage.getAttachment().getFilePath();
+                multiItem = new VoiceMessageItem(RecordFilePath, new Date(System.currentTimeMillis()), MultiItemEntity.OTHER, chatMessage.getUser());
+                Logger.d(RecordFilePath);
                 break;
             case "视频":
 
@@ -417,8 +335,71 @@ public class TestChatGroupActivity extends AppCompatActivity implements SendList
                 break;
         }
         if (multiItem != null) {
-            multiItemEntityList.add(multiItem);
+//            multiItemEntityList.add(multiItem);
+            chatAdapter.addData(multiItem);
             chatAdapter.notifyDataSetChanged();
+            rv_chat.scrollToPosition(chatAdapter.getData().size() - 1);
         }
     }
+
+    public static void openGroupChatActivity(Context context, int chatRoomId, String chatRoomName) {
+        Intent intent = new Intent(context, GroupChatActivity.class);
+        intent.putExtra("chatRoomId", chatRoomId + "");
+        intent.putExtra("chatRoomName", chatRoomName);
+        context.startActivity(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isInGroupChatActivity = true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        KeyboardUtils.hideSoftInput(getWindow());
+        myChatBar.getEditText().clearFocus();
+        EventBus.getDefault().register(this);
+        long lastViewTime = chatManager.getLastViewTime();
+        if (lastViewTime == -1) {
+            return;
+        }
+        List<MultiItemEntity> multiItemEntities = chatManager.getMessageFromDB(chatRoomId, lastViewTime);
+        if (multiItemEntities != null && !multiItemEntities.isEmpty()) {
+            chatAdapter.addAll(multiItemEntities);
+            chatAdapter.notifyDataSetChanged();
+            rv_chat.scrollToPosition(multiItemEntityList.size() - 1);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isInGroupChatActivity = false;
+        EventBus.getDefault().unregister(this);
+        chatManager.setLastViewTime(System.currentTimeMillis());
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ibtn_group_chat_back:
+                finish();
+                break;
+            case R.id.ibtn_group_chat:
+            case R.id.ibtn_group_chat_menu:
+                Intent intent = new Intent(this, GroupMoreActivity.class);
+                intent.putExtra("chatRoomId", chatRoomId);
+                intent.putExtra("ChatRoomName", chatRoomName);
+                startActivity(intent);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+
 }

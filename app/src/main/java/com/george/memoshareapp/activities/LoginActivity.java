@@ -110,6 +110,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                                 editor.putBoolean("isLogin", true);
                                                 editor.apply();
                                                 startActivity(intent);
+
                                                 Toasty.success(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                                                 Logger.d("登录成功");
                                                 finish();

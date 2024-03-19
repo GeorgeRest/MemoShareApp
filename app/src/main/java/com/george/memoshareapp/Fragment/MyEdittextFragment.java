@@ -18,8 +18,10 @@ import androidx.fragment.app.Fragment;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.TextMessageItem;
+import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.interfaces.SendListener;
+import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.utils.GlideEngine;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
@@ -137,7 +139,7 @@ public class MyEdittextFragment extends Fragment {
                 switch (sendBtnState){
                     case SEND_PIC_BTN_STATE:
                         PictureSelector.create(getActivity())
-                                .openGallery(SelectMimeType.ofAll())
+                                .openGallery(SelectMimeType.ofImage())
                                 .setImageEngine(GlideEngine.createGlideEngine())
                                 .isWithSelectVideoImage(false)//图片视频分别处理
 //                                .setSelectionMode(Picture)//设置单选多选
@@ -159,7 +161,9 @@ public class MyEdittextFragment extends Fragment {
                         String text = et_group_chat.getText().toString();
                         SendListener listener = (SendListener) getActivity();
                         Date date = new Date(System.currentTimeMillis());
-                        listener.sendContent(new TextMessageItem(text,date, MultiItemEntity.SELF,"user"));
+                        UserManager userManager = new UserManager(getContext());
+                        User user = userManager.findUserByPhoneNumber(UserManager.getSelfPhoneNumber(getContext()));
+                        listener.sendContent(new TextMessageItem(text,date, MultiItemEntity.SELF,user));
                         Toast.makeText(getContext(), "发送文字成功", Toast.LENGTH_SHORT).show();
 
                         et_group_chat.setText("");
@@ -170,9 +174,10 @@ public class MyEdittextFragment extends Fragment {
                 }
             }
         });
-
-
     }
 
+    public EditText getEditText(){
+        return view.findViewById(R.id.et_group_chat);
+    }
 
 }

@@ -1,9 +1,11 @@
 package com.george.memoshareapp.beans;
 
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @projectName: MemoShare
@@ -18,26 +20,23 @@ import java.util.Date;
 public class ChatMessage extends LitePalSupport {
     private int id;
     private int chatRoomId;
-    private String ChatRoomName;
+    private int ChatMessageId;
     private String senderId;
     private String content;
     private String messageType;
-    private Date createdAt;
-    private Date updatedAt;
+    private String createdAt;
+    private String updatedAt;
+    @Column(ignore = true)
+    private User user;
     private ChatAttachment attachment;
 
-    public String getChatRoomName() {
-        return ChatRoomName;
-    }
-
-    public void setChatRoomName(String chatRoomName) {
-        ChatRoomName = chatRoomName;
-    }
+    @Column(ignore = true)
+    private ChatRoom chatRoom;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(int id, int chatRoomId, String senderId, String content, String messageType, Date createdAt, Date updatedAt, ChatAttachment attachment) {
+    public ChatMessage(int id, int chatRoomId, String senderId, String content, String messageType, String createdAt, String updatedAt, ChatAttachment attachment) {
         this.id = id;
         this.chatRoomId = chatRoomId;
         this.senderId = senderId;
@@ -48,14 +47,6 @@ public class ChatMessage extends LitePalSupport {
         this.attachment = attachment;
     }
 
-    public ChatMessage(Date createdAt, String ChatRoomName, int chatRoomId, String senderId, String content, String messageType) {
-        this.chatRoomId = chatRoomId;
-        this.ChatRoomName=ChatRoomName;
-        this.createdAt=createdAt;
-        this.senderId = senderId;
-        this.content = content;
-        this.messageType = messageType;
-    }
     public ChatMessage(int chatRoomId, String senderId, String content, String messageType) {
         this.chatRoomId = chatRoomId;
         this.senderId = senderId;
@@ -110,19 +101,19 @@ public class ChatMessage extends LitePalSupport {
         this.messageType = messageType;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -134,17 +125,45 @@ public class ChatMessage extends LitePalSupport {
         this.attachment = attachment;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
+
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+    }
+
+    public int getChatMessageId() {
+        return ChatMessageId;
+    }
+
+    public void setChatMessageId(int chatMessageId) {
+        ChatMessageId = chatMessageId;
+    }
+
+
     @Override
     public String toString() {
         return "ChatMessage{" +
                 "id=" + id +
                 ", chatRoomId=" + chatRoomId +
+                ", ChatMessageId=" + ChatMessageId +
                 ", senderId='" + senderId + '\'' +
                 ", content='" + content + '\'' +
                 ", messageType='" + messageType + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
+                ", user=" + user +
                 ", attachment=" + attachment +
+                ", chatRoom=" + chatRoom +
                 '}';
     }
 }

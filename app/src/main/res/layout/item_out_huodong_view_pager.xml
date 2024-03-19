@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingHorizontal="50dp"
+    android:paddingVertical="150dp">
+
+    <ImageView
+        android:id="@+id/iv_activity_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/tv_publisher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cdv_avator"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="20dp"
+        android:text="发表用户名称"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/tv_publish_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_publish_tag"
+        android:layout_marginTop="8dp"
+        android:paddingHorizontal="20dp"
+        android:text="发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容发布内容"
+        android:textSize="12dp"
+        android:textColor="@color/white"
+        android:maxLength="50"
+        android:ellipsize="end"/>
+
+    <TextView
+        android:id="@+id/tv_publish_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/cdv_avator"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:text="2024/00/00 00:21:21"/>
+
+    <TextView
+        android:id="@+id/tv_publish_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_publish_time"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/cdv_avator"
+        android:gravity="right"
+        android:layout_marginLeft="20dp"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:text="中国大连"/>
+
+    <TextView
+        android:id="@+id/tv_publish_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_publish_location"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:textColor="#A167E3"
+        android:text="#美景"/>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cdv_avator"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:cardCornerRadius="5dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

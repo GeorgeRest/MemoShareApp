@@ -44,4 +44,7 @@ public interface PostServiceApi {
 
     @GET("api/getLikePostsByPhoneNumber")
     Call<HttpListData<Post>> getLikePostsByPhoneNumber(@Query("pageNum") int pageNum, @Query("pageSize") int pageSize, @Query("phoneNumber") String phoneNumber);
+
+    @GET("api/getMemoPost")
+    Call<Post> getMemoPost(@Query("phoneNumber") String phoneNumber);
 }

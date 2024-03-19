@@ -30,6 +30,7 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.CreatedAlbumActivity;
 import com.george.memoshareapp.activities.RemindActivity;
 import com.george.memoshareapp.activities.TestContactListActivity;
+import com.george.memoshareapp.activities.GroupFriendListActivity;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
@@ -247,7 +248,8 @@ public class CalendarTripFragment extends Fragment implements
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_blue:
-                Intent intent1 = new Intent(getContext(), TestContactListActivity.class);
+                Intent intent1 = new Intent(getContext(), GroupFriendListActivity.class);
+                intent1.putExtra("ComeFromCalendarTripFragment",true);
                 startActivity(intent1);
                 break;
             case R.id.add_red:

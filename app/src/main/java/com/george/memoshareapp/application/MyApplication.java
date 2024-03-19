@@ -6,8 +6,8 @@ import android.util.Log;
 import com.amap.api.maps2d.model.LatLng;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.george.memoshareapp.utils.LocationUtil;
-import com.mob.MobSDK;
-import com.mob.OperationCallback;
+import com.kongzue.dialogx.DialogX;
+import com.kongzue.dialogx.style.IOSStyle;
 import com.mob.MobSDK;
 import com.mob.OperationCallback;
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -44,6 +44,8 @@ public class MyApplication extends Application {
         Logger.addLogAdapter(new AndroidLogAdapter());
         LitePal.initialize(this);
         Fresco.initialize(this);
+        DialogX.init(this);
+        DialogX.globalStyle = IOSStyle.style();
         new LocationUtil(this).getLocation(new LocationUtil.LocationCallback() {
             @Override
             public void onLocationBack(LatLng latLng) {

@@ -17,27 +17,25 @@ import java.util.Date;
  */
 
 public class ChatRoomMember extends LitePalSupport {
+    private int id;
     private int chatRoomId;
-    private String userId;
+    private long userId;
     private Date lastReadAt;
     private int isAdmin;
     private Date createdAt;
     private Date updatedAt;
 
+    public ChatRoomMember() {
 
+    }
 
-    public ChatRoomMember(int chatRoomId, String userId, Date lastReadAt, int isAdmin, Date createdAt, Date updatedAt) {
+    public ChatRoomMember(int chatRoomId, int userId, Date lastReadAt, int isAdmin, Date createdAt, Date updatedAt) {
         this.chatRoomId = chatRoomId;
         this.userId = userId;
         this.lastReadAt = lastReadAt;
         this.isAdmin = isAdmin;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
-    public ChatRoomMember(int chatRoomId, String userId, int isAdmin) {
-        this.chatRoomId = chatRoomId;
-        this.userId = userId;
-        this.isAdmin = isAdmin;
     }
 
     public int getChatRoomId() {
@@ -48,16 +46,25 @@ public class ChatRoomMember extends LitePalSupport {
         this.chatRoomId = chatRoomId;
     }
 
-    public String getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 
-    public void setUserId(String userId) {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
+
     public Date getLastReadAt() {
         return lastReadAt;
+    }
+
+    public long getUserId() {
+        return userId;
     }
 
     public void setLastReadAt(Date lastReadAt) {
@@ -86,5 +93,18 @@ public class ChatRoomMember extends LitePalSupport {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatRoomMember{" +
+                "id=" + id +
+                ", chatRoomId=" + chatRoomId +
+                ", userId=" + userId +
+                ", lastReadAt=" + lastReadAt +
+                ", isAdmin=" + isAdmin +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

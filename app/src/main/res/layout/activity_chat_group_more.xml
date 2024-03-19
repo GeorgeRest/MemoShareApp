@@ -33,9 +33,6 @@
 
     </RelativeLayout>
 
-
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_more_member_rv_image"
         android:layout_width="match_parent"
@@ -117,32 +114,12 @@
 
 
             <TextView
+                android:id="@+id/tv_chat_picture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="30dp"
-                android:text="查看图片及视频"
-                android:textColor="#504F4F"
-                android:textSize="14dp" />
-
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/RL_permission"
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:layout_marginTop="2dp"
-            android:background="@color/white">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="30dp"
-
-                android:text="生成相册"
+                android:text="查看图片"
                 android:textColor="#504F4F"
                 android:textSize="14dp" />
 
@@ -156,9 +133,8 @@
             android:layout_marginTop="8dp"
             android:background="@color/white">
 
-
-
             <TextView
+                android:id="@+id/tv_exit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

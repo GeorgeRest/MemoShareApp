@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -37,7 +38,7 @@ public class MyChatBarFragment extends Fragment {
     private View view;
     private ImageView ibtn_group_chat_input_type;
 
-    Fragment myEtFragment = null;
+    MyEdittextFragment myEtFragment = null;
     Fragment myRecFragment = null;
     private int chatRoomId;
 
@@ -146,5 +147,7 @@ public class MyChatBarFragment extends Fragment {
         chatState = VOICE_RECORD_STATE;
     }
 
-
+    public EditText getEditText() {
+        return myEtFragment.getEditText();
+    }
 }

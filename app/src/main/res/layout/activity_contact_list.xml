@@ -10,64 +10,64 @@
         android:orientation="vertical">
 
 
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="40dp" android:paddingLeft="10dp" android:paddingRight="10dp">
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="30dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="40dp" android:paddingLeft="10dp" android:paddingRight="10dp">
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
 
-            android:src="@mipmap/back_register_contact"/>
-        <TextView android:id="@+id/tv_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerHorizontal="true" android:layout_centerVertical="true" android:maxWidth="200dp" android:text="联系人" android:textColor="#202025" android:textSize="20dp"/>
-        <Button
-            android:id="@+id/btn_add_contacts_complete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="完成"
-            android:backgroundTint="#957ED8"
+                android:src="@mipmap/back_register_contact"/>
+            <TextView android:id="@+id/tv_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerHorizontal="true" android:layout_centerVertical="true" android:maxWidth="200dp" android:text="联系人" android:textColor="#202025" android:textSize="20dp"/>
+            <Button
+                android:id="@+id/btn_add_contacts_complete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="完成"
+                android:backgroundTint="#957ED8"
 
-            />
-    </RelativeLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/horizontal_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/lv_contact_list"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        />
-
-
-    <FrameLayout
-        android:id="@+id/contact_search_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:padding="10dp">
-    </FrameLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ListView android:id="@+id/lv_contact_list"
+                />
+        </RelativeLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/horizontal_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-        <com.george.memoshareapp.view.LetterIndexView
-            android:id="@+id/letter_index_view"
-            android:layout_width="36dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"/>
-        <TextView
-            android:id="@+id/tv_show_letter_toast"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:text="A"
-            android:textSize="27sp"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:background="#57525755"
-            android:visibility="gone"/>
-    </RelativeLayout>
+            android:layout_above="@+id/lv_contact_list"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            />
+
+
+        <FrameLayout
+            android:id="@+id/contact_search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="10dp">
+        </FrameLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ListView android:id="@+id/lv_contact_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <com.george.memoshareapp.view.LetterIndexView
+                android:id="@+id/letter_index_view"
+                android:layout_width="36dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                android:id="@+id/tv_show_letter_toast"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:text="A"
+                android:textSize="27sp"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:background="#57525755"
+                android:visibility="gone"/>
+        </RelativeLayout>
     </LinearLayout>
 </com.drake.statelayout.StateLayout>

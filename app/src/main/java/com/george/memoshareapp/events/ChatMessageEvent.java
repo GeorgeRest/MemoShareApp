@@ -1,7 +1,6 @@
 package com.george.memoshareapp.events;
 
 import com.george.memoshareapp.beans.ChatMessage;
-import com.google.common.eventbus.Subscribe;
 
 /**
  * @projectName: Memosahre

@@ -27,8 +27,7 @@
                 <ImageView
                     android:id="@+id/iv_text_chat_other_profile"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#D81B1B"/>
+                    android:layout_height="match_parent" />
 
 
             </androidx.cardview.widget.CardView>
@@ -37,7 +36,6 @@
                 android:id="@+id/tv_text_chat_other_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="蝎子莱莱"
                 android:layout_marginLeft="50dp"
                 android:textSize="10dp"
                 android:textColor="@color/black"
@@ -47,7 +45,6 @@
                 android:id="@+id/tv_text_chat_other_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2020/6/23 13:00"
                 android:layout_alignTop="@+id/tv_text_chat_other_name"
                 android:layout_marginLeft="50dp"
                 android:textSize="10dp"
@@ -100,8 +97,7 @@
                 <ImageView
                     android:id="@+id/iv_text_chat_self_profile"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#D81B1B"/>
+                    android:layout_height="match_parent" />
 
 
             </androidx.cardview.widget.CardView>
@@ -112,7 +108,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="50dp"
-                android:text="蝎子莱莱"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/black"
                 android:textSize="10dp" />

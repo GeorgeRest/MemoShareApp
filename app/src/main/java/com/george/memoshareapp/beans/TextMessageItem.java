@@ -1,7 +1,6 @@
 package com.george.memoshareapp.beans;
 
 
-
 import com.george.memoshareapp.interfaces.MultiItemEntity;
 import com.george.memoshareapp.properties.MessageType;
 
@@ -12,15 +11,15 @@ public class TextMessageItem extends MultiItemEntity {
     private String textContent;
     private Date date;
     private int UserSide;
-    private String name;
+    private User user;
     private int progress;
     private String fileName;
 
-    public TextMessageItem(String textContent, Date date, int userSide, String name) {
+    public TextMessageItem(String textContent, Date date, int userSide, User user) {
         this.textContent = textContent;
         this.date = date;
         UserSide = userSide;
-        this.name = name;
+        this.user = user;
     }
 
     @Override
@@ -35,14 +34,15 @@ public class TextMessageItem extends MultiItemEntity {
     }
 
     @Override
-    public void setUserName(String name) {
-        this.name = name;
+    public void setUserInfo(User user) {
+        this.user = user;
     }
 
     @Override
-    public String getUserName() {
-        return name;
+    public User getUserInfo() {
+        return user;
     }
+
 
     @Override
     public void setItemContent(String textContent) {
@@ -83,11 +83,23 @@ public class TextMessageItem extends MultiItemEntity {
 
     @Override
     public void setUserSideType(int UserSide) {
-        this.UserSide =UserSide;
+        this.UserSide = UserSide;
     }
 
     @Override
     public int getUserSideType() {
         return UserSide;
+    }
+
+    @Override
+    public String toString() {
+        return "TextMessageItem{" +
+                "textContent='" + textContent + '\'' +
+                ", date=" + date +
+                ", UserSide=" + UserSide +
+                ", user=" + user +
+                ", progress=" + progress +
+                ", fileName='" + fileName + '\'' +
+                '}';
     }
 }

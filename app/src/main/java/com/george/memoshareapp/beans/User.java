@@ -26,6 +26,7 @@ public class User extends LitePalSupport implements Serializable {
     private String birthday;
     private String region; //中国
     private String BackGroundPath; //默认背景
+    private ChatMessage ChatMessage;
     private int  isFriend;
 
     public int getIsFriend() {
@@ -37,11 +38,10 @@ public class User extends LitePalSupport implements Serializable {
     }
 
     private List<Post> likePosts = new ArrayList<>();
-    private List<Relationship> user1 = new ArrayList<>();
-    private List<Relationship> user2 = new ArrayList<>();
 
 
-    public User(String phoneNumber, String name, String signature, String gender, String birthday, String region, String backGroundPath, String headPortraitPath) {
+
+    public User(String phoneNumber, String name, String signature, String gender, String birthday, String region) {
         this.phoneNumber=phoneNumber;
         this.name = name;
         this.signature = signature;
@@ -90,9 +90,6 @@ public class User extends LitePalSupport implements Serializable {
         this.phoneNumber = phoneNumber;
         this.password = password;
     }
-
-
-
     public User(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
@@ -168,5 +165,29 @@ public class User extends LitePalSupport implements Serializable {
                 ", BackGroundPath='" + BackGroundPath + '\'' +
                 ", likePosts=" + likePosts +
                 '}';
+    }
+
+    public com.george.memoshareapp.beans.ChatMessage getChatMessage() {
+        return ChatMessage;
+    }
+
+    public void setChatMessage(com.george.memoshareapp.beans.ChatMessage chatMessage) {
+        ChatMessage = chatMessage;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        User user = (User) obj;
+        return phoneNumber != null ? phoneNumber.equals(user.phoneNumber) : user.phoneNumber == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return phoneNumber != null ? phoneNumber.hashCode() : 0;
     }
 }

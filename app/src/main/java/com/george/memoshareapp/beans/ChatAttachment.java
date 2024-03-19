@@ -3,6 +3,8 @@ package com.george.memoshareapp.beans;
 
 import org.litepal.crud.LitePalSupport;
 
+import java.util.Date;
+
 /**
  * @projectName: MemoShare
  * @package: com.george.memoshare.bean
@@ -19,7 +21,9 @@ public class ChatAttachment extends LitePalSupport {
     private String fileType;
     private String createdAt;
     private String updatedAt;
-public ChatAttachment() {
+    private ChatMessage ChatMessage;
+
+    public ChatAttachment() {
     }
 
     public ChatAttachment(int id, int messageId, String filePath, String fileType, String createdAt, String updatedAt) {
@@ -31,10 +35,11 @@ public ChatAttachment() {
         this.updatedAt = updatedAt;
     }
 
-    public ChatAttachment( String filePath, String fileType) {
+    public ChatAttachment(String filePath, String fileType) {
         this.filePath = filePath;
         this.fileType = fileType;
     }
+
     public ChatAttachment(int messageId, String filePath, String fileType) {
         this.messageId = messageId;
         this.filePath = filePath;
@@ -99,5 +104,13 @@ public ChatAttachment() {
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
                 '}';
+    }
+
+    public com.george.memoshareapp.beans.ChatMessage getChatMessage() {
+        return ChatMessage;
+    }
+
+    public void setChatMessage(com.george.memoshareapp.beans.ChatMessage chatMessage) {
+        ChatMessage = chatMessage;
     }
 }

@@ -1,5 +1,7 @@
 package com.george.memoshareapp.interfaces;
 
+import com.george.memoshareapp.beans.User;
+
 import java.util.Date;
 
 public abstract class MultiItemEntity {
@@ -16,9 +18,9 @@ public abstract class MultiItemEntity {
 
     public abstract String getItemContent();
 
-    public abstract void setUserName(String name);
+    public abstract void setUserInfo(User user);
 
-    public abstract String getUserName();
+    public abstract User getUserInfo();
 
     public abstract void setItemDate(Date date);
 
@@ -27,5 +29,6 @@ public abstract class MultiItemEntity {
     public abstract int getProgress();
     public abstract void setFileName(String  fileName);
     public abstract String getFileName();
+
 
 }

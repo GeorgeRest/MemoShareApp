@@ -3,22 +3,41 @@ package com.george.memoshareapp.service;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.george.memoshareapp.activities.GroupChatActivity;
 import com.george.memoshareapp.beans.ChatMessage;
+import com.george.memoshareapp.beans.ChatRoom;
 import com.george.memoshareapp.events.ChatMessageEvent;
 import com.george.memoshareapp.events.ForceLogoutEvent;
 import com.george.memoshareapp.events.SendMessageEvent;
+import com.george.memoshareapp.manager.ChatManager;
+import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.properties.AppProperties;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.kongzue.dialogx.dialogs.PopNotification;
+import com.kongzue.dialogx.interfaces.OnDialogButtonClickListener;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -30,9 +49,10 @@ public class ChatService extends Service {
 
     private WebSocket mWebSocket;
     private final IBinder mBinder = new ChatService.LocalBinder();
+    private ChatManager chatManager;
 
     public class LocalBinder extends Binder {
-        public  ChatService getService() {
+        public ChatService getService() {
             return ChatService.this;
         }
     }
@@ -46,11 +66,14 @@ public class ChatService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        chatManager = new ChatManager(this);
+
         EventBus.getDefault().register(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //String url = AppProperties.getWebsocketUrl(UserManager.getSelfPhoneNumber(this));
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
         String phoneNumber = sp.getString("phoneNumber", "");
         String url = "ws://192.168.43.204:6028/websocket/"+phoneNumber;
@@ -63,22 +86,35 @@ public class ChatService extends Service {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
                 super.onOpen(webSocket, response);
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        chatManager.updateLastReadTimeInThread();
+                    }
+                }, 5000);
                 Logger.d("WebSocket 连接成功");
-                System.out.println(response.body()+"----------");
-
             }
 
             @Override
             public void onMessage(WebSocket webSocket, String text) {
                 super.onMessage(webSocket, text);
-                Gson gson = new GsonBuilder()
-                        .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                        .create();
-                ChatMessage message = gson.fromJson(text, ChatMessage.class);
+                chatManager.updateLastReadTimeInThread();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Gson gson = new GsonBuilder()
+                                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                                .create();
+                        ChatMessage message = gson.fromJson(text, ChatMessage.class);
+                        new ChatManager(ChatService.this).saveChatMessage(message);
+                        if(!GroupChatActivity.isInGroupChatActivity) {
+                            showPopNotification(message);
+                        }
 
                 EventBus.getDefault().post(new ChatMessageEvent(message)); //接收到的消息给到ChatActivity
                 // 现在你可以操作message对象，例如显示消息内容
-                Logger.d("WebSocket 收到消息"+message);
+                Logger.d("WebSocket 收到消息"+message);}
+                }).start();
             }
 
             @Override
@@ -90,73 +126,120 @@ public class ChatService extends Service {
                     // 如果原因是新会话已经打开，则处理强制注销逻辑
                     handleForceLogout();
                 }
+
+                Logger.d("WebSocket 连接关闭" + "reason" + reason + "code" + code);
             }
+
 
             @Override
             public void onFailure(WebSocket webSocket, Throwable t, Response response) {
                 super.onFailure(webSocket, t, response);
-                Logger.d("WebSocket 连接失败"+t.getMessage());
+
+                Logger.d("WebSocket 连接失败" + t.getMessage());
             }
         });
         return START_STICKY;
     }
+
     public void sendMessage(String message) {
+        chatManager.updateLastReadTimeInThread();
         if (mWebSocket != null && message != null) {
             mWebSocket.send(message);
         }
     }
+
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
         if (mWebSocket != null) {
             mWebSocket.close(1000, "Service destroyed");
+
         }
         super.onDestroy();
     }
 
     /**
      * 发送消息给服务器
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void SendMessageEvent(SendMessageEvent event) {
         ChatMessage message = event.message;
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        // 将Date对象格式化为字符串
+        String createdAt = sdf.format(now);
+        message.setCreatedAt(createdAt);
+        message.setUpdatedAt(createdAt);
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setChatRoomId(message.getChatRoomId());
+        chatRoom.setLastMessage(message.getContent());
+        chatRoom.setLastMessageTime(createdAt);
+        chatRoom.setLastMessageType(message.getMessageType());
+        message.setChatRoom(chatRoom);
+        chatManager.saveChatMessage(message);
         sendMessage(new Gson().toJson(message));
     }
-//    private void handleForceLogout() {
-//        Intent intent = new Intent(this, LoginActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
-//
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "YOUR_CHANNEL_ID")
-//                .setSmallIcon(R.drawable.app_icon) // 设置通知图标
-//                .setContentTitle("账号异常")
-//                .setContentText("您的账号在另一设备登录了。您已被强制下线。")
-//                .setContentIntent(pendingIntent)
-//                .setPriority(NotificationCompat.PRIORITY_MAX);
-//
-//        notificationManager.notify(0, builder.build());
-//
-//        // 关闭WebSocket连接
-//        if (mWebSocket != null) {
-//            mWebSocket.close(1000, "Logged in from another device");
-//        }
-//
-//        // 结束服务
-//        stopSelf();
-//    }
-private void handleForceLogout() {
-    // 发送EventBus事件通知UI层显示强制注销的Dialog
-    EventBus.getDefault().post(new ForceLogoutEvent());
+    private void handleForceLogout() {
+        // 发送EventBus事件通知UI层显示强制注销的Dialog
+        EventBus.getDefault().post(new ForceLogoutEvent());
 
-    // 关闭WebSocket连接
-    if (mWebSocket != null) {
-        mWebSocket.close(1000, "Logged in from another device");
+        // 关闭WebSocket连接
+        if (mWebSocket != null) {
+            mWebSocket.close(1000, "Logged in from another device");
+        }
+
+        // 结束服务
+        stopSelf();
     }
+    private void showPopNotification(ChatMessage message) {
+        String content = "";
+        if (message.getMessageType().equals("图片")) {
+            content = "[图片]";
+        } else if (message.getMessageType().equals("语音")) {
+            content = "[语音]";
+        } else if (message.getMessageType().equals("文本")) {
+            content = message.getContent();
+            if (content.length() > 10) {
+                content = content.substring(0, 10) + "...";
+            }
+        }
+        String ChatRoomName = "";
+        if (message.getChatRoom().getType().equals("多人")) {
+            ChatRoomName = message.getChatRoom().getName();
+        } else {
+            ChatRoomName= message.getUser().getName();
+        }
 
-    // 结束服务
-    stopSelf();
-}
+        // 创建一个final变量来在内部类中使用
+        final String finalContent = content;
+        final String finalChatRoomName = ChatRoomName;
+        Glide.with(this)
+                .asBitmap()
+                .load(AppProperties.SERVER_MEDIA_URL + message.getUser().getHeadPortraitPath()) // 替换为你的图片URL
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        PopNotification.show(message.getUser().getName(), finalContent)
+                                .setIcon(resource)
+                                .setButton("回复", new OnDialogButtonClickListener<PopNotification>() {
+                                    @Override
+                                    public boolean onClick(PopNotification baseDialog, View v) {
+                                        Intent intent = new Intent(ChatService.this, GroupChatActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.putExtra("chatRoomId", message.getChatRoom().getId()+"");
+                                        intent.putExtra("chatRoomName", finalChatRoomName);
+                                        startActivity(intent);
+                                        return false;
+                                    }
+                                })
+                                .showLong();
+                    }
 
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+    }
 }
