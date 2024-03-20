@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+
 
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -11,8 +11,8 @@
 
         <ImageView
             android:id="@+id/chat_more_member_image_view"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="130dp"
+            android:layout_height="115dp"
 
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"

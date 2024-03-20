@@ -103,7 +103,7 @@ public class ChatService extends Service {
                 WebSocketMessage webSocketMessage = gson.fromJson(text, WebSocketMessage.class);
                 if("session_closed".equals(webSocketMessage.getType())){
                     //处理logOut
-
+                    handleForceLogout();
                     mWebSocket.close(1000, "session_closed");
                     Logger.d("WebSocket 收到消息" + webSocketMessage.getMessage());
                     return;
@@ -136,7 +136,7 @@ public class ChatService extends Service {
                 // 评估关闭的原因
                 if ("New session opened！！！".equals(reason)) {
                     // 如果原因是新会话已经打开，则处理强制注销逻辑
-                    handleForceLogout();
+//                    handleForceLogout();
                 }
 
                 Logger.d("WebSocket 连接关闭" + "reason" + reason + "code" + code);
