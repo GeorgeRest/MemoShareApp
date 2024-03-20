@@ -134,7 +134,7 @@ public class CommentAdapter extends BaseAdapter {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.commentItemContentAndTime:
-                    handler.sendMessage(handler.obtainMessage(10, position));
+                    handler.sendMessage(handler.obtainMessage(10, position));  //10代表回复一级评论
                     break;
             }
         }

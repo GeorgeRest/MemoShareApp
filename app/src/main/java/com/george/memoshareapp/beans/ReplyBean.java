@@ -11,7 +11,15 @@ public class ReplyBean extends LitePalSupport {
     private String commentPhoneNumber;	//被回复人账号
     private String replyContent;	    //回复的内容
     private String replyTime;             //回复时间
+    private User user;
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public int getId() {
         return id;

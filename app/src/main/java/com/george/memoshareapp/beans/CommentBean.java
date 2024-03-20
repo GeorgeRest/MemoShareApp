@@ -2,13 +2,9 @@ package com.george.memoshareapp.beans;
 
 import org.litepal.crud.LitePalSupport;
 
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @projectName: Memosahre
@@ -26,9 +22,26 @@ public class CommentBean extends LitePalSupport implements Serializable {
     private int postId;
     private String commentContent;
     private String commentTime;
-    private String commentUserPhoneNumber;
+    private String commentUserPhoneNumber;      //回复人
+    private String postPhoneNumber;                    //被回复人
     private List<ReplyBean> replyCommentList = new ArrayList<>() ;      //回复内容列表
+    private User user;
 
+    public String getPostPhoneNumber() {
+        return postPhoneNumber;
+    }
+
+    public void setPostPhoneNumber(String postPhoneNumber) {
+        this.postPhoneNumber = postPhoneNumber;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public int getId() {
         return id;

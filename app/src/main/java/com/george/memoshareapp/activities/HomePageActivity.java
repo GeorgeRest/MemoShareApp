@@ -68,6 +68,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_home_page);
         initViews();
         fragmentManager = getSupportFragmentManager();
+        UserManager userManager = new UserManager(this);
         setTabSelection(0);
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
         String phoneNumber = sp.getString("phoneNumber", "");
@@ -77,6 +78,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = new Intent(this, ChatService.class);
         startService(intent);
         bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        userManager.getAllUsers();
     }
 
     private void initViews() {

@@ -43,6 +43,7 @@ import com.haibin.calendarview.CalendarView;
 import java.text.SimpleDateFormat;
 import java.time.Month;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -133,7 +134,6 @@ public class CalendarTripFragment extends Fragment implements
     }
 
     private void getRemind(String date) {
-        System.out.println("------------"+date);
         remindList = new ArrayList<>();
         RemindServiceApi serviceApi = RetrofitManager.getInstance().create(RemindServiceApi.class);
         serviceApi.getRemind(date,myPhoneNumber).enqueue(new Callback<HttpListData<Remind>>() {

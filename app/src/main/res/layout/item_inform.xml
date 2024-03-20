@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <com.george.memoshareapp.view.NiceImageView
+        android:id="@+id/niv_photo"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@mipmap/head_portrait"
+        android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textColor="#202025"
+        android:textSize="15dp"
+        android:layout_toRightOf="@+id/niv_photo"
+        android:layout_marginLeft="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_inform_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="time"
+        android:textSize="11dp"
+        android:textColor="#80202025"
+        android:layout_toRightOf="@+id/niv_photo"
+        android:layout_below="@+id/tv_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="2dp"/>
+
+    <TextView
+        android:id="@+id/tv_inform_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        android:textSize="13dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:maxWidth="65dp"/>
+
+</RelativeLayout>

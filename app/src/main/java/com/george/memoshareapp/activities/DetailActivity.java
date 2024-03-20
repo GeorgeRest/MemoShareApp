@@ -464,10 +464,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      */
     private void publishComment() {
         CommentBean comment = new CommentBean();
-        comment.setCommentUserPhoneNumber(phoneNumber);
+        comment.setCommentUserPhoneNumber(phoneNumber);         //回复人账号
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
         String dateString = formatter.format(date);
+        String postPhoneNumber = post.getPhoneNumber();     //被回复人账号
+        comment.setPostPhoneNumber(postPhoneNumber);
         comment.setCommentTime(dateString);
         comment.setCommentContent(text);
         comment.setPostId(post.getId());  // 假设post是你当前的帖子对象
