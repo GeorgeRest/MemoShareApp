@@ -23,5 +23,7 @@
     <color name="complete">#997AE7</color>
     <color name="separator">#4D605F65</color>
     <color name="edit_bg">#f8f4fa</color>
+    <color name="activity_text_color">#403E3E</color>
+    <color name="personal_activity_bg">#F8F4FA</color>
 </resources>
 

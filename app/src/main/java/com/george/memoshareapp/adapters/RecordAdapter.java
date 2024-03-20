@@ -92,7 +92,7 @@ public class RecordAdapter extends BaseMultiItemAdapter<Recordings>implements Dr
                             MediaPlayer mediaPlayer = mediaPlayerMap.get(recording);
                             if (mediaPlayer.isPlaying()) {
                                 mediaPlayer.pause();
-                                long currentDuration = mediaPlayer.getCurrentPosition();
+                                long currentDuration = mediaPlayer.getDuration();
                                 recording.setCurrentDuration(currentDuration); // Store current duration
 
                                 if (recording.getCountDownTimer() != null) {

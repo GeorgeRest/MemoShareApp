@@ -4,7 +4,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -73,7 +72,7 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
 
     private static final String TAG = "GroupChatActivity";
     private FragmentManager manager;
-    private Fragment myChatBar;
+    private MyChatBarFragment myChatBar;
     private final int CHOOSE_PIC_REQUEST_CODE = 3;
     private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
@@ -353,6 +352,8 @@ public class GroupChatActivity extends AppCompatActivity implements SendListener
     @Override
     protected void onResume() {
         super.onResume();
+        KeyboardUtils.hideSoftInput(getWindow());
+        myChatBar.getEditText().clearFocus();
         EventBus.getDefault().register(this);
         long lastViewTime = chatManager.getLastViewTime();
         if (lastViewTime == -1) {
