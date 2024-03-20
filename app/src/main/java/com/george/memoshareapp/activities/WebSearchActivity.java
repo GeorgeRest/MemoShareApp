@@ -1,7 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -12,7 +10,7 @@ import com.just.agentweb.AgentWeb;
 
 import es.dmoral.toasty.Toasty;
 
-public class WebSearchActivity extends AppCompatActivity {
+public class WebSearchActivity extends BaseActivity {
 
     private AgentWeb agentWeb;
     private static String uri = "https://www.baidu.com/s?wd=" ;

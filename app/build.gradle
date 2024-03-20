@@ -41,6 +41,8 @@ MobSDK {
 
 dependencies {
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
 
     implementation 'com.orhanobut:logger:2.1.1'

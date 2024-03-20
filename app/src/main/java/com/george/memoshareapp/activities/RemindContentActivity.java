@@ -1,7 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,11 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.beans.User;
 
-import org.litepal.LitePal;
-
-public class RemindContentActivity extends AppCompatActivity implements View.OnClickListener{
+public class RemindContentActivity extends BaseActivity implements View.OnClickListener{
     private ImageView iv_back;
     private EditText et_content;
     private TextView tv_complete;

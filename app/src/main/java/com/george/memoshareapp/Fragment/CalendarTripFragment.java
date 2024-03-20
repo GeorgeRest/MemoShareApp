@@ -1,13 +1,17 @@
 package com.george.memoshareapp.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
@@ -22,7 +27,9 @@ import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.george.memoshareapp.R;
+import com.george.memoshareapp.activities.CreatedAlbumActivity;
 import com.george.memoshareapp.activities.RemindActivity;
+
 import com.george.memoshareapp.activities.GroupFriendListActivity;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
@@ -246,10 +253,78 @@ public class CalendarTripFragment extends Fragment implements
                 startActivity(intent1);
                 break;
             case R.id.add_red:
-                Intent intent = new Intent(getContext(), RemindActivity.class);
-                startActivity(intent);
+                showBottomDialog();
+
                 break;
 
         }
+    }
+    private void showBottomDialog() {
+        //1、使用Dialog、设置style
+        final Dialog dialog = new Dialog(getContext(), R.style.DialogTheme);
+        //2、设置布局
+        View view = View.inflate(getContext(), R.layout.release_permission, null);
+        dialog.setContentView(view);
+
+        Window window = dialog.getWindow();//获取dialog的window对象
+        //设置弹出位置
+        window.setGravity(Gravity.BOTTOM);
+        //设置弹出动画
+        window.setWindowAnimations(R.style.main_menu_animStyle);
+        //设置对话框大小
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        TextView tv_pc_private = view.findViewById(R.id.tv_pc_private);
+        tv_pc_private.setText("创建提醒");
+        TextView tv_pc_public = view.findViewById(R.id.tv_pc_public);
+        tv_pc_public.setText("创建相册");
+        dialog.show();
+
+        dialog.findViewById(R.id.tv_pc_public).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog innerDialog = new AlertDialog.Builder(getContext())
+                        .setMessage("确定要新建一个相册么？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 点击确定按钮后执行的操作
+                                Intent intent = new Intent(getContext(), CreatedAlbumActivity.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 点击取消按钮后执行的操作
+                                dialog.dismiss();
+                            }
+                        })
+                        .create();
+
+                // 显示内部对话框
+                innerDialog.show();
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.tv_pc_private).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getContext(), RemindActivity.class);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
     }
 }

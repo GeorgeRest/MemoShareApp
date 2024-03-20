@@ -180,7 +180,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="320dp"
+                android:layout_marginLeft="310dp"
                 android:layout_marginRight="30dp"
                 android:text="公开"
                 android:textColor="#353434" />
@@ -227,7 +227,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="240dp"
+                android:layout_marginLeft="200dp"
                 android:layout_marginRight="30dp"
                 android:text=""
                 android:textColor="@color/black" />
@@ -237,7 +237,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="320dp"
+                android:layout_marginLeft="300dp"
                 android:layout_marginRight="15dp"
                 android:text=""
                 android:textColor="@color/black" />

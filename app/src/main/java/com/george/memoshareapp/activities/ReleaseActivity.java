@@ -7,7 +7,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import android.text.style.ClickableSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.DatePicker;
@@ -34,7 +32,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -67,7 +64,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class ReleaseActivity extends AppCompatActivity implements View.OnClickListener, RecordingDataListener, PhotoChangedListener {
+public class ReleaseActivity extends BaseActivity implements View.OnClickListener, RecordingDataListener, PhotoChangedListener {
 
     private static final String TAG = "ReleaseActivity";
     private static String timeHourMinute;
@@ -182,48 +179,36 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
     public void showDatePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
-        // 直接创建一个DatePickerDialog对话框实例，并将它显示出来
         new DatePickerDialog(activity, themeResId, new DatePickerDialog.OnDateSetListener() {
-            // 绑定监听器(How the parent is notified that the date is set.)
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                // 此处得到选择的时间，可以进行你想要的操作
                 getYearMonthDay(year, monthOfYear + 1, dayOfMonth);
                 tv.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
-
-                showTimePickerDialog(ReleaseActivity.this, StyleType, release_time_hour, calendar);
-
-            }
-        }, calendar.get(Calendar.YEAR)
-                , calendar.get(Calendar.MONTH)
-                , calendar.get(Calendar.DAY_OF_MONTH)).show();
+                showTimePickerDialog(ReleaseActivity.this, StyleType, release_time_hour, calendar);}
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    private String getYearMonthDay(int year, int month, int dayOfMonth) {
+    public String getYearMonthDay(int year, int month, int dayOfMonth) {
         memoireTimeYear = year + "/" + month + "/" + dayOfMonth;
         return memoireTimeYear;
 
     }
 
     public void showTimePickerDialog(Activity activity, int themeResId, final TextView tv, Calendar calendar) {
-        // Calendar c = Calendar.getInstance();
-        // 创建一个TimePickerDialog实例，并把它显示出来
-        // Activity是context的子类
         new TimePickerDialog(activity, themeResId,
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         getTime(hourOfDay, minute);
                         tv.setText(hourOfDay + ":" + minute);
-
                     }
                 }
-                // 设置初始时间
                 , calendar.get(Calendar.HOUR_OF_DAY)
                 , calendar.get(Calendar.MINUTE)
-                // true表示采用24小时制
                 , true).show();
-    }
+    }// Calendar c = Calendar.getInstance();
+    // 创建一个TimePickerDialog实例，并把它显示出来
+    // Activity是context的子类 // 设置初始时间// true表示采用24小时制
 
     private String getTime(int hourOfDay, int minute) {
         timeHourMinute = hourOfDay + ":" + minute;
@@ -440,8 +425,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         }
         return list;
     }
-
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onClick(View v) {
@@ -458,7 +441,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
                     return;
                 }
                 getSystemTime();
-
                 if (location == null) {
                     location = "";
                 }
@@ -481,7 +463,6 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
 
 
     private void initRecordRecycler() {
-
         recordRecyclerView = (RecyclerView) findViewById(R.id.rl_record);
         recordRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         List<Recordings> recordings = new ArrayList<>();
@@ -490,21 +471,19 @@ public class ReleaseActivity extends AppCompatActivity implements View.OnClickLi
         recordAdapter.setRecordListener(new RecordAdapter.RecordListener() {
             @Override
             public void onRecordClicked() {
-                RecordAudioDialogFragment fragment = RecordAudioDialogFragment.newInstance();
+                RecordAudioDialogFragment fragment = RecordAudioDialogFragment.newInstance();//用于显示录音对话框
                 fragment.show(getSupportFragmentManager(), RecordAudioDialogFragment.class.getSimpleName());
-                fragment.setDataListener(ReleaseActivity.this);
+                fragment.setDataListener(ReleaseActivity.this);//监听录音完成时，调用onRecordingDataReceived()将数据返回给ReleaseActivity
             }
         });
 
 
         recordRecyclerView.addItemDecoration(new SpacesItemDecoration(2, 0, 2, 0));
-
         RecordDragAndSwipe recordDragAndSwipe = new RecordDragAndSwipe(recordAdapter){
             boolean isUp = false;
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-
                 int[] itemLocation = new int[2];
                 viewHolder.itemView.getLocationInWindow(itemLocation);
                 int[] deleteLocation = new int[2];

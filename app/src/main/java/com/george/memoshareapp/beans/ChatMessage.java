@@ -4,9 +4,6 @@ package com.george.memoshareapp.beans;
 import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
-import java.util.Date;
-import java.util.List;
-
 /**
  * @projectName: MemoShare
  * @package: com.george.memoshare.bean

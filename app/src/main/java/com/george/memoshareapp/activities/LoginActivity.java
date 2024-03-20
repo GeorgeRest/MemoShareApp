@@ -15,7 +15,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -43,7 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener , OnCodeReceiverListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener , OnCodeReceiverListener {
     private EventHandler eventHandler;
     private TextView tv_pw_login;
     private TextView tv_code_login;
@@ -70,20 +69,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
-
-//        LitePal.getDatabase();
-//        User user1 = new User();
-//        user1.setName("zxp");
-//        user1.setPhoneNumber("15242089476");
-//        user1.setPassword("123456");
-//        user1.save();
-//        LitePal.getDatabase();
-//        User user2 = new User();
-//        user2.setName("tyf");
-//        user2.setPhoneNumber("19818961591");
-//        user2.setPassword("123456");
-//        user2.save();
-
 
         fragmentManager = getSupportFragmentManager();
         setDefaultSelection(0);
@@ -187,6 +172,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+
+
     private void initView() {
         tv_pw_login = (TextView) findViewById(R.id.tv_pw_login);
         tv_code_login = (TextView) findViewById(R.id.tv_code_login);
@@ -230,8 +217,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     transaction.show(CodeFragment);
                 }
                 break;
-
-
         }
         transaction.commit();
     }
@@ -297,6 +282,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (agreement.isChecked()) {
                 performLogin(phoneNumber, pwNumber);
             } else {
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
                 Toasty.info(this, "请勾选同意协议", Toast.LENGTH_SHORT).show();
             }
         } else if (CodeFragment != null && CodeFragment.isVisible()) {
@@ -314,6 +301,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //                performLoginVcCode(phoneNumber, et_code);
 
             } else {
+                loadingDialog.endAnim();
+                loadingDialog.dismiss();
                 Toasty.info(this, "请同意协议", Toast.LENGTH_SHORT).show();
             }
 

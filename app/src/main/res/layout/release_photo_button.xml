@@ -4,7 +4,7 @@
     android:layout_height="wrap_content">
     <!--        android:contentDescription="@string/move_button_description"-->
     <ImageView
-        android:id="@+id/button_move"
+        android:id="@+id/chat_group_add_member"
         android:layout_width="115dp"
         android:layout_height="115dp"
         android:src="@mipmap/picture"

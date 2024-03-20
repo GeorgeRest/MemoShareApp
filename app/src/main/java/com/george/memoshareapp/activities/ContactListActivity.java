@@ -1,7 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,7 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ContactListActivity extends AppCompatActivity {
+public class ContactListActivity extends BaseActivity {
 
     private ListView lv_contact_list;
     private ContactListAdapter contactListAdapter;

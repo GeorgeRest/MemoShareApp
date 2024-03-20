@@ -1,7 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +11,7 @@ import com.george.memoshareapp.R;
 
 import es.dmoral.toasty.Toasty;
 
-public class TageActivity extends AppCompatActivity {
+public class TageActivity extends BaseActivity {
 
     private RelativeLayout rl_tag_back;
     private TextView tv_tag_finish;

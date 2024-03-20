@@ -9,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.User;
 import com.george.memoshareapp.dialog.LoadingDialog;
@@ -20,7 +18,6 @@ import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.utils.CodeSender;
 import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.george.memoshareapp.view.MyCheckBox;
-
 import com.orhanobut.logger.Logger;
 
 import cn.smssdk.EventHandler;
@@ -30,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText et_phone;
     private EditText et_pw;

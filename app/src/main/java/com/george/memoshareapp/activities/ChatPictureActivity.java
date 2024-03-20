@@ -1,11 +1,10 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ChatPictureAdapter;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ChatPictureActivity extends AppCompatActivity {
+public class ChatPictureActivity extends BaseActivity {
 
     private RecyclerView rv_picture_list;
     private ChatPictureAdapter mPictureAdapter;

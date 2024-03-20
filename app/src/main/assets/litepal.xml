@@ -13,10 +13,11 @@
             <mapping class="com.george.memoshareapp.beans.Relationship"></mapping>
             <mapping class="com.george.memoshareapp.beans.ContactInfo"></mapping>
             <mapping class="com.george.memoshareapp.beans.ChatRoom"></mapping>
-            <mapping class="com.george.memoshareapp.beans.ChatMessage"></mapping>
             <mapping class="com.george.memoshareapp.beans.ChatRoomMember"></mapping>
+            <mapping class="com.george.memoshareapp.beans.ChatMessage"></mapping>
             <mapping class="com.george.memoshareapp.beans.ChatAttachment"></mapping>
-
+            <mapping class="com.george.memoshareapp.beans.Album"></mapping>
+            <mapping class="com.george.memoshareapp.beans.PhotoInAlbum"></mapping>
 
         </list>
     </list>

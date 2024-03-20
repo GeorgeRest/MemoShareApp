@@ -48,7 +48,7 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class DetailActivity extends BaseActivity implements View.OnClickListener {
 
 
     private int like_number;
@@ -189,8 +189,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void putParameter2View() {
-
-
         postUser = post.getUser().get(0);
         userName.setText(postUser.getName());
         if(postUser.getHeadPortraitPath()!=null){
@@ -201,16 +199,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         }else{
             userIcon.setImageResource(R.mipmap.app_icon);
         }
-
         publishTime.setText(DateFormat.getCurrentDateTime(post.getPublishedTime()));
-
         location.setText(post.getLocation());
         content.setText(post.getPublishedText());
         imageParameters = post.getImageParameters();
-
         displayManager.showPhoto(recyclerView, imageParameters, DetailActivity.this);
-
-
     }
 
 
@@ -323,7 +316,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                             like.setImageResource(R.mipmap.like_press);
                             has_like = true;
                         }
-
                         editor1.putBoolean(post.getId() + ":" + phoneNumber, has_like);
                         editor1.apply();
                         EventBus.getDefault().post(new updateLikeState(post.getId(), has_like));
@@ -334,7 +326,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                             detail_tv_like_number.setText(String.valueOf(likeCount));
                         }
                     }
-
                 });
                 break;
             default:
@@ -379,18 +370,15 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         dialog.findViewById(R.id.detail_link).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 dialog.dismiss();
             }
         });
-
         dialog.findViewById(R.id.detail_tv_share_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
             }
         });
-
     }
 
     /**
@@ -398,7 +386,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      */
     private List<CommentBean> getCommentData() {
         list = new ArrayList<CommentBean>();
-
         List<CommentBean> commentBeans = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(CommentBean.class);
         for (CommentBean commentBean : commentBeans) {
             List<ReplyBean> replyBeans = LitePal.where("commentbean_id = ?", String.valueOf(commentBean.getId())).find(ReplyBean.class);

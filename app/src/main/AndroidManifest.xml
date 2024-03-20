@@ -66,10 +66,19 @@
             android:name=".activities.GroupMoreActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".activities.CoverPhotoSelectionActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.CreatedAlbumActivity"
+            android:exported="false" />
+
         <service
             android:name=".service.ChatService"
             android:enabled="true"
             android:exported="true" />
+
         <activity
             android:name=".activities.ChatPictureActivity"
             android:exported="false" />
@@ -84,10 +93,19 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.NewPersonPageActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.AlbumActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ChangePasswordActivity"
+            android:exported="true" />
         <activity
             android:name=".activities.RemindNoteActivity"
             android:exported="true">

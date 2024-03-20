@@ -3,14 +3,13 @@ package com.george.memoshareapp.activities;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.george.memoshareapp.Fragment.TestFragment;
 import com.george.memoshareapp.R;
 
-public class FragmentTestActivity extends AppCompatActivity {
+public class FragmentTestActivity extends BaseActivity {
     private FragmentManager mFragmentManager;
 
     @Override

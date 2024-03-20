@@ -75,6 +75,7 @@ public class DetailPhotoRecycleViewAdapter extends RecyclerView.Adapter<DetailPh
                     }
                     intent.putStringArrayListExtra("photoPath", list);
                     intent.putExtra("position", position);
+                    intent.putExtra("DetailPhotoRecyclerViewAdapter",true);
                     context.startActivity(intent);
                 }
             }

@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,11 @@ import com.george.memoshareapp.manager.ChatManager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
+import com.george.memoshareapp.adapters.ChatRoomAdapter;
+import com.george.memoshareapp.beans.ChatRoom;
+import com.george.memoshareapp.manager.ChatRoomManager;
 
 import java.util.List;
 

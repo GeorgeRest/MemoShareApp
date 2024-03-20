@@ -1,19 +1,20 @@
 package com.george.memoshareapp;
 
+import static junit.framework.TestCase.assertEquals;
+
 import android.content.Context;
 
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.runner.AndroidJUnit4;
+
+import com.george.memoshareapp.activities.CoverPhotoSelectionActivity;
+import com.george.memoshareapp.beans.User;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
-
-import com.george.memoshareapp.beans.Post;
-import com.george.memoshareapp.manager.DisplayManager;
-
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -35,4 +36,17 @@ public class ExampleInstrumentedTest {
     public  void test_displayManager_getLikePost(){
 
     }
+    @Test
+    public void getListCount_ReturnsCorrectCount() {
+        ArrayList<User> uriList = new ArrayList<>();
+        try (ActivityScenario<CoverPhotoSelectionActivity> scenario = ActivityScenario.launch(CoverPhotoSelectionActivity.class)) {
+            scenario.onActivity(activity -> {
+                User user = new User("199");
+                uriList.add(user);
+                int count = activity.getListCount(uriList);
+                assertEquals(1, count);
+            });
+        }
+    }
+
 }

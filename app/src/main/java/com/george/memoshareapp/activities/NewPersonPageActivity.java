@@ -2,14 +2,12 @@ package com.george.memoshareapp.activities;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.george.memoshareapp.Fragment.NewPersonPageFragment;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.User;
 
-public class NewPersonPageActivity extends AppCompatActivity {
+public class NewPersonPageActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

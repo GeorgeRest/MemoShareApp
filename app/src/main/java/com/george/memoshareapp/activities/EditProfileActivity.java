@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
@@ -49,7 +47,6 @@ import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.GetJsonDataUtil;
 import com.george.memoshareapp.utils.GlideEngine;
-import com.george.memoshareapp.utils.ImageUtil;
 import com.google.gson.Gson;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
@@ -76,7 +73,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditProfileActivity extends BaseActivity implements View.OnClickListener {
     public static final String EXTRA_EDITED_GENDER = "edited_gender";
     public static final String EXTRA_EDITED_BIRTHDAY = "edited_birthday";
     public static final String EXTRA_EDITED_REGION = "edited_region";
@@ -126,11 +123,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-
         initView();
-
-
-
         String headPortraitPath = sp.getString("headPortraitPath", AppProperties.DEFAULT_AVATAR);
         Glide.with(this).load(headPortraitPath).into(head_portrait);
         edit = sp.edit();
@@ -283,18 +276,15 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                             @Override
                             public void onResult(ArrayList<LocalMedia> result) {
                                 headPortraitPath = result.get(0).getRealPath();
-                                Glide.with(EditProfileActivity.this).load(destPath)
-                                        .thumbnail(Glide.with(EditProfileActivity.this).load(R.drawable.photo_loading))
-                                        .error(R.drawable.ic_close).into(head_portrait);
-                                edit.putString("headPortraitPath", headPortraitPath);
+
+                                Glide.with(EditProfileActivity.this).load(destPath).thumbnail(Glide.with(EditProfileActivity.this).load(R.drawable.photo_loading))
+                                        .error(R.drawable.ic_close).into(head_portrait);edit.putString("headPortraitPath", headPortraitPath);
                                 edit.commit();
                             }
-
                             @Override
                             public void onCancel() {
                             }
                         });
-
                 break;
             case R.id.rl_name:
                 Intent intent1 = new Intent(this, EditNameActivity.class);
@@ -311,8 +301,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.rl_birthday:
                 birthdayScrollWheel();
-
-
                 break;
             case R.id.rl_region:
                 if (isLoaded) {
@@ -333,6 +321,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 String region = tv_edit_region.getText().toString();
                 String gender = tv_edit_gender.getText().toString();
                 String birthday = tv_edit_birthday.getText().toString();
+                //User updateUser = new User(phoneNumber, name, signature, gender, birthday, region, user.getBackGroundPath(), user.getHeadPortraitPath());
                 User updateUser = new User(phoneNumber, name, signature, gender, birthday, region);
                 Logger.d(updateUser);
 
@@ -365,7 +354,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 break;
         }
     }
-
     private void birthdayScrollWheel() {
         Calendar selectedDate = Calendar.getInstance();//系统当前时间
         Calendar startDate = Calendar.getInstance();
@@ -391,7 +379,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 .setDate(selectedDate)
                 .setRangDate(startDate, endDate)
                 .setLayoutRes(R.layout.calender_time_picker, new CustomListener() {
-
                     @Override
                     public void customLayout(View v) {
                         ImageView tvSubmit = (ImageView) v.findViewById(R.id.iv_calender_confirm);
@@ -401,6 +388,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                             public void onClick(View v) {
                                 pvCustomTime.returnData();
                                 pvCustomTime.dismiss();
+                                Toast.makeText(EditProfileActivity.this, "生日设置成功~", Toast.LENGTH_SHORT).show();
                             }
                         });
                         ivCancel.setOnClickListener(new View.OnClickListener() {
@@ -421,7 +409,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 .build();
         pvCustomTime.show();
     }
-
     private void showBottomDialog() {
         //1、使用Dialog、设置style
         final Dialog dialog = new Dialog(this, R.style.DialogTheme);
@@ -488,10 +475,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 getTime2view(year, month, day);
             }
         })
-                .setDate(selectedDate)
-                .setRangDate(startDate, endDate)
+                .setDate(selectedDate).setRangDate(startDate, endDate)
                 .setLayoutRes(R.layout.pickerview_custom_lunar, new CustomListener() {
-
                     @Override
                     public void customLayout(final View v) {
                         final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
@@ -500,7 +485,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                             @Override
                             public void onClick(View v) {
                                 pvCustomLunar.returnData();
-
                                 pvCustomLunar.dismiss();
                             }
                         });
@@ -574,7 +558,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void initCustomTimePicker() {
-
         Calendar selectedDate = Calendar.getInstance();//系统当前时间
         Calendar startDate = Calendar.getInstance();
         startDate.set(2014, 1, 23);
@@ -586,12 +569,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 tv_edit_birthday.setText(getTime(date));
             }
-        })
-
-                .setDate(selectedDate)
-                .setRangDate(startDate, endDate)
+        }).setDate(selectedDate).setRangDate(startDate, endDate)
                 .setLayoutRes(R.layout.pickerview_custom_time, new CustomListener() {
-
                     @Override
                     public void customLayout(View v) {
                         final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);

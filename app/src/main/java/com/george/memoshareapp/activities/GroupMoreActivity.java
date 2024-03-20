@@ -1,10 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +7,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.ChatGroupMemberAdapter;
@@ -27,7 +26,7 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupMoreActivity extends AppCompatActivity {
+public class GroupMoreActivity extends BaseActivity {
 
     public static final int REQUEST_CODE_ADD_MEMBER = 1;
     private TextView photo_chat_title_name;
@@ -97,14 +96,16 @@ public class GroupMoreActivity extends AppCompatActivity {
         tv_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new XPopup.Builder(GroupMoreActivity.this).hasBlurBg(true).asConfirm("退出", "确定退出群聊么", new OnConfirmListener() {
-                            @Override
-                            public void onConfirm() {
-                                Intent intent = new Intent(GroupMoreActivity.this, HomePageActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                startActivity(intent);
-                            }
-                        }).show();
+                new XPopup.Builder(GroupMoreActivity.this)
+                        .hasBlurBg(true)
+                        .asConfirm("退出", "确定退出群聊么",
+                                new OnConfirmListener() {
+                                    @Override
+                                    public void onConfirm() {
+                                        Toasty.success(GroupMoreActivity.this, "退出成功");
+                                    }
+                                })
+                        .show();
             }
         });
 

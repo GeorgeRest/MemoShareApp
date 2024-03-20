@@ -53,6 +53,7 @@ public class MyEdittextFragment extends Fragment {
     private final int CHOOSE_PIC_REQUEST_CODE = 3;
     private static final int REQUEST_SELECT_MEDIA = 100;
     private List<String> mImageList = new ArrayList<>();
+
     public MyEdittextFragment() {
         // Required empty public constructor
     }

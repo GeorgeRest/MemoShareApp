@@ -91,7 +91,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="67dp"
                     android:layout_toRightOf="@id/person_fragment_tv_name"
-                    android:src="@drawable/location" />
+                    android:src="@drawable/location9" />
 
                 <TextView
                     android:id="@+id/person_fragment_tv_location"

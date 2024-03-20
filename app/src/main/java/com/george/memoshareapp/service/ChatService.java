@@ -2,6 +2,7 @@ package com.george.memoshareapp.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Binder;
@@ -21,9 +22,9 @@ import com.george.memoshareapp.beans.ChatMessage;
 import com.george.memoshareapp.beans.ChatRoom;
 import com.george.memoshareapp.beans.WebSocketMessage;
 import com.george.memoshareapp.events.ChatMessageEvent;
+import com.george.memoshareapp.events.ForceLogoutEvent;
 import com.george.memoshareapp.events.SendMessageEvent;
 import com.george.memoshareapp.manager.ChatManager;
-import com.george.memoshareapp.manager.UserManager;
 import com.george.memoshareapp.properties.AppProperties;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -72,7 +73,10 @@ public class ChatService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String url = AppProperties.getWebsocketUrl(UserManager.getSelfPhoneNumber(this));
+        //String url = AppProperties.getWebsocketUrl(UserManager.getSelfPhoneNumber(this));
+        SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
+        String phoneNumber = sp.getString("phoneNumber", "");
+        String url = "ws://192.168.43.204:6028/websocket/"+phoneNumber;
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -99,7 +103,7 @@ public class ChatService extends Service {
                 WebSocketMessage webSocketMessage = gson.fromJson(text, WebSocketMessage.class);
                 if("session_closed".equals(webSocketMessage.getType())){
                     //处理logOut
-
+                    handleForceLogout();
                     mWebSocket.close(1000, "session_closed");
                     Logger.d("WebSocket 收到消息" + webSocketMessage.getMessage());
                     return;
@@ -117,17 +121,23 @@ public class ChatService extends Service {
                         if(!GroupChatActivity.isInGroupChatActivity) {
                             showPopNotification(message);
                         }
-                        EventBus.getDefault().post(new ChatMessageEvent(message)); //接收到的消息给到ChatActivity
-                        // 现在你可以操作message对象，例如显示消息内容
-                        Logger.d("WebSocket 收到消息" + message);
-                    }
-                }).start();
 
+                EventBus.getDefault().post(new ChatMessageEvent(message)); //接收到的消息给到ChatActivity
+                // 现在你可以操作message对象，例如显示消息内容
+                Logger.d("WebSocket 收到消息"+message);}
+                }).start();
             }
 
             @Override
             public void onClosed(WebSocket webSocket, int code, String reason) {
                 super.onClosed(webSocket, code, reason);
+                Logger.d("WebSocket 连接关闭"+"reason"+reason+"code"+code);
+                System.out.println(code+reason+"====11111111111111111111111111");
+                // 评估关闭的原因
+                if ("New session opened！！！".equals(reason)) {
+                    // 如果原因是新会话已经打开，则处理强制注销逻辑
+//                    handleForceLogout();
+                }
 
                 Logger.d("WebSocket 连接关闭" + "reason" + reason + "code" + code);
             }
@@ -183,7 +193,18 @@ public class ChatService extends Service {
         chatManager.saveChatMessage(message);
         sendMessage(new Gson().toJson(message));
     }
+    private void handleForceLogout() {
+        // 发送EventBus事件通知UI层显示强制注销的Dialog
+        EventBus.getDefault().post(new ForceLogoutEvent());
 
+        // 关闭WebSocket连接
+        if (mWebSocket != null) {
+            mWebSocket.close(1000, "Logged in from another device");
+        }
+
+        // 结束服务
+        stopSelf();
+    }
     private void showPopNotification(ChatMessage message) {
         String content = "";
         if (message.getMessageType().equals("图片")) {

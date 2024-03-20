@@ -1,41 +1,26 @@
 package com.george.memoshareapp.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseMultiItemAdapter;
 import com.chad.library.adapter.base.dragswipe.listener.DragAndSwipeDataCallback;
 import com.george.memoshareapp.R;
-import com.george.memoshareapp.activities.EditProfileActivity;
-import com.george.memoshareapp.activities.ReleaseActivity;
 import com.george.memoshareapp.activities.ReleasePhotoImageDetailActivity;
-import com.george.memoshareapp.beans.Post;
-import com.george.memoshareapp.beans.Recordings;
 import com.george.memoshareapp.interfaces.PhotoChangedListener;
 import com.george.memoshareapp.utils.GlideEngine;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
-import com.luck.picture.lib.engine.CropFileEngine;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.interfaces.OnResultCallbackListener;
-import com.orhanobut.logger.Logger;
-import com.yalantis.ucrop.UCrop;
-import com.yalantis.ucrop.UCropImageEngine;
 
-import java.util.ArrayList;
 import java.util.List;
 public class ImageAdapter extends BaseMultiItemAdapter<Uri> implements DragAndSwipeDataCallback {
     public static final int VIEW_TYPE_IMAGE = 1;
@@ -157,7 +142,7 @@ public class ImageAdapter extends BaseMultiItemAdapter<Uri> implements DragAndSw
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.image_view);
+            imageView = itemView.findViewById(R.id.chat_more_member_image_view);
 //            deleteButton = itemView.findViewById(R.id.delete_button);
 //            deleteButton.setOnClickListener(this);
         }
@@ -169,7 +154,7 @@ public class ImageAdapter extends BaseMultiItemAdapter<Uri> implements DragAndSw
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);
-            moveButton = itemView.findViewById(R.id.button_move);
+            moveButton = itemView.findViewById(R.id.chat_group_add_member);
 //            moveButton.setOnClickListener(this);
         }
     }

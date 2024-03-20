@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="300dp">
+
+
+    <ImageView
+        android:id="@+id/voice_record"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="6dp"
+        android:background="@mipmap/record_demo" />
+    <Button
+        android:id="@+id/play_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/ps_color_transparent"/>
+    <TextView
+        android:id="@+id/record_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:textColor="@color/black"
+        android:text="1'"/>
+</RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/refreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.scwang.smart.refresh.header.MaterialHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/albums_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="60dp"
+            android:layout_marginLeft="7dp"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/createdalbumText"
+            android:layout_marginTop="100dp"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="快去创建属于你的相册吧~"/>
+        <ImageView
+            android:id="@+id/pleaseCreatedAlbum"
+            android:layout_width="wrap_content"
+            android:layout_height="500dp"
+            android:src="@mipmap/album"/>
+    </FrameLayout>
+
+
+
+        <com.scwang.smart.refresh.footer.ClassicsFooter
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+</com.scwang.smart.refresh.layout.SmartRefreshLayout>
+
+
+
+

@@ -2,13 +2,11 @@ package com.george.memoshareapp.activities;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.george.memoshareapp.R;
 
 import java.util.concurrent.ExecutorService;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private ExecutorService executor;
 

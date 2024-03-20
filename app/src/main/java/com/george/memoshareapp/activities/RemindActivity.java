@@ -1,11 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -22,12 +16,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
 import com.george.memoshareapp.R;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-public class RemindActivity extends AppCompatActivity implements View.OnClickListener{
+public class RemindActivity extends BaseActivity implements View.OnClickListener{
 
     private RelativeLayout rl_contact;
     private RelativeLayout rl_content;

@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.drake.statelayout.StateLayout;
@@ -58,7 +57,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GroupFriendListActivity extends AppCompatActivity implements FriendListAdapter.OnContactsSelectedListener {
+public class GroupFriendListActivity extends BaseActivity implements FriendListAdapter.OnContactsSelectedListener {
     private String TAG = "ContactListActivity";
     private ChatService mService;
     private boolean mBound = false;

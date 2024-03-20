@@ -1,8 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.GalleryAdapter;
 import com.george.memoshareapp.adapters.OutHuodongViewPagerAdapter;
@@ -28,6 +27,7 @@ import com.george.memoshareapp.http.response.HttpListData;
 import com.george.memoshareapp.interfaces.HuodongDataListener;
 import com.george.memoshareapp.interfaces.OuterHuodongClickListener;
 import com.george.memoshareapp.manager.HuodongManager;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -37,7 +37,7 @@ import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 
-public class HuodongGalleryActivity extends AppCompatActivity implements HuodongDataListener<List<InnerActivityBean>> {
+public class HuodongGalleryActivity extends BaseActivity implements HuodongDataListener<List<InnerActivityBean>> {
 
 
     private GalleryAdapter galleryAdapter;

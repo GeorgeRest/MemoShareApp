@@ -91,27 +91,28 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="67dp"
                     android:layout_toRightOf="@id/person_fragment_tv_name"
-                    android:src="@drawable/location" />
+                    android:src="@drawable/location9" />
 
                 <TextView
                     android:id="@+id/person_fragment_tv_location"
-                    android:layout_width="wrap_content"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="13dp"
-                    android:layout_marginTop="70dp"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginTop="72dp"
                     android:layout_toRightOf="@id/person_fragment_tv_name"
                     android:text="上海"
+                    android:gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="9dp"
+                    android:textSize="7dp"
                     android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/sex"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
-                    android:layout_marginLeft="70dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="72dp"
-                    android:layout_toRightOf="@id/person_fragment_tv_name"
+                    android:layout_toRightOf="@id/person_fragment_iv_location"
                     android:src="@drawable/sex_woman" />
 
 

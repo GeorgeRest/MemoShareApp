@@ -1,15 +1,14 @@
 package com.george.memoshareapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.drake.statelayout.StateLayout;
 import com.george.memoshareapp.R;
@@ -36,9 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.dmoral.toasty.Toasty;
-
-public class PersonalHuodDongActivity extends AppCompatActivity implements HuodongDataListener<List<InnerActivityBean>> {
+public class PersonalHuodDongActivity extends BaseActivity implements HuodongDataListener<List<InnerActivityBean>> {
 
     private StateLayout state;
     private RecyclerView outerRecyclerView;

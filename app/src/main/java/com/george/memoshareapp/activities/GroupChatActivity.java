@@ -1,14 +1,5 @@
 package com.george.memoshareapp.activities;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +13,14 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.george.memoshareapp.Fragment.MyChatBarFragment;
 import com.george.memoshareapp.R;
@@ -68,7 +67,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GroupChatActivity extends AppCompatActivity implements SendListener, View.OnClickListener {
+public class GroupChatActivity extends BaseActivity implements SendListener, View.OnClickListener {
 
     private static final String TAG = "GroupChatActivity";
     private FragmentManager manager;
