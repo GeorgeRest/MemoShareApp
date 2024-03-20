@@ -200,8 +200,6 @@ public class PersonalHuodDongActivity extends BaseActivity implements HuodongDat
                     huodongManager.getPersonalHuoDongListByPage(phoneNumber,huodongPageNum, pageSize, huoDongAdapter.getItemCount(), new HuodongDataListener<List<InnerActivityBean>>() {
                         @Override
                         public void onLoadSuccess(HttpListData<InnerActivityBean> data, String type) {
-                            System.out.println(data.isLastPage() + "data.isLastPage()-------------");
-                            System.out.println(huodongPageNum + "huodongPageNum-------------");
                             huodongPageNum++;
                             List<InnerActivityBean> newActivitys = data.getItems();
                             for(InnerActivityBean huodong : newActivitys){
@@ -216,7 +214,6 @@ public class PersonalHuodDongActivity extends BaseActivity implements HuodongDat
 
                             if (data.isLastPage()) {
                                 refreshlayout.setNoMoreData(true);
-                                System.out.println(data.isLastPage() + "----------------");
                             }
                         }
 

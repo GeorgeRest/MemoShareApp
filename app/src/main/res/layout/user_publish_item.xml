@@ -123,7 +123,6 @@
             android:layout_height="wrap_content"
             android:textSize="13sp"
             android:textColor="#202025"
-            android:text="64946549465116465161356494616111616"
             android:maxLines="3"
             android:ellipsize="end"/>
 
@@ -137,7 +136,6 @@
             android:textColor="#99202025"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="1234657979646497"
             android:layout_marginBottom="7dp"/>
 
     </LinearLayout>

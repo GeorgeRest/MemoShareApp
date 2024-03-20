@@ -154,7 +154,6 @@ public class CreatedAlbumActivity extends BaseActivity {
             String fileName = file.getName();
             AlbumRealPathName.add(fileName);
         }
-        //System.out.println("111111111"+AlbumRealPath);
         String realFilePathFirstPhoto = getRealFilePathFromUri(this, uri);
         String firstPhotoFilePath = realFilePathFirstPhoto;
         File firstPhotoFile = new File(firstPhotoFilePath);
@@ -206,7 +205,6 @@ public class CreatedAlbumActivity extends BaseActivity {
                         for (int i = 0; i < arrayList.size(); i++) {
                             Uri uri = Uri.parse(arrayList.get(i).getPath());
                             uriPathList.add(uri);
-                            System.out.println("7777777777777--"+ uriPathList);
                         }
                        // pictureAdapter = new PictureAdapter(uriPathList);
                         pictureAdapter.notifyDataSetChanged(); // 通知适配器数据发生了变化

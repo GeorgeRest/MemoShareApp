@@ -353,7 +353,9 @@ public class GroupChatActivity extends BaseActivity implements SendListener, Vie
         super.onResume();
         KeyboardUtils.hideSoftInput(getWindow());
         myChatBar.getEditText().clearFocus();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         long lastViewTime = chatManager.getLastViewTime();
         if (lastViewTime == -1) {
             return;
@@ -370,7 +372,9 @@ public class GroupChatActivity extends BaseActivity implements SendListener, Vie
     protected void onPause() {
         super.onPause();
         isInGroupChatActivity = false;
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
         chatManager.setLastViewTime(System.currentTimeMillis());
     }
 

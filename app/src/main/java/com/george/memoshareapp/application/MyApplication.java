@@ -50,7 +50,6 @@ public class MyApplication extends Application {
             @Override
             public void onLocationBack(LatLng latLng) {
                 currentLatLng = latLng;
-                System.out.println("currentLatLng = " + currentLatLng);
             }
         });
 

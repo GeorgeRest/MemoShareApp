@@ -92,7 +92,6 @@ public class ContactListAdapter extends BaseAdapter implements SectionIndexer {
 
 
         String imagePath = AppProperties.SERVER_MEDIA_URL+ contact.getHeadPortraitPath();
-        System.out.println(imagePath+"==============="+context);
         if(imagePath != null && !imagePath.isEmpty()) {
             int cornerRadius = 20;
             Glide.with(context)

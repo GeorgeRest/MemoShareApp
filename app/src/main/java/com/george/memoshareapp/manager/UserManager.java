@@ -460,7 +460,6 @@ public void countFollowing(User user, OnSaveUserListener onSaveUserListener) {
 
             @Override
             public void onFailure(Call<Boolean> call, Throwable t) {
-                System.out.println("-------"+t.getMessage());
             }
         });
     }

@@ -24,7 +24,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -180,9 +179,7 @@ public class DetailActivity extends BaseActivity implements View.OnClickListener
         new DisplayManager().getLikeCount(post.getId(), new getLikeCountListener() {
             @Override
             public void onSuccess(int likeCount) {
-                System.out.println("likeCount:" + likeCount);
                 detail_tv_like_number.setText(String.valueOf(likeCount));
-                System.out.println("likeCount:" + likeCount);
             }
 
         });
@@ -311,7 +308,6 @@ public class DetailActivity extends BaseActivity implements View.OnClickListener
                         if (has_like) {
                             like.setImageResource(R.mipmap.like);
                             has_like = false;
-                            System.out.println("取消点赞");
                         } else {
                             like.setImageResource(R.mipmap.like_press);
                             has_like = true;

@@ -2,9 +2,7 @@ package com.george.memoshareapp.Fragment;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.drake.statelayout.StateLayout;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.AddHuoDongActivity;
-import com.george.memoshareapp.activities.HuoDongDetailActivity;
 import com.george.memoshareapp.activities.HuodongGalleryActivity;
 import com.george.memoshareapp.activities.PersonalHuodDongActivity;
 import com.george.memoshareapp.adapters.HomeWholeRecyclerViewAdapter;
@@ -150,13 +147,11 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                             public void onSuccess(HttpListData<Post> newPostData,String type) {
 
                                 kv.clearAll();
-                                posts.clear(); // 清除原有数据
+                                posts.clear();
                                 List<Post> newPosts = newPostData.getItems();
-                                // 将新数据添加到列表中
                                 posts.addAll(newPosts);
-                                // 通知 adapter 更新列表
-                                outerAdapter.notifyDataSetChanged(); // 通知整个列表数据变化，重绘视图
-                                refreshLayout.finishRefresh(); //结束刷新
+                                outerAdapter.notifyDataSetChanged();
+                                refreshLayout.finishRefresh();
 
                                 if (newPostData.isLastPage()) {
                                     refreshLayout.setNoMoreData(true);
@@ -184,7 +179,7 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                 outerRecyclerView = (RecyclerView) rootView.findViewById(R.id.whole_recycler);
                 List<Post> emptyList1 = new ArrayList<>();
                 outerAdapter = new HomeWholeRecyclerViewAdapter(getActivity(), emptyList1);
-                displayManager.getPostListByPageFriend(pageNum, pageSize, outerAdapter.getItemCount(),phoneNumber,this);
+                displayManager.getPostListByPage(pageNum, pageSize, outerAdapter.getItemCount(),phoneNumber,this);
                 smartRefreshLayout = rootView.findViewById(R.id.refreshLayout);
                 smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
                 smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
@@ -194,10 +189,9 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                     @Override
                     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                         pageNum = 1;
-                        displayManager.getPostListByPageFriend(pageNum, pageSize,outerAdapter.getItemCount(),phoneNumber, new PostDataListener<List<Post>>() {
+                        displayManager.getPostListByPage(pageNum, pageSize,outerAdapter.getItemCount(),phoneNumber, new PostDataListener<List<Post>>() {
                             @Override
                             public void onSuccess(HttpListData<Post> newPostData,String type) {
-
                                 kv.clearAll();
                                 posts.clear();
                                 List<Post> newPosts = newPostData.getItems();
@@ -208,7 +202,7 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                                     refreshLayout.setNoMoreData(true);
                                 } else {
                                     pageNum++;
-                                    refreshLayout.setNoMoreData(false); // 允许加载更多数据
+                                    refreshLayout.setNoMoreData(false);
                                 }
                             }
                             @Override
@@ -219,7 +213,6 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                     }
                 });
                 break;
-
             case "活动":
                 rootView = inflater.inflate(R.layout.fragment_home_activity, container, false);
                 huoDongState = (StateLayout) rootView.findViewById(R.id.state);
@@ -402,8 +395,6 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
                     displayManager.getPostListByPage(pageNum, pageSize,outerAdapter.getItemCount(),phoneNumber , new PostDataListener<List<Post>>() {
                         @Override
                         public void onSuccess(HttpListData<Post> newPostData,String type) {
-                            System.out.println(newPostData.isLastPage() + "newPostData.isLastPage()-------------");
-                            System.out.println(pageNum + "pageNum-------------");
                             pageNum++;
                             List<Post> newPosts = newPostData.getItems();
                             posts.addAll(newPosts);
@@ -413,7 +404,6 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
 
                             if (newPostData.isLastPage()) {
                                 refreshlayout.setNoMoreData(true);
-                                System.out.println(newPostData.isLastPage() + "----------------");
                             }
                         }
 
@@ -492,20 +482,3 @@ public class HomePageFragment extends Fragment implements PostDataListener<List<
     }
 
 }
-
-//class MyBottomDecoration extends RecyclerView.ItemDecoration {
-//    RecyclerView recyclerView;
-//    public MyBottomDecoration(RecyclerView recyclerView) {
-//        this.recyclerView = recyclerView;
-//    }
-//
-//    @Override
-//    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-//        super.getItemOffsets(outRect, view, parent, state);
-//        if(parent.getChildCount()>0){
-//            if(parent.getChildAdapterPosition(view) == recyclerView.getAdapter().getItemCount() - 1){
-//                outRect.bottom = 200;
-//            }
-//        }
-//    }
-//}

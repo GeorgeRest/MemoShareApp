@@ -363,11 +363,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
 
     private void performLoginVcCode(String phoneNumber, String vcCode) {
-        System.out.println("====66==========");
         eventHandler = new EventHandler() {
             @Override
             public void afterEvent(int event, int result, Object data) {//走完第三方验证就走这个
-                System.out.println(data+"====77=========="+result);
                 if (result == SMSSDK.RESULT_COMPLETE) {
                     if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                         runOnUiThread(new Runnable() {

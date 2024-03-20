@@ -256,7 +256,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
     @Override
     public void onSuccess(HttpListData<Post> postData, String type) {
         state.showContent(null);
-        System.out.println(postData.isLastPage() + "===========-------------");
         posts = postData.getItems();
         if (posts == null) {
             state.showEmpty(null);
@@ -275,8 +274,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                     displayManager.getPostsByPhoneNumber(pageNum, pageSize, phoneNumber, new PostDataListener<List<Post>>() {
                         @Override
                         public void onSuccess(HttpListData<Post> newPostData, String type) {
-                            System.out.println(newPostData.isLastPage() + "newPostData.isLastPage()-------------");
-                            System.out.println(pageNum + "pageNum-------------");
                             pageNum++;
                             List<Post> newPosts = newPostData.getItems();
                             posts.addAll(newPosts);
@@ -286,7 +283,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
 
                             if (newPostData.isLastPage()) {
                                 refreshlayout.setNoMoreData(true);
-                                System.out.println(newPostData.isLastPage() + "----------------");
                             }
                         }
 
@@ -308,7 +304,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
 
     @Override
     public void onPostLikeSuccess(HttpListData data) {
-        System.out.println(data.isLastPage() + "===========-------------");
         posts = data.getItems();
         if (posts == null) {
 //            state.showEmpty(null);
@@ -325,8 +320,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
                     displayManager.getLikePostsByPhoneNumber(pageNum, pageSize, phoneNumber, new LikePostDataListener<List<Post>>() {
                         @Override
                         public void onPostLikeSuccess(HttpListData<Post> data) {
-                            System.out.println(data.isLastPage() + "newPostData.isLastPage()-------------");
-                            System.out.println(pageNum + "pageNum-------------");
                             pageNum++;
                             List<Post> newPosts = data.getItems();
                             posts.addAll(newPosts);
@@ -336,7 +329,6 @@ public class NewPersonFragment extends Fragment implements PostDataListener<List
 
                             if (data.isLastPage()) {
                                 refreshlayout.setNoMoreData(true);
-                                System.out.println(data.isLastPage() + "----------------");
                             }
                         }
 

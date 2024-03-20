@@ -118,7 +118,6 @@ public class DisplayManager {
         for (Post post : postList) {
             List<ImageParameters> imageParametersList = LitePal.where("post_id = ?", String.valueOf(post.getId())).find(ImageParameters.class);
             post.setImageParameters(imageParametersList);
-            System.out.println(post.getImageParameters().size());
             LikePostList.add(post); // 把修改过的post添加到LikePostList
         }
         return LikePostList; // 返回LikePostList，而不是postList
@@ -379,7 +378,6 @@ public class DisplayManager {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 getLikeCountListener.onSuccess(response.body());//点赞数量
-                System.out.println(response.body() + "-------------");
             }
 
             @Override

@@ -23,6 +23,7 @@ import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Recordings;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.utils.UserDateFormat;
 import com.orhanobut.logger.Logger;
 
@@ -126,12 +127,12 @@ public class UserPublishRecyclerAdapter extends RecyclerView.Adapter<UserPublish
             holder.tv_user_publish_image_count.setVisibility(View.VISIBLE);
             holder.tv_user_publish_image_count.setText(String.valueOf(post.getImageParameters().size()));
         }
-        if(!post.getImageParameters().isEmpty()){
-            Glide.with(context)
-                    .load(post.getImageParameters().get(0).getPhotoCachePath())
-                    .into(holder.iv_user_publish_image);
-        }
-
+        Glide.with(context)
+                .load(post.getImageParameters().get(0).getPhotoCachePath())
+                .into(holder.iv_user_publish_image);
+        Logger.d(AppProperties.SERVER_MEDIA_URL + post.getImageParameters().get(0).getPhotoCachePath());
+        holder.tv_user_publish_content.setText(post.getPublishedText());
+        holder.tv_user_publish_location.setText(post.getLocation());
 
         if (holder.recordings != null && !holder.recordings.isEmpty()) {
             holder.tv_user_publish_recorder_count.setVisibility(View.GONE);

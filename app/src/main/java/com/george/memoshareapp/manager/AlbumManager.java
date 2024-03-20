@@ -101,12 +101,7 @@ public class AlbumManager {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
-                    Logger.d("Upload upload success");
-                    System.out.println("77777777777777"+"到file了"+"----response:"+response);
-                    //Toasty.info(context, "到file成功", Toast.LENGTH_SHORT, true).show();
                 }else{
-                    System.out.println("77777777777777"+"没到file");
-                    Logger.d("Upload upload fail");
                 }
             }
             @Override
@@ -166,19 +161,12 @@ public class AlbumManager {
             public void onResponse(Call<HttpListData<Album>> call, Response<HttpListData<Album>> response) {
                 albumList = response.body().getItems();
                 HttpListData<Album> ListAlbum = response.body();
-//                for (Album a:albumList) {
-//                    System.out.println("从服务器获取AlbumList成功"+a.toString());
-//                }
-//                count++;
                 getPhotoInAlbum(listener,ListAlbum,albumList,createdalbumText,pleaseCreatedAlbum,phoneNumber,loadingDialog,albumsRecyclerView,context);
-                //listener.onSuccess(ListAlbum);
             }
             @Override
             public void onFailure(Call<HttpListData<Album>> call, Throwable t) {
-                System.out.println("从服务器获取AlbumList失败");
                 loadingDialog.dismiss();
                 count++;
-                //listener.onError("request Failed");
             }
         });
         return albumList;
@@ -190,17 +178,11 @@ public class AlbumManager {
             @Override
             public void onResponse(Call<HttpListData<PhotoInAlbum>> call, Response<HttpListData<PhotoInAlbum>> response) {
                 photoInAlbumList1 = response.body().getItems();
-                //loadingDialog.dismiss();
-                for (PhotoInAlbum p:photoInAlbumList1) {
-                    System.out.println("从服务器获取PhotoInAlbumList成功"+p.toString());
-                }
 
                 if(albumList.size()!=0){
                     AlbumAdapter albumAdapter = new AlbumAdapter(albumList,photoInAlbumList1,context);
                     albumsRecyclerView.setAdapter(albumAdapter);
-                    System.out.println("`````````````````"+photoInAlbumList1);
                 }else {
-                    System.out.println("````````````````1");
                     Toast.makeText(context,"albumList,photoList都为空",Toast.LENGTH_LONG);
                     pleaseCreatedAlbum.setVisibility(View.VISIBLE);
                     createdalbumText.setVisibility(View.VISIBLE);
@@ -211,8 +193,6 @@ public class AlbumManager {
             }
             @Override
             public void onFailure(Call<HttpListData<PhotoInAlbum>> call, Throwable t) {
-                System.out.println("从服务器获取PhotoInAlbumList失败");
-                //loadingDialog.dismiss();
                 listener.onError("request Failed");
                 count++;
             }
@@ -228,12 +208,7 @@ public class AlbumManager {
             public void onResponse(Call<HttpListData<Album>> call, Response<HttpListData<Album>> response) {
                 albumList = response.body().getItems();
                 HttpListData<Album> ListAlbum = response.body();
-//                for (Album a:albumList) {
-//                    System.out.println("从服务器获取AlbumList成功"+a.toString());
-//                }
-//                count++;
                 getPhotoInAlbum(ListAlbum,albumList,createdalbumText,pleaseCreatedAlbum,phoneNumber,loadingDialog,albumsRecyclerView,context);
-                //listener.onSuccess(ListAlbum);
             }
             @Override
             public void onFailure(Call<HttpListData<Album>> call, Throwable t) {
@@ -252,17 +227,10 @@ public class AlbumManager {
             @Override
             public void onResponse(Call<HttpListData<PhotoInAlbum>> call, Response<HttpListData<PhotoInAlbum>> response) {
                 photoInAlbumList1 = response.body().getItems();
-                //loadingDialog.dismiss();
-                for (PhotoInAlbum p:photoInAlbumList1) {
-                    System.out.println("从服务器获取PhotoInAlbumList成功"+p.toString());
-                }
-
                 if(albumList.size()!=0){
                     AlbumAdapter albumAdapter = new AlbumAdapter(albumList,photoInAlbumList1,context);
                     albumsRecyclerView.setAdapter(albumAdapter);
-                    System.out.println("`````````````````"+photoInAlbumList1);
                 }else {
-                    System.out.println("````````````````1");
                     Toast.makeText(context,"albumList,photoList都为空",Toast.LENGTH_LONG);
                     pleaseCreatedAlbum.setVisibility(View.VISIBLE);
                     createdalbumText.setVisibility(View.VISIBLE);
@@ -272,8 +240,6 @@ public class AlbumManager {
             }
             @Override
             public void onFailure(Call<HttpListData<PhotoInAlbum>> call, Throwable t) {
-                System.out.println("从服务器获取PhotoInAlbumList失败");
-                //loadingDialog.dismiss();
 
                 count++;
             }

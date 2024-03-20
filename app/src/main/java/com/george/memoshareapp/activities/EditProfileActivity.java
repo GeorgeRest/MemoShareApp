@@ -252,7 +252,6 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
                             public void onStartCrop(Fragment fragment, Uri srcUri, Uri destinationUri, ArrayList<String> dataSource, int requestCode) {
                                 UCrop uCrop = UCrop.of(srcUri, destinationUri, dataSource);
                                 destPath = destinationUri + "";
-                                System.out.println("-------------" + srcUri + "-----" + destinationUri + "-----" + dataSource + "-----" + requestCode);
                                 uCrop.setImageEngine(new UCropImageEngine() {
                                     @Override
                                     public void loadImage(Context context, String url, ImageView imageView) {
