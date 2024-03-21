@@ -2,11 +2,9 @@ package com.george.memoshareapp.beans;
 
 import org.litepal.crud.LitePalSupport;
 
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @projectName: Memosahre
@@ -20,30 +18,45 @@ import java.io.Serializable;
 
 
 public class CommentBean extends LitePalSupport implements Serializable {
-    private long id;
-    private Post post;
+    private int id;
+    private int postId;
     private String commentContent;
-    private Date commentTime;
-    private String commentUserPhoneNumber;
-    private String commentUserName;         //(后期修改)
-    private int commentUserPhoto;           //(后期修改)
-    private List<ReplyBean> replyBeanList = new ArrayList<>();      //回复内容列表
+    private String commentTime;
+    private String commentUserPhoneNumber;      //回复人
+    private String postPhoneNumber;                    //被回复人
+    private List<ReplyBean> replyCommentList = new ArrayList<>() ;      //回复内容列表
+    private User user;
 
+    public String getPostPhoneNumber() {
+        return postPhoneNumber;
+    }
 
-    public long getId() {
+    public void setPostPhoneNumber(String postPhoneNumber) {
+        this.postPhoneNumber = postPhoneNumber;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Post getPost() {
-        return post;
+    public int getPostId() {
+        return postId;
     }
 
-    public void setPost(Post post) {
-        this.post = post;
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 
     public String getCommentContent() {
@@ -54,12 +67,23 @@ public class CommentBean extends LitePalSupport implements Serializable {
         this.commentContent = commentContent;
     }
 
-    public Date getCommentTime() {
+    public String getCommentTime() {
         return commentTime;
     }
 
-    public void setCommentTime(Date commentTime) {
-        this.commentTime = commentTime == null ? new Date() : commentTime;
+    public void setCommentTime(String commentTime) {
+//        Date parse=null;
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+//        Date date = new Date();
+//        String format = dateFormat.format(date);
+//        try {
+//            parse = dateFormat.parse(format);
+//
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
+//        }
+//        this.commentTime = commentTime == null ? format : "commentTime";
+        this.commentTime = commentTime;
     }
 
     public String getCommentUserPhoneNumber() {
@@ -70,42 +94,12 @@ public class CommentBean extends LitePalSupport implements Serializable {
         this.commentUserPhoneNumber = commentUserPhoneNumber;
     }
 
-    public String getCommentUserName() {
-        return commentUserName;
+
+    public List<ReplyBean> getReplyCommentList() {
+        return replyCommentList;
     }
 
-    public void setCommentUserName(String commentUserName) {
-        this.commentUserName = commentUserName;
-    }
-
-    public int getCommentUserPhoto() {
-        return commentUserPhoto;
-    }
-
-    public void setCommentUserPhoto(int commentUserPhoto) {
-        this.commentUserPhoto = commentUserPhoto;
-    }
-
-    public List<ReplyBean> getReplyList() {
-        return replyBeanList;
-    }
-
-
-    public void setReplyList(List<ReplyBean> replyBeanList) {
-        this.replyBeanList = replyBeanList;
-    }
-
-    @Override
-    public String toString() {
-        return "CommentBean{" +
-                "id=" + id +
-                ", post=" + post +
-                ", commentContent='" + commentContent + '\'' +
-                ", commentTime='" + commentTime + '\'' +
-                ", commentUserPhoneNumber='" + commentUserPhoneNumber + '\'' +
-                ", commentUserName='" + commentUserName + '\'' +
-                ", commentUserPhoto=" + commentUserPhoto +
-                ", replyBeanList=" + replyBeanList +
-                '}';
+    public void setReplyCommentList(List<ReplyBean> replyCommentList) {
+        this.replyCommentList = replyCommentList;
     }
 }

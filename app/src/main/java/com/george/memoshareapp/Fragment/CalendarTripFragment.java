@@ -1,9 +1,12 @@
 package com.george.memoshareapp.Fragment;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,12 +18,15 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
@@ -28,19 +34,32 @@ import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.CreatedAlbumActivity;
+import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.activities.RemindActivity;
 
 import com.george.memoshareapp.activities.GroupFriendListActivity;
+import com.george.memoshareapp.adapters.CalendarMultiTypeAdapter;
+import com.george.memoshareapp.beans.Remind;
+import com.george.memoshareapp.http.api.RemindServiceApi;
+import com.george.memoshareapp.http.response.HttpListData;
+import com.george.memoshareapp.manager.RetrofitManager;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 
+import java.text.SimpleDateFormat;
 import java.time.Month;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * @projectName: Memosahre
@@ -55,20 +74,20 @@ public class CalendarTripFragment extends Fragment implements
         CalendarView.OnCalendarSelectListener,
         CalendarView.OnYearChangeListener, View.OnClickListener {
     TextView mTextMonthDay;
-
     TextView mTextYear;
-
-
     CalendarView mCalendarView;
-
     LinearLayout mRelativeTool;
-
-    private int mYear;
     CalendarLayout mCalendarLayout;
     private TimePickerView pvCustomTime;
     private View view;
     private ImageView add_blue;
     private View add_red;
+    private String selected_date;
+    private CalendarMultiTypeAdapter multiTypeAdapter;
+    private RecyclerView rv_calendar;
+    private List<Remind> remindList;
+    private String nowDate;
+    private String myPhoneNumber;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
@@ -77,7 +96,74 @@ public class CalendarTripFragment extends Fragment implements
         view = inflater.inflate(R.layout.fragment_calendar_trip_page, container, false);
         initView();
         initData();
+        getRemind(nowDate);
+        System.out.println("----------nowDate:"+nowDate);
+        getRemindDate();
         return view;
+    }
+
+    private void getRemindDate() {
+        List<String> dateList = new ArrayList<>();
+        RemindServiceApi serviceApi = RetrofitManager.getInstance().create(RemindServiceApi.class);
+        serviceApi.getRemindDate(myPhoneNumber).enqueue(new Callback<HttpListData<String>>() {
+            @Override
+            public void onResponse(Call<HttpListData<String>> call, Response<HttpListData<String>> response) {
+                if (response.isSuccessful()){
+                    HttpListData<String> body = response.body();
+                    List<String> items = body.getItems();
+
+                    Map<String, Calendar> map = new HashMap<>();
+                    for (String date : items) {
+                        System.out.println("-----------"+date);
+                        // 使用 "-" 分割字符串
+                        String[] parts = date.split("-");
+
+                        // 获取分割后的子串
+                        String year = parts[0];
+                        String month = parts[1];
+                        String day = parts[2];
+                        Calendar today = getSchemeCalendar(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day), Color.RED);//红
+                        map.put(today.toString(), today);
+                    }
+
+                    mCalendarView.setSchemeDate(map);
+
+                }else{
+                    Toast.makeText(getContext(), "错误1", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpListData<String>> call, Throwable t) {
+                Toast.makeText(getContext(), "错误2", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getRemind(String date) {
+        remindList = new ArrayList<>();
+        RemindServiceApi serviceApi = RetrofitManager.getInstance().create(RemindServiceApi.class);
+        serviceApi.getRemind(date,myPhoneNumber).enqueue(new Callback<HttpListData<Remind>>() {
+            @Override
+            public void onResponse(Call<HttpListData<Remind>> call, Response<HttpListData<Remind>> response) {
+                if (response.isSuccessful()){
+                    HttpListData<Remind> body = response.body();
+                    List<Remind> reminds = body.getItems();
+                    remindList.addAll(reminds);
+                    multiTypeAdapter = new CalendarMultiTypeAdapter(getContext(), remindList, myPhoneNumber, 1);
+                    rv_calendar.setAdapter(multiTypeAdapter);
+                    LinearLayoutManager manager = new LinearLayoutManager(getContext());
+                    rv_calendar.setLayoutManager(manager);
+                }else{
+                    Toast.makeText(getContext(), "错误1", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HttpListData<Remind>> call, Throwable t) {
+                Toast.makeText(getContext(), "错误2", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -89,6 +175,7 @@ public class CalendarTripFragment extends Fragment implements
         mCalendarView = view.findViewById(R.id.calendarView);
         add_blue = view.findViewById(R.id.add_blue);
         add_red = view.findViewById(R.id.add_red);
+        rv_calendar = view.findViewById(R.id.recyclerView_calendar);
         add_blue.setOnClickListener(this);
         add_red.setOnClickListener(this);
 
@@ -106,7 +193,8 @@ public class CalendarTripFragment extends Fragment implements
                  * 2.因为系统Calendar的月份是从0-11的,所以如果是调用Calendar的set方法来设置时间,月份的范围也要是从0-11
                  * setRangDate方法控制起始终止时间(如果不设置范围，则使用默认时间1900-2100年，此段代码可注释)
                  */
-                java.util.Calendar selectedDate = java.util.Calendar.getInstance();//系统当前时间
+                //系统当前时间
+                java.util.Calendar selectedDate =java.util.Calendar.getInstance();
                 java.util.Calendar startDate = java.util.Calendar.getInstance();
                 startDate.set(2000, 0, 23);
                 java.util.Calendar endDate = java.util.Calendar.getInstance();
@@ -180,7 +268,6 @@ public class CalendarTripFragment extends Fragment implements
         mCalendarView.setOnYearChangeListener(this);
         mCalendarView.setOnCalendarSelectListener(this);
         mTextYear.setText(String.valueOf(mCalendarView.getCurYear()));
-        mYear = mCalendarView.getCurYear();
         mTextMonthDay.setText(getEnglishMonthName(mCalendarView.getCurMonth()));
         mCalendarView.setFixMode();
     }
@@ -193,7 +280,6 @@ public class CalendarTripFragment extends Fragment implements
         int day = mCalendarView.getCurDay();
         Map<String, Calendar> map = new HashMap<>();
 
-
         Calendar today = getSchemeCalendar(2023, 6, 23, Color.RED);//红
         Calendar today1 = getSchemeCalendar(2023, 6, 24, Color.GREEN);//紫
         Calendar today2 = getSchemeCalendar(2023, 6, 21, Color.GRAY);//红和紫
@@ -203,6 +289,19 @@ public class CalendarTripFragment extends Fragment implements
         map.put(today2.toString(), today2);
 
         mCalendarView.setSchemeDate(map);
+
+        //获取当前用户手机号
+        SharedPreferences user = getActivity().getSharedPreferences("User", MODE_PRIVATE);
+        myPhoneNumber = user.getString("phoneNumber", "");
+
+        // 获取系统当前日期
+        java.util.Calendar calendar =java.util.Calendar.getInstance();
+        Date currentDate = calendar.getTime();
+
+        // 设置日期格式
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-M-d");
+        nowDate = dateFormat.format(currentDate);
+
     }
 
 
@@ -227,7 +326,12 @@ public class CalendarTripFragment extends Fragment implements
         mTextYear.setVisibility(View.VISIBLE);
         mTextMonthDay.setText(getEnglishMonthName(calendar.getMonth()));
         mTextYear.setText(String.valueOf(calendar.getYear()));
-        mYear = calendar.getYear();
+        int selectedYear = calendar.getYear();
+        int selectedMonth = calendar.getMonth();
+        int selectedDay = calendar.getDay();
+        selected_date = selectedYear+"-"+selectedMonth+"-"+selectedDay;
+
+        getRemind(selected_date);
     }
 
     @Override
@@ -325,6 +429,5 @@ public class CalendarTripFragment extends Fragment implements
                 dialog.dismiss();
             }
         });
-
     }
 }

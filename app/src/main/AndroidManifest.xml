@@ -43,6 +43,11 @@
         android:theme="@style/Theme.MemoShareApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <activity
+            android:name=".activities.InformActivity"
+            android:exported="false">
+        </activity>
         <activity
             android:name=".activities.TageActivity"
             android:exported="false" />

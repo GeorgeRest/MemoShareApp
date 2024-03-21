@@ -43,7 +43,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener , OnCodeReceiverListener {
-    private EventHandler eventHandler;
+   private EventHandler eventHandler;
     private TextView tv_pw_login;
     private TextView tv_code_login;
     private TextView forgetPW;
@@ -282,8 +282,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             if (agreement.isChecked()) {
                 performLogin(phoneNumber, pwNumber);
             } else {
-                loadingDialog.endAnim();
-                loadingDialog.dismiss();
                 Toasty.info(this, "请勾选同意协议", Toast.LENGTH_SHORT).show();
             }
         } else if (CodeFragment != null && CodeFragment.isVisible()) {

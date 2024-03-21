@@ -8,9 +8,10 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="52dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:paddingRight="10dp"
+        android:paddingTop="5dp">
 
         <ImageView
             android:id="@+id/iv_back"
@@ -29,13 +30,23 @@
             android:maxWidth="200dp"
             android:text="设置提醒"
             android:textColor="#D31B1515"
-            android:textSize="17dp" />
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/tv_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="完成"
+            android:textColor="@color/complete"
+            android:textSize="17dp"
+            android:layout_alignBottom="@+id/tv_title"/>
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:background="#ececec"
         android:layout_marginBottom="5dp"/>
 
@@ -94,7 +105,7 @@
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textColor="#D31B1515"
             android:layout_toLeftOf="@+id/iv_skip2"
             android:layout_marginRight="5dp"/>
@@ -131,7 +142,7 @@
             android:id="@+id/tv_time_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textColor="#D31B1515"
             android:layout_toLeftOf="@+id/tv_time_hour"
             android:layout_marginRight="5dp"/>
@@ -139,7 +150,7 @@
             android:id="@+id/tv_time_hour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textColor="#D31B1515"
             android:layout_toLeftOf="@+id/iv_skip3"
             android:layout_marginRight="5dp"/>
@@ -176,7 +187,7 @@
             android:id="@+id/tv_interval"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textColor="#D31B1515"
             android:layout_toLeftOf="@+id/iv_skip4"
             android:layout_marginRight="5dp"/>
@@ -213,7 +224,7 @@
             android:id="@+id/tv_note"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
+            android:textSize="16dp"
             android:textColor="#D31B1515"
             android:layout_toLeftOf="@+id/iv_skip5"
             android:layout_marginRight="5dp"/>

@@ -481,4 +481,24 @@ public void countFollowing(User user, OnSaveUserListener onSaveUserListener) {
 //
 //        LitePal.use(litePalDB);  // 切换到新的数据库配置
 //    }
+
+    public void getAllUsers(){
+        UserServiceApi userServiceApi = RetrofitManager.getInstance().create(UserServiceApi.class);
+        userServiceApi.getAllUser().enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if(response.isSuccessful()){
+                    List<User> users = response.body();
+                    for (User user:users) {
+                        user.save();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+
+            }
+        });
+    }
 }

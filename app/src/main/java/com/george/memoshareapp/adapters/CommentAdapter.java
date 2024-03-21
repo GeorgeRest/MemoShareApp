@@ -14,11 +14,16 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.CommentBean;
 import com.george.memoshareapp.beans.ReplyBean;
+import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.properties.AppProperties;
 import com.george.memoshareapp.view.NoScrollListView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -66,8 +71,6 @@ public class CommentAdapter extends BaseAdapter {
                     convertView.findViewById(R.id.commentItemImg);
             holder.commentNickname = (TextView)
                     convertView.findViewById(R.id.commentNickname);
-//            holder.commentItemTime = (TextView)
-//                    convertView.findViewById(R.id.commentItemTime);
             holder.commentItemContentAndTime = (TextView)
                     convertView.findViewById(R.id.commentItemContentAndTime);
             holder.replyList = (NoScrollListView)
@@ -77,12 +80,15 @@ public class CommentAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.commentItemImg.setImageResource(bean.getCommentUserPhoto());
-        holder.commentNickname.setText(bean.getCommentUserName());
-//        holder.commentItemTime.setText(getTimeFormatText(bean.getCommentTime()));
+        UserManager userManager = new UserManager(context);
+        User user = userManager.findUserByPhoneNumber(bean.getCommentUserPhoneNumber());
+        // 设置头像
+        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+user.getHeadPortraitPath()).into(holder.commentItemImg);
+        //设置评论人名字
+        holder.commentNickname.setText(user.getName());
 
         String content = bean.getCommentContent();
-        String time = getTimeFormatText(bean.getCommentTime());
+        String time =getTimeFormatText(bean.getCommentTime());
         SpannableString spannableString = new SpannableString(content + "   " + time);
 
         // 设置评论时间的字体大小和颜色
@@ -91,10 +97,11 @@ public class CommentAdapter extends BaseAdapter {
         holder.commentItemContentAndTime.setText(spannableString);
 
 
-        ReplyAdapter adapter = new ReplyAdapter(context, bean.getReplyList(), R.layout.item_reply,handler,position);
+        ReplyAdapter adapter = new ReplyAdapter(context, bean.getReplyCommentList(), R.layout.item_reply,handler,position);
 
         holder.replyList.setAdapter(adapter);
 
+        //设置点击事件
         TextviewClickListener tcl = new TextviewClickListener(position);
         holder.commentItemContentAndTime.setOnClickListener(tcl);
         return convertView;
@@ -111,7 +118,7 @@ public class CommentAdapter extends BaseAdapter {
      * 获取回复评论
      */
     public void getReplyComment(ReplyBean bean, int position){
-        List<ReplyBean> rList = list.get(position).getReplyList();
+        List<ReplyBean> rList = list.get(position).getReplyCommentList();
         rList.add(rList.size(), bean);
     }
 
@@ -127,7 +134,7 @@ public class CommentAdapter extends BaseAdapter {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.commentItemContentAndTime:
-                    handler.sendMessage(handler.obtainMessage(10, position));
+                    handler.sendMessage(handler.obtainMessage(10, position));  //10代表回复一级评论
                     break;
             }
         }
@@ -136,48 +143,56 @@ public class CommentAdapter extends BaseAdapter {
      * 时间差
      *
      */
-    public  String getTimeFormatText(Date date) {
-        long minute = 60 * 1000;// 1分钟
-        long hour = 60 * minute;// 1小时
-        long day = 24 * hour;// 1天
-        long month = 31 * day;// 月
-        long year = 12 * month;// 年
+    public String getTimeFormatText(String dateString) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        try {
+            Date date = formatter.parse(dateString);
 
-        // 创建一个新的SimpleDateFormat实例，指定所需的格式
-        SimpleDateFormat formatter1 = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        SimpleDateFormat formatter2 = new SimpleDateFormat("MM-dd", Locale.getDefault());
-        SimpleDateFormat formatter3 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            long minute = 60 * 1000;// 1分钟
+            long hour = 60 * minute;// 1小时
+            long day = 24 * hour;// 1天
+            long month = 31 * day;// 月
+            long year = 12 * month;// 年
 
-        // 使用formatter.format(currentDate)方法将日期对象转换为字符串
-        String dateString1 = formatter1.format(date);
-        String dateString2 = formatter2.format(date);
-        String dateString3 = formatter3.format(date);
+            // 创建一个新的SimpleDateFormat实例，指定所需的格式
+            SimpleDateFormat formatter1 = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            SimpleDateFormat formatter2 = new SimpleDateFormat("MM-dd", Locale.getDefault());
+            SimpleDateFormat formatter3 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-        if (date == null) {
-            return null;
-        }
-        long diff = new Date().getTime() - date.getTime();
-        long r = 0;
-        if (diff > year) {
-            return dateString3;
-        }
+            // 使用formatter.format(currentDate)方法将日期对象转换为字符串
+            String dateString1 = formatter1.format(date);
+            String dateString2 = formatter2.format(date);
+            String dateString3 = formatter3.format(date);
 
-        if (diff > day) {
-            r = (diff / day);
-            if(r == 1) {
-                return "昨天" +dateString1;
-            }else{
-                return dateString2 ;
+            if (date == null) {
+                return null;
             }
+            long diff = new Date().getTime() - date.getTime();
+            long r = 0;
+            if (diff > year) {
+                return dateString3;
+            }
+
+            if (diff > day) {
+                r = (diff / day);
+                if(r == 1) {
+                    return "昨天" +dateString1;
+                }else{
+                    return dateString2 ;
+                }
+            }
+            if (diff > hour) {
+                r = (diff / hour);
+                return r + "小时前";
+            }
+            if (diff > minute) {
+                r = (diff / minute);
+                return r + "分钟前";
+            }
+            return "刚刚";
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        if (diff > hour) {
-            r = (diff / hour);
-            return r + "小时前";
-        }
-        if (diff > minute) {
-            r = (diff / minute);
-            return r + "分钟前";
-        }
-        return "刚刚";
+        return null;
     }
 }

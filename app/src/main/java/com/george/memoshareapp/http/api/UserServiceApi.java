@@ -59,6 +59,9 @@ public interface UserServiceApi {
     @GET("user/getUser/{phoneNumber}")
     Call<HttpData<User>> getUserByPhoneNumber(@Path("phoneNumber") String phoneNumber);
 
+    @GET("user/getAllUser")
+    Call<List<User>> getAllUser();
+
     @GET("user/getFollowedUser")
     Call<HttpListData<User>> getFollowedUser(@Query("userPhoneNumber") String phoneNumber);
 

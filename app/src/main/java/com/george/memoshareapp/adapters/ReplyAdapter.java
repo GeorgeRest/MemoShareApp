@@ -16,11 +16,16 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.beans.ReplyBean;
+import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.manager.UserManager;
+import com.george.memoshareapp.properties.AppProperties;
 
 import org.litepal.LitePal;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -68,28 +73,28 @@ public class ReplyAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         bean = list.get(position);
         replayId = bean.getId();
-
-
         ViewHolder holder = null;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(resourceId, null);
             holder.replyPhoto = (ImageView) convertView.findViewById(R.id.iv_reply_photo);
             holder.replyName = (TextView) convertView.findViewById(R.id.tv_reply_name);
-//            holder.replyTime= (TextView)convertView.findViewById(R.id.tv_replyTime);
             holder.replyTextAndTime = (TextView) convertView.findViewById(R.id.replyContentAndTime);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.replyPhoto.setImageResource(bean.getReplyUserPhoto());
-        holder.replyName.setText(bean.getReplyNickname());
-//        holder.replyTime.setText(getTimeFormatText(bean.getReplyTime()));
+        UserManager userManager = new UserManager(context);
+        //user1:回复人 user2:被回复人
+        User user1 = userManager.findUserByPhoneNumber(bean.getReplyPhoneNumber());
+        User user2 = userManager.findUserByPhoneNumber(bean.getCommentPhoneNumber());
+        Glide.with(context).load(AppProperties.SERVER_MEDIA_URL+user1.getHeadPortraitPath()).into(holder.replyPhoto);
+        holder.replyName.setText(user1.getName());
 
         String content = bean.getReplyContent();
         String time = getTimeFormatText(bean.getReplyTime());
         SpannableString spannableString = new SpannableString(content + "   " + time);
-        String commentNickName = bean.getCommentNickname();
+        String commentNickName = user2.getName();
         ss = new SpannableString("回复" + commentNickName
                 + "：" + spannableString);
         ss.setSpan(new ForegroundColorSpan(Color.parseColor("#80202025")), 2,
@@ -110,7 +115,6 @@ public class ReplyAdapter extends BaseAdapter {
         public ImageView replyPhoto;
         public TextView replyName;
         public TextView replyTextAndTime;
-//        public TextView replyTime;
     }
 
     /**
@@ -121,19 +125,18 @@ public class ReplyAdapter extends BaseAdapter {
 
         public TextviewClickListener(int position) {
             this.replyPosition = position;
-
         }
 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.replyContentAndTime:
-                    Cursor cursor = LitePal.findBySQL("select commentbean_id from replybean where id=?", String.valueOf(replayId));
-                    if (cursor != null && cursor.moveToFirst()) {
-                        int columnIndex = cursor.getColumnIndex("commentbean_id");
-                        commentbeanId = cursor.getInt(columnIndex);
-                        cursor.close();
-                    }
+//                    Cursor cursor = LitePal.findBySQL("select commentbean_id from replybean where id=?", String.valueOf(replayId));
+//                    if (cursor != null && cursor.moveToFirst()) {
+//                        int columnIndex = cursor.getColumnIndex("commentbean_id");
+//                        commentbeanId = cursor.getInt(columnIndex);
+//                        cursor.close();
+//                    }
                     handler.sendMessage(handler.obtainMessage(1, replyPosition,position));
                     break;
             }
@@ -142,50 +145,59 @@ public class ReplyAdapter extends BaseAdapter {
 
     /**
      * 时间差
+     *
      */
-    public String getTimeFormatText(Date date) {
-        long minute = 60 * 1000;// 1分钟
-        long hour = 60 * minute;// 1小时
-        long day = 24 * hour;// 1天
-        long month = 31 * day;// 月
-        long year = 12 * month;// 年
+    public String getTimeFormatText(String dateString) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+        try {
+            Date date = formatter.parse(dateString);
 
-        // 创建一个新的SimpleDateFormat实例，指定所需的格式
-        SimpleDateFormat formatter1 = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        SimpleDateFormat formatter2 = new SimpleDateFormat("MM-dd", Locale.getDefault());
-        SimpleDateFormat formatter3 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            long minute = 60 * 1000;// 1分钟
+            long hour = 60 * minute;// 1小时
+            long day = 24 * hour;// 1天
+            long month = 31 * day;// 月
+            long year = 12 * month;// 年
 
-        // 使用formatter.format(currentDate)方法将日期对象转换为字符串
-        String dateString1 = formatter1.format(date);
-        String dateString2 = formatter2.format(date);
-        String dateString3 = formatter3.format(date);
+            // 创建一个新的SimpleDateFormat实例，指定所需的格式
+            SimpleDateFormat formatter1 = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            SimpleDateFormat formatter2 = new SimpleDateFormat("MM-dd", Locale.getDefault());
+            SimpleDateFormat formatter3 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-        if (date == null) {
-            return null;
-        }
-        long diff = new Date().getTime() - date.getTime();
-        long r = 0;
-        if (diff > year) {
-            return dateString3;
-        }
+            // 使用formatter.format(currentDate)方法将日期对象转换为字符串
+            String dateString1 = formatter1.format(date);
+            String dateString2 = formatter2.format(date);
+            String dateString3 = formatter3.format(date);
 
-        if (diff > day) {
-            r = (diff / day);
-            if (r == 1) {
-                return "昨天" + dateString1;
-            } else {
-                return dateString2;
+            if (date == null) {
+                return null;
             }
+            long diff = new Date().getTime() - date.getTime();
+            long r = 0;
+            if (diff > year) {
+                return dateString3;
+            }
+
+            if (diff > day) {
+                r = (diff / day);
+                if(r == 1) {
+                    return "昨天" +dateString1;
+                }else{
+                    return dateString2 ;
+                }
+            }
+            if (diff > hour) {
+                r = (diff / hour);
+                return r + "小时前";
+            }
+            if (diff > minute) {
+                r = (diff / minute);
+                return r + "分钟前";
+            }
+            return "刚刚";
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        if (diff > hour) {
-            r = (diff / hour);
-            return r + "小时前";
-        }
-        if (diff > minute) {
-            r = (diff / minute);
-            return r + "分钟前";
-        }
-        return "刚刚";
+        return null;
     }
 
 }

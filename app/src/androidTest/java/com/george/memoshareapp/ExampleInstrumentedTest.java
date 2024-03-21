@@ -8,9 +8,6 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.george.memoshareapp.activities.CoverPhotoSelectionActivity;
-import com.george.memoshareapp.beans.User;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,20 +30,7 @@ public class ExampleInstrumentedTest {
         assertEquals("com.george.litepaltest1", appContext.getPackageName());
     }
     @Test
-    public  void test_displayManager_getLikePost(){
+    public void test_displayManager_getLikePost() {
 
     }
-    @Test
-    public void getListCount_ReturnsCorrectCount() {
-        ArrayList<User> uriList = new ArrayList<>();
-        try (ActivityScenario<CoverPhotoSelectionActivity> scenario = ActivityScenario.launch(CoverPhotoSelectionActivity.class)) {
-            scenario.onActivity(activity -> {
-                User user = new User("199");
-                uriList.add(user);
-                int count = activity.getListCount(uriList);
-                assertEquals(1, count);
-            });
-        }
-    }
-
 }
