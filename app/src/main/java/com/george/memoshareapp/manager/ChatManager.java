@@ -293,6 +293,9 @@ public class ChatManager {
                 super.run();
                 List<ChatRoom> chatRoomList = getChatRoomList();
                 for (ChatRoom chatRoom : chatRoomList) {
+                    if(selfUser==null) {
+                        selfUser = userManager.findUserByPhoneNumber(UserManager.getSelfPhoneNumber(context));
+                    }
                     Call<Void> call = chatRoomApi.updateLastReadAt(selfUser.getPhoneNumber(), chatRoom.getChatRoomId());
                     call.enqueue(new Callback<Void>() {
                         @Override
