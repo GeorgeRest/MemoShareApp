@@ -1,12 +1,12 @@
 package com.george.memoshareapp.properties;
 
 public class AppProperties {
-    private static final String SERVER_URL ="http://11.1.1.37"; //修改这个两个ip
-    private static final String IP ="11.1.1.37";
+    private static final String SERVER_URL ="http://82.156.138.114"; //修改这个两个ip
+    private static final String IP ="82.156.138.114";
 
-    public static final String PORT =":6028/";
+    public static final String PORT =":6027/";
 
-
+    //服务器 ip:82.156.138.114  port:6027
 
     public static final String SERVER =SERVER_URL+PORT;
 

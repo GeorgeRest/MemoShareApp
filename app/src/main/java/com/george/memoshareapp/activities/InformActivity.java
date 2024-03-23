@@ -2,6 +2,7 @@ package com.george.memoshareapp.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,6 +33,8 @@ public class InformActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inform);
+        ImageView iv_back = (ImageView) findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(v -> finish());
         sharedPreferences = getSharedPreferences("User", MODE_PRIVATE);
         phoneNumber = sharedPreferences.getString("phoneNumber", "");
         init();

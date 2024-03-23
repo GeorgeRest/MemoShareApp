@@ -243,21 +243,12 @@ public class DetailActivity extends BaseActivity implements View.OnClickListener
 
         boolean shouldCheckComments = getIntent().getBooleanExtra("shouldCheckComments", false);
         if (shouldCheckComments) {
-            if (list.size() < 9) {
-                scrollView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                });
-            } else {
                 scrollView.post(new Runnable() {
                     @Override
                     public void run() {
                         scrollView.scrollTo(0, 1200);
                     }
                 });
-            }
         }
     }
 

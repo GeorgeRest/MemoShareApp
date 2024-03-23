@@ -2,6 +2,7 @@ package com.george.memoshareapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,12 +21,14 @@ public class ChatPictureActivity extends BaseActivity {
 
     private RecyclerView rv_picture_list;
     private ChatPictureAdapter mPictureAdapter;
+    private ImageView iv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_picture);
         rv_picture_list = findViewById(R.id.rv_picture_list);
+        iv_back = findViewById(R.id.iv_back);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 4, RecyclerView.VERTICAL, false);
         rv_picture_list.setLayoutManager(layoutManager);
         mPictureAdapter = new ChatPictureAdapter();
@@ -44,6 +47,7 @@ public class ChatPictureActivity extends BaseActivity {
                 pictureList.add(chatPicture.getFilePath());
             }
         }
+        iv_back.setOnClickListener(v -> finish());
         mPictureAdapter.setData(pictureList);
         mPictureAdapter.notifyDataSetChanged();
         rv_picture_list.setAdapter(mPictureAdapter);

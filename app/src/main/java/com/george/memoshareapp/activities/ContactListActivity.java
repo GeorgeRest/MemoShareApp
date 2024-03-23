@@ -1,5 +1,7 @@
 package com.george.memoshareapp.activities;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,8 +20,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.drake.statelayout.StateLayout;
 import com.george.memoshareapp.R;
@@ -83,7 +83,7 @@ public class ContactListActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.putExtra("contact_user",userList.get(position));
                 setResult(ReleaseActivity.RESULT_CODE_CONTACT,intent);
-                finish();
+                finish();   //关闭页面,回传结果
             }
         });
 
@@ -200,7 +200,7 @@ public class ContactListActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent();
-                    intent.putExtra("contact_user",userList.get(position));
+                    intent.putExtra("name",filteredList.get(position).getName());
                     setResult(ReleaseActivity.RESULT_CODE_CONTACT,intent);
                     finish();
                 }

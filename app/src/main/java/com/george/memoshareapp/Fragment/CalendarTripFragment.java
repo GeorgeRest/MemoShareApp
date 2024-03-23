@@ -34,7 +34,6 @@ import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.activities.CreatedAlbumActivity;
-import com.george.memoshareapp.activities.DetailActivity;
 import com.george.memoshareapp.activities.RemindActivity;
 
 import com.george.memoshareapp.activities.GroupFriendListActivity;
@@ -210,21 +209,7 @@ public class CalendarTripFragment extends Fragment implements
                         mCalendarView.scrollToCalendar(year, month, 1);
                     }
                 })
-                        /*.setType(TimePickerView.Type.ALL)//default is all
-                        .setCancelText("Cancel")
-                        .setSubmitText("Sure")
-                        .setContentTextSize(18)
-                        .setTitleSize(20)
-                        .setTitleText("Title")
-                        .setTitleColor(Color.BLACK)
-                       /*.setDividerColor(Color.WHITE)//设置分割线的颜色
-                        .setTextColorCenter(Color.LTGRAY)//设置选中项的颜色
-                        .setLineSpacingMultiplier(1.6f)//设置两横线之间的间隔倍数
-                        .setTitleBgColor(Color.DKGRAY)//标题背景颜色 Night mode
-//                       .setBgColor(Color.BLACK)//滚轮背景颜色 Night mode
-                        .setSubmitColor(Color.WHITE)
-                        .setCancelColor(Color.WHITE)*/
-                        /*.animGravity(Gravity.RIGHT)// default is center*/
+
                         .setContentTextSize(18)
                         .setDividerColor(Color.BLUE)
                         .setTextColorCenter(Color.BLACK)

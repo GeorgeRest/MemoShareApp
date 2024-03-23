@@ -1,8 +1,43 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical">
-    <TextView android:id="@+id/tv_show_letter" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="A" android:textColor="#C3090A0E" android:layout_marginTop="2dp" android:layout_marginBottom="2dp" android:background="#83EAE7E7" android:padding="4dp"/>
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="10dp">
-        <com.george.memoshareapp.view.AlbumFriendCheckBox android:id="@+id/checkbox" android:layout_width="24dp" android:layout_height="24dp" android:layout_alignParentStart="true" android:layout_centerVertical="true" android:layout_marginStart="5dp"/>
-        <ImageView android:id="@+id/iv_photo" android:layout_toRightOf="@id/checkbox" android:layout_marginLeft="5dp" android:layout_width="45dp" android:layout_height="45dp" android:src="@color/common_google_signin_btn_text_light_disabled"/>
-        <TextView android:id="@+id/tv_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="15dp" android:textSize="16sp" android:text="name" android:layout_toRightOf="@+id/iv_photo" android:layout_centerVertical="true"/>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/tv_show_letter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="A"
+        android:textColor="#C3090A0E"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:background="#83EAE7E7"
+        android:padding="4dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <com.george.memoshareapp.view.NiceImageView
+            android:id="@+id/niv_photo"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@mipmap/head_portrait"
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textSize="16sp"
+            android:text="name"
+            android:layout_toRightOf="@+id/niv_photo"
+            android:layout_centerVertical="true"/>
     </RelativeLayout>
+
+
 </LinearLayout>
