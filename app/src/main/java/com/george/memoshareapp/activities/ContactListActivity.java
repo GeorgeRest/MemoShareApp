@@ -217,7 +217,12 @@ public class ContactListActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<HttpListData<User>> call, Response<HttpListData<User>> response) {
                 state.showContent(null);
-                userList = response.body().getItems();
+                if(response.body()!=null){
+                    userList = response.body().getItems();
+                }else {
+                    Toasty.info(ContactListActivity.this,"很遗憾，您还没有好友呢~").show();
+                }
+
                 sortContacts(userList); // 按拼音首字母排序
                 // 设置数据给 contactListAdapter 对象
                 contactListAdapter.setData(userList);

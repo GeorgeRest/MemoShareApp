@@ -5,8 +5,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,10 +26,12 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.bumptech.glide.Glide;
 import com.george.memoshareapp.R;
 import com.george.memoshareapp.adapters.AddActivityPicAdapter;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.interfaces.OnDelPicClickListener;
+import com.george.memoshareapp.interfaces.OnPicClickListener;
 import com.george.memoshareapp.manager.HuodongManager;
 import com.george.memoshareapp.utils.SHA1Output;
 import com.hjq.permissions.OnPermissionCallback;
@@ -32,6 +39,9 @@ import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.photoview.PhotoView;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.util.SmartGlideImageLoader;
 import com.orhanobut.logger.Logger;
 
 import java.sql.Date;
@@ -63,6 +73,7 @@ public class AddHuoDongActivity extends BaseActivity {
     public static final int TAG_REQUES_CODE = 5;
     private String tagResult = "";
     private TextView tv_huodong_tag;
+    private LinearLayout ll_activity_add;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,6 +231,33 @@ public class AddHuoDongActivity extends BaseActivity {
                 adapter.notifyDataSetChanged();
             }
         });
+
+        ll_activity_add = (LinearLayout) findViewById(R.id.ll_activity_add);
+
+        adapter.setOnPicClickListener(new OnPicClickListener() {
+            @Override
+            public void onPicClick(Uri imagePath) {
+                PopupWindow popupWindow = new PopupWindow(AddHuoDongActivity.this);
+                popupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                popupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+                View view = LayoutInflater.from(AddHuoDongActivity.this).inflate(R.layout.activity_pic_layout, null);
+                popupWindow.setContentView(view);
+
+                PhotoView pv_pic = (PhotoView) view.findViewById(R.id.pv_activity_pic);
+                Glide.with(AddHuoDongActivity.this).load(imagePath)
+                        .placeholder(R.drawable.huodong_pic_default)
+                        .into(pv_pic);
+                popupWindow.showAsDropDown(ll_activity_add);
+
+                pv_pic.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popupWindow.dismiss();
+                    }
+                });
+            }
+        });
+
         tv_publish.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override

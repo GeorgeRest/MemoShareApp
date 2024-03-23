@@ -52,9 +52,11 @@ public class OutHuodongViewPagerAdapter extends RecyclerView.Adapter<OutHuodongV
         InnerActivityBean innerActivityBean = huodonglist.get(position);
 
         Glide.with(context).load(AppProperties.SERVER_MEDIA_URL + innerActivityBean
-                .getHeadPortraitPath()).placeholder(R.drawable.huodong_pic_default).into(holder.iv_avatar);
+                .getHeadPortraitPath())
+                .placeholder(R.drawable.huodong_pic_default).into(holder.iv_avatar);
         Glide.with(context).load(AppProperties.SERVER_MEDIA_URL + innerActivityBean
-                .getFirstImagePath()).placeholder(R.drawable.huodong_pic_default).into(holder.iv_activity_image);
+                .getFirstImagePath())
+                .placeholder(R.drawable.huodong_pic_default).into(holder.iv_activity_image);
 
         holder.tv_publisher.setText(innerActivityBean.getName());
 

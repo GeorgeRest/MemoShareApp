@@ -83,7 +83,10 @@ public class HuodongGalleryActivity extends BaseActivity implements HuodongDataL
         phoneNumber = intent.getStringExtra("phoneNumber");
         followId = firstHuoDong.getActivityId();
         Log.d("zxtest", " initData: followId = " + followId);
-        EventBus.getDefault().register(this);
+        
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
 
 //        initTestData();
 
