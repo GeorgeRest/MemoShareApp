@@ -150,6 +150,10 @@ public class GroupChatActivity extends BaseActivity implements SendListener, Vie
                     Log.i("TAG", "onActivityResult PictureSelector Cancel");
                 }
                 break;
+            case 1:
+                if(resultCode == RESULT_OK){
+                    finish();
+                }
             default:
                 break;
 
@@ -170,21 +174,7 @@ public class GroupChatActivity extends BaseActivity implements SendListener, Vie
                     media.setHeight(videoExtraInfo.getHeight());
                 }
             }
-//            Log.i(TAG, "文件名: " + media.getFileName());
-//            Log.i(TAG, "是否压缩:" + media.isCompressed());
-//            Log.i(TAG, "压缩:" + media.getCompressPath());
-//            Log.i(TAG, "初始路径:" + media.getPath());
-//            Log.i(TAG, "绝对路径:" + media.getRealPath());
-//            Log.i(TAG, "是否裁剪:" + media.isCut());
-//            Log.i(TAG, "裁剪:" + media.getCutPath());
-//            Log.i(TAG, "是否开启原图:" + media.isOriginal());
-//            Log.i(TAG, "原图路径:" + media.getOriginalPath());
-//            Log.i(TAG, "沙盒路径:" + media.getSandboxPath());
-//            Log.i(TAG, "水印路径:" + media.getWatermarkPath());
-//            Log.i(TAG, "视频缩略图:" + media.getVideoThumbnailPath());
-//            Log.i(TAG, "原始宽高: " + media.getWidth() + "x" + media.getHeight());
-//            Log.i(TAG, "裁剪宽高: " + media.getCropImageWidth() + "x" + media.getCropImageHeight());
-//            Log.i(TAG, "文件大小: " + media.getSize());
+
             String path = new File(media.getRealPath()).getPath();
             Date date = new Date(System.currentTimeMillis());
             mImageList.add(path); // 接收已选图片地址，用于接口上传图片
@@ -390,13 +380,14 @@ public class GroupChatActivity extends BaseActivity implements SendListener, Vie
                 Intent intent = new Intent(this, GroupMoreActivity.class);
                 intent.putExtra("chatRoomId", chatRoomId);
                 intent.putExtra("ChatRoomName", chatRoomName);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
                 break;
 
             default:
                 break;
         }
     }
+
 
 
 }

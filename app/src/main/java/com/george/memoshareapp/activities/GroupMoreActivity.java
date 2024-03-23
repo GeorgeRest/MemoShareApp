@@ -17,6 +17,8 @@ import com.george.memoshareapp.adapters.ChatGroupMemberAdapter;
 import com.george.memoshareapp.beans.ChatRoom;
 import com.george.memoshareapp.beans.ChatRoomMember;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.http.api.ChatRoomApi;
+import com.george.memoshareapp.manager.RetrofitManager;
 import com.george.memoshareapp.manager.UserManager;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
@@ -26,6 +28,9 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 import es.dmoral.toasty.Toasty;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GroupMoreActivity extends BaseActivity {
 
@@ -94,24 +99,43 @@ public class GroupMoreActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-        tv_exit.setOnClickListener(new View.OnClickListener() {
+        rlTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("----------");
                 new XPopup.Builder(GroupMoreActivity.this)
                         .hasBlurBg(true)
                         .asConfirm("退出", "确定退出群聊么",
                                 new OnConfirmListener() {
                                     @Override
                                     public void onConfirm() {
-                                        Toasty.success(GroupMoreActivity.this, "退出成功");
+                                        ChatRoomApi chatRoomApi = RetrofitManager.getInstance().create(ChatRoomApi.class);
+                                        chatRoomApi.deleteChatRoomMember(Integer.parseInt(chatRoomId), UserManager.getSelfPhoneNumber(GroupMoreActivity.this)).enqueue(new Callback<Void>() {
+                                            @Override
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                if (response.isSuccessful()) {
+                                                    int deletedRows = LitePal.deleteAll(ChatRoom.class, "chatroomId = ?", chatRoomId);
+                                                    if(deletedRows>0){
+                                                        Toasty.success(GroupMoreActivity.this, "退出成功", Toasty.LENGTH_SHORT).show();
+                                                        Intent intent1 = new Intent();
+                                                        setResult(RESULT_OK, intent1);
+                                                        finish();
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Void> call, Throwable t) {
+
+                                            }
+                                        });
                                     }
-                                })
-                        .show();
+                                }).show();
             }
         });
 
-    }
 
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
