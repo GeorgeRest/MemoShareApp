@@ -176,7 +176,7 @@ public class MyVoiceRecordFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 PictureSelector.create(getActivity())
-                        .openGallery(SelectMimeType.ofAll())
+                        .openGallery(SelectMimeType.TYPE_IMAGE)
                         .setImageEngine(GlideEngine.createGlideEngine())
                         .isWithSelectVideoImage(false)//图片视频分别处理
 //                                .setSelectionMode(Picture)//设置单选多选

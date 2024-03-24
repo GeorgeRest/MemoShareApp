@@ -194,7 +194,7 @@ public class CreatedAlbumActivity extends BaseActivity {
 
     private void jumpToPictureSelector() {
         PictureSelector.create(this)
-                .openGallery(SelectMimeType.ofAll())
+                .openGallery(SelectMimeType.TYPE_IMAGE)
                 .setImageEngine(GlideEngine.createGlideEngine())
                 .setMaxSelectNum(20)
                 .isEmptyResultReturn(true)

@@ -176,6 +176,9 @@ public class AudioPublishPlayerFragment extends Fragment {
     }
 
     private void updateSeekBar() {
+        if(mediaPlayer == null||seekBar == null||currentProgressTextView == null) {
+            return;
+        }
         seekBar.setProgress(mediaPlayer.getCurrentPosition());
         currentProgressTextView.setText(getTime(mediaPlayer.getCurrentPosition()));
         if (mediaPlayer.isPlaying()) {

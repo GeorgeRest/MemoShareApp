@@ -23,6 +23,7 @@ import com.george.memoshareapp.beans.ChatRoom;
 import com.george.memoshareapp.beans.WebSocketMessage;
 import com.george.memoshareapp.events.ChatMessageEvent;
 import com.george.memoshareapp.events.ForceLogoutEvent;
+import com.george.memoshareapp.events.LogOutEvent;
 import com.george.memoshareapp.events.SendMessageEvent;
 import com.george.memoshareapp.manager.ChatManager;
 import com.george.memoshareapp.manager.UserManager;
@@ -100,8 +101,8 @@ public class ChatService extends Service {
                 Logger.d("WebSocket 收到消息" + text);
                 Gson gson = new Gson();
                 WebSocketMessage webSocketMessage = gson.fromJson(text, WebSocketMessage.class);
-                if("session_closed".equals(webSocketMessage.getType())){
-                    //处理logOut
+                if ("session_closed".equals(webSocketMessage.getType())) {
+                    // 处理logOut
                     handleForceLogout();
                     mWebSocket.close(1000, "session_closed");
                     Logger.d("WebSocket 收到消息" + webSocketMessage.getMessage());
@@ -117,20 +118,21 @@ public class ChatService extends Service {
                                 .create();
                         ChatMessage message = gson.fromJson(text, ChatMessage.class);
                         new ChatManager(ChatService.this).saveChatMessage(message);
-                        if(!GroupChatActivity.isInGroupChatActivity) {
+                        if (!GroupChatActivity.isInGroupChatActivity) {
                             showPopNotification(message);
                         }
 
-                EventBus.getDefault().post(new ChatMessageEvent(message)); //接收到的消息给到ChatActivity
-                // 现在你可以操作message对象，例如显示消息内容
-                Logger.d("WebSocket 收到消息"+message);}
+                        EventBus.getDefault().post(new ChatMessageEvent(message)); // 接收到的消息给到ChatActivity
+                        // 现在你可以操作message对象，例如显示消息内容
+                        Logger.d("WebSocket 收到消息" + message);
+                    }
                 }).start();
             }
 
             @Override
             public void onClosed(WebSocket webSocket, int code, String reason) {
                 super.onClosed(webSocket, code, reason);
-                Logger.d("WebSocket 连接关闭"+"reason"+reason+"code"+code);
+                Logger.d("WebSocket 连接关闭" + "reason" + reason + "code" + code);
                 // 评估关闭的原因
                 if ("New session opened！！！".equals(reason)) {
                     // 如果原因是新会话已经打开，则处理强制注销逻辑
@@ -191,6 +193,7 @@ public class ChatService extends Service {
         chatManager.saveChatMessage(message);
         sendMessage(new Gson().toJson(message));
     }
+
     private void handleForceLogout() {
         // 发送EventBus事件通知UI层显示强制注销的Dialog
         EventBus.getDefault().post(new ForceLogoutEvent());
@@ -203,6 +206,15 @@ public class ChatService extends Service {
         // 结束服务
         stopSelf();
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void LogOutEvent(LogOutEvent event) {
+        if (mWebSocket != null) {
+            mWebSocket.close(1000, "Logged out");
+        }
+        stopSelf();
+    }
+
     private void showPopNotification(ChatMessage message) {
         String content = "";
         if (message.getMessageType().equals("图片")) {
@@ -219,7 +231,7 @@ public class ChatService extends Service {
         if (message.getChatRoom().getType().equals("多人")) {
             ChatRoomName = message.getChatRoom().getName();
         } else {
-            ChatRoomName= message.getUser().getName();
+            ChatRoomName = message.getUser().getName();
         }
 
         // 创建一个final变量来在内部类中使用
@@ -238,7 +250,7 @@ public class ChatService extends Service {
                                     public boolean onClick(PopNotification baseDialog, View v) {
                                         Intent intent = new Intent(ChatService.this, GroupChatActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        intent.putExtra("chatRoomId", message.getChatRoom().getId()+"");
+                                        intent.putExtra("chatRoomId", message.getChatRoom().getId() + "");
                                         intent.putExtra("chatRoomName", finalChatRoomName);
                                         startActivity(intent);
                                         return false;

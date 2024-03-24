@@ -242,7 +242,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.head_portrait:
                 PictureSelector.create(this)
-                        .openGallery(SelectMimeType.ofAll())
+                        .openGallery(SelectMimeType.TYPE_IMAGE)
                         .setImageEngine(GlideEngine.createGlideEngine())
                         .setMaxSelectNum(1)
                         .isEmptyResultReturn(true)

@@ -103,7 +103,7 @@ public class ImageAdapter extends BaseMultiItemAdapter<Uri> implements DragAndSw
             selectVideoSize = 1;
 
         PictureSelector.create(context)
-                .openGallery(SelectMimeType.ofAll())
+                .openGallery(SelectMimeType.TYPE_IMAGE)
                 .isWithSelectVideoImage(false)
                 .setImageEngine(GlideEngine.createGlideEngine())
                 .setMaxSelectNum(selectImageSize)

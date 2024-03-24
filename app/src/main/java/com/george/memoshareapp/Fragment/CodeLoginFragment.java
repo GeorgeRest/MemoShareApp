@@ -22,7 +22,7 @@ import com.george.memoshareapp.utils.VerificationCountDownTimer;
 import com.george.memoshareapp.view.MyCheckBox;
 import com.orhanobut.logger.Logger;
 
-//import cn.smssdk.SMSSDK;
+import cn.smssdk.SMSSDK;
 import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,7 +76,7 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
                     if (userIsExit(phoneNumber)){
                         VerificationCountDownTimer timer = new VerificationCountDownTimer(tv_getCode, COUNTDOWN_TIME, 1000);
                         timer.start();
-//                        SMSSDK.getVerificationCode("86", phoneNumber);//给手机发验证码
+                       SMSSDK.getVerificationCode("86", phoneNumber);//给手机发验证码
                     }
 
 
@@ -105,7 +105,7 @@ public class CodeLoginFragment extends Fragment implements View.OnClickListener{
                     // 处理成功的情况
                     if (data.getCode() == 200) {
                         isSuccessLogin = true;
-//                        SMSSDK.getVerificationCode("86", phoneNumber);//给手机发验证码
+                       SMSSDK.getVerificationCode("86", phoneNumber);//给手机发验证码
                         VerificationCountDownTimer timer = new VerificationCountDownTimer(tv_getCode, COUNTDOWN_TIME, 1000);
                         timer.start();
 

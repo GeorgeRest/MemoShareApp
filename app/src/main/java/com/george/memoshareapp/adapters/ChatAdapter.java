@@ -528,7 +528,6 @@ public class ChatAdapter extends BaseMultiItemAdapter<MultiItemEntity> {
             int durationInMillis = mediaPlayer.getDuration();
             // 将毫秒转换为秒
             int durationInSeconds = durationInMillis / 1000;
-            Toast.makeText(getContext(), "录音文件时长：" + durationInSeconds + " 秒", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }

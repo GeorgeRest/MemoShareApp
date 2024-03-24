@@ -27,6 +27,7 @@ import com.george.memoshareapp.adapters.PersonPageAdapter;
 import com.george.memoshareapp.beans.Post;
 import com.george.memoshareapp.beans.Relationship;
 import com.george.memoshareapp.beans.User;
+import com.george.memoshareapp.events.LogOutEvent;
 import com.george.memoshareapp.http.api.RelationshipServiceApi;
 import com.george.memoshareapp.http.api.UserServiceApi;
 import com.george.memoshareapp.http.response.HttpData;
@@ -40,6 +41,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.orhanobut.logger.Logger;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -467,6 +470,7 @@ public class NewPersonPageFragment extends Fragment  {//外部
         iv_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EventBus.getDefault().post(new LogOutEvent());
                 sharedPreferences1.edit().putBoolean("isLogin",false).commit();
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 getActivity().finish();
