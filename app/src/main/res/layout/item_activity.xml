@@ -26,6 +26,19 @@
                 android:scaleType="centerCrop"
                 android:background="#436C706F"/>
 
+            <TextView
+                android:id="@+id/tv_item_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="43dp"
+                android:layout_marginRight="30dp"
+                android:textColor="@color/teal_200"
+                android:text="#无标签"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

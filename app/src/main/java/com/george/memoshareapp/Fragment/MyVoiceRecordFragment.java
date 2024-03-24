@@ -4,6 +4,7 @@ import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -229,10 +230,18 @@ public class MyVoiceRecordFragment extends Fragment {
     private void stopRecording() {
 
         if (isRecording) {
-            mediaRecorder.stop();
-            mediaRecorder.release();
-            isRecording = false;
-            Toast.makeText(getContext(), "录音结束", Toast.LENGTH_SHORT).show();
+            try {
+                if (mediaRecorder != null) {
+                    isRecording = false;
+                    Toast.makeText(getContext(), "录音结束", Toast.LENGTH_SHORT).show();
+                    mediaRecorder.stop();
+                    mediaRecorder.release();
+                }
+            } catch (Exception e) {
+                Log.e("errorTAG", "stopRecording: ", e);
+//                    Toast.makeText(getContext(), "录音停止时发生错误", Toast.LENGTH_SHORT).show();
+                // 可能需要清理资源，例如关闭文件流、删除临时文件等
+            }
 
             // Now you can use the 'audioFile' to handle the recorded audio (e.g., send it, play it, etc.)
 

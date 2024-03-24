@@ -80,6 +80,13 @@ public class HuoDongAdapter extends RecyclerView.Adapter<HuoDongAdapter.ViewHold
             String timeString = simpleDateFormat.format(date);
             holder.tv_date.setText(timeString);
             holder.tv_location.setText(huoDong.getLocation());
+
+            if(huoDong.getTag() != null && huoDong.getTag().length() > 0){
+                holder.tv_item_tag.setText("#" + huoDong.getTag());
+            } else {
+                holder.tv_item_tag.setText("#无标签");
+            }
+
             if (huoDong.getFirstImagePath() != null) {
                 Glide.with(context).load(AppProperties.SERVER_MEDIA_URL + huoDong.getFirstImagePath())
                         .placeholder(R.drawable.huodong_pic_default).into(holder.iv_image);//正确地址
@@ -161,6 +168,7 @@ public class HuoDongAdapter extends RecyclerView.Adapter<HuoDongAdapter.ViewHold
 //        TextView tv_name;
         TextView tv_date;
         TextView tv_location;
+        TextView tv_item_tag;
         ImageView iv_check_btn;
         ImageView iv_checked_btn;
 
@@ -173,6 +181,7 @@ public class HuoDongAdapter extends RecyclerView.Adapter<HuoDongAdapter.ViewHold
             tv_location = (TextView) itemView.findViewById(R.id.tv_location);
             iv_check_btn = (ImageView) itemView.findViewById(R.id.iv_check_btn);
             iv_checked_btn = (ImageView) itemView.findViewById(R.id.iv_checked_btn);
+            tv_item_tag = (TextView) itemView.findViewById(R.id.tv_item_tag);
         }
     }
 
